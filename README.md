@@ -1,8 +1,8 @@
-# Lugormod #X 
+# ![#f03c15]Lugormod X 
 
 
 
-## X version aims to change the core of the Lugormod to bring out its potential and making it compatible with the KotF modification and making it official KotF multiplayer server core.
+## ![#1589F0]X version aims to change the core of the Lugormod to bring out its potential and making it compatible with the KotF modification and making it official KotF multiplayer server core.
 
 # Main features and changes:
 
@@ -27,14 +27,17 @@
 - Adding extern variable for profession credits fee.
 - Bug fixes.
 
-#Main long-terms Goals:
+##Main long-terms Goals:
 - Full compatibility with all KotF features.
 - Adding GUI overlay for console commands.
 - More AI improvements.
 - Repairing memory leaks.
 
 **Early 3.0.1.0 version Lugor X**
-**Compiled files inside ReleaseEnv folder**
+
+**Compiled files inside ReleaseEnv folder.**
+
+#User Files:
 - [Main folder](https://github.com/omatix/Lugor-X)
 - [Compiled file for Windows](ReleaseEnv/jampgamex86.dll)
 - [Compiled, main folder](ReleaseEnv)
