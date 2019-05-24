@@ -1,0 +1,353 @@
+//Merchant 1.0
+//Keep 2 comments to load GeneralBotInfo
+GeneralBotInfo
+{
+reflex	500
+//base reflex value, time in ms it takes the bot to react
+accuracy	25
+//base accuracy, number of degrees bot can aim off by. Lower value == better aim.
+turnspeed	0.10
+turnspeed_combat	0.10
+maxturn	360
+perfectaim	0
+chatability	1
+chatfrequency	3
+hatelevel	3
+camper	1
+saberspecialist	1
+//if 1, bot will not run just because it's forced to use a saber
+
+//don't exceed 20 force points total
+//forceinfo	7-1-000000000000000000
+//	hlspptglrpattdssss
+//	eepuueriarbeereaaa
+//	aveslliggosaaaebbb
+//	l ehlephetommi eee
+//	d t erhfn rrr
+//	n cbeo adt
+//	i t ar teh
+//	n lc tfr
+//	g e aeo
+//	cnw
+//	kd
+
+}
+
+//Weapons with a weight of 0 will be used in special cases outside of combat
+
+BotWeaponWeights
+{
+WP_STUN_BATON	1
+WP_SABER	1
+WP_BRYAR_PISTOL	2
+WP_BLASTER	11
+WP_DISRUPTOR	12
+WP_BOWCASTER	3
+WP_REPEATER	14
+WP_DEMP2	15
+WP_FLECHETTE	17
+WP_ROCKET_LAUNCHER	18
+WP_THERMAL	13
+WP_TRIP_MINE	0
+WP_DET_PACK	0
+}
+
+
+EmotionalAttachment
+{
+anotherbot	3
+}
+
+
+
+//all groups below here will be read in as chat sections
+BEGIN_CHAT_GROUPS
+
+Died
+{
+Woah!
+I can't...
+Ouch...
+}
+
+Killed
+{
+That's the power of the ^3Merchant Guild!
+Got ya!
+Haha!
+Am I mad?
+}
+
+Beloved Killed
+{
+Sad...
+}
+
+Hatred
+{
+Lamer!
+You suck ^1%s!
+}
+
+LovedOneKilledLovedOne
+{
+%s, don't kill ^1%a!
+Eh?!
+What are you doing ^1%s?
+}
+KilledHatedOne
+{
+You suck ^1%s!
+Rest In Pieces ^1%s!
+That's a power of the ^3Merchant Guild!
+@gloat
+}
+
+GeneralGreetings
+{
+Welcome to the Merchant Guild!
+Hi!
+}
+
+ResponseGreetings
+{
+Nice to see you ^1%s!
+Hello ^1%s.
+}
+
+OrderAccepted
+{
+It's fine!
+Good deal!
+As you wish ^1%s.
+As you wish master.
+}
+Challenge
+{
+Come on ^1%s!
+Fight me ^1%s!
+@taunt
+@flourish
+}
+
+
+ChatBack
+{
+sit merchant
+{
+@meditate
+}
+come merchant
+{
+@goto
+}
+im not
+i am not
+i'm not
+{
+Yes you are ^1%s!
+What did you say?
+Oh well...
+Haha!
+Someone told me a different story...
+I know something different...
+Isn't that a lie?
+}
+wait merchant
+{
+@wait
+}
+thank you merchant
+thanks merchant
+thx merchant
+{
+You're welcome!
+With a pleasure!
+That was the Merchant Guild duty...
+}
+where merchant
+{
+@where
+}
+dont kill me
+don't kill me
+{
+Oh, why not?
+Are you that weak?
+I'm just a merchant, not a killer!
+}
+kill me
+kill me merchant
+{
+@attack
+}
+how use jetpack
+{
+Jump and press the use key when you are in the air!
+}
+hug me
+hug me merchant
+{
+@hug
+}
+you are good merchant
+you're good merchant
+{
+I know.
+Thanks...
+Thank you!
+Hah, as you say...
+}
+fuck merchant
+{
+Keep it up and I'll get you kicked ^1%s.
+My goods are 3 times more expensive now, for ^1%s. 
+}
+bitch
+fuck
+cock
+dick
+{
+Hey, watch the language please!
+Your language is awful, ^1%s!
+Merchant Guild is not pleased...
+}
+hello merchant
+hi merchant
+hi all
+hello all
+hi
+hello
+{
+Hello ^1%s!
+Hello!
+Hi!
+Be welcome.
+Behold, ^1%s.
+Greetings from the Merchant Guild!
+}
+bryar
+teleporter
+{
+@give weapon_bryar_pistol
+}
+stun baton
+{
+@give weapon_stun_baton
+}
+blaster
+{
+@give weapon_blaster
+}
+disruptor
+{
+@give weapon_disruptor
+}
+bowcaster
+{
+@give weapon_bowcaster
+}
+repeater
+{
+@give weapon_repeater
+}
+demp
+demp2
+demp-2
+{
+@give weapon_demp2
+}
+flechette
+{
+@give weapon_flechette
+}
+launcher
+rocket launcher
+{
+@give weapon_rocket_launcher
+}
+thermal
+{
+@give weapon_thermal
+}
+mine
+trip-mine
+trip mine
+{
+@give weapon_trip_mine
+}
+det pack
+det-pack
+{
+@give weapon_det_pack
+}
+tauntaun
+{
+@spawn tauntaun
+}
+tusken
+{
+@spawn tusken
+@spawn tuskensniper
+}
+im off
+good night
+to bed
+i'm leaving
+im leaving
+{
+Bye!
+Bye, bye ^1%s!
+See you later!
+}
+lamer merchant
+{
+@throw
+}
+away
+stop
+afk
+{
+@ignore
+}
+sorry merchant
+sry merchant
+{
+@forgive
+}
+merchant
+{
+Hm?
+What?
+Yes...
+No...
+Nothing...
+What you want from the Merchant Guild representative, ^1%s?
+Oh, close your mouth ^1%s!
+}
+}
+
+
+Leaving
+{
+Bye all!
+See you later!
+The Merchant Guild has called me. So long!
+Have to go. Bye! 
+}
+Laming
+{
+Hey!
+Quit laming ^1%s!
+%s is a lamer.
+}
+RandomChat
+{
+Where is everyone?
+I am getting bored...
+@fnord
+@taunt
+@meditate
+Want to buy something?
+Do you want to check out my goods? 
+}

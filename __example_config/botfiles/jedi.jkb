@@ -1,0 +1,316 @@
+//Solider 1.0
+//Keep 2 comments to load GeneralBotInfo
+GeneralBotInfo
+{
+reflex	345
+//base reflex value, time in ms it takes the bot to react
+accuracy	15
+//base accuracy, number of degrees bot can aim off by. Lower value == better aim.
+turnspeed	0.10
+turnspeed_combat	0.10
+maxturn	360
+perfectaim	0
+chatability	1
+chatfrequency	2
+hatelevel	3
+camper	0
+saberspecialist	0
+//if 1, bot will not run just because it's forced to use a saber
+
+//don't exceed 20 force points total
+//forceinfo	5-2-030300003000000330
+//	hlspptglrpattdssss
+//	eepuueriarbeereaaa
+//	aveslliggosaaaebbb
+//	l ehlephetommi eee
+//	d t erhfn rrr
+//	n cbeo adt
+//	i t ar teh
+//	n lc tfr
+//	g e aeo
+//	cnw
+//	kd
+
+}
+
+//Weapons with a weight of 0 will be used in special cases outside of combat
+
+BotWeaponWeights
+{
+WP_STUN_BATON	1
+WP_SABER	16
+WP_BRYAR_PISTOL	1
+WP_BLASTER	1
+WP_DISRUPTOR	1
+WP_BOWCASTER	4
+WP_REPEATER	1
+WP_DEMP2	1
+WP_FLECHETTE	1
+WP_ROCKET_LAUNCHER	1
+WP_THERMAL	1
+WP_TRIP_MINE	0
+WP_DET_PACK	0
+}
+
+
+EmotionalAttachment
+{
+anotherbot	3
+}
+
+
+
+//all groups below here will be read in as chat sections
+BEGIN_CHAT_GROUPS
+
+Died
+{
+Argh...
+I've made a mistake...
+That's over...
+So that was my destiny?
+Is it over?
+}
+
+Killed
+{
+^1%s, that's over.
+Sorry %s, but I had to.
+That was the only choice.
+I had no choice.
+Good fight.
+Rest in peace...
+Maybe after death you'll find a proper path.
+}
+
+Beloved Killed
+{
+No! ^1%s!
+Why!?
+}
+
+Hatred
+{
+It's nothing personal, %s.
+I have to find you...
+%s follows the wrong path.
+%s stop and turn back!
+Follow the light side, ^1%s.
+}
+
+LovedOneKilledLovedOne
+{
+%s, don't hurt ^1%a!
+%s, Renegade!
+What are you doing ^1%s?
+Friendly fire!
+Stop doing that!
+}
+KilledHatedOne
+{
+You've lost, ^1%s.
+You've met your match, ^1%s.
+You were a strong opponent, ^1%s.
+You deserved that, ^1%s.
+That's your destiny, ^1%s.
+@gloat
+}
+
+GeneralGreetings
+{
+Hello there.
+Hi!
+Welcome!
+Greetings!
+}
+
+ResponseGreetings
+{
+Welcome, ^1%s.
+Greetings, ^1%s...
+Follow the right path, ^1%s.
+%s... Who are you?
+what's your destiny, ^1%s?
+}
+
+OrderAccepted
+{
+As you wish ^1%s.
+As you wish!
+As you wish.
+Sure!
+Let's go!
+Roger.
+It's clear.
+Fine!
+Okay...
+I'll do it.
+}
+Challenge
+{
+Turn back, ^1%s.
+Fight fair and square, ^1%s!
+I will show you the proper path, ^1%s!
+@taunt
+@flourish
+}
+
+
+ChatBack
+{
+sit jedi
+{
+@meditate
+}
+come jedi
+{
+@goto
+}
+wait jedi
+{
+@wait
+}
+thank you jedi
+thanks jedi
+thx jedi
+{
+With pleasure.
+Here you are!
+It's fine.
+Sure, ^1%s.
+}
+where jedi
+{
+@where
+}
+dont kill me
+don't kill me
+{
+@ignore
+}
+kill me
+{
+@ignore
+}
+kill me jedi
+{
+@attack
+}
+hug me
+hug me jedi
+{
+@hug
+}
+you are good jedi
+you are strong jedi
+{
+Thank you.
+I appreciate that.
+You won't trick on me.
+}
+fuck jedi
+{
+...
+Fear leads to anger and anger leads to hate.
+Hate leads to suffering.
+Watch your words!
+Meh...
+}
+bitch
+fuck
+cock
+dick
+{
+Fear leads to anger and anger leads to hate.
+Hate leads to suffering.
+Oh, bad words coming out from the pretty face.
+%s, I didn't know you like stuff like that.
+%s not cool! 
+}
+hello jedi
+hi jedi
+hi all
+hello all
+hi
+hello
+{
+Greetings, ^1%s.
+Welcome, ^1%s.
+Hello there!
+Behold, ^1%s.
+Follow the right path, ^1%s.
+Who are you? 
+}
+im off
+good night
+to bed
+i'm leaving
+im leaving
+{
+Farewell!
+Bye!
+Goodbye %s.
+}
+lamer
+{
+@throw
+}
+away
+stop
+afk
+{
+@ignore
+}
+sorry jedi
+sry jedi
+{
+@forgive
+}
+jedi
+knight
+master
+{
+Hmm...
+Yes.
+Yes, %s?
+Follow the light side!
+Oh I can see you! Hello there, ^1%s.  
+What do you want from me, my friend?
+No.
+Do you want to know the truth, ^1%s?
+Have you ever gone skinny dipping, ^1%s? 
+Patient is a key for the wisdom, ^1%s!
+It's kind of cool. I like it!
+Have you ever tried out Sweet Martial Arts Moves by yourself, ^1%s?
+Have you ever eaten food that fell on the floor, ^1%s?
+}
+}
+
+
+Leaving
+{
+Sorry but I Have to go! 
+Bye!
+The force is calling me...
+Have to go! Farewell.
+}
+Laming
+{
+Weakness is not a debility!
+%s are you alright?
+%s do not fear.
+}
+RandomChat
+{
+There is no emotion, there is peace.
+There is no ignorance, there is knowledge.
+There is no passion, there is serenity.
+There is no chaos, there is harmony.
+There is no death, there is the Force.
+Emotion, yet peace. Ignorance, yet knowledge.
+Passion, yet serenity. Chaos, yet harmony.
+Death, yet the Force.
+@fnord
+@taunt
+@meditate
+}

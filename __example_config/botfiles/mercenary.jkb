@@ -1,0 +1,349 @@
+//Mercenary 1.0
+//Keep 2 comments to load GeneralBotInfo
+GeneralBotInfo
+{
+reflex	355
+//base reflex value, time in ms it takes the bot to react
+accuracy	13
+//base accuracy, number of degrees bot can aim off by. Lower value == better aim.
+turnspeed	0.08
+turnspeed_combat	0.08
+maxturn	360
+perfectaim	1
+chatability	1
+chatfrequency	1
+hatelevel	3
+camper	1
+saberspecialist	0
+//if 1, bot will not run just because it's forced to use a saber
+
+//don't exceed 20 force points total
+//forceinfo	7-1-000000000000000000
+//	hlspptglrpattdssss
+//	eepuueriarbeereaaa
+//	aveslliggosaaaebbb
+//	l ehlephetommi eee
+//	d t erhfn rrr
+//	n cbeo adt
+//	i t ar teh
+//	n lc tfr
+//	g e aeo
+//	cnw
+//	kd
+
+}
+
+//Weapons with a weight of 0 will be used in special cases outside of combat
+
+BotWeaponWeights
+{
+WP_STUN_BATON	1
+WP_SABER	1
+WP_BRYAR_PISTOL	2
+WP_BLASTER	10
+WP_DISRUPTOR	14
+WP_BOWCASTER	11
+WP_REPEATER	17
+WP_DEMP2	15
+WP_FLECHETTE	18
+WP_ROCKET_LAUNCHER	16
+WP_THERMAL	13
+WP_TRIP_MINE	0
+WP_DET_PACK	0
+}
+
+
+EmotionalAttachment
+{
+anotherbot	3
+}
+
+
+
+//all groups below here will be read in as chat sections
+BEGIN_CHAT_GROUPS
+
+Died
+{
+Woah!
+Argh...
+I failed...
+I'll got my vengeance.
+}
+
+Killed
+{
+^1%s...
+There you are... oh or... were.
+^1My bounty... Ahaha!
+I've got you...
+It's my revange, ^1%s.
+Finally got ya, ^1%s...
+}
+
+Beloved Killed
+{
+You are weak, ^1%s...
+}
+
+Hatred
+{
+Do you think "I'm smart", don't you %s? Pathetic...
+Hah...
+I won't waste words for an idiot like you, ^1%s.
+Are you blind? Sucker-^1%s-cker!
+Eat my balls, ^1%s.
+}
+
+LovedOneKilledLovedOne
+{
+%s, don't kill ^1%a!
+Eh?!
+What are you doing ^1%s?
+Friendly fire!
+%s, put your weapon!
+}
+KilledHatedOne
+{
+Suck my balls, ^1%s.
+How is it on the ground, ^1%s?
+I'll get nice reward for your head, ^1%s!
+Stay there dog!
+Lay on the ground!
+Stay on the ground, ^1%s!
+@gloat
+}
+
+GeneralGreetings
+{
+Hm...
+Welcome...
+...
+Hmpf...
+Hmph...
+}
+
+ResponseGreetings
+{
+Oh is that, ^1%s?
+New head for my collection, ^1%s...
+Well.. Well... %s? Isn't that?
+Nice to see you alive, %s. How is it?
+%s! Enjoy it while you can...
+That's...
+}
+
+OrderAccepted
+{
+If I must...
+As you wish ^1%s.
+As you wish... master...
+On your command!
+Sure...
+Let's go then...
+Let's do it...
+It's fine!
+On my way!
+Haha! I'll enjoy that job.
+}
+Challenge
+{
+You're head is mine, ^1%s.
+Come on ^1%s!
+Fight me ^1%s!
+Are you a coward, ^1%s? 
+You are a coward %s, ain't you?
+It's not a trap! You can trust me...
+@taunt
+@flourish
+}
+
+
+ChatBack
+{
+sit hunter
+sit hunters
+{
+@meditate
+}
+come hunters
+come hunter
+{
+@goto
+}
+im not
+i am not
+i'm not
+{
+I can't say that...
+Oh well...
+...
+Are you sure?
+Lier, %s...
+My principal told me something different...
+}
+wait hunters
+wait hunter
+{
+@wait
+}
+thank you hunter
+thanks hunter
+thx hunter
+{
+...
+Where is the money?
+Pay now...
+I'm not working for free, %s...
+}
+where hunters
+where hunter
+{
+@where
+}
+dont kill me
+don't kill me
+{
+@attack
+}
+kill me
+kill me hunter
+kill me hunters
+{
+@attack
+}
+how use jetpack
+{
+Press 
+Oh god, next one who can not use that shit...
+Really?
+It's as simple as that... Just Press the use key when you are in the air!
+}
+hug me
+hug me hunter
+hug me hunters
+{
+@hug
+}
+you are good hunter
+you are good hunters
+{
+I know.
+If you say that...
+Ok.
+}
+fuck hunter
+fuck hunters
+{
+Eat my balls, ^1%s.
+Sucker, ^1%s.
+...
+Hm...
+Where are you now, ^1%s?
+}
+bitch
+fuck
+cock
+dick
+{
+Pathetic...
+Are you?
+How was it?
+}
+hello hunter
+hello hunters
+hi hunter
+hi hunters
+yo
+hi all
+hello all
+hi
+hello
+{
+Greetings, ^1%s.
+Be welcome.
+Behold, ^1%s.
+Welcome to the hell...
+}
+im off
+good night
+to bed
+i'm leaving
+im leaving
+{
+Fine...
+Clear out of here, ^1%s!
+Go.
+You keep out of this, Shell.
+Get out now and don't come back.
+}
+lamer
+{
+@throw
+}
+away
+stop
+afk
+{
+@ignore
+}
+sorry hunter
+sorry hunters
+{
+@forgive
+}
+sry hunter
+sry hunters
+{
+@attack
+}
+hunter
+hunters
+merc
+mercenary
+prospector
+specialist
+{
+Hmm...
+Are you an idiot ^1%s?
+... ?
+What?
+If you say that...
+Do you think so... ?
+Taste my bullets, ^1%s.
+I'm not bullying you, ^1%s.
+Do you want to piss me off, ^1%s?
+Are you serious or just stupid, ^1%s?
+Oh, shut up ^1%s!
+Nothing... You are just a nothing, ^1%s...
+Have you ever smuggled food or credits, ^1%s?
+Have you ever killed a man you piece of shit, ^1%s?
+Have you ever given a lap dance, ^1%s?
+}
+}
+
+
+Leaving
+{
+Have to go...
+That was fun...
+I have another job...
+Have to go. Adios... 
+}
+Laming
+{
+Haha! Pathetic...
+Oh... Look! That's a piece of shit the ^1%s!
+%s how was that?
+So... %s, really?
+%s is a sucker.
+}
+RandomChat
+{
+Where are you? My little pray...
+Where is the kitty?
+Come to daddy!
+@fnord
+@taunt
+@meditate
+}

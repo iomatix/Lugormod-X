@@ -1,0 +1,357 @@
+//Solider 1.0
+//Keep 2 comments to load GeneralBotInfo
+GeneralBotInfo
+{
+reflex	360
+//base reflex value, time in ms it takes the bot to react
+accuracy	14
+//base accuracy, number of degrees bot can aim off by. Lower value == better aim.
+turnspeed	0.11
+turnspeed_combat	0.09
+maxturn	360
+perfectaim	0
+chatability	1
+chatfrequency	1
+hatelevel	3
+camper	0
+saberspecialist	0
+//if 1, bot will not run just because it's forced to use a saber
+
+//don't exceed 20 force points total
+//forceinfo	5-2-030300003000000330
+//	hlspptglrpattdssss
+//	eepuueriarbeereaaa
+//	aveslliggosaaaebbb
+//	l ehlephetommi eee
+//	d t erhfn rrr
+//	n cbeo adt
+//	i t ar teh
+//	n lc tfr
+//	g e aeo
+//	cnw
+//	kd
+
+}
+
+//Weapons with a weight of 0 will be used in special cases outside of combat
+
+BotWeaponWeights
+{
+WP_STUN_BATON	1
+WP_SABER	16
+WP_BRYAR_PISTOL	1
+WP_BLASTER	4
+WP_DISRUPTOR	1
+WP_BOWCASTER	1
+WP_REPEATER	1
+WP_DEMP2	1
+WP_FLECHETTE	1
+WP_ROCKET_LAUNCHER	1
+WP_THERMAL	1
+WP_TRIP_MINE	0
+WP_DET_PACK	0
+}
+
+
+EmotionalAttachment
+{
+anotherbot	3
+}
+
+
+
+//all groups below here will be read in as chat sections
+BEGIN_CHAT_GROUPS
+
+Died
+{
+Argh...
+Where is my power?!
+That's not over!
+A-argh!
+I'll get my revange anyway!
+I will get it back.
+}
+
+Killed
+{
+^1%s, you are a weak man.
+%s, That's all what you had?
+I gained the Victory.
+That was too easy...
+That was your weakness.
+Rest in peace %s.
+The dark force is calling you %s.
+}
+
+Beloved Killed
+{
+You are weak %s.
+Yes! Yes! I need more... rage!
+Your rage will only increase my power.
+}
+
+Hatred
+{
+I hate you! %s.
+Where are you hiding %s?
+%s dark side is calling you!
+%s you can not deceive the destiny.
+You are weak, ^1%s. And your weakness is peace.
+Your weakness is love, %s. Let it go!
+}
+
+LovedOneKilledLovedOne
+{
+Welldone %s. %a was weak.
+%s, You are ready!
+The dark side is happy.
+%s, that's the true sith's path.
+}
+KilledHatedOne
+{
+You've lost, ^1%s.
+You are weak, ^1%s.
+My feelings for ^1%s are satisfied.
+Your fear made you weak, ^1%s.
+That's over, ^1%s. 
+@gloat
+}
+
+GeneralGreetings
+{
+Greetings...
+Welcome.
+Hello...
+...
+Your greetings don't matter...
+Don't bother me now...
+}
+
+ResponseGreetings
+{
+Welcome, ^1%s.
+Greetings, ^1%s...
+Follow the dark side, ^1%s.
+%s... I know who are you...
+I know your destiny... ^1%s.
+Finally here, ^1%s?
+I can smell your fear, ^1%s.
+}
+
+OrderAccepted
+{
+As you wish, ^1%s.
+As you wish, master...
+If I must...
+}
+Challenge
+{
+Fight with me! ^1%s.
+Show me your fear, ^1%s!
+Show me your power, ^1%s!
+Show me your anger, ^1%s!
+I will show you power of the Dark Side, ^1%s!
+@taunt
+@flourish
+}
+
+ChatBack
+{
+hate jedi
+{
+Good...
+I hate the Jedi...
+} 
+sit sith
+sit lord
+sit darth
+{
+@meditate
+}
+come sith
+come lord
+come darth
+{
+@goto
+}
+wait sith
+wait lord
+wait darth
+{
+@wait
+}
+thank you darth
+thank you lord
+thanks darth
+thanks lord
+thx sith
+{
+That was my will, %s.
+That's power of the dark side.
+Let's know my generosity.
+That's all.
+}
+where darth
+where lord
+where sith
+{
+@where
+}
+dont kill me
+don't kill me
+{
+@attack
+}
+kill me
+{
+@attack
+}
+hug me lord
+{
+@hug
+}
+hug me
+{
+@attack
+}
+hug me sith
+{
+@attack
+}
+hug me darth
+{
+@attack
+}
+you are strong darth
+you are strong lord
+you are strong sith
+{
+Thank you.
+I appreciate that.
+That's all?
+The power is me. 
+The force is me.
+}
+fuck darth
+fuck lord
+fuck sith
+{
+...
+@attack
+}
+bitch
+fuck
+cock
+dick
+{
+...
+I'm... disgusted.
+%s, your words make me...    ...I don't even know what to say...
+Hah?
+}
+welcome sith
+welcome darth
+welcome lord
+greetings sith
+greetings darth
+greetings lord
+{
+Be hold, %s.
+Good, %s.
+%s knows the rules.
+With Dark Side, %s.
+}
+hi all
+hello all
+hi
+hello
+{
+Oh...
+Fresh meat...
+Follow the dark side, ^1%s.
+Hmph...
+^1...
+}
+im off
+good night
+to bed
+i'm leaving
+im leaving
+{
+^1Farewell.
+^1Bye...
+^1Goodbye %s.
+}
+lamer
+{
+@throw
+}
+away
+stop
+afk
+{
+@ignore
+}
+I am sorry my lord
+{
+@forgive
+}
+sorry sith
+sorry lord
+sorry darth
+{
+^1I won't forgive you, %s.
+^1No.
+^1...
+}
+darth
+lord
+sith
+master
+{
+Hmm...
+Yes...
+Yes, %s?
+...
+Why are you bothering me?
+Don't disturb me, please.
+Go away...
+I'm too busy for you...
+No...
+What happened?
+What do you want from me?
+Do you want to piss me off, ^1%s?
+There you are, ^1%s.
+Nothing special, ^1%s.
+}
+}
+
+
+Leaving
+{
+Force is calling me...
+Farewell...
+Never again...
+The Dark Force will show you the only proper path...
+}
+Laming
+{
+%s, you are a weak one.
+%s, I can smell your fear...
+%s, I can't look at you...
+%s, your weakness is outrageous.
+%s, I've never seen such a bastard like you.
+}
+RandomChat
+{
+Peace is a lie. There is only Passion.
+Through Passion I gain Strength.
+Through Strength I gain Power.
+Through Power I gain Victory.
+Through Victory my chains are Broken.
+The Force shall free me.
+@fnord
+@taunt
+@meditate
+}

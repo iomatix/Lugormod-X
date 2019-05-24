@@ -1,0 +1,318 @@
+//Solider 1.0
+//Keep 2 comments to load GeneralBotInfo
+GeneralBotInfo
+{
+reflex	425
+//base reflex value, time in ms it takes the bot to react
+accuracy	16
+//base accuracy, number of degrees bot can aim off by. Lower value == better aim.
+turnspeed	0.07
+turnspeed_combat	0.07
+maxturn	360
+perfectaim	1
+chatability	1
+chatfrequency	2
+hatelevel	3
+camper	0
+saberspecialist	0
+//if 1, bot will not run just because it's forced to use a saber
+
+//don't exceed 20 force points total
+//forceinfo	7-1-000000000000000000
+//	hlspptglrpattdssss
+//	eepuueriarbeereaaa
+//	aveslliggosaaaebbb
+//	l ehlephetommi eee
+//	d t erhfn rrr
+//	n cbeo adt
+//	i t ar teh
+//	n lc tfr
+//	g e aeo
+//	cnw
+//	kd
+
+}
+
+//Weapons with a weight of 0 will be used in special cases outside of combat
+
+BotWeaponWeights
+{
+WP_STUN_BATON	1
+WP_SABER	1
+WP_BRYAR_PISTOL	2
+WP_BLASTER	17
+WP_DISRUPTOR	15
+WP_BOWCASTER	3
+WP_REPEATER	18
+WP_DEMP2	14
+WP_FLECHETTE	16
+WP_ROCKET_LAUNCHER	12
+WP_THERMAL	10
+WP_TRIP_MINE	0
+WP_DET_PACK	0
+}
+
+
+EmotionalAttachment
+{
+anotherbot	3
+}
+
+
+
+//all groups below here will be read in as chat sections
+BEGIN_CHAT_GROUPS
+
+Died
+{
+Woah!
+Argh...
+The unit lost...
+Signal lost...
+Enemy contact...
+Retreat...
+I need a backup...
+}
+
+Killed
+{
+^1%s...
+Stay on the ground citizen.
+Enemy contact...
+Sector clear!
+Don't move, ^1%s!
+}
+
+Beloved Killed
+{
+No, ^1%s...
+}
+
+Hatred
+{
+New target, %s.
+I hate people like you...
+Stay in the order, ^1%s.
+I have to check your identity, citizen!
+Eat rubble, ^1%s.
+}
+
+LovedOneKilledLovedOne
+{
+%s, don't hurt ^1%a!
+Eh?!
+Renegade!
+What are you doing ^1%s?
+Friendly fire!
+%s, put your weapon!
+}
+KilledHatedOne
+{
+Looser, ^1%s.
+The biggest lame out there, ^1%s.
+Stay on the ground! ^1%s!
+Task is over.
+From 69 duty, Over and Out.
+Put your hands up!
+Don't move, ^1%s!
+@gloat
+}
+
+GeneralGreetings
+{
+Salute.
+Welcome!
+Hello citizen.
+}
+
+ResponseGreetings
+{
+Welcome, ^1%s.
+Obey the rules, ^1%s...
+Respect the rules, citizen!
+Don't cause a troubles, %s. Okay?
+%s... Who are you?
+}
+
+OrderAccepted
+{
+As you wish ^1%s.
+As you wish!
+On your command!
+Sure!
+Let's go!
+Roger.
+Roger that.
+Roger, Roger.
+It's clear.
+}
+Challenge
+{
+Do not resist, ^1%s.
+Put your hands up, ^1%s!
+Lay on the ground, ^1%s!
+Freeze, ^1%s!
+@taunt
+@flourish
+}
+
+
+ChatBack
+{
+sit solider
+sit soliders
+{
+@meditate
+}
+come soliders
+come solider
+{
+@goto
+}
+wait soliders
+wait solider
+{
+@wait
+}
+thank you solider
+thanks solider
+thx solider
+{
+No problem citizen.
+Sure, ^1%s.
+Over and out.
+}
+where soliders
+where solider
+{
+@where
+}
+dont kill me
+don't kill me
+{
+Put your hands up, %s!
+@attack
+@ignore
+}
+kill me
+kill me soliders
+kill me solider
+{
+@attack
+}
+hug me
+hug me solider
+hug me soliders
+{
+@hug
+}
+you are good solider
+you are good soliders
+{
+Roger!
+Roger, Roger...
+Thank you!
+}
+fuck solider
+fuck soliders
+{
+Stay there citizen!
+That's an insult. You will take responsibility for this.
+Show your ID-card, ^1%s!
+}
+bitch
+fuck
+cock
+dick
+{
+Stay where you are, ^1%s!
+Stop that!
+Show your ID-card, citizen!
+}
+hello solider
+hello soliders
+hi solider
+hi soliders
+yo
+hi all
+hello all
+hi
+hello
+{
+Greetings, ^1%s.
+Be welcome.
+Behold, ^1%s.
+Follow the rules, ^1%s.
+Please, do not cause problems, ^1%s. 
+}
+im off
+good night
+to bed
+i'm leaving
+im leaving
+{
+Farewell!
+Roger that.
+Roger and out.
+%s, over and out.
+}
+lamer
+{
+@throw
+}
+away
+stop
+afk
+{
+@ignore
+}
+sorry solider
+sorry soliders
+sry soliders
+sry solider
+{
+@forgive
+}
+solider
+soliders
+commando
+officer
+trooper
+{
+Hmm...
+Yes.
+Yes, ^1%s?
+Citizen?
+No.
+Show your respect ^1%s!
+What do you want, ^1%s?
+Respect the rules, ^1%s.
+Have you ever gone Commando, ^1%s?
+}
+}
+
+
+Leaving
+{
+Have to go...
+Thank you for battle...
+I've got new orders...
+Have to go. Farewell... 
+}
+Laming
+{
+Why are you so weak?
+^1%s the weak!
+%s, please follow the orders.
+%s is the weakest link.
+}
+RandomChat
+{
+Need a backup...
+Roger!
+Sector clear...
+Check the corner!
+@fnord
+@taunt
+@meditate
+}
