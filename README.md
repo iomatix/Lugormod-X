@@ -35,10 +35,10 @@
 
 **Early 3.0.1.0 version Lugor X**
 **Compiled files inside ReleaseEnv folder**
-*[Main folder](https://github.com/omatix/Lugor-X)
-*[Compiled file for Windows](ReleaseEnv/jampgamex86.dll)
-*[Compiled, main folder](ReleaseEnv)
-*[Config example with working bots for KotF](__example_config)
+- [Main folder](https://github.com/omatix/Lugor-X)
+- [Compiled file for Windows](ReleaseEnv/jampgamex86.dll)
+- [Compiled, main folder](ReleaseEnv)
+- [Config example with working bots for KotF](__example_config)
 
 Credits to:
 
