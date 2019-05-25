@@ -336,9 +336,9 @@ vmCvar_t	lmd_profession_fee;
 vmCvar_t	lmd_bounty_streaks_by;
 vmCvar_t	lmd_skillpoint_cost;
 vmCvar_t	lmd_exp_for_level;
+vmCvar_t    lmd_skillpoints_perlevel;
 								 
-								 
-								 //RoboPhred:
+//RoboPhred:
 vmCvar_t lmd_DataPath;
 vmCvar_t lmd_stashrate;
 vmCvar_t lmd_stashdepotime;
@@ -864,6 +864,7 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_bounty_streaks_by, "lmd_bounty_streaks_by", "5", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_skillpoint_cost, "lmd_skillpoint_cost", "150", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_exp_for_level, "lmd_exp_for_level", "450", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_skillpoints_perlevel, "lmd_skillpoints_perlevel", "4", CVAR_ARCHIVE, 0, qfalse },
 
 // Lugormod cvars:
 { &g_noVoteTime, "g_noVoteTime", "5", CVAR_ARCHIVE,0, qfalse, qfalse,

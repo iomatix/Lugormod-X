@@ -15,10 +15,14 @@
 - Added lmd_jedi_pickup_weapons, set it to 1 to allow jedi class to pick up weapons and ammo from the map. Default 0 ✔️
 - Added lmd_jedi_add_hp_level, set it to 1 to allow jedi class to get additional health-points per level, set it to 2 to use like mercenaries (may be op). Default 1 ✔️
 - Added lmd_profession_fee variable to set the fee when changing the profession. Default 1350. ✔️
+- Added lmd_skillpoints_perlevel variable that amount of skill points will be gived per each level up. Default 4. ✔️
+- Reworked skillpoints checking system. Old one was totally bugged. ✔️
+- Added more basic information in command-popup and repaired old messy ones for usable commands. ✔️
 
 ##TODO
+- TODO: Player can spend skillpoints to upgrade their max hp/power/shield capacity. 50%
+- TODO: Make MaxAmmo function for explosive materials.  
 
-- TODO: Player can spend skillpoints to upgrade their max hp/power/shield capacity.
 - TODO: Player after reaching level 120 is able to start over again from level 1 but with perma +25hp/+25force/+25shield boost. Repeatable. 
 - TODO: Add lootboxes called now Credits Boxes. Chances: 80% for 25-200CR, 15% for 200-1000CR, 4% for 1000-10000CR, 1% for 10000-10
 - TODO: Killing streak Bounty. After each lmd_bounty_streaks_by kills bounty is increasing. For killing bounty target player will recive Credit Boxes. new variable (lmd_bounty_streaks_by default "5")
@@ -33,3 +37,6 @@
 - TODO: Repair selling option trading system. Add message (motd) + try to console disp. If not create new buy/sell inv options.
 - TODO: Messages motd for duel types.
 - TODO: Lootboxes for killstreak
+
+
+- TODO: Adding openjk API support

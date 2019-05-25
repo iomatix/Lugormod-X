@@ -17,9 +17,7 @@ int AccProfessionDataDataIndex = -1;
 #define PROFDATA(acc) (profData_t *)Lmd_Accounts_GetAccountCategoryData(acc, AccProfessionDataDataIndex)
 
 
-#define LEVEL_REDUCE 5
-#define LEVEL_POINTS 5
-#define MIN_LEVEL_POINTS 3
+
 
 
 
@@ -411,21 +409,22 @@ void Professions_SetDefaultSkills(Account_t *acc, int prof) {
 
 }
 
-//FIXME: use grouping values.
+//iomatix fixed up that shit! ;)
+int Professions_Add_That_Amount_SkillPoints(int level) //that may be useful for disps !! iomatix
+{
+	int p;
+
+	p = lmd_skillpoints_perlevel.integer; //starting 
+	if (level > MASTER_LEVEL)//additional points bonus for mastery level!
+	{
+		p += floor((float)(lmd_skillpoints_perlevel.integer / 3)); 
+		if (level % 3 == 0) p += 1; //add the missing point every 3 levels (part of bonus).
+	}
+	return p;
+}
 int Professions_TotalSkillPoints(int prof, int level) {
 	int p;
-	if (level > LEVEL_REDUCE * (LEVEL_POINTS - MIN_LEVEL_POINTS)) {
-		p = ((((LEVEL_POINTS - MIN_LEVEL_POINTS) * (LEVEL_POINTS - MIN_LEVEL_POINTS + 1)) / 2) * LEVEL_REDUCE);
-		p += level * MIN_LEVEL_POINTS;
-	}
-	else {
-		int q;
-		q = (int)floor((float)(level - 1) / LEVEL_REDUCE);
-		q = LEVEL_POINTS - q;
-		p = (((LEVEL_POINTS * (LEVEL_POINTS + 1)) / 2) - ((q * (q + 1)) / 2)) * LEVEL_REDUCE;
-		p += q * (1 + ((level - 1) % LEVEL_REDUCE));
-	}
-
+	p = level*Professions_Add_That_Amount_SkillPoints(level);
 	return p;
 }
 
@@ -433,8 +432,10 @@ int Professions_SkillCost(profSkill_t *skill, int level) {
 	//If we have a min level, dont count it
 	if (level <= skill->levels.min) return 0;
 	level -= skill->levels.min;
-	if (skill->points.type == SPT_TRIANGULAR) return (level * (level + 1)) / 2;
-	else if (skill->points.type == SPT_LINEAR) return level + 1;
+	if (skill->points.type == SPT_TRIANGULAR) return 1+(level * (level + 1));
+	else if (skill->points.type == SPT_LINEAR) return level;
+	else if (skill->points.type == SPT_LINEAR_2) return level*2;
+	else if (skill->points.type == SPT_LINEAR_10) return level*10;
 	return 0;
 
 	////linear
@@ -523,13 +524,13 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 	else {
 		if (PlayerAcc_GetCredits(ent) <= lmd_profession_fee.integer)
 		{
-			//Disp(ent, "^3You've paid all your credits.");
+			Disp(ent, "^3You've paid all your credits.");
 			PlayerAcc_SetCredits(ent, 0);
 
 		}
 		else
 		{
-			//Disp(ent, va("^3You've paid ^2%sCR", lmd_profession_fee.integer));
+			Disp(ent, va("^3You've paid ^2%iCR", lmd_profession_fee.integer));
 			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - lmd_profession_fee.integer);
 		}
 
@@ -555,8 +556,7 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 }
 
 void Profession_UpdateSkillEffects(gentity_t *ent, int prof) {
-	if (prof == PROF_JEDI)
-		WP_InitForcePowers(ent);
+	if (prof == PROF_JEDI) WP_InitForcePowers(ent);
 }
 
 qboolean Lmd_Prof_SkillIsLeveled(Account_t *acc, int prof, profSkill_t *skill) {
@@ -728,30 +728,37 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			Disp(ent, "^3This skill is already at its highest level.");
 			return;
 		}
-		level++;
+		
 
+		//iomatix re-designe
+		int nextLevel = level + 1;
+		int cost = Professions_SkillCost(skill, nextLevel) - Professions_SkillCost(skill, level);
 		int points = Professions_AvailableSkillPoints(acc, prof, skill, NULL);
-		if (points < level) {
-			Disp(ent, va("^2Not enough points.\n ^3It takes ^2%i^3 points to level up this skill.", level));
+		if (points < cost) {
+			Disp(ent, va("^2Not enough points.\n ^3You need ^2%i^3 point%s more to level up this skill.", cost-points, (cost - points == 1) ? "" : "s"));
 			return;
 		}
+		//fixed by iomatix.
+		level++;
+		nextLevel++;
 
-		if (!skill->canSetValue(acc, skill, level)) {
+		//if (!skill->canSetValue(acc, skill, level)) {
 			// TODO: Better message, explain why it can't be leveled.
 			//Disp(ent, va("^2This skill cannot be leveled up at this time."));
 			//return;
-		}
+		//iomatix: That was piece of shit sowwy. ._.
+		//}
 
 		if (level >= skill->levels.max) {
 			Disp(ent, "^3This skill is now at its highest level.");
 		}
 		else {
-			points -= level;
-			int nextLevel = level + 1;
-			if (points >= level + 1) {
+			//iomatix
+			points -= cost;
+			cost = Professions_SkillCost(skill, nextLevel) - Professions_SkillCost(skill, level);
+			if (points >= cost) {
 				int i;
 				const char **descr = skill->levelDescriptions;
-				int cost = Professions_SkillCost(skill, level + 1) - Professions_SkillCost(skill, level);
 				Disp(ent, va("^3You can increase this skill again.  It will cost ^2%i^3 points, leaving you with ^2%i^3 point%s left.",
 					cost, points - cost, (points - cost == 1) ? "" : "s"));
 
@@ -762,7 +769,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 				}
 				if (*descr != NULL) Disp(ent, va("^2Next level: ^5%s", *descr));
 			}
-			else Disp(ent, "^2You do not have enough points to increase this skill.");
+			//else Disp(ent, "^2You do not have enough points to increase this skill."); iomatix: we don't need that it's only disturbing!!! who the hell get idea to disp it is good deal??? 
 		}
 	}
 
@@ -1010,8 +1017,12 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 
 	if (Q_stricmp("confirm", arg) == 0) {
 		PlayerAcc_SetCredits(ent, resCr);
-		PlayerAcc_Prof_SetLevel(ent, playerLevel + 1);
-		Disp(ent, va("^3You are now at level ^2%i^3.", playerLevel + 1));
+		//iomatix:
+		playerLevel++;
+		PlayerAcc_Prof_SetLevel(ent, playerLevel);
+		int NewSkillPoints_value = Professions_Add_That_Amount_SkillPoints(playerLevel);
+
+		Disp(ent, va("^3You are now at level ^2%i^3.\n ^3%i skill points recived.", playerLevel, NewSkillPoints_value));
 		WP_InitForcePowers(ent);
 		return;
 	}

@@ -763,7 +763,8 @@ int Jedi_GetForceRegenDebounce(gentity_t *ent) {
 	//level / 20 = x / (g_forceRegenTime.integer * (2. / 3.))
 	//(level * (g_forceRegenTime.integer * (2. / 3.))) = x * 20
 	//((level * (g_forceRegenTime.integer * (2. / 3.))) / 20) = x
-	return g_forceRegenTime.integer - ((level * (g_forceRegenTime.integer * (4. / 5.))) / 120.); //120 is max level
+	//iomatix new regen formula
+	return g_forceRegenTime.integer - floor((level * (g_forceRegenTime.integer / 2.)) / 120.); //120 is max level -> -50% regen cooldown on max level
 }
 
 unsigned int Jedi_Count() {

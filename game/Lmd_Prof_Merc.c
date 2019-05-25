@@ -35,6 +35,8 @@ typedef struct mercFields_s{
 		int flame;
 		int binoculars;
 		int ysalamiri;
+		int hp_maxs;
+		int sd_maxs;
 	} skills;
 	int weaponselect;
 }mercFields_t;
@@ -56,6 +58,8 @@ typedef struct mercFields_s{
 	_m##_AUTO(flame, MERCFIELDOFS(skills.flame), F_INT) \
 	_m##_AUTO(binoculars, MERCFIELDOFS(skills.binoculars), F_INT) \
 	_m##_AUTO(ysalamiri, MERCFIELDOFS(skills.ysalamiri), F_INT) \
+	_m##_AUTO(hp_maxs, MERCFIELDOFS(skills.hp_maxs), F_INT) \
+	_m##_AUTO(sd_maxs, MERCFIELDOFS(skills.sd_maxs), F_INT) \
 	_m##_AUTO(weaponselect, MERCFIELDOFS(weaponselect), F_INT)
 
 MercFields_Base(DEFINE_FIELD_PRE)
@@ -65,7 +69,225 @@ MercFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
 const int MercFields_Count = DATAFIELDS_COUNT(MercFields);
+//iomatix:
+//20
 
+
+//skills:
+const char *mercSkill_hp_maxs_Descr[] = {
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+13 HP",
+	"+25 HP",
+	NULL
+};
+//+272 HP
+
+
+
+int Lmd_Prof_Merc_GetSkill_hp_maxs(AccountPtr_t accPtr, profSkill_t *skill) {
+	mercFields_t *data;
+	Account_t *acc = (Account_t*)accPtr;
+
+	if (!IS_A_MERC(acc)) {
+		return 0;
+	}
+
+	data = ACCFIELDDATA(acc);
+
+	if (!data) {
+		return 0;
+	}
+	return data->skills.hp_maxs;
+}
+
+qboolean Lmd_Prof_Merc_CanSetSkill_hp_maxs(AccountPtr_t accPtr, profSkill_t *skill, int value) {
+	Account_t *acc = (Account_t*)accPtr;
+	mercFields_t *data;
+
+	if (!IS_A_MERC(acc)) {
+		return qfalse;
+	}
+
+	data = ACCFIELDDATA(acc);
+	if (!data) {
+		return qfalse;
+	}
+
+	if (value < skill->levels.min || value > skill->levels.max) {
+		return qfalse;
+	}
+
+	return qtrue;
+}
+
+qboolean Lmd_Prof_Merc_SetSkill_hp_maxs(AccountPtr_t accPtr, profSkill_t *skill, int value) {
+	mercFields_t *data;
+	Account_t *acc = (Account_t*)accPtr;
+
+	if (!Lmd_Prof_Merc_CanSetSkill_hp_maxs(accPtr, skill, value)) {
+		return qfalse;
+	}
+
+	data = ACCFIELDDATA(acc);
+
+
+	data->skills.hp_maxs = value;
+	Lmd_Accounts_Modify(acc);
+	return qtrue;
+}
+
+profSkill_t mercSkill_hp_maxs = {
+	"Vitality",
+	"Increase total health capacity.",
+	mercSkill_hp_maxs_Descr,
+
+	0,
+	SkillLevels_20,
+	SkillPoints_Linear_10,
+
+	Lmd_Prof_Merc_GetSkill_hp_maxs,
+	Lmd_Prof_Merc_CanSetSkill_hp_maxs,
+	Lmd_Prof_Merc_SetSkill_hp_maxs,
+};
+////////////
+const char *mercSkill_sd_maxs_Descr[] = {
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+5 Shield",
+	"+8 Shield",
+	NULL
+};
+int Lmd_Prof_Merc_GetSkill_sd_maxs(AccountPtr_t accPtr, profSkill_t *skill) {
+	mercFields_t *data;
+	Account_t *acc = (Account_t*)accPtr;
+
+	if (!IS_A_MERC(acc)) {
+		return 0;
+	}
+
+	data = ACCFIELDDATA(acc);
+
+	if (!data) {
+		return 0;
+	}
+	return data->skills.sd_maxs;
+}
+
+qboolean Lmd_Prof_Merc_CanSetSkill_sd_maxs(AccountPtr_t accPtr, profSkill_t *skill, int value) {
+	Account_t *acc = (Account_t*)accPtr;
+	mercFields_t *data;
+
+	if (!IS_A_MERC(acc)) {
+		return qfalse;
+	}
+
+	data = ACCFIELDDATA(acc);
+	if (!data) {
+		return qfalse;
+	}
+
+	if (value < skill->levels.min || value > skill->levels.max) {
+		return qfalse;
+	}
+
+	return qtrue;
+}
+
+qboolean Lmd_Prof_Merc_SetSkill_sd_maxs(AccountPtr_t accPtr, profSkill_t *skill, int value) {
+	mercFields_t *data;
+	Account_t *acc = (Account_t*)accPtr;
+
+	if (!Lmd_Prof_Merc_CanSetSkill_sd_maxs(accPtr, skill, value)) {
+		return qfalse;
+	}
+
+	data = ACCFIELDDATA(acc);
+
+
+	data->skills.sd_maxs = value;
+	Lmd_Accounts_Modify(acc);
+	return qtrue;
+}
+
+profSkill_t mercSkill_sd_maxs = {
+	"Defense",
+	"Increase total shield capacity.",
+	mercSkill_sd_maxs_Descr,
+
+	0,
+	SkillLevels_20,
+	SkillPoints_Linear_10,
+
+	Lmd_Prof_Merc_GetSkill_sd_maxs,
+	Lmd_Prof_Merc_CanSetSkill_sd_maxs,
+	Lmd_Prof_Merc_SetSkill_sd_maxs,
+};
+
+//functions for skills:
+int Get_hp_maxs_value(gentity_t *ent)
+{
+	int value = 0; //additional health
+
+	int skillHP = Lmd_Prof_Merc_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &mercSkill_hp_maxs);
+	if (skillHP == 0) return 0; //if 0 return (speedup, for low resources)
+	if (skillHP > 0) value = 13 * skillHP;
+	if (skillHP == mercSkill_hp_maxs.levels.max) value += 12; //bonus for maxed (13+12=25)
+
+	return value;
+
+}
+
+int Get_sd_maxs_value(gentity_t *ent)
+{
+	int value = 0; //additional shield
+
+	int skillSD = Lmd_Prof_Merc_GetSkill_sd_maxs(ent->client->pers.Lmd.account, &mercSkill_sd_maxs);
+	if (skillSD == 0) return 0; //if 0 return (speedup, for low resources)
+	if (skillSD > 0) value = 5 * skillSD;
+	if (skillSD == mercSkill_sd_maxs.levels.max) value += 3; //bonus for maxed (5+3=8)
+
+	return value;
+
+
+}
+
+
+
+
+////
 
 const char *mercSkill_MartialArts_Descr[] = {
 	"Increased melee damage.",
@@ -785,6 +1007,8 @@ profSkill_t mercSkills[] = {
 	mercSkill_FlameBurst,
 	mercSkill_StashRange,
 	mercSkill_Ysalamiri,
+	mercSkill_hp_maxs,
+	mercSkill_sd_maxs,
 };
 const unsigned int mercSkillCount = sizeof(mercSkills) / sizeof(profSkill_t);
 
@@ -1898,8 +2122,9 @@ void Merc_Spawn(gentity_t *ent)
 	//Disp(ent, "\n^3============================================\n^3Prototype jetpack in testing.  Please give feedback.\n^3============================================\n");
 #endif
 	ent->client->ps.trueNonJedi = qtrue;
-	ent->client->ps.trueJedi = qfalse;
-	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = 100 + Professions_TotalSkillPoints(PROF_MERC, PlayerAcc_Prof_GetLevel(ent));// +(Lmd_Prof_Merc_GetSkill_HP_TOTAL(ent->client->pers.Lmd.account, &mercSkill_HP_TOTAL) * 2); //iomatix HP skill
+	ent->client->ps.trueJedi = qfalse;       
+	//iomatix:
+	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = 100 + Professions_TotalSkillPoints(PROF_MERC, PlayerAcc_Prof_GetLevel(ent) + Get_hp_maxs_value(ent) );// +(Lmd_Prof_Merc_GetSkill_HP_TOTAL(ent->client->pers.Lmd.account, &mercSkill_HP_TOTAL) * 2); //iomatix HP skill
 
 	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_MELEE) | (1 << WP_BRYAR_PISTOL);
 #ifdef LMD_NEW_JETPACK
@@ -1919,6 +2144,9 @@ void Merc_Spawn(gentity_t *ent)
 		//Will be capped to max on spawn finalize if needed.
 		ent->client->ps.stats[STAT_ARMOR] += armorSkill * (ent->client->pers.maxHealth * 0.15f);
 	}
+	//iomatix:
+	ent->client->ps.stats[STAT_ARMOR] += Get_sd_maxs_value(ent);
+	
 }
 
 const char *mercProf_Descr[] = {

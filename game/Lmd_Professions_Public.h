@@ -17,11 +17,14 @@ typedef struct skillLevelDef_s {
 }skillLevelDef_t;
 
 static skillLevelDef_t SkillLevels_Default = {0, 5, qfalse};
+static skillLevelDef_t SkillLevels_20 = { 0, 20, qfalse };
 
 typedef enum {
 	SPT_NOCOST,
 	SPT_TRIANGULAR, //The usual ((level * (level + 1) / 2) point values.
     SPT_LINEAR,
+	SPT_LINEAR_2,
+	SPT_LINEAR_10,
 } skillPointType_t;
 
 typedef struct skillPointData_s {
@@ -34,6 +37,8 @@ typedef struct skillPointData_s {
 
 static skillPointData_t SkillPoints_Default = {SPT_TRIANGULAR};
 static skillPointData_t SkillPoints_Linear = { SPT_LINEAR };
+static skillPointData_t SkillPoints_Linear_2 = { SPT_LINEAR_2 };
+static skillPointData_t SkillPoints_Linear_10 = { SPT_LINEAR_10 };
 
 struct profSkill_s{
 	char *name;
