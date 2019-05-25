@@ -11,7 +11,7 @@
 
 **Early 3.0.1.0 version Lugor X**
 
-**Compiled files inside ReleaseEnv folder.**
+**The Compiled files folder.**
 
 ### User Files:
 - [Main Project Folder](https://github.com/omatix/Lugor-X)
