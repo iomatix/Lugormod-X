@@ -14,10 +14,10 @@
 **The Compiled files folder.**
 
 ### User Files:
-- [Main Project Folder](https://github.com/omatix/Lugor-X)
-- [Compiled server file for Windows](https://github.com/omatix/Lugor-X/blob/master/ReleaseEnv/jampgamex86.dll)
-- [Config example with working bots for KotF](https://github.com/omatix/Lugor-X/blob/master/__example_config/)
-- [Compiled - Main Folder](https://github.com/omatix/Lugor-X/blob/master/ReleaseEnv/)
+- **[Main Project Folder](https://github.com/omatix/Lugor-X)**
+- **[Compiled server file for Windows](https://github.com/omatix/Lugor-X/blob/master/ReleaseEnv/jampgamex86.dll)**
+- **[Config example with working bots for KotF](https://github.com/omatix/Lugor-X/blob/master/__example_config/)**
+- *[Compiled - Main Folder](https://github.com/omatix/Lugor-X/blob/master/ReleaseEnv/)*
 - **Note: you need only [jampgamex86.dll](https://github.com/omatix/Lugor-X/blob/master/ReleaseEnv/jampgamex86.dll) to start core server on Windows OS. [Config example](https://github.com/omatix/Lugor-X/blob/master/__example_config/) is recommended for new users.**
 
 
