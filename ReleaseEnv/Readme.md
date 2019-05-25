@@ -1,6 +1,6 @@
 # Lugormod X 
 
-# Server files - compiled liblaries:
+# Server files - Compiled Libraries:
 
 ## How to install?
 - Windows: Replace [jampgamex86.dll](https://github.com/omatix/Lugor-X/blob/master/ReleaseEnv/jampgamex86.dll) inside main server folder.
