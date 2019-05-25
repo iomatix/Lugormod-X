@@ -1,8 +1,5 @@
 # Lugormod X 
-
-
-
-## X version aims to change the core of the Lugormod to bring out its potential and making it compatible with the KotF modification and making it official KotF multiplayer server core.
+**X version aims to change the core of the Lugormod to bring out its potential and making it compatible with the KotF modification and making it official KotF multiplayer server core.**
 
 # Main features and changes:
 
