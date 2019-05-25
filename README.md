@@ -36,9 +36,10 @@
 
 ### User Files:
 - [Main folder](https://github.com/omatix/Lugor-X)
-- [Compiled file for Windows](ReleaseEnv/jampgamex86.dll)
-- [Compiled, main folder](ReleaseEnv)
-- [Config example with working bots for KotF](__example_config)
+- [READY SERVER FILES: Compiled server file for Windows](ReleaseEnv/jampgamex86.dll)
+- [READY SERVER FILES: Config example with working bots for KotF](__example_config)
+- [Compiled whole main folder](ReleaseEnv)
+- **Note: you need only [jampgamex86.dll](ReleaseEnv/jampgamex86.dll) to start core server on Windows OS. [Config example](__example_config) is recommended for new users.**
 
 ### Credits to:
 
@@ -46,7 +47,7 @@
 - RoboPhred   - for developing the mod for many years,
 - Ufo         - for small scale development and producing a linux build.
 
-*Can be compiled using v120 compiler -> Visual Studio 2013.*
+*Can be compiled using Visual Studio 2013.*
 Linux users may use the makefile inside game folder.
 
 Licensed under GPL version 2 or later.
