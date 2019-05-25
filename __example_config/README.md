@@ -1,6 +1,6 @@
 # Lugormod X 
 
-# Server files - config example:
+# Server files - Config Example:
 
 ## How to install?
 - Copy all files into your main server folder. Skins for bots works only with **[KotF 2.1 server](https://www.moddb.com/mods/knights-of-the-force-21/downloads/kotf-multiplayer-server)** base files or newer.
