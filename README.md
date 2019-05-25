@@ -27,7 +27,7 @@
 - Adding extern variable for profession credits fee.
 - Bug fixes.
 
-##Main long-terms Goals:
+### Main long-terms Goals:
 - Full compatibility with all KotF features.
 - Adding GUI overlay for console commands.
 - More AI improvements.
