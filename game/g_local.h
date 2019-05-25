@@ -1108,7 +1108,10 @@ extern vmCvar_t lmd_enforceentwait;
 //iomatix
 extern	vmCvar_t	lmd_jedi_pickup_weapons;
 extern	vmCvar_t	lmd_jedi_add_hp_level;
-
+extern	vmCvar_t	lmd_profession_fee;
+extern	vmCvar_t	lmd_bounty_streaks_by;
+extern	vmCvar_t	lmd_skillpoint_cost;
+extern	vmCvar_t	lmd_exp_for_level;
 #include "../namespace_begin.h"
 
 // RoboPhred

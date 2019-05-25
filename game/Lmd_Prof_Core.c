@@ -21,7 +21,7 @@ int AccProfessionDataDataIndex = -1;
 #define LEVEL_POINTS 5
 #define MIN_LEVEL_POINTS 3
 
-#define PROFESSION_CHANGE_COST 1350
+
 
 //This is multiplied by (level) X (the next level)
 #define LEVEL_COST 25 // 
@@ -521,7 +521,7 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 		Disp(ent, "^3Your free profession change has been used up.");
 	}
 	else {
-		if (PlayerAcc_GetCredits(ent) <= PROFESSION_CHANGE_COST)
+		if (PlayerAcc_GetCredits(ent) <= lmd_profession_fee.integer)
 		{
 			//Disp(ent, "^3You've paid all your credits.");
 			PlayerAcc_SetCredits(ent, 0);
@@ -529,8 +529,8 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 		}
 		else
 		{
-			//Disp(ent, va("^3You've paid ^2%sCR", PROFESSION_CHANGE_COST));
-			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - PROFESSION_CHANGE_COST);
+			//Disp(ent, va("^3You've paid ^2%sCR", lmd_profession_fee.integer));
+			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - lmd_profession_fee.integer);
 		}
 
 

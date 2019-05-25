@@ -332,8 +332,13 @@ vmCvar_t		g_showDuelHealths;
 //iomatix:
 vmCvar_t lmd_jedi_pickup_weapons; //allows jedi to pickup ammo and weapons from the map.
 vmCvar_t lmd_jedi_add_hp_level;  //allows jedi to gain additional max hp per level.
+vmCvar_t	lmd_profession_fee;
+vmCvar_t	lmd_bounty_streaks_by;
+vmCvar_t	lmd_skillpoint_cost;
+vmCvar_t	lmd_exp_for_level;
+								 
+								 
 								 //RoboPhred:
-
 vmCvar_t lmd_DataPath;
 vmCvar_t lmd_stashrate;
 vmCvar_t lmd_stashdepotime;
@@ -854,7 +859,12 @@ static cvarTable_t		gameCvarTable[] = {
 { &g_powerDuelEndHealth, "g_powerDuelEndHealth", "90", CVAR_ARCHIVE, 0, qtrue },
 //iomatix: 
 { &lmd_jedi_pickup_weapons, "lmd_jedi_pickup_weapons", "0", CVAR_ARCHIVE, 0, qfalse },
-{ &lmd_jedi_add_hp_level, "lmd_jedi_add_hp_level", "0", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_jedi_add_hp_level, "lmd_jedi_add_hp_level", "1", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_profession_fee, "lmd_profession_fee", "1350", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_bounty_streaks_by, "lmd_bounty_streaks_by", "5", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_skillpoint_cost, "lmd_skillpoint_cost", "150", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_exp_for_level, "lmd_exp_for_level", "450", CVAR_ARCHIVE, 0, qfalse },
+
 // Lugormod cvars:
 { &g_noVoteTime, "g_noVoteTime", "5", CVAR_ARCHIVE,0, qfalse, qfalse,
 "Number of minutes to wait after a map change before votes are allowed again.  This does not apply to admins level 3 or lower."
