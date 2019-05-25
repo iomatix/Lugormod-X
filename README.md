@@ -35,7 +35,7 @@
 **Compiled files inside ReleaseEnv folder.**
 
 ### User Files:
-- **[Main Project Folder](https://github.com/omatix/Lugor-X)**
+- ***[Main Project Folder](https://github.com/omatix/Lugor-X)***
 - [**SERVER FILES**: Compiled server file for Windows](ReleaseEnv/jampgamex86.dll)
 - [**SERVER FILES**: Config example with working bots for KotF](__example_config)
 - [Compiled - Main Folder](ReleaseEnv)
