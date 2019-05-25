@@ -37,17 +37,17 @@
 
 **Compiled files inside ReleaseEnv folder.**
 
-#User Files:
+### User Files:
 - [Main folder](https://github.com/omatix/Lugor-X)
 - [Compiled file for Windows](ReleaseEnv/jampgamex86.dll)
 - [Compiled, main folder](ReleaseEnv)
 - [Config example with working bots for KotF](__example_config)
 
-Credits to:
+### Credits to:
 
-Lugor       - for creating early versions of the mod,
-RoboPhred   - for developing the mod for many years,
-Ufo         - for small scale development and producing a linux build.
+- Lugor       - for creating early versions of the mod,
+- RoboPhred   - for developing the mod for many years,
+- Ufo         - for small scale development and producing a linux build.
 
 *Can be compiled using Visual Studio 2013.*
 Linux users may use the makefile inside game folder.
@@ -55,4 +55,4 @@ Linux users may use the makefile inside game folder.
 Licensed under GPL version 2 or later.
 
 Copyright (C) 2003-2018 RoboPhred.
-*Copyright (C) 2019 iomatix.*
+**Copyright (C) 2019 iomatix.**
