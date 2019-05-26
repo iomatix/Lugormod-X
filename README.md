@@ -3,39 +3,41 @@
 
 # Main features and changes:
 
-## Features which are working now:
+## New features:
 - New registration. Username is also character name now.
 - AI unlocked. AI is able to use Force user or Mercenary profession.
 - Level cap changed up to 120 and added mastery level for Force Users which starts on 40 profession level.
 - Reaching mastery level allows to use force of the opposite side and unlocks new power ups.
 - Profession change requires a constant credits fee now. (default: 1350 credits)
 - Force, health and shield capacity grows per level depending on profession level.
+- Health, Force Power and Shield formula is re-balanced.
+- Reworked skillpoints system with clear and RPG style formula.
+- Player can spend skillpoints to upgrade their max hp/power/shield capacity.
+- Improved console displays making it more clear for the user.
 
-### Added new extern variables usable in server.cfg: 
-- lmd_jedi_pickup_weapons - set it to 1 to allow force users to pickup weapons. Force users have ammo capacity penalty which decreases with level.  0 is default - old lugor style.
-- lmd_jedi_add_hp_level - set it to 1 to allow Force Users to gain additional HP capacity per level (recommended), set it to 2 to use same algorythm as for Mercenary (op),  0 is default - old lugor style.
-
+### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 
 ### I'm working on:
-- Adding new passive-skills to spend additional points on.
 - New-Game + after reaching max level capacity.
 - Bounty for killing streaks.
 - Messages time control.
 - Adding extern variable for profession credits fee.
 - Bug fixes.
+- A lot of more...
 
 ### Main long-terms Goals:
 - Full compatibility with all KotF features.
 - Adding GUI overlay for console commands.
 - More AI improvements.
 - Repairing memory leaks.
+- OpenJK Support
 
 **Early 3.0.1.0 version Lugor X**
 
 **Compiled files inside ReleaseEnv folder.**
 
 ### User Files:
-- ***[Main Project Folder](https://github.com/omatix/Lugor-X)***
+- ***[Main Project Folder](https://github.com/iomatix/Lugormod-X)***
 - [**SERVER FILES**: Compiled server file for Windows](ReleaseEnv/jampgamex86.dll)
 - [**SERVER FILES**: Config example with working bots for KotF](__example_config)
 - [Compiled - Main Folder](ReleaseEnv)
@@ -50,7 +52,7 @@
 *Can be compiled using Visual Studio 2013.*
 Linux users may use the makefile inside game folder.
 
-Licensed under GPL version 2 or later.
+Licensed under GPL version 3 or later.
 
 Copyright (C) 2003-2018 RoboPhred.
 **Copyright (C) 2019 iomatix.**

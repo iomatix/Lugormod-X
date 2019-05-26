@@ -18,7 +18,7 @@
 - Added lmd_skillpoints_perlevel variable that amount of skill points will be gived per each level up. Default 4. ✔️
 - Reworked skillpoints checking system. Old one was totally bugged. ✔️
 - Added more basic information in command-popup and repaired old messy ones for usable commands. ✔️
-- Health, Force Power and Shield formula are re-balanced. ✔️
+- Health, Force Power and Shield formula is re-balanced. ✔️
 - When meditating Force Power rains 20% faster.  ✔️
 - Meditation formula re-balanced.  ✔️
 - Player can spend skillpoints to upgrade their max hp/power/shield capacity. 50% TODO: Force User and update new meditation formula with new functions.
