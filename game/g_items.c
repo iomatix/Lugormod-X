@@ -47,7 +47,7 @@ int MaxAmmo(gentity_t *ent, int ammo) {
 	//iomatix: for jedi smaller ammo capacity
 	if (lmd_jedi_pickup_weapons.integer > 0)
 	{
-		if (PlayerAcc_Prof_GetProfession(ent) == PROF_JEDI) return  ammoData[ammo].max - floor((ammoData[ammo].max / 1.55)) + floor(ammoData[ammo].max * PlayerAcc_Prof_GetLevel(ent)* 0.021);
+		if (PlayerAcc_Prof_GetProfession(ent) == PROF_JEDI) return  ammoData[ammo].max - floor((ammoData[ammo].max / 1.17)) + floor(ammoData[ammo].max * PlayerAcc_Prof_GetLevel(ent)* 0.021);
 	}
 
 

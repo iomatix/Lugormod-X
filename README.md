@@ -12,7 +12,7 @@
 - Force, health and shield capacity grows per level depending on profession level.
 - Health, Force Power and Shield formula is re-balanced.
 - Reworked skillpoints system with clear and RPG style formula.
-- Player can spend skillpoints to upgrade their max hp/power/shield capacity.
+- Player can spend skillpoints to upgrade new fully working passive skills.
 - Improved console displays making it more clear for the user.
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)

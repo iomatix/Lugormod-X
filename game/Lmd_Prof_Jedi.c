@@ -25,7 +25,11 @@ enum {
 	SK_JEDI_SABER_OFFENSE,
 	SK_JEDI_SABER_DEFENSE,
 	SK_JEDI_SABERTHROW,
-
+	//iomatix, passiv skills:
+	SK_JEDI_hp_maxs,
+	SK_JEDI_mp_maxs,
+	SK_JEDI_overload,
+	///////////////////
 	SK_JEDI_NUM_SKILLS
 };
 
@@ -56,17 +60,13 @@ enum {
 											if (value < skill->levels.min || value > skill->levels.max) { \
 												return qfalse; \
 											} \
-											side = Jedi_GetAccSide(acc); \
-											if (side != 0 && forcePowerDarkLight[fp] != 0 && side != forcePowerDarkLight[fp]) { \
-												return qfalse; \
-											} \
 											return qtrue; \
 										}
 
 #define STD_FORCEPOWER_SET(name, fp) qboolean Lmd_Prof_Jedi_SetSkill_##name(AccountPtr_t accPtr, profSkill_t *skill, int value) { \
 										Account_t *acc = (Account_t*)accPtr; \
 										jediFields_t *data; \
-										if (!Lmd_Prof_Jedi_CanSetSkill_Jump(acc, skill, value)) { \
+										if (!Lmd_Prof_Jedi_CanSetSkill_##name(acc, skill, value)) { \
 											return qfalse; \
 										} \
 										data = ACCFIELDDATA(acc); \
@@ -109,7 +109,10 @@ typedef struct jediFields_s {
 	_m##_AUTO(see, JEDIFIELDOFS(Jedi[SK_JEDI_SEE]), F_INT) \
 	_m##_AUTO(saber_offense, JEDIFIELDOFS(Jedi[SK_JEDI_SABER_OFFENSE]), F_INT) \
 	_m##_AUTO(saber_defense, JEDIFIELDOFS(Jedi[SK_JEDI_SABER_DEFENSE]), F_INT) \
-	_m##_AUTO(saber_throw, JEDIFIELDOFS(Jedi[SK_JEDI_SABERTHROW]), F_INT)
+	_m##_AUTO(saber_throw, JEDIFIELDOFS(Jedi[SK_JEDI_SABERTHROW]), F_INT) \
+    _m##_AUTO(hp_maxs, JEDIFIELDOFS(Jedi[SK_JEDI_hp_maxs]), F_INT) \
+    _m##_AUTO(mp_maxs, JEDIFIELDOFS(Jedi[SK_JEDI_mp_maxs]), F_INT) \
+    _m##_AUTO(overload, JEDIFIELDOFS(Jedi[SK_JEDI_overload]), F_INT)
 
 JediFields_Base(DEFINE_FIELD_PRE)
 
@@ -141,33 +144,208 @@ int Jedi_GetSide(gentity_t *ent) {
 		return 0;
 	return Jedi_GetAccSide(ent->client->pers.Lmd.account);
 }
+/////iomatix: passive skills
 
-#if 0
-BG_field_t jediFields[] = {
-	{ "heal", JEDIFIELDOFS(Jedi[SK_JEDI_HEAL]), F_INT },
-{ "levitate", JEDIFIELDOFS(Jedi[SK_JEDI_LEVITATION]), F_INT },
-{ "speed", JEDIFIELDOFS(Jedi[SK_JEDI_SPEED]), F_INT },
-{ "push", JEDIFIELDOFS(Jedi[SK_JEDI_PUSH]), F_INT },
-{ "pull", JEDIFIELDOFS(Jedi[SK_JEDI_PULL]), F_INT },
-{ "telepathy", JEDIFIELDOFS(Jedi[SK_JEDI_TELEPATHY]), F_INT },
-{ "grip", JEDIFIELDOFS(Jedi[SK_JEDI_GRIP]), F_INT },
-{ "lightning", JEDIFIELDOFS(Jedi[SK_JEDI_LIGHTNING]), F_INT },
-{ "rage", JEDIFIELDOFS(Jedi[SK_JEDI_RAGE]), F_INT },
-{ "protect", JEDIFIELDOFS(Jedi[SK_JEDI_PROTECT]), F_INT },
-{ "absorb", JEDIFIELDOFS(Jedi[SK_JEDI_ABSORB]), F_INT },
-{ "team_heal", JEDIFIELDOFS(Jedi[SK_JEDI_TEAM_HEAL]), F_INT },
-{ "team_force", JEDIFIELDOFS(Jedi[SK_JEDI_TEAM_FORCE]), F_INT },
-{ "drain", JEDIFIELDOFS(Jedi[SK_JEDI_DRAIN]), F_INT },
-//{"see", JEDIFIELDOFS(Jedi[SK_JEDI_SEE]), F_INT},
-{ "saber_offense", JEDIFIELDOFS(Jedi[SK_JEDI_SABER_OFFENSE]), F_INT },
-{ "saber_defense", JEDIFIELDOFS(Jedi[SK_JEDI_SABER_DEFENSE]), F_INT },
-{ "saber_throw", JEDIFIELDOFS(Jedi[SK_JEDI_SABERTHROW]), F_INT },
-{ NULL }
+//skills:
+//will
+const char *jediSkill_Passive_hp_maxs_Descr[] = {
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+10 HP",
+	"+20 HP",
+	NULL
 };
-const unsigned int jediFieldsCount = (sizeof(jediFields) / sizeof(BG_field_t)) - 1;
-#endif
 
 
+STD_FORCEPOWER_FUNCS(hp_maxs, FP_PASSIVE_hp_maxs)
+
+profSkill_t jediSkill_Passive_hp_maxs = {
+	"Will",
+	"Increase total Health capacity.",
+	jediSkill_Passive_hp_maxs_Descr,
+
+	0,
+	SkillLevels_20,
+	SkillPoints_Linear_10,
+
+	Lmd_Prof_Jedi_GetSkill_hp_maxs,
+	Lmd_Prof_Jedi_CanSetSkill_hp_maxs,
+	Lmd_Prof_Jedi_SetSkill_hp_maxs
+};
+//Force
+const char *jediSkill_Passive_mp_maxs_Descr[] = {
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+12 Force capacity",
+	"+25 Force capacity",
+	NULL
+};
+
+
+STD_FORCEPOWER_FUNCS(mp_maxs, FP_PASSIVE_mp_maxs)
+
+profSkill_t jediSkill_Passive_mp_maxs = {
+	"Force",
+	"Increase the Force capacity.",
+	jediSkill_Passive_mp_maxs_Descr,
+
+	0,
+	SkillLevels_20,
+	SkillPoints_Linear_10,
+
+	Lmd_Prof_Jedi_GetSkill_mp_maxs,
+	Lmd_Prof_Jedi_CanSetSkill_mp_maxs,
+	Lmd_Prof_Jedi_SetSkill_mp_maxs
+};
+
+
+//Overload
+const char *jediSkill_Passive_overload_Descr[] = {
+	"Additional 2 percent of force regeneration and force capacity",
+	"Additional 5 percent of force regeneration and force capacity",
+	"Additional 8 percent of force regeneration and force capacity",
+	"Additional 10 percent of force regeneration and force capacity",
+	NULL
+};
+
+
+STD_FORCEPOWER_FUNCS(overload, FP_PASSIVE_overload)
+
+profSkill_t jediSkill_Passive_overload = {
+	"Overload",
+	"Regenerate more force and increase its base capacity.",
+	jediSkill_Passive_overload_Descr,
+
+	0,
+	SkillLevels_4,
+	SkillPoints_Linear_10,
+
+	Lmd_Prof_Jedi_GetSkill_overload,
+	Lmd_Prof_Jedi_CanSetSkill_overload,
+	Lmd_Prof_Jedi_SetSkill_overload
+};
+
+
+
+profSkill_t jediSkill_Passive_Subskills[] = {
+	jediSkill_Passive_hp_maxs,
+	jediSkill_Passive_mp_maxs,
+	jediSkill_Passive_overload
+};
+const unsigned int jediPassiveCount = sizeof(jediSkill_Passive_Subskills) / sizeof(profSkill_t);
+////////////////
+////functions:
+//functions for passive skills:
+
+int Get_Jedi_hp_maxs_value(gentity_t *ent) //Will (Health points)
+{
+	if (lmd_jedi_add_hp_level.integer == 0) { return 100; } //old lugor option
+
+	int value = 40; //starting health
+	
+		
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 1.7); //scale health
+	
+
+	int skillHP = Lmd_Prof_Jedi_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_hp_maxs);
+	if (skillHP > 0) {
+
+		value += 10 * skillHP;
+		if (skillHP == jediSkill_Passive_hp_maxs.levels.max) value += 10; //bonus for maxed (10+10=20)
+	}
+
+	return value;
+
+}
+
+
+//Overload + Force
+
+int Get_Jedi_overload_value_cap(gentity_t *ent, int Amount) //returns % of total mana. Amount is based on overload skill level.
+{
+
+	if (!Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload)) return 0;
+
+	int value = 0;
+	int skillOverload = Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload);
+	//2,5,8,10 %
+	if (skillOverload == 1) value = Amount / 50; //2%
+	else if (skillOverload == 2) value = Amount / 20; //5%
+	else if (skillOverload == 3) value = Amount / 12; //+-8%
+	else if (skillOverload == 4) value = Amount / 10; //10%
+	return value;
+
+}
+int Get_Jedi_mp_maxs_value(gentity_t *ent)
+{
+	int value = 55; //starting force
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.1); //Level bonus
+	if (Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload)) value += Get_Jedi_overload_value_cap(ent, value); //be sure it adds only base Force Power //iomatix
+
+																																					   //Passive skill bonus:
+	int skillMP = Lmd_Prof_Jedi_GetSkill_mp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_mp_maxs);
+	if (skillMP > 0)
+	{
+		value += 10 * skillMP;
+		if (skillMP == jediSkill_Passive_mp_maxs.levels.max) value += 13; //bonus for maxed (12+13=25)
+	}
+
+	return value;
+
+}
+
+int Get_Jedi_overload_value_reg(gentity_t *ent, int value) //returns % output for the skill
+{
+	if (!Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload)) return 0;
+
+	int skillOverload = Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload);
+	//2,5,8,10 %
+	if (skillOverload == 1) value /= 50; //2%
+	else if (skillOverload == 2) value /= Get_Jedi_mp_maxs_value(ent) / 20; //5%
+	else if (skillOverload == 3) value /= Get_Jedi_mp_maxs_value(ent) / 12; //+-8%
+	else if (skillOverload == 4) value /= Get_Jedi_mp_maxs_value(ent) / 10; //10%
+	else value = 0;
+
+	return value;
+
+}
+
+
+/////
+
+////////////////////
 
 const char *jediSkill_Neutral_Jump_Descr[] = {
 	"Gain the force jump power.",
@@ -191,15 +369,15 @@ profSkill_t jediSkill_Neutral_Jump = {
 
 	Lmd_Prof_Jedi_GetSkill_Jump,
 	Lmd_Prof_Jedi_CanSetSkill_Jump,
-	Lmd_Prof_Jedi_SetSkill_Jump,
+	Lmd_Prof_Jedi_SetSkill_Jump
 };
 
 const char *jediSkill_Neutral_Push_Descr[] = {
 	"Gain the Push force power.  Push those that you target.",
 	"Push anything within a small arc your aim.",
 	"Push anything within a large arc of your aim.  Lower cooldown time.",
-	"Push with more force than normal.  Lower cooldown time."
-	"Push with twice the normal force.  Lower cooldown time."
+	"Push with more force than normal.  Lower cooldown time.",
+	"Push with twice the normal force.  Lower cooldown time.",
 	"",
 	NULL
 };
@@ -242,7 +420,7 @@ profSkill_t jediSkill_Neutral_Pull = {
 
 	Lmd_Prof_Jedi_GetSkill_Pull,
 	Lmd_Prof_Jedi_CanSetSkill_Pull,
-	Lmd_Prof_Jedi_SetSkill_Pull,
+	Lmd_Prof_Jedi_SetSkill_Pull
 };
 
 const char *jediSkill_Neutral_Speed_Descr[] = {
@@ -302,7 +480,7 @@ profSkill_t jediSkill_Neutral_Subskills[] = {
 	jediSkill_Neutral_Push,
 	jediSkill_Neutral_Pull,
 	jediSkill_Neutral_Speed,
-	jediSkill_Neutral_Seeing,
+	jediSkill_Neutral_Seeing
 };
 const unsigned int jediSkillNeutralCount = sizeof(jediSkill_Neutral_Subskills) / sizeof(profSkill_t);
 
@@ -356,7 +534,7 @@ profSkill_t jediSkill_Light_Heal = {
 
 	Lmd_Prof_Jedi_GetSkill_Heal,
 	Lmd_Prof_Jedi_CanSetSkill_Heal,
-	Lmd_Prof_Jedi_SetSkill_Heal,
+	Lmd_Prof_Jedi_SetSkill_Heal
 };
 
 
@@ -382,7 +560,7 @@ profSkill_t jediSkill_Light_Protect = {
 
 	Lmd_Prof_Jedi_GetSkill_Protect,
 	Lmd_Prof_Jedi_CanSetSkill_Protect,
-	Lmd_Prof_Jedi_SetSkill_Protect,
+	Lmd_Prof_Jedi_SetSkill_Protect
 };
 
 const char *jediSkill_Light_MindTrick_Descr[] = {
@@ -407,7 +585,7 @@ profSkill_t jediSkill_Light_MindTrick = {
 
 	Lmd_Prof_Jedi_GetSkill_MindTrick,
 	Lmd_Prof_Jedi_CanSetSkill_MindTrick,
-	Lmd_Prof_Jedi_SetSkill_MindTrick,
+	Lmd_Prof_Jedi_SetSkill_MindTrick
 };
 
 const char *jediSkill_Light_TeamHeal_Descr[] = {
@@ -462,7 +640,7 @@ profSkill_t jediSkill_Dark_Grip = {
 
 	Lmd_Prof_Jedi_GetSkill_Grip,
 	Lmd_Prof_Jedi_CanSetSkill_Grip,
-	Lmd_Prof_Jedi_SetSkill_Grip,
+	Lmd_Prof_Jedi_SetSkill_Grip
 };
 
 
@@ -483,7 +661,7 @@ profSkill_t jediSkill_Dark_Drain = {
 
 	Lmd_Prof_Jedi_GetSkill_Drain,
 	Lmd_Prof_Jedi_CanSetSkill_Drain,
-	Lmd_Prof_Jedi_SetSkill_Drain,
+	Lmd_Prof_Jedi_SetSkill_Drain
 };
 
 const char *jediSkill_Dark_Lightnig_Descr[] = {
@@ -534,7 +712,7 @@ profSkill_t jediSkill_Dark_Rage = {
 
 	Lmd_Prof_Jedi_GetSkill_Rage,
 	Lmd_Prof_Jedi_CanSetSkill_Rage,
-	Lmd_Prof_Jedi_SetSkill_Rage,
+	Lmd_Prof_Jedi_SetSkill_Rage
 };
 
 const char *jediSkill_Dark_Energize_Descr[] = {
@@ -562,7 +740,7 @@ profSkill_t jediSkill_Dark_Subskills[] = {
 	jediSkill_Dark_Drain,
 	jediSkill_Dark_Lightning,
 	jediSkill_Dark_Rage,
-	jediSkill_Dark_Energize,
+	jediSkill_Dark_Energize
 };
 const unsigned int jediSkillDarkCount = sizeof(jediSkill_Dark_Subskills) / sizeof(profSkill_t);
 
@@ -578,7 +756,7 @@ profSkill_t jediSkill_Saber_Attack = {
 	jediSkill_Saber_Attack_Descr,
 
 	0,
-{ 3, 3 },
+{ 1, 3 },
 SkillPoints_Default,
 
 Lmd_Prof_Jedi_GetSkill_Saber_Attack,
@@ -599,7 +777,7 @@ profSkill_t jediSkill_Saber_Defend = {
 	jediSkill_Saber_Defend_Descr,
 
 	0,
-{ 3, 3 },
+{ 1, 3 },
 SkillPoints_Default,
 
 Lmd_Prof_Jedi_GetSkill_Saber_Defend,
@@ -620,7 +798,7 @@ profSkill_t jediSkill_Saber_Throw = {
 	jediSkill_Saber_Throw_Descr,
 
 	0,
-{ 3, 3 },
+{ 0, 3 },
 SkillPoints_Default,
 
 Lmd_Prof_Jedi_GetSkill_Saber_Throw,
@@ -631,7 +809,7 @@ Lmd_Prof_Jedi_SetSkill_Saber_Throw
 profSkill_t jediSkill_Saber_Subskills[] = {
 	jediSkill_Saber_Attack,
 	jediSkill_Saber_Defend,
-	jediSkill_Saber_Throw,
+	jediSkill_Saber_Throw
 };
 const unsigned int jediSkillaberCount = sizeof(jediSkill_Saber_Subskills) / sizeof(profSkill_t);
 
@@ -722,37 +900,42 @@ NULL,
 
 {
 	jediSkillaberCount,
-	(profSkill_t *)jediSkill_Saber_Subskills
+    (profSkill_t *)jediSkill_Saber_Subskills
 }
 };
 
+
+//iomatix: passive branch
+const char *jediSkill_Passive_Descr[] = {
+	NULL
+};
+
+profSkill_t jediSkill_Passive = {
+	"Passive",
+	"List of the available passive skills:",
+	 jediSkill_Passive_Descr,
+
+	0,
+{ 0,0 },
+SkillPoints_Default,
+
+NULL,
+NULL,
+NULL,
+{ jediPassiveCount,(profSkill_t *) jediSkill_Passive_Subskills }
+};
+
+///
 profSkill_t jediSkill[] = {
 	jediSkill_Neutral,
 	jediSkill_Jedi,
 	jediSkill_Sith,
-	jediSkill_Saber
+	jediSkill_Saber,
+	jediSkill_Passive
 };
 const unsigned int jediSkillCount = sizeof(jediSkill) / sizeof(profSkill_t);
 
-//iomatix:
-int Jedi_GetForceIncrease(gentity_t *ent) {
-	//Getting force 
-	int level = PlayerAcc_Prof_GetLevel(ent);
-	if (level == 1) return 0;
-	level = (int)floor(3.47f * (float)level);
 
-	return level;
-
-}
-
-int Jedi_GetMaximumForce(gentity_t *ent) {
-	//Getting force 
-	int MaxForce = 65; //starting value
-	MaxForce = MaxForce + Jedi_GetForceIncrease(ent);
-
-	return MaxForce;
-
-}
 
 extern vmCvar_t g_forceRegenTime;
 int Jedi_GetForceRegenDebounce(gentity_t *ent) {
@@ -764,7 +947,7 @@ int Jedi_GetForceRegenDebounce(gentity_t *ent) {
 	//(level * (g_forceRegenTime.integer * (2. / 3.))) = x * 20
 	//((level * (g_forceRegenTime.integer * (2. / 3.))) / 20) = x
 	//iomatix new regen formula
-	return g_forceRegenTime.integer - floor((level * (g_forceRegenTime.integer / 2.)) / 120.); //120 is max level -> -50% regen cooldown on max level
+	return g_forceRegenTime.integer - floor((level * (g_forceRegenTime.integer / 8.)) / 120.); //120 is max level -> -13% regen cooldown on level 120
 }
 
 unsigned int Jedi_Count() {
@@ -832,10 +1015,11 @@ void Jedi_Spawn(gentity_t *ent) {
 	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_SABER);
 
 	//iomatix:
-	ent->client->ps.fd.forcePowerMax = Jedi_GetMaximumForce(ent); // Jedi_GetForceIncrease was 100 but now it depends on profession level.
-	ent->client->ps.fd.forcePower = Jedi_GetMaximumForce(ent); //starting value
-	if (lmd_jedi_add_hp_level.integer == 1) ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = 100 + (PlayerAcc_Prof_GetLevel(ent) * 2); //add health
-	else if (lmd_jedi_add_hp_level.integer > 1) ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = 100 + Professions_TotalSkillPoints(PROF_MERC, PlayerAcc_Prof_GetLevel(ent)); //add health merc style
+	ent->client->ps.fd.forcePowerMax =  Get_Jedi_mp_maxs_value(ent); 
+	ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax; //starting value
+	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = Get_Jedi_hp_maxs_value(ent); //default formula
+		
+
 
 }
 

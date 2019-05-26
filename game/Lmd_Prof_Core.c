@@ -267,9 +267,11 @@ void Accounts_Prof_ClearData(Account_t *acc) {
 	profData_t *data = PROFDATA(acc);
 	if (Professions[data->profession]->data.fields) {
 		Lmd_Data_FreeFields(data->data, Professions[data->profession]->data.fields, Professions[data->profession]->data.count);
-		memset(data->data, 0, Professions[data->profession]->data.size);
+		memset(data->data, 0, Professions[data->profession]->data.size); 
 		Lmd_Accounts_Modify(acc);
+
 	}
+    
 }
 
 void* Accounts_Prof_GetFieldData(Account_t *acc) {
@@ -435,6 +437,7 @@ int Professions_SkillCost(profSkill_t *skill, int level) {
 	if (skill->points.type == SPT_TRIANGULAR) return 1+(level * (level + 1));
 	else if (skill->points.type == SPT_LINEAR) return level;
 	else if (skill->points.type == SPT_LINEAR_2) return level*2;
+	else if (skill->points.type == SPT_LINEAR_5) return level * 5;
 	else if (skill->points.type == SPT_LINEAR_10) return level*10;
 	return 0;
 
@@ -705,7 +708,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 	profSkill_t *blocker;
 	if (Lmd_Prof_SkillIsAchieveable(acc, prof, skill, &blocker) == qfalse) {
 		if (blocker->name == "Sith" || blocker->name == "Jedi") {
-			//Disp(ent, va("^3Unlocked at ^2%s^3 profession level.", MASTER_LEVEL));
+			Disp(ent, va("^3Unlocked at ^2%i^3 profession level.", MASTER_LEVEL));
 		}
 		Disp(ent, va("^3You cannot level this skill while ^2%s^3 is leveled.", blocker->name));
 		return;
@@ -739,15 +742,10 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			return;
 		}
 		//fixed by iomatix.
+		if(!skill) Disp(ent, ("^1MISSING SKILL!")); //debug
 		level++;
 		nextLevel++;
 
-		//if (!skill->canSetValue(acc, skill, level)) {
-			// TODO: Better message, explain why it can't be leveled.
-			//Disp(ent, va("^2This skill cannot be leveled up at this time."));
-			//return;
-		//iomatix: That was piece of shit sowwy. ._.
-		//}
 
 		if (level >= skill->levels.max) {
 			Disp(ent, "^3This skill is now at its highest level.");
@@ -773,9 +771,11 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 		}
 	}
 
-	skill->setValue(acc, skill, level);
-	Disp(ent, va("^3The ^2%s^3 skill is now at level ^2%i^3.", skill->name, level));
-	Profession_UpdateSkillEffects(ent, prof);
+	//check 
+	if (skill->setValue(acc, skill, level)) {
+		Disp(ent, va("^3The ^2%s^3 skill is now at level ^2%i^3.", skill->name, level));
+		Profession_UpdateSkillEffects(ent, prof);
+	}else Disp(ent, ("^1Something gone wrong!")); //debug
 }
 
 void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
@@ -931,19 +931,19 @@ void Cmd_ResetSkills_f(gentity_t *ent, int iArg) {
 		return;
 	}
 
-	int cost = used * 200;
+	int cost = used * lmd_skillpoint_cost.integer;
 
 	if (myCredits < cost) {
 		Disp(ent, va("^3The cost to reset your skills is ^2CR %i^3.", cost));
 		return;
 	}
-
+	Disp(ent, va("^3You've paid %iCR to reset your skills.", cost));
 	PlayerAcc_SetCredits(ent, myCredits - cost);
 	Accounts_Prof_ClearData(ent->client->pers.Lmd.account);
 	Professions_SetDefaultSkills(ent->client->pers.Lmd.account, prof);
 	Profession_UpdateSkillEffects(ent, prof);
 
-	Disp(ent, "^3Your skills have been reset.");
+	Disp(ent, "^2Your skills have been reseted!");
 }
 
 //FIXME: should be replaced by Profession_SkillCost

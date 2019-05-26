@@ -633,6 +633,7 @@ enum
 typedef int saber_colors_t;
 
 //typedef 
+//iomatix: be sure adding new skills without force to the 2nd enum "for passives"
 enum
 {
 	FP_FIRST = 0,//marker
@@ -656,6 +657,16 @@ enum
 	FP_SABERTHROW,
 
 	NUM_FORCE_POWERS
+};
+//iomatix for passives:
+enum
+{   NUM_FORCE_POWERS_PASSIVE_START = NUM_FORCE_POWERS-1,
+	FP_PASSIVE_hp_maxs,
+	FP_PASSIVE_mp_maxs,
+	FP_PASSIVE_overload,
+	NUM_WITH_PASSIVES_POWERS
+
+
 };
 typedef int forcePowers_t;
 

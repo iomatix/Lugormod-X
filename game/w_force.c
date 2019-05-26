@@ -323,13 +323,6 @@ void WP_InitForcePowers( gentity_t *ent )
 		trap_Cvar_Set("g_maxForceRank", "0");
 	}
 
-	/*
-	if (g_forcePowerDisable.integer)
-	{
-	maxRank = FORCE_MASTERY_UNINITIATED;
-	}
-	*/
-	//rww - don't do this
 
 	if ( !ent || !ent->client )
 	{
@@ -1346,8 +1339,10 @@ int WP_AbsorbConversion(gentity_t *attacked, int atdAbsLevel, gentity_t *attacke
 	return getLevel;
 }
 extern vmCvar_t g_meditateExtraForce;//Lugormod
-int Jedi_GetForceIncrease(gentity_t *ent);
-
+//iomatix:
+int Get_Jedi_mp_maxs_value(gentity_t *ent);
+int Get_Jedi_overload_value_reg(gentity_t *ent, int value);
+//Iomatix:
 void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 { //called on a regular interval to regenerate force power.
 	if ( !self->client )
@@ -1356,33 +1351,28 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 	}
 	int extraForce = g_meditateExtraForce.integer;
 	if(extraForce < 0) extraForce = 0;
-	else if(extraForce > Jedi_GetForceIncrease(self)) extraForce = Jedi_GetForceIncrease(self);
+	else if(extraForce > floor(Get_Jedi_mp_maxs_value(self)/1.5)) extraForce = floor(Get_Jedi_mp_maxs_value(self) / 1.5); //max additional extra force is 66% now
 
 	int fpmax = self->client->ps.fd.forcePowerMax;
 
+	int passive_regen = 1 + floor(fpmax*0.01f); //add 1% regen as a passive
 	if (g_meditateExtraForce.integer && g_gametype.integer == GT_FFA && self->client->ps.legsAnim == BOTH_MEDITATE && self->client->ps.torsoAnim == BOTH_MEDITATE && PlayerAcc_Prof_GetProfession(self) <= PROF_JEDI) {
+		
 		fpmax += extraForce;
-		if(overrideAmt) overrideAmt += extraForce / 5; //iomatix: 20% faster regen when meditating.
-		else overrideAmt = extraForce / 5;
+		if(!overrideAmt || overrideAmt <= 0) overrideAmt = fpmax / 15;  //iomatix: 6% additional regen while meditating
 	}
-	//iomatix: addon 10% for meditation bonus
-	if(PlayerAcc_Prof_GetProfession(self) == PROF_JEDI)  fpmax += Jedi_GetForceIncrease(self)/10;
+	int overload = 0;
+	if(PlayerAcc_Prof_GetProfession(self) == PROF_JEDI)  overload = Get_Jedi_overload_value_reg(self, passive_regen); //overload skill regen
 	
-
-	if ( self->client->ps.fd.forcePower >= fpmax)
-	{ //cap it off at the max (default 100)
-		//self->client->ps.fd.forcePower = fpmax;
-		return;
-	}
-
-	if ( overrideAmt )
+    if ( overrideAmt )
 	{ //custom regen amount
-		self->client->ps.fd.forcePower += overrideAmt;
+		self->client->ps.fd.forcePower += overrideAmt + passive_regen + overload;
 	}
 	else
 	{ //otherwise, just 1
-		self->client->ps.fd.forcePower++;
+		self->client->ps.fd.forcePower += passive_regen + overload;
 	}
+
 	if ( self->client->ps.fd.forcePower >= fpmax)
 	{ //cap it off at the max (default 100)
 		self->client->ps.fd.forcePower = fpmax;

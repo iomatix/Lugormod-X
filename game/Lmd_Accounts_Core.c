@@ -469,8 +469,7 @@ Account_t *Accounts_New(char *username, char *name, char *password) {
 }
 
 void Lmd_Accounts_Modify(Account_t *acc) {
-	if(acc->modifiedTime == 0)
-		acc->modifiedTime = level.time;
+	if(acc->modifiedTime == 0) acc->modifiedTime = level.time;
 }
 
 /*

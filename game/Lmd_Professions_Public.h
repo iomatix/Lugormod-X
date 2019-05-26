@@ -16,7 +16,9 @@ typedef struct skillLevelDef_s {
 	qboolean canRemove;
 }skillLevelDef_t;
 
-static skillLevelDef_t SkillLevels_Default = {0, 5, qfalse};
+static skillLevelDef_t SkillLevels_Default = {0, 5, qfalse}; //Levels_5
+static skillLevelDef_t SkillLevels_3 = { 0, 3, qfalse };
+static skillLevelDef_t SkillLevels_4 = { 0, 4, qfalse };
 static skillLevelDef_t SkillLevels_20 = { 0, 20, qfalse };
 
 typedef enum {
@@ -24,20 +26,18 @@ typedef enum {
 	SPT_TRIANGULAR, //The usual ((level * (level + 1) / 2) point values.
     SPT_LINEAR,
 	SPT_LINEAR_2,
+	SPT_LINEAR_5,
 	SPT_LINEAR_10,
 } skillPointType_t;
 
 typedef struct skillPointData_s {
 	skillPointType_t type;
-	//int cost;
-	//int multiplier;
-	//This causes a skill level of 0 to take up 1 point, as we calculate the cost of the current level, not the next level.
-	////points = cost + (level * multiplier).  Usual skills have cost and mult of 1
 }skillPointData_t;
 
 static skillPointData_t SkillPoints_Default = {SPT_TRIANGULAR};
 static skillPointData_t SkillPoints_Linear = { SPT_LINEAR };
 static skillPointData_t SkillPoints_Linear_2 = { SPT_LINEAR_2 };
+static skillPointData_t SkillPoints_Linear_5 = { SPT_LINEAR_5 };
 static skillPointData_t SkillPoints_Linear_10 = { SPT_LINEAR_10 };
 
 struct profSkill_s{
@@ -63,7 +63,6 @@ struct profSkill_s{
 		profSkill_t *skill;
 		qboolean pointGroup; //The subskills use a seperate point group.
 		skillPointData_t points;
-		//FIXME: Skills within this skill should get pointsAdd + (skillLevel * pointsMultiplier)
 	}subSkills;
 
 	//These are populated automatically on mod load.

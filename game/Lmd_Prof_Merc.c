@@ -155,7 +155,7 @@ qboolean Lmd_Prof_Merc_SetSkill_hp_maxs(AccountPtr_t accPtr, profSkill_t *skill,
 
 profSkill_t mercSkill_hp_maxs = {
 	"Vitality",
-	"Increase total health capacity.",
+	"Increase total Health capacity.",
 	mercSkill_hp_maxs_Descr,
 
 	0,
@@ -244,7 +244,7 @@ qboolean Lmd_Prof_Merc_SetSkill_sd_maxs(AccountPtr_t accPtr, profSkill_t *skill,
 
 profSkill_t mercSkill_sd_maxs = {
 	"Defense",
-	"Increase total shield capacity.",
+	"Increase total Shield capacity.",
 	mercSkill_sd_maxs_Descr,
 
 	0,
@@ -256,15 +256,17 @@ profSkill_t mercSkill_sd_maxs = {
 	Lmd_Prof_Merc_SetSkill_sd_maxs,
 };
 
-//functions for skills:
+//functions for passive skills:
 int Get_Merc_hp_maxs_value(gentity_t *ent)
 {
 	int value = 55; //starting health
 
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.2); //scale health
 	int skillHP = Lmd_Prof_Merc_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &mercSkill_hp_maxs);
-	if (skillHP > 0) value = 13 * skillHP;
-	if (skillHP == mercSkill_hp_maxs.levels.max) value += 12; //bonus for maxed (13+12=25)
-
+	if (skillHP > 0){
+		value = 13 * skillHP;
+		if (skillHP == mercSkill_hp_maxs.levels.max) value += 12; //bonus for maxed (13+12=25)
+	}
 	return value;
 
 }
@@ -274,8 +276,10 @@ int Get_Merc_sd_maxs_value(gentity_t *ent)
 	int value = 5; //starting shield
 
 	int skillSD = Lmd_Prof_Merc_GetSkill_sd_maxs(ent->client->pers.Lmd.account, &mercSkill_sd_maxs);
-	if (skillSD > 0) value = 5 * skillSD;
-	if (skillSD == mercSkill_sd_maxs.levels.max) value += 3; //bonus for maxed (5+3=8)
+	if (skillSD > 0) {
+		value = 5 * skillSD;
+		if (skillSD == mercSkill_sd_maxs.levels.max) value += 3; //bonus for maxed (5+3=8)
+	}
 
 	return value;
 
@@ -2137,7 +2141,7 @@ void Merc_Spawn(gentity_t *ent)
 
 	//iomatix:
 	//HEALTH
-	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = floor(PlayerAcc_Prof_GetLevel(ent) * 2.2) + Get_Merc_hp_maxs_value(ent);// +(Lmd_Prof_Merc_GetSkill_HP_TOTAL(ent->client->pers.Lmd.account, &mercSkill_HP_TOTAL) * 2); //iomatix HP skill
+	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] =  Get_Merc_hp_maxs_value(ent); //iomatix HP skill
 
 	//SHIELD:
 	int armorSkill = Lmd_Prof_Merc_GetSkill_Shield(ent->client->pers.Lmd.account, &mercSkill_Shield);
@@ -2147,7 +2151,6 @@ void Merc_Spawn(gentity_t *ent)
 	}
 	//iomatix:
 	ent->client->ps.stats[STAT_ARMOR] += Get_Merc_sd_maxs_value(ent);
-	
 }
 
 const char *mercProf_Descr[] = {
@@ -2158,11 +2161,7 @@ const char *mercProf_Descr[] = {
 profession_t mercProf = {
 	"Mercenary",
 	"merc",
-{
-	MercFields,
-	MercFields_Count,
-	sizeof(mercFields_t)
-},
+{MercFields,MercFields_Count,sizeof(mercFields_t) },
 	{
 		"Mercenary",
 		"One trained in weapons.  Mercenaries excel at attacking from a distance and avoid direct confrontations.\n"

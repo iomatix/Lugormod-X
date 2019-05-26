@@ -21,9 +21,12 @@
 - Health, Force Power and Shield formula is re-balanced. ✔️
 - When meditating Force Power rains 20% faster.  ✔️
 - Meditation formula re-balanced.  ✔️
-- Player can spend skillpoints to upgrade their max hp/power/shield capacity. 50% TODO: Force User and update new meditation formula with new functions.
+- Player can spend skillpoints to upgrade their max hp/power/shield capacity. ✔️
+- Added new skill tree for Jedi and new passive skills. ✔️
+- lmd_skillpoint_cost will have impact also on reset skill cost. Reseting skill is the same price as uprgrading. ✔️
+- Redesigned skill creation for mercenary.
 
-##TODO
+## TODO
 
 - TODO: Make MaxAmmo function for explosive materials.  
 
@@ -41,6 +44,8 @@
 - TODO: Repair selling option trading system. Add message (motd) + try to console disp. If not create new buy/sell inv options.
 - TODO: Messages motd for duel types.
 - TODO: Lootboxes for killstreak
+
+- TODO: Lightning turn off jetpacks for a while. 
 
 
 - TODO: Adding openjk API support

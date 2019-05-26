@@ -700,7 +700,7 @@ static cvarTable_t		gameCvarTable[] = {
 
 { &g_svfps, "sv_fps", "20", 0, 0, qtrue },
 
-{ &g_forceRegenTime, "g_forceRegenTime", "200", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue },
+{ &g_forceRegenTime, "g_forceRegenTime", "100", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue },
 
 { &g_spawnInvulnerability, "g_spawnInvulnerability", "3000", CVAR_ARCHIVE, 0, qtrue },
 
