@@ -9,7 +9,7 @@
   Allows Force User to extend HP capacity per level, 0 is blocking that feature.  
 - **lmd_profession_fee** 1350 is default. 
   
-  It's Credits cost of the profession change. If is smaller thant this value it will take all CR belonging to the player.
+  It's Credits cost of the profession change. If credits value is smaller than this value it will take all CR belonging to the player.
 - **lmd_exp_for_level** 450 is default. 
   
   This value is used to calcuate how many experience points player will need to gain next level.
