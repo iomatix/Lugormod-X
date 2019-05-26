@@ -3,29 +3,34 @@
 
 # Main features and changes:
 
-## Features which are working now:
+## New features:
 - New registration. Username is also character name now.
 - AI unlocked. AI is able to use Force user or Mercenary profession.
 - Level cap changed up to 120 and added mastery level for Force Users which starts on 40 profession level.
 - Reaching mastery level allows to use force of the opposite side and unlocks new power ups.
 - Profession change requires a constant credits fee now. (default: 1350 credits)
 - Force, health and shield capacity grows per level depending on profession level.
+- Health, Force Power and Shield formula is re-balanced.
+- Reworked skillpoints system with clear and RPG style formula.
+- Player can spend skillpoints to upgrade their max hp/power/shield capacity.
+- Improved console displays making it more clear for the user.
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 
 ### I'm working on:
-- Adding new passive-skills to spend additional points on.
 - New-Game + after reaching max level capacity.
 - Bounty for killing streaks.
 - Messages time control.
 - Adding extern variable for profession credits fee.
 - Bug fixes.
+- A lot of more...
 
 ### Main long-terms Goals:
 - Full compatibility with all KotF features.
 - Adding GUI overlay for console commands.
 - More AI improvements.
 - Repairing memory leaks.
+- OpenJK Support
 
 **Early 3.0.1.0 version Lugor X**
 
