@@ -1,4 +1,4 @@
-#List of all extern variables added by iomatix.
+##List of all extern variables added by iomatix.
 
 **They are usable inside server.cfg file.**
 - **lmd_jedi_pickup_weapons** 0 is default. 
@@ -12,7 +12,7 @@
   It's Credits cost of the profession change. If credits value is smaller than this value it will take all CR belonging to the player.
 - **lmd_exp_for_level** 450 is default. 
   
-  This value is used to calcuate how many experience points player will need to gain next level.
+  This value is used to calculate how many experience points player will need to gain the next level.
 - **lmd_skillpoint_cost** 150 is default. 
   
   It's Credits cost of spending one skill point for upgrading skills. 
@@ -21,4 +21,4 @@
   That value is used in killing streak counter. After that value killing streak reward for killing the player is increasing.
 - **lmd_skillpoints_perlevel** 4 is default. 
   
-  That value determines how many skill points player will recive after each level-up. After reaching the Mastery Level the value slightly increasing. 
+  That value determines how many skill points player will receive after each level-up. After reaching the Mastery Level the value slightly increasing. 
