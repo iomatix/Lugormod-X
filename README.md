@@ -11,10 +11,7 @@
 - Profession change requires a constant credits fee now. (default: 1350 credits)
 - Force, health and shield capacity grows per level depending on profession level.
 
-### Added new extern variables usable in server.cfg: 
-- lmd_jedi_pickup_weapons - set it to 1 to allow force users to pickup weapons. Force users have ammo capacity penalty which decreases with level.  0 is default - old lugor style.
-- lmd_jedi_add_hp_level - set it to 1 to allow Force Users to gain additional HP capacity per level (recommended), set it to 2 to use same algorythm as for Mercenary (op),  0 is default - old lugor style.
-
+### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 
 ### I'm working on:
 - Adding new passive-skills to spend additional points on.
