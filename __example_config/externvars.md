@@ -1,8 +1,7 @@
 # Extern Variables List
-List of all Extern Variables added by iomatix.
-
-
 **They are usable inside server.cfg file.**
+
+List of all Extern Variables added by iomatix:
 - **lmd_jedi_pickup_weapons** 0 is default. 
   
   1 allows Force User to pick up weapons and ammo from the map. 
