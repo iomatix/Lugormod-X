@@ -984,7 +984,7 @@ static cvarTable_t		gameCvarTable[] = {
 { &g_meditateProtect, "g_meditateProtect", "0",CVAR_ARCHIVE, 0, qtrue, qfalse,
 "Number of miliseconds to wait before granting invincibility to someone using the meditation taunt.  Disabled if 0."
 },
-{ &g_meditateExtraForce, "g_meditateExtraForce", "100", CVAR_ARCHIVE, 0, qtrue, qfalse,
+{ &g_meditateExtraForce, "g_meditateExtraForce", "150", CVAR_ARCHIVE, 0, qtrue, qfalse,
 "If a player uses the meditation taunt, then increase their max forcepower by this amount for the duration of the taunt.\n"
 "DANGER: Can severely unbalance the game!  It is highly recommended you leave this as-is to avoid placing "
 "non force using professions at a severe disadvantage."

@@ -1355,20 +1355,19 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 		return;
 	}
 	int extraForce = g_meditateExtraForce.integer;
-	if(extraForce < 0)
-		extraForce = 0;
-	else if(extraForce > 100)
-		extraForce = 100;
+	if(extraForce < 0) extraForce = 0;
+	else if(extraForce > Jedi_GetForceIncrease(self)) extraForce = Jedi_GetForceIncrease(self);
 
 	int fpmax = self->client->ps.fd.forcePowerMax;
 
-	if(g_meditateExtraForce.integer && g_gametype.integer == GT_FFA && self->client->ps.legsAnim == BOTH_MEDITATE
-		&& self->client->ps.torsoAnim == BOTH_MEDITATE && PlayerAcc_Prof_GetProfession(self) <= PROF_JEDI)
+	if (g_meditateExtraForce.integer && g_gametype.integer == GT_FFA && self->client->ps.legsAnim == BOTH_MEDITATE && self->client->ps.torsoAnim == BOTH_MEDITATE && PlayerAcc_Prof_GetProfession(self) <= PROF_JEDI) {
 		fpmax += extraForce;
-
-	if(PlayerAcc_Prof_GetProfession(self) == PROF_JEDI) {
-		fpmax += Jedi_GetForceIncrease(self);
+		if(overrideAmt) overrideAmt += extraForce / 5; //iomatix: 20% faster regen when meditating.
+		else overrideAmt = extraForce / 5;
 	}
+	//iomatix: addon 10% for meditation bonus
+	if(PlayerAcc_Prof_GetProfession(self) == PROF_JEDI)  fpmax += Jedi_GetForceIncrease(self)/10;
+	
 
 	if ( self->client->ps.fd.forcePower >= fpmax)
 	{ //cap it off at the max (default 100)

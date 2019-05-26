@@ -13,14 +13,18 @@
 - Skillreset command bug is fixed. ✔️
 - Mercenary gets his jetpack after first fuel skill upgrade. ✔️
 - Added lmd_jedi_pickup_weapons, set it to 1 to allow jedi class to pick up weapons and ammo from the map. Default 0 ✔️
-- Added lmd_jedi_add_hp_level, set it to 1 to allow jedi class to get additional health-points per level, set it to 2 to use like mercenaries (may be op). Default 1 ✔️
+- Added lmd_jedi_add_hp_level, set it to 1 to allow jedi class to get additional health-points per level. Default 1 ✔️
 - Added lmd_profession_fee variable to set the fee when changing the profession. Default 1350. ✔️
 - Added lmd_skillpoints_perlevel variable that amount of skill points will be gived per each level up. Default 4. ✔️
 - Reworked skillpoints checking system. Old one was totally bugged. ✔️
 - Added more basic information in command-popup and repaired old messy ones for usable commands. ✔️
+- Health, Force Power and Shield formula are re-balanced. ✔️
+- When meditating Force Power rains 20% faster.  ✔️
+- Meditation formula re-balanced.  ✔️
+- Player can spend skillpoints to upgrade their max hp/power/shield capacity. 50% TODO: Force User and update new meditation formula with new functions.
 
 ##TODO
-- TODO: Player can spend skillpoints to upgrade their max hp/power/shield capacity. 50%
+
 - TODO: Make MaxAmmo function for explosive materials.  
 
 - TODO: Player after reaching level 120 is able to start over again from level 1 but with perma +25hp/+25force/+25shield boost. Repeatable. 

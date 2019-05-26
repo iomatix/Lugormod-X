@@ -654,6 +654,7 @@ enum
 	FP_SABER_OFFENSE,
 	FP_SABER_DEFENSE,
 	FP_SABERTHROW,
+
 	NUM_FORCE_POWERS
 };
 typedef int forcePowers_t;

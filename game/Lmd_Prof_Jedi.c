@@ -6,7 +6,7 @@
 #include "Lmd_Prof_Core.h"
 
 //Jedi skills.
-enum{
+enum {
 	SK_JEDI_HEAL,
 	SK_JEDI_LEVITATION,//hold/duration
 	SK_JEDI_SPEED,//duration
@@ -81,7 +81,7 @@ enum{
 
 
 
-typedef struct jediFields_s{
+typedef struct jediFields_s {
 	int Jedi[SK_JEDI_NUM_SKILLS];
 }jediFields_t;
 #define	JEDIFIELDOFS(x) ((int)&(((jediFields_t *)0)->x))
@@ -126,8 +126,8 @@ int Jedi_GetAccSide(Account_t *acc) {
 	jediFields_t *entry = (jediFields_t*)Accounts_Prof_GetFieldData(acc);
 	int result = 0;
 	int i;
-	for(i = 0; i < SK_JEDI_NUM_SKILLS; i++) {
-		if(entry->Jedi[i] > 0 && forcePowerDarkLight[i] != 0)
+	for (i = 0; i < SK_JEDI_NUM_SKILLS; i++) {
+		if (entry->Jedi[i] > 0 && forcePowerDarkLight[i] != 0)
 			result |= forcePowerDarkLight[i];
 	}
 	if (result == FORCE_LIGHTSIDE || result == FORCE_DARKSIDE)
@@ -136,33 +136,33 @@ int Jedi_GetAccSide(Account_t *acc) {
 		return 0;
 }
 
-int Jedi_GetSide(gentity_t *ent){
-	if(!ent->client->pers.Lmd.account)
+int Jedi_GetSide(gentity_t *ent) {
+	if (!ent->client->pers.Lmd.account)
 		return 0;
 	return Jedi_GetAccSide(ent->client->pers.Lmd.account);
 }
 
 #if 0
 BG_field_t jediFields[] = {
-	{"heal", JEDIFIELDOFS(Jedi[SK_JEDI_HEAL]), F_INT},
-	{"levitate", JEDIFIELDOFS(Jedi[SK_JEDI_LEVITATION]), F_INT},
-	{"speed", JEDIFIELDOFS(Jedi[SK_JEDI_SPEED]), F_INT},
-	{"push", JEDIFIELDOFS(Jedi[SK_JEDI_PUSH]), F_INT},
-	{"pull", JEDIFIELDOFS(Jedi[SK_JEDI_PULL]), F_INT},
-	{"telepathy", JEDIFIELDOFS(Jedi[SK_JEDI_TELEPATHY]), F_INT},
-	{"grip", JEDIFIELDOFS(Jedi[SK_JEDI_GRIP]), F_INT},
-	{"lightning", JEDIFIELDOFS(Jedi[SK_JEDI_LIGHTNING]), F_INT},
-	{"rage", JEDIFIELDOFS(Jedi[SK_JEDI_RAGE]), F_INT},
-	{"protect", JEDIFIELDOFS(Jedi[SK_JEDI_PROTECT]), F_INT},
-	{"absorb", JEDIFIELDOFS(Jedi[SK_JEDI_ABSORB]), F_INT},
-	{"team_heal", JEDIFIELDOFS(Jedi[SK_JEDI_TEAM_HEAL]), F_INT},
-	{"team_force", JEDIFIELDOFS(Jedi[SK_JEDI_TEAM_FORCE]), F_INT},
-	{"drain", JEDIFIELDOFS(Jedi[SK_JEDI_DRAIN]), F_INT},
-	//{"see", JEDIFIELDOFS(Jedi[SK_JEDI_SEE]), F_INT},
-	{"saber_offense", JEDIFIELDOFS(Jedi[SK_JEDI_SABER_OFFENSE]), F_INT},
-	{"saber_defense", JEDIFIELDOFS(Jedi[SK_JEDI_SABER_DEFENSE]), F_INT},
-	{"saber_throw", JEDIFIELDOFS(Jedi[SK_JEDI_SABERTHROW]), F_INT},
-	{NULL}
+	{ "heal", JEDIFIELDOFS(Jedi[SK_JEDI_HEAL]), F_INT },
+{ "levitate", JEDIFIELDOFS(Jedi[SK_JEDI_LEVITATION]), F_INT },
+{ "speed", JEDIFIELDOFS(Jedi[SK_JEDI_SPEED]), F_INT },
+{ "push", JEDIFIELDOFS(Jedi[SK_JEDI_PUSH]), F_INT },
+{ "pull", JEDIFIELDOFS(Jedi[SK_JEDI_PULL]), F_INT },
+{ "telepathy", JEDIFIELDOFS(Jedi[SK_JEDI_TELEPATHY]), F_INT },
+{ "grip", JEDIFIELDOFS(Jedi[SK_JEDI_GRIP]), F_INT },
+{ "lightning", JEDIFIELDOFS(Jedi[SK_JEDI_LIGHTNING]), F_INT },
+{ "rage", JEDIFIELDOFS(Jedi[SK_JEDI_RAGE]), F_INT },
+{ "protect", JEDIFIELDOFS(Jedi[SK_JEDI_PROTECT]), F_INT },
+{ "absorb", JEDIFIELDOFS(Jedi[SK_JEDI_ABSORB]), F_INT },
+{ "team_heal", JEDIFIELDOFS(Jedi[SK_JEDI_TEAM_HEAL]), F_INT },
+{ "team_force", JEDIFIELDOFS(Jedi[SK_JEDI_TEAM_FORCE]), F_INT },
+{ "drain", JEDIFIELDOFS(Jedi[SK_JEDI_DRAIN]), F_INT },
+//{"see", JEDIFIELDOFS(Jedi[SK_JEDI_SEE]), F_INT},
+{ "saber_offense", JEDIFIELDOFS(Jedi[SK_JEDI_SABER_OFFENSE]), F_INT },
+{ "saber_defense", JEDIFIELDOFS(Jedi[SK_JEDI_SABER_DEFENSE]), F_INT },
+{ "saber_throw", JEDIFIELDOFS(Jedi[SK_JEDI_SABERTHROW]), F_INT },
+{ NULL }
 };
 const unsigned int jediFieldsCount = (sizeof(jediFields) / sizeof(BG_field_t)) - 1;
 #endif
@@ -184,7 +184,7 @@ profSkill_t jediSkill_Neutral_Jump = {
 	"Jump",
 	"Use the force to reach higher places.",
 	jediSkill_Neutral_Jump_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -199,7 +199,7 @@ const char *jediSkill_Neutral_Push_Descr[] = {
 	"Push anything within a small arc your aim.",
 	"Push anything within a large arc of your aim.  Lower cooldown time.",
 	"Push with more force than normal.  Lower cooldown time."
-	"Push with twice the normal force.  Lower cooldown time." 
+	"Push with twice the normal force.  Lower cooldown time."
 	"",
 	NULL
 };
@@ -210,7 +210,7 @@ profSkill_t jediSkill_Neutral_Push = {
 	"Push",
 	"Push items and people away from you.  Deflect projectiles.  Break saber locks in your favor.",
 	jediSkill_Neutral_Push_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -235,7 +235,7 @@ profSkill_t jediSkill_Neutral_Pull = {
 	"Pull",
 	"Pull items, people, and projectiles to you.",
 	jediSkill_Neutral_Pull_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -260,7 +260,7 @@ profSkill_t jediSkill_Neutral_Speed = {
 	"Speed",
 	"Gain a burst of speed.",
 	jediSkill_Neutral_Speed_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -286,15 +286,15 @@ profSkill_t jediSkill_Neutral_Seeing = {
 	"Seeing",
 	"Locate others through barriers, and find the money stash.  Sense others using Mind Trick",
 	jediSkill_Neutral_Seeing_Descr,
-	
+
 	0,
 	//Ufo:
-	{0, 3},
-	SkillPoints_Default,
+{ 0, 3 },
+SkillPoints_Default,
 
-	Lmd_Prof_Jedi_GetSkill_Seeing,
-	Lmd_Prof_Jedi_CanSetSkill_Seeing,
-	Lmd_Prof_Jedi_SetSkill_Seeing
+Lmd_Prof_Jedi_GetSkill_Seeing,
+Lmd_Prof_Jedi_CanSetSkill_Seeing,
+Lmd_Prof_Jedi_SetSkill_Seeing
 };
 
 profSkill_t jediSkill_Neutral_Subskills[] = {
@@ -375,7 +375,7 @@ profSkill_t jediSkill_Light_Protect = {
 	"Protect",
 	"Protect yourself from damage.",
 	jediSkill_Light_Protect_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -400,7 +400,7 @@ profSkill_t jediSkill_Light_MindTrick = {
 	"MindTrick",
 	"Trick others and become invisible to them.  You will become visible if you attack, or to anyone who uses Force Sense.",
 	jediSkill_Light_MindTrick_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -420,7 +420,7 @@ profSkill_t jediSkill_Light_TeamHeal = {
 	"TeamHeal",
 	"Heal others around you.  Control who you heal by adding them to \'/buddies\'.",
 	jediSkill_Light_TeamHeal_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -455,7 +455,7 @@ profSkill_t jediSkill_Dark_Grip = {
 	"Grip",
 	"Paralyze a target and do more damage the longer they are held.",
 	jediSkill_Dark_Grip_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -476,7 +476,7 @@ profSkill_t jediSkill_Dark_Drain = {
 	"Drain",
 	"Take force energy from others to heal yourself.",
 	jediSkill_Dark_Drain_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -501,7 +501,7 @@ profSkill_t jediSkill_Dark_Lightning = {
 	"Lightning",
 	"Shocks others with a damaging lightning burst.",
 	jediSkill_Dark_Lightnig_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -525,9 +525,9 @@ STD_FORCEPOWER_FUNCS(Rage, FP_RAGE)
 profSkill_t jediSkill_Dark_Rage = {
 	"Rage",
 	"Increase your speed damage and defense with the power of the force at the cost of degenerating health.  You need to recover for a short time afterwards.\n"
-		"While using rage, you can resist death even when you have very low health.",
+	"While using rage, you can resist death even when you have very low health.",
 	jediSkill_Dark_Rage_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -547,7 +547,7 @@ profSkill_t jediSkill_Dark_Energize = {
 	"Energize",
 	"Recharge force energy of those around you.  Control who you recharge by adding them to \'/buddies\'.",
 	jediSkill_Dark_Energize_Descr,
-	
+
 	0,
 	SkillLevels_Default,
 	SkillPoints_Default,
@@ -576,14 +576,14 @@ profSkill_t jediSkill_Saber_Attack = {
 	"Attack",
 	"Your skills with a saber.",
 	jediSkill_Saber_Attack_Descr,
-	
-	0,
-	{3, 3},
-	SkillPoints_Default,
 
-	Lmd_Prof_Jedi_GetSkill_Saber_Attack,
-	Lmd_Prof_Jedi_CanSetSkill_Saber_Attack,
-	Lmd_Prof_Jedi_SetSkill_Saber_Attack
+	0,
+{ 3, 3 },
+SkillPoints_Default,
+
+Lmd_Prof_Jedi_GetSkill_Saber_Attack,
+Lmd_Prof_Jedi_CanSetSkill_Saber_Attack,
+Lmd_Prof_Jedi_SetSkill_Saber_Attack
 };
 
 
@@ -599,12 +599,12 @@ profSkill_t jediSkill_Saber_Defend = {
 	jediSkill_Saber_Defend_Descr,
 
 	0,
-	{3, 3},
-	SkillPoints_Default,
+{ 3, 3 },
+SkillPoints_Default,
 
-	Lmd_Prof_Jedi_GetSkill_Saber_Defend,
-	Lmd_Prof_Jedi_CanSetSkill_Saber_Defend,
-	Lmd_Prof_Jedi_SetSkill_Saber_Defend
+Lmd_Prof_Jedi_GetSkill_Saber_Defend,
+Lmd_Prof_Jedi_CanSetSkill_Saber_Defend,
+Lmd_Prof_Jedi_SetSkill_Saber_Defend
 };
 
 
@@ -618,14 +618,14 @@ profSkill_t jediSkill_Saber_Throw = {
 	"Throw",
 	"Your ability to throw the saber as a projectile.",
 	jediSkill_Saber_Throw_Descr,
-	
-	0,
-	{3, 3},
-	SkillPoints_Default,
 
-	Lmd_Prof_Jedi_GetSkill_Saber_Throw,
-	Lmd_Prof_Jedi_CanSetSkill_Saber_Throw,
-	Lmd_Prof_Jedi_SetSkill_Saber_Throw
+	0,
+{ 3, 3 },
+SkillPoints_Default,
+
+Lmd_Prof_Jedi_GetSkill_Saber_Throw,
+Lmd_Prof_Jedi_CanSetSkill_Saber_Throw,
+Lmd_Prof_Jedi_SetSkill_Saber_Throw
 };
 
 profSkill_t jediSkill_Saber_Subskills[] = {
@@ -645,17 +645,17 @@ profSkill_t jediSkill_Neutral = {
 
 	0,
 
-	{0,0},
-	SkillPoints_Default,
+{ 0,0 },
+SkillPoints_Default,
 
-	NULL,
-	NULL,
-	NULL,
+NULL,
+NULL,
+NULL,
 
-	{
-		jediSkillNeutralCount,
-		(profSkill_t *)jediSkill_Neutral_Subskills
-	},
+{
+	jediSkillNeutralCount,
+	(profSkill_t *)jediSkill_Neutral_Subskills
+},
 };
 
 const char *jediSkill_Jedi_Descr[] = {
@@ -666,19 +666,19 @@ profSkill_t jediSkill_Jedi = {
 	"Jedi",
 	"Powers of the Jedi.",
 	jediSkill_Jedi_Descr,
-	
+
 	1,
-	{0,0},
-	SkillPoints_Default,
+{ 0,0 },
+SkillPoints_Default,
 
-	NULL,
-	NULL,
-	NULL,
+NULL,
+NULL,
+NULL,
 
-	{
-		jediSkillLightCount,
-		(profSkill_t *)jediSkill_Light_Subskills
-	},
+{
+	jediSkillLightCount,
+	(profSkill_t *)jediSkill_Light_Subskills
+},
 };
 
 const char *jediSkill_Sith_Descr[] = {
@@ -689,18 +689,18 @@ profSkill_t jediSkill_Sith = {
 	"Sith",
 	"Powers of the Sith.",
 	jediSkill_Sith_Descr,
-	
-	1,
-	{0,0}, 
-	SkillPoints_Default,
-	
-	NULL,
-	NULL,
-	NULL,
 
-	{
-		jediSkillDarkCount, (profSkill_t *)jediSkill_Dark_Subskills
-	},
+	1,
+{ 0,0 },
+SkillPoints_Default,
+
+NULL,
+NULL,
+NULL,
+
+{
+	jediSkillDarkCount, (profSkill_t *)jediSkill_Dark_Subskills
+},
 };
 
 const char *jediSkill_Saber_Descr[] = {
@@ -711,19 +711,19 @@ profSkill_t jediSkill_Saber = {
 	"Saber",
 	"Skills with a saber.",
 	jediSkill_Saber_Descr,
-	
+
 	0,
-	{0,0},
-	SkillPoints_Default,
+{ 0,0 },
+SkillPoints_Default,
 
-	NULL,
-	NULL,
-	NULL,
+NULL,
+NULL,
+NULL,
 
-	{
-		jediSkillaberCount,
-		(profSkill_t *)jediSkill_Saber_Subskills
-	}
+{
+	jediSkillaberCount,
+	(profSkill_t *)jediSkill_Saber_Subskills
+}
 };
 
 profSkill_t jediSkill[] = {
@@ -769,32 +769,32 @@ int Jedi_GetForceRegenDebounce(gentity_t *ent) {
 
 unsigned int Jedi_Count() {
 	int i, count = 0;
-	for(i = 0; i < MAX_CLIENTS; i++) {
-		if(!g_entities[i].client || g_entities[i].client->pers.connected != CON_CONNECTED)
+	for (i = 0; i < MAX_CLIENTS; i++) {
+		if (!g_entities[i].client || g_entities[i].client->pers.connected != CON_CONNECTED)
 			continue;
-		if(PlayerAcc_Prof_GetProfession((&g_entities[i])) == PROF_JEDI)
+		if (PlayerAcc_Prof_GetProfession((&g_entities[i])) == PROF_JEDI)
 			count++;
 	}
 	return count;
 }
 
 //Ufo:
-void Cmd_Ionlysaber_f (gentity_t *ent, int iArg) 
+void Cmd_Ionlysaber_f(gentity_t *ent, int iArg)
 {
-	if (ent->s.m_iVehicleNum){
+	if (ent->s.m_iVehicleNum) {
 		return;
 	}
 
-	if (ent->client->ps.weaponTime > 0 
+	if (ent->client->ps.weaponTime > 0
 		|| ent->client->ps.weapon != WP_SABER
 		|| ent->client->ps.m_iVehicleNum
 		|| ent->client->pers.Lmd.persistantFlags & SPF_IONLYSABER
 		|| duelInProgress(&ent->client->ps)
 		|| ent->client->ps.forceHandExtend != HANDEXTEND_NONE
-		|| BG_HasYsalamiri(g_gametype.integer, &ent->client->ps)){
-			return;
+		|| BG_HasYsalamiri(g_gametype.integer, &ent->client->ps)) {
+		return;
 	}
-	if(ent->client->Lmd.moneyStash){
+	if (ent->client->Lmd.moneyStash) {
 		return;
 	}
 
@@ -813,10 +813,10 @@ void Cmd_Ionlysaber_f (gentity_t *ent, int iArg)
 	ent->client->ps.weapon = WP_SABER;
 	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_SABER);
 	ent->client->pers.Lmd.persistantFlags |= SPF_IONLYSABER;
-	Disp (ent, "IONLYSABER activated (it can be deactivated by engaging in a duel or using /kill command)\n");
+	Disp(ent, "IONLYSABER activated (it can be deactivated by engaging in a duel or using /kill command)\n");
 }
 
-void Jedi_Spawn(gentity_t *ent){
+void Jedi_Spawn(gentity_t *ent) {
 	ent->client->ps.trueNonJedi = qfalse;
 	//iomatix:
 	if (lmd_jedi_pickup_weapons.integer > 0) {
@@ -842,11 +842,11 @@ void Jedi_Spawn(gentity_t *ent){
 void Jedi_SetupForce(gentity_t *ent)
 {
 	int i;
-	if(!ent->client->pers.Lmd.account)
+	if (!ent->client->pers.Lmd.account)
 		return;
 	jediFields_t *entry = FIELDDATA(ent);
 
-	for(i = 0; i < NUM_FORCE_POWERS; i++){
+	for (i = 0; i < NUM_FORCE_POWERS; i++) {
 		ent->client->ps.fd.forcePowerLevel[i] = entry->Jedi[i];
 		if (ent->client->ps.fd.forcePowerLevel[i])
 			ent->client->ps.fd.forcePowersKnown |= (1 << i);
@@ -861,14 +861,14 @@ const char *jediProf_Descr[] = {
 };
 
 int Lmd_Prof_Jedi_GetLevel(Account_t *acc, profSkill_t *skill) {
-	if(!IS_A_JEDI(acc)) {
+	if (!IS_A_JEDI(acc)) {
 		return 0;
 	}
 	return Accounts_Prof_GetLevel(acc);
 }
 
 qboolean Lmd_Prof_Jedi_CanSetLevel(Account_t *acc, profSkill_t *skill, int level) {
-	if(!IS_A_JEDI(acc)) {
+	if (!IS_A_JEDI(acc)) {
 		return qfalse;
 	}
 

@@ -257,12 +257,11 @@ profSkill_t mercSkill_sd_maxs = {
 };
 
 //functions for skills:
-int Get_hp_maxs_value(gentity_t *ent)
+int Get_Merc_hp_maxs_value(gentity_t *ent)
 {
-	int value = 0; //additional health
+	int value = 55; //starting health
 
 	int skillHP = Lmd_Prof_Merc_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &mercSkill_hp_maxs);
-	if (skillHP == 0) return 0; //if 0 return (speedup, for low resources)
 	if (skillHP > 0) value = 13 * skillHP;
 	if (skillHP == mercSkill_hp_maxs.levels.max) value += 12; //bonus for maxed (13+12=25)
 
@@ -270,12 +269,11 @@ int Get_hp_maxs_value(gentity_t *ent)
 
 }
 
-int Get_sd_maxs_value(gentity_t *ent)
+int Get_Merc_sd_maxs_value(gentity_t *ent)
 {
-	int value = 0; //additional shield
+	int value = 5; //starting shield
 
 	int skillSD = Lmd_Prof_Merc_GetSkill_sd_maxs(ent->client->pers.Lmd.account, &mercSkill_sd_maxs);
-	if (skillSD == 0) return 0; //if 0 return (speedup, for low resources)
 	if (skillSD > 0) value = 5 * skillSD;
 	if (skillSD == mercSkill_sd_maxs.levels.max) value += 3; //bonus for maxed (5+3=8)
 
@@ -2123,8 +2121,6 @@ void Merc_Spawn(gentity_t *ent)
 #endif
 	ent->client->ps.trueNonJedi = qtrue;
 	ent->client->ps.trueJedi = qfalse;       
-	//iomatix:
-	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = 100 + Professions_TotalSkillPoints(PROF_MERC, PlayerAcc_Prof_GetLevel(ent) + Get_hp_maxs_value(ent) );// +(Lmd_Prof_Merc_GetSkill_HP_TOTAL(ent->client->pers.Lmd.account, &mercSkill_HP_TOTAL) * 2); //iomatix HP skill
 
 	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_MELEE) | (1 << WP_BRYAR_PISTOL);
 #ifdef LMD_NEW_JETPACK
@@ -2136,16 +2132,21 @@ void Merc_Spawn(gentity_t *ent)
 
 	if (Lmd_Prof_Merc_GetSkill_Fuel(ent->client->pers.Lmd.account, &mercSkill_Fuel) > 0) ent->client->ps.stats[STAT_HOLDABLE_ITEMS] |= (1 << HI_JETPACK); //iomatix: new mechanics, jetpack after upgrading the fuel.
 
-																																						  //Ufo:
+				
 	ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax = 75;
+
+	//iomatix:
+	//HEALTH
+	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = floor(PlayerAcc_Prof_GetLevel(ent) * 2.2) + Get_Merc_hp_maxs_value(ent);// +(Lmd_Prof_Merc_GetSkill_HP_TOTAL(ent->client->pers.Lmd.account, &mercSkill_HP_TOTAL) * 2); //iomatix HP skill
+
+	//SHIELD:
 	int armorSkill = Lmd_Prof_Merc_GetSkill_Shield(ent->client->pers.Lmd.account, &mercSkill_Shield);
-	//ent->client->ps.stats[STAT_ARMOR] += (Lmd_Prof_Merc_GetSkill_SD_TOTAL(ent->client->pers.Lmd.account, &mercSkill_SD_TOTAL) * 2); //iomatix SD skill
 	if (armorSkill > 0) {
 		//Will be capped to max on spawn finalize if needed.
 		ent->client->ps.stats[STAT_ARMOR] += armorSkill * (ent->client->pers.maxHealth * 0.15f);
 	}
 	//iomatix:
-	ent->client->ps.stats[STAT_ARMOR] += Get_sd_maxs_value(ent);
+	ent->client->ps.stats[STAT_ARMOR] += Get_Merc_sd_maxs_value(ent);
 	
 }
 
