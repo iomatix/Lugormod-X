@@ -47,7 +47,7 @@
 *Can be compiled using Visual Studio 2013.*
 Linux users may use the makefile inside game folder.
 
-Licensed under GPL version 2 or later.
+Licensed under GPL version 3 or later.
 
 Copyright (C) 2003-2018 RoboPhred.
 **Copyright (C) 2019 iomatix.**
