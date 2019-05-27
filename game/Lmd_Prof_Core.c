@@ -439,6 +439,7 @@ int Professions_SkillCost(profSkill_t *skill, int level) {
 	else if (skill->points.type == SPT_LINEAR_2) return level*2;
 	else if (skill->points.type == SPT_LINEAR_5) return level * 5;
 	else if (skill->points.type == SPT_LINEAR_10) return level*10;
+	else if (skill->points.type == SPT_LINEAR_12) return level * 12;
 	return 0;
 
 	////linear
@@ -739,7 +740,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 
 		if (lmd_mastery_level_skills_level.integer > 0)
 		{
-			if (nextLevel > lmd_mastery_level_skills_level.integer)
+			if (nextLevel > lmd_mastery_level_skills_level.integer && profession_level < MASTER_LEVEL)
 			{
 				Disp(ent, va("^1Unlocked at ^2%i^3 profession level. You need to reach mastery level before increasing this skill.", MASTER_LEVEL));
 				return;

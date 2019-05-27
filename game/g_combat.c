@@ -2647,6 +2647,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			}
 
 			if(lmd_rewardcr_kill.integer != 0 && attacker->s.number < MAX_CLIENTS && attacker != self) {
+				//iomatix: todo killing rewards for experience system
 				GiveCredits(attacker, lmd_rewardcr_kill.integer, va("for killing ^7%s", self->client->pers.netname));
 			}
 		}
@@ -5130,7 +5131,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		targ->client->ps.otherKillerDebounceTime = level.time + 25000;
 	}
 
-
+	
+	////////
 	if ( (g_jediVmerc.integer || g_gametype.integer == GT_SIEGE ||
 		g_gametype.integer == GT_BATTLE_GROUND || gameMode(GM_ALLWEAPONS))
 		&& targ->client )
@@ -5140,7 +5142,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			|| g_gametype.integer == GT_BATTLE_GROUND
 			|| PlayerAcc_Prof_GetProfession(targ) == PROF_JEDI)
 			&& targ->client->ps.weapon == WP_SABER))
-		{//if the target is a trueJedi, reduce splash and explosive damage to 1/2
+		{//if the target is a trueJedi, reduce splash and explosive damage to 72%
 			switch ( mod )
 			{
 			case MOD_REPEATER_ALT:
@@ -5156,7 +5158,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			case MOD_TRIP_MINE_SPLASH:
 			case MOD_TIMED_MINE_SPLASH:
 			case MOD_DET_PACK_SPLASH:
-				damage *= 0.75;
+				damage *= 0.72;
 				break;
 			}
 		}
@@ -5168,6 +5170,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			&& !(gameMode(5) &&
 			targ->client->ps.saberInFlight))
 		{//if the target is a trueNonJedi, take more saber damage... combined with the 1.5 in the w_saber stuff, this is 6 times damage!
+			//iomatix nerf?
 			if ( damage < 100 )
 			{
 				damage *= 4;
@@ -5326,7 +5329,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			attacker->client->ps.persistant[PERS_ATTACKEE_ARMOR] = (targ->health<<8)|(targ->client->ps.stats[STAT_ARMOR]);
 	}
 
-	// always give half damage if hurting self... but not in siege.  Heavy weapons need a counter.
+	// always give 75% damage if hurting self... but not in siege.  Heavy weapons need a counter.
 	// calculated after knockback, so rocket jumping works
 	if ( targ == attacker && !(dflags & DAMAGE_NO_SELF_PROTECTION)) {
 		if ( g_gametype.integer == GT_SIEGE )
@@ -5335,9 +5338,41 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		}
 		else
 		{
-			damage *= 0.5;
+			damage *= 0.75;
 		}
 	}
+
+	//iomatix damage_modifiers :
+	//Lethality & Thousand Cuts skills + level damage scale depending on level differences between players
+																												//deal with NPC?
+	if (lmd_damage_level_scale.integer == 1 && mod && attacker->client && targ->client && targ->s.eType != ET_NPC && attacker->s.eType != ET_NPC) {
+		int level_attacker = 1;
+		int level_targ = 1;
+		//1% per 1 level difference!
+		//check is logged in
+		if (attacker->client->pers.Lmd.account)level_attacker = PlayerAcc_Prof_GetLevel(attacker);
+		if (targ->client->pers.Lmd.account)level_targ = PlayerAcc_Prof_GetLevel(targ);
+		
+		damage += damage * ((level_attacker - level_targ)/100); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
+	}
+	//PlayerAcc_Prof_GetProfession
+	int lethalityoutput = 0;
+	if (mod && attacker->client && targ->client)
+	{
+		if (attacker->client->pers.Lmd.account) { //is logged in?
+			if (PlayerAcc_Prof_GetProfession(attacker) == PROF_MERC) { //mercenary class check 
+				if (PlayerProf_Merc_GetLethalitySkill(attacker) > 0) {
+					//4->8->12->16 check the lethality descr   
+					lethalityoutput = (damage * PlayerProf_Merc_GetLethalitySkill(attacker)*4)/100; //gets the percent of damage value
+					if (lmd_is_lethality_add_damage.integer == 0) damage -= lethalityoutput; //default add_damage = 0. It converts the damage instead of adding the damage.
+				}
+			}
+
+
+		}
+	}
+	
+
 
 	if ( damage < 1 ) {
 		damage = 1;
@@ -5373,10 +5408,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	// save some from armor
 	asave = CheckArmor (targ, take, dflags);
 
-	if (asave)
-		shieldAbsorbed = asave;
+	if (asave)shieldAbsorbed = asave;
 
 	take -= asave;
+	take += lethalityoutput;              //iomatix lethality.
 	if ( targ->client )
 	{//update vehicle shields and armor, check for explode 
 		if ( targ->client->NPC_class == CLASS_VEHICLE && targ->m_pVehicle )

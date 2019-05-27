@@ -30,6 +30,7 @@ typedef enum {
 	SPT_LINEAR_2,
 	SPT_LINEAR_5,
 	SPT_LINEAR_10,
+	SPT_LINEAR_12,
 } skillPointType_t;
 
 typedef struct skillPointData_s {
@@ -41,6 +42,7 @@ static skillPointData_t SkillPoints_Linear = { SPT_LINEAR };
 static skillPointData_t SkillPoints_Linear_2 = { SPT_LINEAR_2 };
 static skillPointData_t SkillPoints_Linear_5 = { SPT_LINEAR_5 };
 static skillPointData_t SkillPoints_Linear_10 = { SPT_LINEAR_10 };
+static skillPointData_t SkillPoints_Linear_12 = { SPT_LINEAR_12 };
 
 struct profSkill_s{
 	char *name;

@@ -27,6 +27,10 @@
 - Redesigned skill creation for mercenary. ✔️
 - Mercenary weapons skill has access to more weapons now. ✔️
 - Skills above lmd_mastery_level_skills_level level availble after reaching the Mastery Level (40). ✔️ default 3, to unlock use 99 or 0. ✔️
+- Flameburst increased damage output. ✔️ 
+- Added level damage scaling with new server side variable lmd_damage_level_scale. default 1, 0 to turn off ✔️ 
+- Added lethality & thousand cuts skills.
+- Added new extern variable lmd_is_lethality_add_damage to configure the lethality skill.
 
 ## TODO
 - New passive for mercenary, maybe more upgrades? //do not touch forces!
@@ -52,3 +56,6 @@
 
 - TODO: USER FRIENDLY GUIDE
 - TODO: Adding openjk API support
+- TODO: RGB lightsabers
+- TODO: Custom swords
+- TODO: New lightning effects for level 4 & 5

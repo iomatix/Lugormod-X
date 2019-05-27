@@ -238,7 +238,7 @@ profSkill_t jediSkill_Passive_overload = {
 
 	0,
 	SkillLevels_4,
-	SkillPoints_Linear_10,
+	SkillPoints_Linear_12,
 
 	Lmd_Prof_Jedi_GetSkill_overload,
 	Lmd_Prof_Jedi_CanSetSkill_overload,

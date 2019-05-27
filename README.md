@@ -16,6 +16,9 @@
 - Improved console displays making it more clear for the user.
 - New weapons for Mercenary profession available through his skill.
 - To get access more powerful skills player must reach his Mastery Level now.
+- Added level damage scaling with new server side variable.
+- Added lethality & thousand cuts skills.
+- Added new extern variable lmd_is_lethality_add_damage to configure the lethality skill.
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 

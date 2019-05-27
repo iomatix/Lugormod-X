@@ -75,6 +75,7 @@ typedef struct mercFields_s{
 		int ysalamiri;
 		int hp_maxs;
 		int sd_maxs;
+		int lethality;
 	} skills;
 	int weaponselect;
 }mercFields_t;
@@ -98,6 +99,7 @@ typedef struct mercFields_s{
 	_m##_AUTO(ysalamiri, MERCFIELDOFS(skills.ysalamiri), F_INT) \
 	_m##_AUTO(hp_maxs, MERCFIELDOFS(skills.hp_maxs), F_INT) \
 	_m##_AUTO(sd_maxs, MERCFIELDOFS(skills.sd_maxs), F_INT) \
+	_m##_AUTO(lethality, MERCFIELDOFS(skills.lethality), F_INT) \
 	_m##_AUTO(weaponselect, MERCFIELDOFS(weaponselect), F_INT)
 
 MercFields_Base(DEFINE_FIELD_PRE)
@@ -193,8 +195,39 @@ profSkill_t mercSkill_sd_maxs = {
 	Lmd_Prof_Merc_CanSetSkill_sd_maxs,
 	Lmd_Prof_Merc_SetSkill_sd_maxs,
 };
+///////////
+const char *mercSkill_lethality_Descr[] = {
+	"4 percent of the Lethality",
+	"8 percent of the Lethality",
+	"12 percent of the Lethality",
+	"16 percent of the Lethality",
+	NULL
+};
 
+STD_SKILLS_FUNCS(lethality)
+
+profSkill_t mercSkill_Lethality = {
+	"Lethality",
+	"Your attacks pierces through the shields.",
+	mercSkill_lethality_Descr,
+
+	0,
+	SkillLevels_4,
+	SkillPoints_Linear_12,
+
+	Lmd_Prof_Merc_GetSkill_lethality,
+	Lmd_Prof_Merc_CanSetSkill_lethality,
+	Lmd_Prof_Merc_SetSkill_lethality,
+};
 //functions for passive skills:
+//GetSkill
+int Lmd_Prof_Merc_GetLethalitySkill(Account_t *acc) {
+	if (!acc) {
+		return 0;
+	}
+	return mercSkill_Lethality.getValue(acc, &mercSkill_Lethality);
+}
+/////Functions:
 int Get_Merc_hp_maxs_value(gentity_t *ent)
 {
 	int value = 55; //starting health
@@ -406,11 +439,11 @@ profSkill_t mercSkill_Fuel = {
 
 
 const char *mercSkill_FlameBurst_Descr[] = {
-	"Deal 15 points of damage to your target.",
-	"Deal 20 points of damage to your target.",
-	"Deal 25 points of damage to your target.",
-	"Deal 30 points of damage to your target.",
-	"Deal 35 points of damage to your target.",
+	"Deal 16 points of damage to your target.",
+	"Deal 22 points of damage to your target.",
+	"Deal 28 points of damage to your target.",
+	"Deal 34 points of damage to your target.",
+	"Deal 40 points of damage to your target.",
 	NULL
 };
 
@@ -511,6 +544,7 @@ profSkill_t mercSkills[] = {
 	mercSkill_Ysalamiri,
 	mercSkill_hp_maxs,
 	mercSkill_sd_maxs,
+	mercSkill_Lethality,
 };
 const unsigned int mercSkillCount = sizeof(mercSkills) / sizeof(profSkill_t);
 
@@ -936,7 +970,7 @@ void Prof_Merc_Flame(gentity_t *ent){
 		// ok, we are within the radius, add us to the incoming list
 
 		G_PlayEffectID(G_EffectIndex("env/fire_wall"), traceEnt->r.currentOrigin, vec3_origin);                       
-		G_Damage(traceEnt, ent, ent, ent->client->ps.viewangles, NULL, 10 + (lvl * 5), /*DAMAGE_NO_ARMOR|*/DAMAGE_NO_KNOCKBACK, MOD_LAVA);
+		G_Damage(traceEnt, ent, ent, ent->client->ps.viewangles, NULL, 10 + (lvl * 6), /*DAMAGE_NO_ARMOR|*/DAMAGE_NO_KNOCKBACK, MOD_LAVA);
 
 		//escape a force grip if we're in one
 		if(traceEnt->client && traceEnt->client->ps.fd.forceGripEntityNum != ENTITYNUM_NONE){

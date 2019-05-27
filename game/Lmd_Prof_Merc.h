@@ -1,4 +1,3 @@
-
 int Lmd_Prof_Merc_GetMeleeSkill(Account_t *acc);
 #define PlayerProf_Merc_GetMeleeSkill(ent) Lmd_Prof_Merc_GetMeleeSkill(ent->client->pers.Lmd.account)
 
@@ -14,3 +13,6 @@ int Lmd_Prof_Merc_GetStashRangeSkill(Account_t *acc);
 
 int Lmd_Prof_Merc_GetYsalamiriSkill(Account_t *acc);
 #define PlayerProf_Merc_GetYsalamiriSkill(ent) Lmd_Prof_Merc_GetYsalamiriSkill(ent->client->pers.Lmd.account)
+
+int Lmd_Prof_Merc_GetLethalitySkill(Account_t *acc);
+#define PlayerProf_Merc_GetLethalitySkill(ent) Lmd_Prof_Merc_GetLethalitySkill(ent->client->pers.Lmd.account)

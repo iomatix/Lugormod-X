@@ -1,5 +1,6 @@
-
-
+#include "Lmd_Prof_Jedi.h"
+#include "Lmd_Prof_Merc.h"
+//iomatix ^ ^
 enum{
 	PROF_NONE = 0,
 	PROF_ADMIN,
