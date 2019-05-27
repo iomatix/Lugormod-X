@@ -43,7 +43,7 @@ void GiveCredits(gentity_t *ent, int cr, char *reason);
 
 
 int Accounts_GetExperience(Account_t *acc);
-#define PlayerAcc_GetExperience(ent) Accounts_GetCredits(ent->client->pers.Lmd.account)
+#define PlayerAcc_GetExperience(ent) Accounts_GetExperience(ent->client->pers.Lmd.account)
 
 void Accounts_SetExperience(Account_t *acc, int value);
 #define PlayerAcc_SetExperience(ent, value) Accounts_SetExperience(ent->client->pers.Lmd.account, value)

@@ -43,6 +43,7 @@
 - meditation fix!!!!!!!
 - more exp based on level differences!!!!!!!!!!!!!!!!!!
 - lesser difference between level damages!!!
+- Add for admin commands self without parameter.
 - TODO: Adding new extern variable lmd_loss_exp_death. ????????
 - TODO: Add experience needed to level up. (Not tradable, add new cmd for admin to set experience.) It will block economic looses for servers. Level DOSEN'T need credits.
 
