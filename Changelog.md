@@ -28,6 +28,9 @@
 - Weapons skill has more weapons available now. ✔️
 
 ## TODO
+- New weapons avaiable after reaching Mastery Level!
+- Last 15 points of passive skills avaiable after reaching Mastery Level!
+- New passive for mercenary, maybe more upgrades? //do not touch forces!
 
 - TODO: Make MaxAmmo function for explosive materials.  
 
