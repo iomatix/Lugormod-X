@@ -265,7 +265,7 @@ void Cmd_Help_f(gentity_t *ent){
 		}
 	}
 	else {
-		Disp(ent, va("^8Lugormod %s -- ^0by iomatix\n ^2Guide: www.github.com/iomatix/Lugormod-X\n", Lugormod_Version.string));
+		Disp(ent, va("^8Lugormod ^6%s ^0-- ^8by iomatix\n ^5Guide: www.github.com/iomatix/Lugormod-X\n", Lugormod_Version.string));
 		Cmd_Help_ListCategories(ent);
 	}
 }
