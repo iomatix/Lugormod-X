@@ -32,17 +32,13 @@ enum {
 	///////////////////
 	SK_JEDI_NUM_SKILLS
 };
-
+//iomatix automata:
 #define STD_FORCEPOWER_GET(name, fp) int Lmd_Prof_Jedi_GetSkill_##name(AccountPtr_t accPtr, profSkill_t *skill) { \
 											Account_t *acc = (Account_t*)accPtr; \
 											jediFields_t *data; \
-											if (!IS_A_JEDI(acc)) { \
-												return 0; \
-											} \
+											if(!IS_A_JEDI(acc)) return 0; \
 											data = ACCFIELDDATA(acc); \
-											if (!data) { \
-												return 0; \
-											} \
+											if(!data) return 0; \
 											return data->Jedi[fp]; \
 										} 
 
@@ -50,25 +46,17 @@ enum {
 											Account_t *acc = (Account_t*)accPtr; \
 											jediFields_t *data; \
 											int side; \
-											if (!IS_A_JEDI(acc)) { \
-												return qfalse; \
-											} \
+											if(!IS_A_JEDI(acc)) return qfalse; \
 											data = ACCFIELDDATA(acc); \
-											if (!data) { \
-												return qfalse; \
-											} \
-											if (value < skill->levels.min || value > skill->levels.max) { \
-												return qfalse; \
-											} \
+											if(!data) return qfalse; \
+											if(value < skill->levels.min || value > skill->levels.max) return qfalse; \
 											return qtrue; \
 										}
 
 #define STD_FORCEPOWER_SET(name, fp) qboolean Lmd_Prof_Jedi_SetSkill_##name(AccountPtr_t accPtr, profSkill_t *skill, int value) { \
 										Account_t *acc = (Account_t*)accPtr; \
 										jediFields_t *data; \
-										if (!Lmd_Prof_Jedi_CanSetSkill_##name(acc, skill, value)) { \
-											return qfalse; \
-										} \
+										if(!Lmd_Prof_Jedi_CanSetSkill_##name(acc, skill, value)) return qfalse; \
 										data = ACCFIELDDATA(acc); \
 										data->Jedi[fp] = value; \
 										Lmd_Accounts_Modify(acc); \

@@ -24,7 +24,8 @@
 - Player can spend skillpoints to upgrade their max hp/power/shield capacity. ✔️
 - Added new skill tree for Jedi and new passive skills. ✔️
 - lmd_skillpoint_cost will have impact also on reset skill cost. Reseting skill is the same price as uprgrading. ✔️
-- Redesigned skill creation for mercenary.
+- Redesigned skill creation for mercenary. ✔️
+- Weapons select have more weapons now.
 
 ## TODO
 
