@@ -29,6 +29,7 @@ enum {
 	SK_JEDI_hp_maxs,
 	SK_JEDI_mp_maxs,
 	SK_JEDI_overload,
+	SK_JEDI_thousandcuts,
 	///////////////////
 	SK_JEDI_NUM_SKILLS
 };
@@ -100,7 +101,8 @@ typedef struct jediFields_s {
 	_m##_AUTO(saber_throw, JEDIFIELDOFS(Jedi[SK_JEDI_SABERTHROW]), F_INT) \
     _m##_AUTO(hp_maxs, JEDIFIELDOFS(Jedi[SK_JEDI_hp_maxs]), F_INT) \
     _m##_AUTO(mp_maxs, JEDIFIELDOFS(Jedi[SK_JEDI_mp_maxs]), F_INT) \
-    _m##_AUTO(overload, JEDIFIELDOFS(Jedi[SK_JEDI_overload]), F_INT)
+    _m##_AUTO(overload, JEDIFIELDOFS(Jedi[SK_JEDI_overload]), F_INT) \
+	_m##_AUTO(thousandcuts, JEDIFIELDOFS(Jedi[SK_JEDI_thousandcuts]), F_INT)
 
 JediFields_Base(DEFINE_FIELD_PRE)
 
@@ -237,7 +239,7 @@ profSkill_t jediSkill_Passive_overload = {
 	jediSkill_Passive_overload_Descr,
 
 	0,
-	SkillLevels_4,
+	SkillLevels_8,
 	SkillPoints_Linear_12,
 
 	Lmd_Prof_Jedi_GetSkill_overload,
@@ -245,18 +247,53 @@ profSkill_t jediSkill_Passive_overload = {
 	Lmd_Prof_Jedi_SetSkill_overload
 };
 
+const char *jediSkill_Passive_thousandcuts_Descr[] = {
+	"5 percent of the additional saber damage.",
+	"10 percent of the additional saber damage.",
+	"15 percent of the additional saber damage.",
+	"20 percent of the additional saber damage.",
+	"5 percent of the base saber damage is converted to the lethality damage.",
+	"10 percent of the base saber damage is converted to the lethality damage.",
+	"15 percent of the base saber damage is converted to the lethality damage.",
+	"20 percent of the base saber damage is converted to the lethality damage.",
+	NULL
+};
+
+STD_FORCEPOWER_FUNCS(thousandcuts, FP_PASSIVE_thousandcuts)
+
+profSkill_t jediSkill_Passive_thousandcuts = {
+	"The Thousand Cuts",
+	"Your saber attacks will become more deadly.",
+	jediSkill_Passive_thousandcuts_Descr,
+
+	0,
+	SkillLevels_4,
+	SkillPoints_Linear_12,
+
+	Lmd_Prof_Jedi_GetSkill_thousandcuts,
+	Lmd_Prof_Jedi_CanSetSkill_thousandcuts,
+	Lmd_Prof_Jedi_SetSkill_thousandcuts,
+};
 
 
 profSkill_t jediSkill_Passive_Subskills[] = {
 	jediSkill_Passive_hp_maxs,
 	jediSkill_Passive_mp_maxs,
-	jediSkill_Passive_overload
+	jediSkill_Passive_overload,
+	jediSkill_Passive_thousandcuts
 };
 const unsigned int jediPassiveCount = sizeof(jediSkill_Passive_Subskills) / sizeof(profSkill_t);
 ////////////////
 ////functions:
 //functions for passive skills:
-
+//GetSkill
+int Lmd_Prof_Jedi_GetThousandCutsSkill(Account_t *acc) {
+	if (!acc) {
+		return 0;
+	}
+	return jediSkill_Passive_thousandcuts.getValue(acc, &jediSkill_Passive_thousandcuts);
+}
+//FUNCTIONS
 int Get_Jedi_hp_maxs_value(gentity_t *ent) //Will (Health points)
 {
 	if (lmd_jedi_add_hp_level.integer == 0) { return 100; } //old lugor option
@@ -577,7 +614,12 @@ profSkill_t jediSkill_Light_MindTrick = {
 };
 
 const char *jediSkill_Light_TeamHeal_Descr[] = {
-	NULL
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
+    NULL
 };
 
 STD_FORCEPOWER_FUNCS(TeamHeal, FP_TEAM_HEAL)
@@ -633,6 +675,11 @@ profSkill_t jediSkill_Dark_Grip = {
 
 
 const char *jediSkill_Dark_Drain_Descr[] = {
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
 	NULL
 };
 
@@ -704,6 +751,11 @@ profSkill_t jediSkill_Dark_Rage = {
 };
 
 const char *jediSkill_Dark_Energize_Descr[] = {
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
+	"Make the skill more powerful!",
 	NULL
 };
 
@@ -733,6 +785,10 @@ profSkill_t jediSkill_Dark_Subskills[] = {
 const unsigned int jediSkillDarkCount = sizeof(jediSkill_Dark_Subskills) / sizeof(profSkill_t);
 
 const char *jediSkill_Saber_Attack_Descr[] = {
+	"Train your offensive saber skills.",
+	"Train your offensive saber skills.",
+	"Train your offensive saber skills.",
+	"Train your offensive saber skills.",
 	NULL
 };
 
@@ -754,6 +810,10 @@ Lmd_Prof_Jedi_SetSkill_Saber_Attack
 
 
 const char *jediSkill_Saber_Defend_Descr[] = {
+	"Train your deffensive saber skills.",
+	"Train your deffensive saber skills.",
+	"Train your deffensive saber skills.",
+	"Train your deffensive saber skills.",
 	NULL
 };
 
@@ -775,6 +835,10 @@ Lmd_Prof_Jedi_SetSkill_Saber_Defend
 
 
 const char *jediSkill_Saber_Throw_Descr[] = {
+	"Train your throws.",
+	"Train your throws.",
+	"Train your throws.",
+	"Train your throws.",
 	NULL
 };
 

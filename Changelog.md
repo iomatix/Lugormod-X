@@ -29,13 +29,14 @@
 - Skills above lmd_mastery_level_skills_level level availble after reaching the Mastery Level (40). ✔️ default 3, to unlock use 99 or 0. ✔️
 - Flameburst increased damage output. ✔️ 
 - Added level damage scaling with new server side variable lmd_damage_level_scale. default 1, 0 to turn off ✔️ 
-- Added lethality & thousand cuts skills.
-- Added new extern variable lmd_is_lethality_add_damage to configure the lethality skill.
+- Added lethality & thousand cuts skills. ✔️ 
+- Added new extern variable lmd_is_lethality_add_damage to configure the lethality skill. default 0, 1 to turn it on. ✔️ 
+- Added new extern variable lmd_is_thousandcuts_lethality to configure the thousand cuts skill. default 0, 1 to turn it on. ✔️ 
+- Added new passive skill Master of The Guns for Mercenery. ✔️ 
 
 ## TODO
-- New passive for mercenary, maybe more upgrades? //do not touch forces!
 
-- TODO: Make MaxAmmo function for explosive materials.  
+
 - TODO: Repair memory leaks with AI say command
 - TODO: Player after reaching level 120 is able to start over again from level 1 but with perma +25hp/+25force/+25shield boost. Repeatable. 
 - TODO: Add lootboxes called now Credits Boxes. Chances: 80% for 25-200CR, 15% for 200-1000CR, 4% for 1000-10000CR, 1% for 10000-10

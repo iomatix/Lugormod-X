@@ -664,6 +664,7 @@ enum
 	FP_PASSIVE_hp_maxs,
 	FP_PASSIVE_mp_maxs,
 	FP_PASSIVE_overload,
+	FP_PASSIVE_thousandcuts,
 	NUM_WITH_PASSIVES_POWERS
 
 

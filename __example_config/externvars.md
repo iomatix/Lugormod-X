@@ -31,3 +31,6 @@ When is set to 1 the damage output will be scaled with level difference between 
 
 - **lmd_is_lethality_add_damage** 
 When is set to 1 the damage output based on lethality skill will increase, with 0 the damage will be converted instead. default 0, 1 to turn it on.
+
+- **lmd_is_thousandcuts_lethality** 
+When is set to 1 the additional damage output is converted to the lethality, subtracting it from HP directly. default 0, 1 to turn it on. Note: The skill will give additional lethality anyway based on the base damage output.

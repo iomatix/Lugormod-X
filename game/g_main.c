@@ -340,6 +340,7 @@ vmCvar_t    lmd_skillpoints_perlevel;
 vmCvar_t	lmd_mastery_level_skills_level;
 vmCvar_t	lmd_damage_level_scale;
 vmCvar_t	lmd_is_lethality_add_damage;
+vmCvar_t    lmd_is_thousandcuts_lethality;
 								 
 //RoboPhred:
 vmCvar_t lmd_DataPath;
@@ -871,6 +872,7 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_mastery_level_skills_level, "lmd_mastery_level_skills_level", "3", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_damage_level_scale, "lmd_damage_level_scale", "1", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_is_lethality_add_damage, "lmd_is_lethality_add_damage", "0", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_is_thousandcuts_lethality, "lmd_is_thousandcuts_lethality", "0", CVAR_ARCHIVE, 0, qfalse },
 
 // Lugormod cvars:
 { &g_noVoteTime, "g_noVoteTime", "5", CVAR_ARCHIVE,0, qfalse, qfalse,

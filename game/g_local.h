@@ -1116,6 +1116,7 @@ extern	vmCvar_t    lmd_skillpoints_perlevel;
 extern	vmCvar_t    lmd_mastery_level_skills_level;
 extern	vmCvar_t	lmd_damage_level_scale;
 extern	vmCvar_t	lmd_is_lethality_add_damage;
+extern	vmCvar_t	lmd_is_thousandcuts_lethality;
 #include "../namespace_begin.h"
 
 // RoboPhred

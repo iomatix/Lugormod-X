@@ -5355,17 +5355,76 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		
 		damage += damage * ((level_attacker - level_targ)/100); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
 	}
-	//PlayerAcc_Prof_GetProfession
-	int lethalityoutput = 0;
+
+
+	int lethalityoutput = 0; //that value will skip the shield, and subtract from the HP instead SD-P.
 	if (mod && attacker->client && targ->client)
 	{
 		if (attacker->client->pers.Lmd.account) { //is logged in?
 			if (PlayerAcc_Prof_GetProfession(attacker) == PROF_MERC) { //mercenary class check 
-				if (PlayerProf_Merc_GetLethalitySkill(attacker) > 0) {
+
+
+
+				if (PlayerProf_Merc_GetLethalitySkill(attacker) > 0) {  //is lethality upgraded?
 					//4->8->12->16 check the lethality descr   
 					lethalityoutput = (damage * PlayerProf_Merc_GetLethalitySkill(attacker)*4)/100; //gets the percent of damage value
 					if (lmd_is_lethality_add_damage.integer == 0) damage -= lethalityoutput; //default add_damage = 0. It converts the damage instead of adding the damage.
 				}
+
+				
+				//MASTER OF THE RIFLES:
+				//5->10->15->20%
+				if (PlayerProf_Merc_Getrifle_masterSkill(attacker) > 0
+					&& mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET 
+					&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
+					&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH ){  //is MotR upgraded? and is not a explosive weapon?
+					damage += (PlayerProf_Merc_Getrifle_masterSkill(attacker)*5)/100;
+
+				}
+
+
+			}else if (PlayerAcc_Prof_GetProfession(attacker) == PROF_JEDI && mod == MOD_SABER) { //jedi class check and is he using the saber?
+				if (PlayerProf_Jedi_GetThousandCutsSkill(attacker) > 0) { //is thousandcuts upgraded?
+
+					//5->10->15->20 check the thousandcuts descr level 1,2,3,4
+					//5->10->15->25 lethality level 5,6,7,8
+					int lethality_multiplier = 0;
+					int additional_damage_multiplier = PlayerProf_Jedi_GetThousandCutsSkill(attacker);
+					if (additional_damage_multiplier > 4)
+					{
+						additional_damage_multiplier = 4; //1,2,3,4 for additional damage
+						                                      //5,6,7 or 8
+						lethality_multiplier = PlayerProf_Jedi_GetThousandCutsSkill(attacker) - 4; //1,2,3,4 again
+
+
+					}
+
+
+					//converts base damage to the lethality
+					lethalityoutput = (lethality_multiplier * 5) / 100; 
+					damage -= lethalityoutput; 
+					
+					//additional damage
+					if (lmd_is_thousandcuts_lethality.integer == 1) //want to use thousandcuts additional damage as a lethality skill from the beginning?
+					{
+
+						lethalityoutput += (additional_damage_multiplier * 5) / 100; //gets the percent of damage value
+						damage -= (additional_damage_multiplier * 5) / 100; //no option for additional damage cuz too op sorry.
+					}
+					else{ //standard formula for increased output
+
+						damage += (damage * additional_damage_multiplier * 5) / 100;
+
+					}
+
+
+
+
+
+
+				}
+
+
 			}
 
 

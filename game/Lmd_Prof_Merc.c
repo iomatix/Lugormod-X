@@ -76,6 +76,7 @@ typedef struct mercFields_s{
 		int hp_maxs;
 		int sd_maxs;
 		int lethality;
+		int rifle_master;
 	} skills;
 	int weaponselect;
 }mercFields_t;
@@ -100,6 +101,7 @@ typedef struct mercFields_s{
 	_m##_AUTO(hp_maxs, MERCFIELDOFS(skills.hp_maxs), F_INT) \
 	_m##_AUTO(sd_maxs, MERCFIELDOFS(skills.sd_maxs), F_INT) \
 	_m##_AUTO(lethality, MERCFIELDOFS(skills.lethality), F_INT) \
+	_m##_AUTO(rifle_master, MERCFIELDOFS(skills.rifle_master), F_INT) \
 	_m##_AUTO(weaponselect, MERCFIELDOFS(weaponselect), F_INT)
 
 MercFields_Base(DEFINE_FIELD_PRE)
@@ -219,8 +221,40 @@ profSkill_t mercSkill_Lethality = {
 	Lmd_Prof_Merc_CanSetSkill_lethality,
 	Lmd_Prof_Merc_SetSkill_lethality,
 };
+//////////
+const char *mercSkill_rifle_master_Descr[] = {
+	"5 percent of the additional damage using rifles.",
+	"10 percent of the additional damage using rifles.",
+	"15 percent of the additional damage using rifles.",
+	"20 percent of the additional damage using rifles.",
+	NULL
+};
+
+STD_SKILLS_FUNCS(rifle_master)
+
+profSkill_t mercSkill_rifle_master = {
+	"Master of the Rifles",
+	"Increases your damage dealt with non-explosive weapons.",
+	mercSkill_rifle_master_Descr,
+
+	0,
+	SkillLevels_4,
+	SkillPoints_Linear_12,
+
+	Lmd_Prof_Merc_GetSkill_rifle_master,
+	Lmd_Prof_Merc_CanSetSkill_rifle_master,
+	Lmd_Prof_Merc_SetSkill_rifle_master,
+};
+
+
 //functions for passive skills:
 //GetSkill
+int Lmd_Prof_Merc_Getrifle_masterSkill(Account_t *acc) {
+	if (!acc) {
+		return 0;
+	}
+	return mercSkill_rifle_master.getValue(acc, &mercSkill_rifle_master);
+}
 int Lmd_Prof_Merc_GetLethalitySkill(Account_t *acc) {
 	if (!acc) {
 		return 0;
@@ -545,6 +579,7 @@ profSkill_t mercSkills[] = {
 	mercSkill_hp_maxs,
 	mercSkill_sd_maxs,
 	mercSkill_Lethality,
+	mercSkill_rifle_master,
 };
 const unsigned int mercSkillCount = sizeof(mercSkills) / sizeof(profSkill_t);
 
