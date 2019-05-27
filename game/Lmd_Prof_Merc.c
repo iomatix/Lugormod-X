@@ -261,8 +261,9 @@ const char *mercSkill_Weapons_Descr[] = {
 	"Gain 14 weapon credits.  Gain access to the Disruptor.",
 	"Gain 17 weapon credits.  Gain access to the Flechette.",
 	"Gain 20 weapon credits.  Gain access to the Repeater.",
-	"Gain 25 weapon credits.",
+	"Gain 25 weapon credits. Gain access to the Emplaced Gun.",
 	"Gain 30 weapon credits.  Gain access to the Heavy Weapons.",
+	"Gain 36 weapon credits.",
 	NULL
 };
 
@@ -274,7 +275,7 @@ profSkill_t mercSkill_Weapons = {
 	mercSkill_Weapons_Descr,
 
 	0,
-	SkillLevels_7,
+	SkillLevels_8,
 	SkillPoints_Default,
 
 	Lmd_Prof_Merc_GetSkill_weapon,
@@ -615,12 +616,13 @@ const int mercWeaponTableMax[] = {
 const int mercWeaponTableMax[] = {
 	0,
 	2,
-	4,
-	5,
 	6,
-	7,
+	8,
 	9,
 	10,
+	11,
+	13,
+	13,
 };
 #endif
 
@@ -632,7 +634,8 @@ int mercWeaponPoints[] = {
 	17,
 	20,
 	25,
-	30
+	30,
+	36
 };
 
 

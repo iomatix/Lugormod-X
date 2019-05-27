@@ -20,6 +20,7 @@ static skillLevelDef_t SkillLevels_Default = {0, 5, qfalse}; //Levels_5
 static skillLevelDef_t SkillLevels_3 = { 0, 3, qfalse };
 static skillLevelDef_t SkillLevels_4 = { 0, 4, qfalse };
 static skillLevelDef_t SkillLevels_7 = { 0, 7, qfalse }; 
+static skillLevelDef_t SkillLevels_8 = { 0, 8, qfalse };
 static skillLevelDef_t SkillLevels_20 = { 0, 20, qfalse };
 
 typedef enum {
