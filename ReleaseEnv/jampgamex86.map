@@ -1,6 +1,6 @@
  jampgamex86
 
- Timestamp is 5cec761e (Tue May 28 01:43:26 2019)
+ Timestamp is 5cec7896 (Tue May 28 01:53:58 2019)
 
  Preferred load address is 20000000
 
@@ -43,10 +43,10 @@
 
   Address         Publics by Value              Rva+Base       Lib:Object
 
- 0000:00000000       ___guard_fids_table        00000000     <absolute>
- 0000:00000000       ___guard_fids_count        00000000     <absolute>
- 0000:00000000       __except_list              00000000     <absolute>
  0000:00000000       ___guard_flags             00000000     <absolute>
+ 0000:00000000       ___guard_fids_table        00000000     <absolute>
+ 0000:00000000       __except_list              00000000     <absolute>
+ 0000:00000000       ___guard_fids_count        00000000     <absolute>
  0000:0000000c       ___safe_se_handler_count   0000000c     <absolute>
  0000:00000000       ___ImageBase               20000000     <linker-defined>
  0001:0000b4f0       ?AltFiring@@YAHPAUbot_state_s@@@Z 2000c4f0 f   ai_main.obj
@@ -4905,8 +4905,8 @@
  0001:002dfbf9       __abnormal_termination     202e0bf9 f   LIBCMTD:exsup.obj
  0001:002dfc1c       __NLG_Notify1              202e0c1c f   LIBCMTD:exsup.obj
  0001:002dfc25       __NLG_Notify               202e0c25 f   LIBCMTD:exsup.obj
- 0001:002dfc3c       __NLG_Dispatch2            202e0c3c     LIBCMTD:exsup.obj
  0001:002dfc3c       __NLG_Dispatch             202e0c3c     LIBCMTD:exsup.obj
+ 0001:002dfc3c       __NLG_Dispatch2            202e0c3c     LIBCMTD:exsup.obj
  0001:002dfc44       __NLG_Call                 202e0c44 f   LIBCMTD:exsup.obj
  0001:002dfc46       __NLG_Return2              202e0c46     LIBCMTD:exsup.obj
  0001:002dfc50       ??3@YAXPAX@Z               202e0c50 f   LIBCMTD:dbgdel.obj
@@ -4918,8 +4918,8 @@
  0001:002dfde0       ??4type_info@@AAEAAV0@ABV0@@Z 202e0de0 f   LIBCMTD:typinfo.obj
  0001:002dfdf0       ??8type_info@@QBE_NABV0@@Z 202e0df0 f   LIBCMTD:typinfo.obj
  0001:002dfe30       ??9type_info@@QBE_NABV0@@Z 202e0e30 f   LIBCMTD:typinfo.obj
- 0001:002dfe70       ??_Etype_info@@UAEPAXI@Z   202e0e70 f i LIBCMTD:typinfo.obj
  0001:002dfe70       ??_Gtype_info@@UAEPAXI@Z   202e0e70 f i LIBCMTD:typinfo.obj
+ 0001:002dfe70       ??_Etype_info@@UAEPAXI@Z   202e0e70 f i LIBCMTD:typinfo.obj
  0001:002dfea0       ?_name_internal_method@type_info@@QBEPBDPAU__type_info_node@@@Z 202e0ea0 f   LIBCMTD:typinfo.obj
  0001:002dfec0       ?_type_info_dtor_internal_method@type_info@@QAEXXZ 202e0ec0 f   LIBCMTD:typinfo.obj
  0001:002dfee0       ?before@type_info@@QBE_NABV1@@Z 202e0ee0 f   LIBCMTD:typinfo.obj
@@ -4946,8 +4946,8 @@
  0001:002e0260       ??_Ebad_cast@std@@UAEPAXI@Z 202e1260 f i LIBCMTD:stdexcpt.obj
  0001:002e0290       ??_Ebad_typeid@std@@UAEPAXI@Z 202e1290 f i LIBCMTD:stdexcpt.obj
  0001:002e0290       ??_Gbad_typeid@std@@UAEPAXI@Z 202e1290 f i LIBCMTD:stdexcpt.obj
- 0001:002e02c0       ??_Eexception@std@@UAEPAXI@Z 202e12c0 f i LIBCMTD:stdexcpt.obj
  0001:002e02c0       ??_Gexception@std@@UAEPAXI@Z 202e12c0 f i LIBCMTD:stdexcpt.obj
+ 0001:002e02c0       ??_Eexception@std@@UAEPAXI@Z 202e12c0 f i LIBCMTD:stdexcpt.obj
  0001:002e02f0       ?_Copy_str@exception@std@@AAEXPBD@Z 202e12f0 f   LIBCMTD:stdexcpt.obj
  0001:002e0350       ?_Tidy@exception@std@@AAEXXZ 202e1350 f   LIBCMTD:stdexcpt.obj
  0001:002e0390       ?what@exception@std@@UBEPBDXZ 202e1390 f   LIBCMTD:stdexcpt.obj
@@ -5240,8 +5240,8 @@
  0001:002ee7ae       _ReadConsoleW@20           202ef7ae f   kernel32:KERNEL32.dll
  0001:002ee7b4       _CreateFileW@28            202ef7b4 f   kernel32:KERNEL32.dll
  0001:002ee7ba       _SetEnvironmentVariableA@8 202ef7ba f   kernel32:KERNEL32.dll
- 0001:002eec40       _strupr                    202efc40 f   LIBCMTD:strupr.obj
  0001:002eec40       __strupr                   202efc40 f   LIBCMTD:strupr.obj
+ 0001:002eec40       _strupr                    202efc40 f   LIBCMTD:strupr.obj
  0001:002eed30       __strupr_l                 202efd30 f   LIBCMTD:strupr.obj
  0001:002eed50       __strupr_s                 202efd50 f   LIBCMTD:strupr.obj
  0001:002eed70       __strupr_s_l               202efd70 f   LIBCMTD:strupr.obj
@@ -5255,8 +5255,8 @@
  0001:002ef6c0       __strlwr_s                 202f06c0 f   LIBCMTD:strlwr.obj
  0001:002ef6e0       __strlwr_s_l               202f06e0 f   LIBCMTD:strlwr.obj
  0001:002ef720       ___ascii_stricmp           202f0720 f   LIBCMTD:stricmp.obj
- 0001:002ef7a0       _stricmp                   202f07a0 f   LIBCMTD:stricmp.obj
  0001:002ef7a0       __stricmp                  202f07a0 f   LIBCMTD:stricmp.obj
+ 0001:002ef7a0       _stricmp                   202f07a0 f   LIBCMTD:stricmp.obj
  0001:002ef8d0       __stricmp_l                202f08d0 f   LIBCMTD:stricmp.obj
  0001:002efab0       ___ascii_memicmp           202f0ab0 f   LIBCMTD:_memicmp.obj
  0002:00000000       ___xc_a                    2030e000     LIBCMTD:crt0init.obj
@@ -11972,7 +11972,7 @@
  0002:0002c794       ??_C@_0BC@LOKOIJIH@JKA?5Galaxies?5v0?41?$AA@ 2033a794     gls_crashreport.obj
  0002:0002c7ac       ??_C@_0BH@KHGNMAMA@Version?3?5?$CFs?5?$CIWindows?$CJ?6?$AA@ 2033a7ac     gls_crashreport.obj
  0002:0002c7c8       ??_C@_0BD@PEHKIMLP@Side?3?5Server?9side?6?$AA@ 2033a7c8     gls_crashreport.obj
- 0002:0002c7e0       ??_C@_08DAKFOAGI@01?342?354?$AA@ 2033a7e0     gls_crashreport.obj
+ 0002:0002c7e0       ??_C@_08NKMNDNLJ@01?353?325?$AA@ 2033a7e0     gls_crashreport.obj
  0002:0002c7ec       ??_C@_0BI@BNEPMDPF@Build?5Date?1Time?3?5?$CFs?5?$CFs?6?$AA@ 2033a7ec     gls_crashreport.obj
  0002:0002c808       ??_C@_0IK@MOIFLKOC@Crash?5type?3?5Exception?6?6?9?9?9?9?9?9?9?9?9@ 2033a808     gls_crashreport.obj
  0002:0002c8b0       ??_C@_0HA@HGKPACMJ@?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9@ 2033a8b0     gls_crashreport.obj

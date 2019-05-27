@@ -1037,6 +1037,7 @@ void Experience_Level_Up(gentity_t *ent)
 	if (resEXP <= 0) {
 		return;
 	}
+
 	Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));
 	resEXP = resEXP - cost; // new cost
 	if (resEXP < 0) {
@@ -1044,21 +1045,22 @@ void Experience_Level_Up(gentity_t *ent)
 		Disp(ent, va("^3You need ^5%i EXP ^3more.\n", -resEXP));
 		return;
 	}
+
 	//checks are completed
 
-		PlayerAcc_SetExperience(ent, -resEXP);
+		PlayerAcc_SetExperience(ent, resEXP);
 		//iomatix:
 		playerLevel++;
 		PlayerAcc_Prof_SetLevel(ent, playerLevel);
 		int NewSkillPoints_value = Professions_Add_That_Amount_SkillPoints(playerLevel);
 		
 		
-		WP_InitForcePowers(ent);
+		
 
 	   cost = Professions_LevelCost_EXP(prof, playerLevel);
 	   Disp(ent, va("^5Congratulation, Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value));
 	   G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
-	  
+	   WP_InitForcePowers(ent);
 	   return;
 
 }
