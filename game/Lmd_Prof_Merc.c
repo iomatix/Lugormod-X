@@ -257,12 +257,12 @@ int Lmd_Prof_Merc_GetMeleeSkill(Account_t *acc) {
 
 const char *mercSkill_Weapons_Descr[] = {
 	"Gain 4 weapon credits.  Gain access to the E11 Blaster and Stun Baton.",
-	"Gain 9 weapon credits.  Gain access to Gadgets and the Bowcaster.",
-	"Gain 14 weapon credits.  Gain access to the Disruptor.",
-	"Gain 17 weapon credits.  Gain access to the Flechette.",
-	"Gain 20 weapon credits.  Gain access to the Repeater.",
-	"Gain 25 weapon credits. Gain access to the Emplaced Gun.",
-	"Gain 30 weapon credits.  Gain access to the Heavy Weapons.",
+	"Gain 11 weapon credits.  Gain access to Gadgets and the Bowcaster.",
+	"Gain 17 weapon credits.  Gain access to the Disruptor.",
+	"Gain 20 weapon credits.  Gain access to the Flechette.",
+	"Gain 24 weapon credits.  Gain access to the Repeater.",
+	"Gain 30 weapon credits.",
+	"Gain 33 weapon credits.  Gain access to the Heavy Weapons.",
 	"Gain 36 weapon credits.",
 	NULL
 };
@@ -596,7 +596,6 @@ const mercItemTable_t mercWeaponTable[] = {
 { "Disruptor", 10, WP_DISRUPTOR },
 { "Flechette", 14, WP_FLECHETTE },
 { "Repeater", 15, WP_REPEATER },
-{ "Emplaced Gun",18,WP_EMPLACED_GUN },
 { "Rocket Launcher",23,WP_ROCKET_LAUNCHER },
 { "Concussion",28,WP_CONCUSSION },
 };
@@ -620,21 +619,21 @@ const int mercWeaponTableMax[] = {
 	8,
 	9,
 	10,
-	11,
-	13,
-	13,
+	10,
+	12,
+	12,
 };
 #endif
 
 int mercWeaponPoints[] = {
 	0,
 	4,
-	9,
-	14,
+	11,
 	17,
 	20,
-	25,
+	24,
 	30,
+	33,
 	36
 };
 
