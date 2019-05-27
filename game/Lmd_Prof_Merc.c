@@ -23,13 +23,51 @@ Unlikely:
 #include "Lmd_Accounts_Data.h"
 #include "Lmd_Prof_Core.h"
 
+
+//iomatix: Auto-code generation, it's simplier to add new skills, skip that part and use STD_SKILLS_FUNCS(name) where name must match with other structures!
+//iomatix: automata
+#define STD_SKILLS_GET(name) int Lmd_Prof_Merc_GetSkill_##name(AccountPtr_t accPtr, profSkill_t *skill) { \
+				Account_t *acc = (Account_t*)accPtr; \
+				mercFields_t *data;	\
+				if(!IS_A_MERC(acc)) return 0; \
+				data = ACCFIELDDATA(acc);\
+				if(!data) return 0; \
+				return data->skills.##name; \
+		} 
+
+#define IS_A_MERC(acc) (Accounts_Prof_GetProfession(acc) == PROF_MERC)
+#define STD_SKILLS_CANSET(name) qboolean Lmd_Prof_Merc_CanSetSkill_##name(AccountPtr_t accPtr, profSkill_t *skill, int value) { \
+				Account_t *acc = (Account_t*)accPtr; \
+				mercFields_t *data; \
+				if(!(acc)) return qfalse; \
+				if(!IS_A_MERC(acc)) return qfalse; \
+				data = ACCFIELDDATA(acc); \
+				if(!data) return qfalse; \
+				if(value < skill->levels.min || value > skill->levels.max) return qfalse; \
+				return qtrue; \
+		}
+
+#define STD_SKILLS_SET(name) qboolean Lmd_Prof_Merc_SetSkill_##name(AccountPtr_t accPtr, profSkill_t *skill, int value) { \
+				Account_t *acc = (Account_t*)accPtr; \
+				mercFields_t *data; \
+				if(!Lmd_Prof_Merc_CanSetSkill_##name(acc, skill, value)) return qfalse; \
+				data = ACCFIELDDATA(acc); \
+				data->skills.##name = value; \
+				Lmd_Accounts_Modify(acc); \
+				return qtrue; \
+		}
+
+#define STD_SKILLS_FUNCS(name) STD_SKILLS_GET(name) \
+STD_SKILLS_CANSET(name) \
+STD_SKILLS_SET(name)
+
 typedef struct mercFields_s{
 	//int Merc[SK_MERC_NUM_SKILLS];
 	struct {
 		int melee;
 		int weapon;
 		int ammo;
-		int forceResist;
+		int forceresist;
 		int armor;
 		int fuel;
 		int flame;
@@ -52,7 +90,7 @@ typedef struct mercFields_s{
 	_m##_AUTO(melee, MERCFIELDOFS(skills.melee), F_INT) \
 	_m##_AUTO(weapon, MERCFIELDOFS(skills.weapon), F_INT) \
 	_m##_AUTO(ammo, MERCFIELDOFS(skills.ammo), F_INT) \
-	_m##_AUTO(forceresist, MERCFIELDOFS(skills.forceResist), F_INT) \
+	_m##_AUTO(forceresist, MERCFIELDOFS(skills.forceresist), F_INT) \
 	_m##_AUTO(armor, MERCFIELDOFS(skills.armor), F_INT) \
 	_m##_AUTO(fuel, MERCFIELDOFS(skills.fuel), F_INT) \
 	_m##_AUTO(flame, MERCFIELDOFS(skills.flame), F_INT) \
@@ -100,58 +138,7 @@ const char *mercSkill_hp_maxs_Descr[] = {
 //+272 HP
 
 
-
-int Lmd_Prof_Merc_GetSkill_hp_maxs(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-	if (!data) {
-		return 0;
-	}
-	return data->skills.hp_maxs;
-}
-
-qboolean Lmd_Prof_Merc_CanSetSkill_hp_maxs(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	Account_t *acc = (Account_t*)accPtr;
-	mercFields_t *data;
-
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return qfalse;
-	}
-
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_hp_maxs(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!Lmd_Prof_Merc_CanSetSkill_hp_maxs(accPtr, skill, value)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-
-	data->skills.hp_maxs = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
+STD_SKILLS_FUNCS(hp_maxs)
 
 profSkill_t mercSkill_hp_maxs = {
 	"Vitality",
@@ -190,57 +177,8 @@ const char *mercSkill_sd_maxs_Descr[] = {
 	"+8 Shield",
 	NULL
 };
-int Lmd_Prof_Merc_GetSkill_sd_maxs(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
 
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-	if (!data) {
-		return 0;
-	}
-	return data->skills.sd_maxs;
-}
-
-qboolean Lmd_Prof_Merc_CanSetSkill_sd_maxs(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	Account_t *acc = (Account_t*)accPtr;
-	mercFields_t *data;
-
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return qfalse;
-	}
-
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_sd_maxs(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!Lmd_Prof_Merc_CanSetSkill_sd_maxs(accPtr, skill, value)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-
-	data->skills.sd_maxs = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
+STD_SKILLS_FUNCS(sd_maxs)
 
 profSkill_t mercSkill_sd_maxs = {
 	"Defense",
@@ -285,12 +223,7 @@ int Get_Merc_sd_maxs_value(gentity_t *ent)
 
 
 }
-
-
-
-
 ////
-
 const char *mercSkill_MartialArts_Descr[] = {
 	"Increased melee damage.",
 	"Increased melee damage.  Learn to roll out of falls and under low overhangs.",
@@ -300,58 +233,7 @@ const char *mercSkill_MartialArts_Descr[] = {
 	NULL
 };
 
-int Lmd_Prof_Merc_GetSkill_Melee(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-	if (!data) {
-		return 0;
-	}
-	return data->skills.melee;
-}
-
-qboolean Lmd_Prof_Merc_CanSetSkill_Melee(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	Account_t *acc = (Account_t*)accPtr;
-	mercFields_t *data;
-
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return qfalse;
-	}
-
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_Melee(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!Lmd_Prof_Merc_CanSetSkill_Melee(accPtr, skill, value)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-	
-
-	data->skills.melee = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
-
+STD_SKILLS_FUNCS(melee)
 profSkill_t mercSkill_MartialArts = {
 	"MartialArts",
 	"Higher martial arts skills yields more damage per strike and grapple moves.",
@@ -361,9 +243,9 @@ profSkill_t mercSkill_MartialArts = {
 	SkillLevels_Default,
 	SkillPoints_Default,
 
-	Lmd_Prof_Merc_GetSkill_Melee,
-	Lmd_Prof_Merc_CanSetSkill_Melee,
-	Lmd_Prof_Merc_SetSkill_Melee
+	Lmd_Prof_Merc_GetSkill_melee,
+	Lmd_Prof_Merc_CanSetSkill_melee,
+	Lmd_Prof_Merc_SetSkill_melee
 };
 
 int Lmd_Prof_Merc_GetMeleeSkill(Account_t *acc) {
@@ -375,62 +257,16 @@ int Lmd_Prof_Merc_GetMeleeSkill(Account_t *acc) {
 
 const char *mercSkill_Weapons_Descr[] = {
 	"Gain 4 weapon credits.  Gain access to the E11 Blaster and Stun Baton.",
-	"Gain 9 weapon credits.  Gain access to the Bowcaster and Thermal Detonators.",
+	"Gain 9 weapon credits.  Gain access to Gadgets and the Bowcaster.",
 	"Gain 14 weapon credits.  Gain access to the Disruptor.",
 	"Gain 17 weapon credits.  Gain access to the Flechette.",
 	"Gain 20 weapon credits.  Gain access to the Repeater.",
+	"Gain 25 weapon credits.",
+	"Gain 30 weapon credits.  Gain access to the Heavy Weapons.",
 	NULL
 };
 
-int Lmd_Prof_Merc_GetSkill_Weapons(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-	
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return 0;
-	}
-	return data->skills.weapon;
-}
-
-qboolean Lmd_Prof_Merc_CanSetSkill_Weapons(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-	
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return qfalse;
-	}
-
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_Weapons(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!Lmd_Prof_Merc_CanSetSkill_Weapons(accPtr, skill, value)) {
-		return qfalse;
-	}
-	
-	data = ACCFIELDDATA(acc);
-
-	data->skills.weapon = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
+STD_SKILLS_FUNCS(weapon)
 
 profSkill_t mercSkill_Weapons = {
 	"Weapons",
@@ -438,12 +274,12 @@ profSkill_t mercSkill_Weapons = {
 	mercSkill_Weapons_Descr,
 
 	0,
-	SkillLevels_Default,
+	SkillLevels_7,
 	SkillPoints_Default,
 
-	Lmd_Prof_Merc_GetSkill_Weapons,
-	Lmd_Prof_Merc_CanSetSkill_Weapons,
-	Lmd_Prof_Merc_SetSkill_Weapons,
+	Lmd_Prof_Merc_GetSkill_weapon,
+	Lmd_Prof_Merc_CanSetSkill_weapon,
+	Lmd_Prof_Merc_SetSkill_weapon,
 };
 
 
@@ -456,57 +292,7 @@ const char *mercSkill_Ammo_Descr[] = {
 	"Double the maximum ammo capacity.",
 	NULL
 };
-
-int Lmd_Prof_Merc_GetSkill_Ammo(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-	
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return 0;
-	}
-	return data->skills.ammo;
-}
-
-qboolean Lmd_Prof_Merc_CanSetSkill_Ammo(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-	
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return qfalse;
-	}
-
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_Ammo(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!Lmd_Prof_Merc_CanSetSkill_Ammo(accPtr, skill, value)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-	data->skills.ammo = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
-
+STD_SKILLS_FUNCS(ammo)
 profSkill_t mercSkill_Ammo = {
 	"Ammo",
 	"Bring more ammo into the field.",
@@ -516,9 +302,9 @@ profSkill_t mercSkill_Ammo = {
 	SkillLevels_Default,
 	SkillPoints_Default,
 
-	Lmd_Prof_Merc_GetSkill_Ammo,
-	Lmd_Prof_Merc_CanSetSkill_Ammo,
-	Lmd_Prof_Merc_SetSkill_Ammo,
+	Lmd_Prof_Merc_GetSkill_ammo,
+	Lmd_Prof_Merc_CanSetSkill_ammo,
+	Lmd_Prof_Merc_SetSkill_ammo,
 };
 
 int Lmd_Prof_Merc_GetAmmoSkill(Account_t *acc) {
@@ -537,56 +323,7 @@ const char *mercSkill_Shield_Descr[] = {
 	"Spawn with an extra 75 percent shield charge.",
 	NULL
 };
-
-int Lmd_Prof_Merc_GetSkill_Shield(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return 0;
-	}
-	return data->skills.armor;
-}
-
-qboolean Lmd_Prof_Merc_CanSetSkill_Shield(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return qfalse;
-	}
-
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_Shield(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!Lmd_Prof_Merc_CanSetSkill_Shield(accPtr, skill, value)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-	data->skills.armor = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
+STD_SKILLS_FUNCS(armor)
 
 profSkill_t mercSkill_Shield = {
 	"Shield",
@@ -597,9 +334,9 @@ profSkill_t mercSkill_Shield = {
 	SkillLevels_Default,
 	SkillPoints_Default,
 
-	Lmd_Prof_Merc_GetSkill_Shield,
-	Lmd_Prof_Merc_CanSetSkill_Shield,
-	Lmd_Prof_Merc_SetSkill_Shield,
+	Lmd_Prof_Merc_GetSkill_armor,
+	Lmd_Prof_Merc_CanSetSkill_armor,
+	Lmd_Prof_Merc_SetSkill_armor,
 };
 
 
@@ -612,57 +349,7 @@ const char *mercSkill_ForceResistance_Descr[] = {
 	"Never loose your weapons to Force Pull.",
 	NULL
 };
-
-int Lmd_Prof_Merc_GetSkill_ForceResistance(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return 0;
-	}
-	return data->skills.forceResist;
-}
-
-qboolean Lmd_Prof_Merc_CanSetSkill_ForceResistance(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return qfalse;
-	}
-
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_ForceResistance(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!Lmd_Prof_Merc_CanSetSkill_ForceResistance(accPtr, skill, value)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-	data->skills.forceResist = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
-
+STD_SKILLS_FUNCS(forceresist)
 profSkill_t mercSkill_ForceResistance = {
 	"ForceResist",
 	"Resist the effects of force powers.",
@@ -672,9 +359,9 @@ profSkill_t mercSkill_ForceResistance = {
 	SkillLevels_Default,
 	SkillPoints_Default,
 
-	Lmd_Prof_Merc_GetSkill_ForceResistance,
-	Lmd_Prof_Merc_CanSetSkill_ForceResistance,
-	Lmd_Prof_Merc_SetSkill_ForceResistance
+	Lmd_Prof_Merc_GetSkill_forceresist,
+	Lmd_Prof_Merc_CanSetSkill_forceresist,
+	Lmd_Prof_Merc_SetSkill_forceresist
 };
 
 int Lmd_Prof_Merc_GetForceResistanceSkill(Account_t *acc) {
@@ -700,58 +387,7 @@ const char *mercSkill_Fuel_Descr[] = {
 #endif
 	NULL
 };
-
-int Lmd_Prof_Merc_GetSkill_Fuel(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-	if (!data) {
-		return 0;
-	}
-	return data->skills.fuel;
-}
-
-qboolean Lmd_Prof_Merc_CanSetSkill_Fuel(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-
-	 data = ACCFIELDDATA(acc);
-	 if (!data) {
-		 return qfalse;
-	 }
-
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_Fuel(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!Lmd_Prof_Merc_CanSetSkill_Fuel(accPtr, skill, value)) {
-		return qfalse;
-	}
-	
-	data = ACCFIELDDATA(acc);
-
-	data->skills.fuel = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
-
+STD_SKILLS_FUNCS(fuel)
 profSkill_t mercSkill_Fuel = {
 	"Fuel",
 	"Increase your fuel reserves for Jetpack and Flame Burst.",
@@ -761,9 +397,9 @@ profSkill_t mercSkill_Fuel = {
 	SkillLevels_Default,
 	SkillPoints_Default,
 
-	Lmd_Prof_Merc_GetSkill_Fuel,
-	Lmd_Prof_Merc_CanSetSkill_Fuel,
-	Lmd_Prof_Merc_SetSkill_Fuel
+	Lmd_Prof_Merc_GetSkill_fuel,
+	Lmd_Prof_Merc_CanSetSkill_fuel,
+	Lmd_Prof_Merc_SetSkill_fuel
 };
 
 
@@ -777,51 +413,7 @@ const char *mercSkill_FlameBurst_Descr[] = {
 	NULL
 };
 
-int Lmd_Prof_Merc_GetSkill_FlameBurst(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return 0;
-	}
-	return data->skills.flame;
-}
-
-qboolean Lmd_Prof_Merc_CanSetSkill_FlameBurst(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-	
-	data = ACCFIELDDATA(acc);
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_FlameBurst(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!Lmd_Prof_Merc_CanSetSkill_FlameBurst(accPtr, skill, value)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-	data->skills.flame = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
+STD_SKILLS_FUNCS(flame)
 
 profSkill_t mercSkill_FlameBurst = {
 	"FlameBurst",
@@ -832,9 +424,9 @@ profSkill_t mercSkill_FlameBurst = {
 	SkillLevels_Default,
 	SkillPoints_Default,
 
-	Lmd_Prof_Merc_GetSkill_FlameBurst,
-	Lmd_Prof_Merc_CanSetSkill_FlameBurst,
-	Lmd_Prof_Merc_SetSkill_FlameBurst
+	Lmd_Prof_Merc_GetSkill_flame,
+	Lmd_Prof_Merc_CanSetSkill_flame,
+	Lmd_Prof_Merc_SetSkill_flame
 };
 
 
@@ -848,54 +440,7 @@ const char *mercSkill_StashRange_Descr[] = {
 	NULL
 };
 
-int Lmd_Prof_Merc_GetSkill_StashRange(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return 0;
-	}
-	return data->skills.binoculars;
-}
-
-qboolean Lmd_Prof_Merc_CanSetSkill_StashRange(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-	
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return qfalse;
-	}
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_StashRange(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!Lmd_Prof_Merc_CanSetSkill_StashRange(accPtr, skill, value)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-
-	data->skills.binoculars = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
+STD_SKILLS_FUNCS(binoculars)
 
 profSkill_t mercSkill_StashRange = {
 	"StashRange",
@@ -906,9 +451,9 @@ profSkill_t mercSkill_StashRange = {
 	SkillLevels_Default,
 	SkillPoints_Default,
 
-	Lmd_Prof_Merc_GetSkill_StashRange,
-	Lmd_Prof_Merc_CanSetSkill_StashRange,
-	Lmd_Prof_Merc_SetSkill_StashRange,
+	Lmd_Prof_Merc_GetSkill_binoculars,
+	Lmd_Prof_Merc_CanSetSkill_binoculars,
+	Lmd_Prof_Merc_SetSkill_binoculars,
 };
 
 int Lmd_Prof_Merc_GetStashRangeSkill(Account_t *acc) {
@@ -928,53 +473,7 @@ const char *mercSkill_Ysalamiri_Descr[] = {
 	NULL
 };
 
-int Lmd_Prof_Merc_GetSkill_Ysalamiri(AccountPtr_t accPtr, profSkill_t *skill) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return 0;
-	}
-	
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return 0;
-	}
-	return data->skills.ysalamiri;
-}
-
-qboolean Lmd_Prof_Merc_CanGetSkill_Ysalamiri(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-
-	if (!IS_A_MERC(acc)) {
-		return qfalse;
-	}
-	
-	data = ACCFIELDDATA(acc);
-	if (!data) {
-		return qfalse;
-	}
-	if (value < skill->levels.min || value > skill->levels.max) {
-		return qfalse;
-	}
-
-	return qtrue;
-}
-
-qboolean Lmd_Prof_Merc_SetSkill_Ysalamiri(AccountPtr_t accPtr, profSkill_t *skill, int value) {
-	mercFields_t *data;
-	Account_t *acc = (Account_t*)accPtr;
-	
-	if (!Lmd_Prof_Merc_CanGetSkill_Ysalamiri(accPtr, skill, value)) {
-		return qfalse;
-	}
-
-	data = ACCFIELDDATA(acc);
-	data->skills.ysalamiri = value;
-	Lmd_Accounts_Modify(acc);
-	return qtrue;
-}
+STD_SKILLS_FUNCS(ysalamiri)
 
 profSkill_t mercSkill_Ysalamiri = {
 	"Ysalamiri",
@@ -985,9 +484,9 @@ profSkill_t mercSkill_Ysalamiri = {
 	SkillLevels_Default,
 	SkillPoints_Default,
 
-	Lmd_Prof_Merc_GetSkill_Ysalamiri,
-	Lmd_Prof_Merc_SetSkill_Ysalamiri,
-	Lmd_Prof_Merc_SetSkill_Ysalamiri
+	Lmd_Prof_Merc_GetSkill_ysalamiri,
+	Lmd_Prof_Merc_SetSkill_ysalamiri,
+	Lmd_Prof_Merc_SetSkill_ysalamiri
 };
 
 int Lmd_Prof_Merc_GetYsalamiriSkill(Account_t *acc) {
@@ -1085,21 +584,27 @@ E11 | +1
 
 const mercItemTable_t mercWeaponTable[] = {
 #ifndef LMD_NEW_JETPACK
-	{"Stun baton", 1, WP_STUN_BATON},
+{ "Stun baton", 1, WP_STUN_BATON },
 #endif
-	{"Blaster", 3, WP_BLASTER},
-	{"Thermals", 4, WP_THERMAL},
-	{"Bowcaster", 5, WP_BOWCASTER},
-	{"Disruptor", 10, WP_DISRUPTOR},
-	{"Flechette", 14, WP_FLECHETTE},
-	{"Repeater", 15, WP_REPEATER},
+{ "Blaster", 2, WP_BLASTER },
+{ "Thermal Detonators", 4, WP_THERMAL },
+{ "Detonation Packs",5,WP_DET_PACK },
+{ "Laser Trip Mines", 5, WP_TRIP_MINE },
+{ "Bowcaster", 5, WP_BOWCASTER },
+{ "Destructive EMP-2", 10, WP_DEMP2 },
+{ "Disruptor", 10, WP_DISRUPTOR },
+{ "Flechette", 14, WP_FLECHETTE },
+{ "Repeater", 15, WP_REPEATER },
+{ "Emplaced Gun",18,WP_EMPLACED_GUN },
+{ "Rocket Launcher",23,WP_ROCKET_LAUNCHER },
+{ "Concussion",28,WP_CONCUSSION },
 };
 
 const unsigned int numMercWeapons = sizeof(mercWeaponTable) / sizeof(mercItemTable_t);
 
 #ifdef LMD_NEW_JETPACK
 const int mercWeaponTableMax[] = {
-	0, 
+	0,
 	1,
 	3,
 	4,
@@ -1108,12 +613,14 @@ const int mercWeaponTableMax[] = {
 };
 #else
 const int mercWeaponTableMax[] = {
-	0, 
+	0,
 	2,
 	4,
 	5,
 	6,
 	7,
+	9,
+	10,
 };
 #endif
 
@@ -1123,7 +630,9 @@ int mercWeaponPoints[] = {
 	9,
 	14,
 	17,
-	20
+	20,
+	25,
+	30
 };
 
 
@@ -1443,7 +952,7 @@ void Cmd_Flame_f(gentity_t *ent, int iArg){
 	if (!ent->client->pers.Lmd.account) {
 		return;
 	}
-	if (Lmd_Prof_Merc_GetSkill_FlameBurst(ent->client->pers.Lmd.account, &mercSkill_FlameBurst) <= 0) {
+	if (Lmd_Prof_Merc_GetSkill_flame(ent->client->pers.Lmd.account, &mercSkill_FlameBurst) <= 0) {
 		Disp(ent, "^3You must have at least level 1 Flame Burst skill to use this.");
 	}
 	else{
@@ -2134,7 +1643,7 @@ void Merc_Spawn(gentity_t *ent)
 	ent->client->ps.stats[STAT_HOLDABLE_ITEMS] |= (1 << HI_BINOCULARS);
 	ent->client->ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(HI_BINOCULARS, IT_HOLDABLE);
 
-	if (Lmd_Prof_Merc_GetSkill_Fuel(ent->client->pers.Lmd.account, &mercSkill_Fuel) > 0) ent->client->ps.stats[STAT_HOLDABLE_ITEMS] |= (1 << HI_JETPACK); //iomatix: new mechanics, jetpack after upgrading the fuel.
+	if (Lmd_Prof_Merc_GetSkill_fuel(ent->client->pers.Lmd.account, &mercSkill_Fuel) > 0) ent->client->ps.stats[STAT_HOLDABLE_ITEMS] |= (1 << HI_JETPACK); //iomatix: new mechanics, jetpack after upgrading the fuel.
 
 				
 	ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax = 75;
@@ -2144,7 +1653,7 @@ void Merc_Spawn(gentity_t *ent)
 	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] =  Get_Merc_hp_maxs_value(ent); //iomatix HP skill
 
 	//SHIELD:
-	int armorSkill = Lmd_Prof_Merc_GetSkill_Shield(ent->client->pers.Lmd.account, &mercSkill_Shield);
+	int armorSkill = Lmd_Prof_Merc_GetSkill_armor(ent->client->pers.Lmd.account, &mercSkill_Shield);
 	if (armorSkill > 0) {
 		//Will be capped to max on spawn finalize if needed.
 		ent->client->ps.stats[STAT_ARMOR] += armorSkill * (ent->client->pers.maxHealth * 0.15f);
