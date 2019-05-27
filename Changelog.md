@@ -51,5 +51,5 @@
 
 - TODO: Lightning turn off jetpacks for a while. 
 
-
+- TODO: USER FRIENDLY GUIDE
 - TODO: Adding openjk API support
