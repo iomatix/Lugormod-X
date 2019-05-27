@@ -1046,7 +1046,7 @@ void Experience_Level_Up(gentity_t *ent)
 	}
 	//checks are completed
 
-		PlayerAcc_SetExperience(ent, resEXP);
+		PlayerAcc_SetExperience(ent, -resEXP);
 		//iomatix:
 		playerLevel++;
 		PlayerAcc_Prof_SetLevel(ent, playerLevel);
