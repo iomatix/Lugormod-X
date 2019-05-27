@@ -341,6 +341,8 @@ vmCvar_t	lmd_mastery_level_skills_level;
 vmCvar_t	lmd_damage_level_scale;
 vmCvar_t	lmd_is_lethality_add_damage;
 vmCvar_t    lmd_is_thousandcuts_lethality;
+vmCvar_t	lmd_is_buy_level;
+
 								 
 //RoboPhred:
 vmCvar_t lmd_DataPath;
@@ -400,6 +402,7 @@ vmCvar_t lmd_allowEmptyHostname;
 vmCvar_t lmd_enableCorpseDrag;
 
 vmCvar_t lmd_rewardcr_kill;
+vmCvar_t lmd_rewardexp_kill;
 
 //RoboPhred: track this and force it to off
 vmCvar_t sv_allowdownload;
@@ -611,8 +614,11 @@ static cvarTable_t		gameCvarTable[] = {
 "Experimental.  Enable dragging corpses with the use key.",
 },
 
-{ &lmd_rewardcr_kill, "lmd_rewardcr_kill", "0", CVAR_ARCHIVE, 0, qtrue, qfalse,
+{ &lmd_rewardcr_kill, "lmd_rewardcr_kill", "4", CVAR_ARCHIVE, 0, qtrue, qfalse,
 "Give a player credits for killing other players.  Does not work for killing NPCs.",
+},
+{ &lmd_rewardexp_kill, "lmd_rewardexp_kill", "11", CVAR_ARCHIVE, 0, qtrue, qfalse,
+"Give a player experience for killing other players.  Does not work for killing NPCs.",
 },
 
 //====================================================================================================
@@ -873,6 +879,7 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_damage_level_scale, "lmd_damage_level_scale", "1", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_is_lethality_add_damage, "lmd_is_lethality_add_damage", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_is_thousandcuts_lethality, "lmd_is_thousandcuts_lethality", "0", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_is_buy_level, "lmd_is_buy_level", "0", CVAR_ARCHIVE, 0, qfalse },
 
 // Lugormod cvars:
 { &g_noVoteTime, "g_noVoteTime", "5", CVAR_ARCHIVE,0, qfalse, qfalse,

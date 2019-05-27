@@ -31,6 +31,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 			"^3Stats are:\n"
 			"^2Name\n"
 			"^2Credits\n"
+			"^2Experience\n"
 			"^2Profession\n"
 			"^2Level\n"
 			"^2Score");
@@ -70,6 +71,19 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		}
 		Accounts_SetCredits(acc, v);
 		Disp(ent, "^2Credits set.");
+	}
+	else if (Q_stricmp(arg, "experience") == 0) {
+		int v = atoi(val);
+		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
+			Disp(ent, "^3Invalid experience amount.");
+			return;
+		}
+		if (v < 0) {
+			Disp(ent, "^3Invalid amount, experience must be greater than or equal to zero.");
+			return;
+		}
+		Accounts_SetExperience(acc, v);
+		Disp(ent, "^5Experience set.");
 	}
 	else if (Q_stricmp(arg, "profession") == 0) {
 		int p = -1;

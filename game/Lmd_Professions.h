@@ -61,4 +61,6 @@ void Accounts_Prof_SetLevel(Account_t *acc, int value);
 
 void Accounts_Prof_ClearData(Account_t *acc);
 
+
+
 qboolean PlayerAcc_Prof_CanUseProfession(gentity_t *ent);

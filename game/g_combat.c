@@ -2191,6 +2191,7 @@ void Merc_Unhook (gentity_t *ent);
 //RoboPhred:
 void lmd_event_playerkilled(gentity_t *player, gentity_t *attacker, int meansOfDeath);
 extern vmCvar_t lmd_rewardcr_kill;
+extern vmCvar_t lmd_rewardexp_kill;
 void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int meansOfDeath ) {
 	//gentity_t	*ent;
 	int			anim;
@@ -2645,11 +2646,9 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 					temp->s.isJediMaster = wasJediMaster;
 				}
 			}
-
-			if(lmd_rewardcr_kill.integer != 0 && attacker->s.number < MAX_CLIENTS && attacker != self) {
-				//iomatix: todo killing rewards for experience system
-				GiveCredits(attacker, lmd_rewardcr_kill.integer, va("for killing ^7%s", self->client->pers.netname));
-			}
+			//iomatix:       
+			if(lmd_rewardcr_kill.integer != 0 && attacker->s.number < MAX_CLIENTS && attacker != self) GiveCredits(attacker, lmd_rewardcr_kill.integer, va("for killing ^7%s", self->client->pers.netname));
+			if(lmd_rewardexp_kill.integer > 0 && attacker->s.number < MAX_CLIENTS && attacker != self) GiveExperience(attacker, lmd_rewardexp_kill.integer, va("for killing ^7%s", self->client->pers.netname));
 		}
 	}
 	if(self->client && self->s.eType == ET_PLAYER) {

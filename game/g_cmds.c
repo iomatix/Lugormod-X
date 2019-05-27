@@ -428,6 +428,7 @@ void Cmd_Give_f (gentity_t *cmdent, int baseArg)
 		if (!give_all)
 			return;
 	}
+	
 	if (Q_stricmp(name, "credits") == 0){
 		int myCreds = PlayerAcc_GetCredits(ent);
 		if(trap_Argc() == 3+baseArg){
@@ -445,9 +446,31 @@ void Cmd_Give_f (gentity_t *cmdent, int baseArg)
 				trap_SendServerCommand(ent->s.number, va("cp \"^3You lost ^1CR %i^3.\"", -num));
 
 		}
+
 		return;
 	}
+	/*
+	if (Q_stricmp(name, "experience") == 0) {
+		int myExp = PlayerAcc_GetExperience(ent);
+		if (trap_Argc() == 3 + baseArg) {
+			int num;
+			trap_Argv(2 + baseArg, arg, sizeof(arg));
+			num = atoi(arg);
+			if (num < 0 && num + myExp < 0) {
+				Disp(cmdent, "^3Target does not have enough experience.");
+				return;
+			}
+			PlayerAcc_SetExperience(ent, myExp + num);
+			if (num >= 0)
+				trap_SendServerCommand(ent->s.number, va("cp \"^3You received ^2EXP %i^3.\"", num));
+			else
+				trap_SendServerCommand(ent->s.number, va("cp \"^3You lost ^1EXP%i^3.\"", -num));
 
+		}
+
+		return;
+	}
+	*/
 	if (give_all || Q_stricmp(name, "armor") == 0)
 	{
 		if (trap_Argc() == 3+baseArg) {

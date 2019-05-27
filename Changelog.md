@@ -33,12 +33,19 @@
 - Added new extern variable lmd_is_lethality_add_damage to configure the lethality skill. default 0, 1 to turn it on. ✔️ 
 - Added new extern variable lmd_is_thousandcuts_lethality to configure the thousand cuts skill. default 0, 1 to turn it on. ✔️ 
 - Added new passive skill Master of The Guns for Mercenery. ✔️ 
-- Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine)
+- Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
+- Added new extern variable lmd_rewardexp_kill to set-up the reward for kill. ✔️ 
+- Added new extern variable lmd_exp_for_level. ✔️ 
+- Added new extern variable lmd_is_buy_level, set to 1 get access to the buylevel command. default 0 ✔️ 
+- True RPG leveling system is implemented. ✔️ 
 
 ## TODO
-- meditation fix, dets, trip, thermal sound fix
+- meditation fix!!!!!!!
+- more exp based on level differences!!!!!!!!!!!!!!!!!!
+- lesser difference between level damages!!!
+- TODO: Adding new extern variable lmd_loss_exp_death. ????????
 - TODO: Add experience needed to level up. (Not tradable, add new cmd for admin to set experience.) It will block economic looses for servers. Level DOSEN'T need credits.
-- TODO: lmd_exp_for_level /default 450
+
 - TODO: Now skillpoints will cost credits to be spend (level(level+1)lmd_skillpoint_cost)  //default 150
 
 
@@ -47,6 +54,7 @@
 - TODO: Add lootboxes called now Credits Boxes. Chances: 80% for 25-200CR, 15% for 200-1000CR, 4% for 1000-10000CR, 1% for 10000-10
 - TODO: Repair memory leaks with AI say command
 
+- TODO: svcmds + commands + admin commands guide
 
 - TODO: Lootbox for level up each 10 lvls %10
 - TODO: Messages time control.

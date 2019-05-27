@@ -38,7 +38,16 @@ int Accounts_GetPassword(Account_t *acc);
 void Accounts_SetPassword(Account_t *acc, char *password);
 #define PlayerAcc_SetPassword(ent, password) Accounts_SetPassword(ent->client->pers.Lmd.account, password)
 
+void GiveExperience(gentity_t *ent, int cr, char *reason);
 void GiveCredits(gentity_t *ent, int cr, char *reason);
+
+
+int Accounts_GetExperience(Account_t *acc);
+#define PlayerAcc_GetExperience(ent) Accounts_GetCredits(ent->client->pers.Lmd.account)
+
+void Accounts_SetExperience(Account_t *acc, int value);
+#define PlayerAcc_SetExperience(ent, value) Accounts_SetExperience(ent->client->pers.Lmd.account, value)
+
 int Accounts_GetCredits(Account_t *acc);
 #define PlayerAcc_GetCredits(ent) Accounts_GetCredits(ent->client->pers.Lmd.account)
 

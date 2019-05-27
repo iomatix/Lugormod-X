@@ -530,12 +530,14 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 		{
 			Disp(ent, "^3You've paid all your credits.");
 			PlayerAcc_SetCredits(ent, 0);
+			PlayerAcc_SetExperience(ent, 0);
 
 		}
 		else
 		{
 			Disp(ent, va("^3You've paid ^2%iCR", lmd_profession_fee.integer));
 			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - lmd_profession_fee.integer);
+			PlayerAcc_SetExperience(ent, 0);
 		}
 
 
@@ -968,6 +970,24 @@ void Cmd_ResetSkills_f(gentity_t *ent, int iArg) {
 }
 
 //FIXME: should be replaced by Profession_SkillCost
+//iomatix:
+int Professions_LevelCost_EXP(int prof, int level) {
+	int nextlevel = level + 1;
+	//450 
+	int cost;
+	if(lmd_exp_for_level.integer <= 1){
+		lmd_exp_for_level.integer = 450; //default
+	}
+	if (nextlevel < MASTER_LEVEL)
+	{
+		cost = lmd_exp_for_level.integer * nextlevel/3.3;
+	}
+	else {//harder formula for players above 40 lvl
+		cost = lmd_exp_for_level.integer * nextlevel/2.3;
+	}
+	return cost;
+}
+
 int Professions_LevelCost(int prof, int level, int time) {
 	int nextlevel = level + 1;
 	int cost = (int)(LEVEL_COST * (nextlevel * (nextlevel + 1)));
@@ -1000,59 +1020,111 @@ void Cmd_BuyLevel_Confirm(gentity_t *ent, void *dataptr) {
 
 }
 
-void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
+void Experience_Level_Up(gentity_t *ent)
+{
 	int playerLevel = PlayerAcc_Prof_GetLevel(ent);
-	int myCreds = PlayerAcc_GetCredits(ent), cost;
+	int myExp = PlayerAcc_GetExperience(ent), cost;
 	int flags = PlayerAcc_GetFlags(ent);
 	int prof = PlayerAcc_Prof_GetProfession(ent);
-	char arg[MAX_STRING_CHARS];
-	trap_Argv(1, arg, sizeof(arg));
-	if (prof == PROF_ADMIN) {
-		Disp(ent, "^3The god profession has no levels.");
+
+	if (prof == PROF_ADMIN) return;
+	if (playerLevel <= 0) return;
+	if (playerLevel >= Professions[prof]->primarySkill.levels.max) return;
+
+	if (flags & ACCFLAGS_NOPROFCRLOSS) PlayerAcc_AddFlags(ent, -ACCFLAGS_NOPROFCRLOSS);
+	cost = Professions_LevelCost_EXP(prof, playerLevel);
+	int resEXP = PlayerAcc_GetExperience(ent);
+	if (resEXP <= 0) {
 		return;
 	}
-
-	if (playerLevel <= 0) {
-		Disp(ent, "^3You are not logged in.");
+	Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));
+	resEXP = resEXP - cost; // new cost
+	if (resEXP < 0) {
+		
+		Disp(ent, va("^3You need ^5%i EXP ^3more.\n", -resEXP));
 		return;
 	}
+	//checks are completed
 
-	if (playerLevel >= Professions[prof]->primarySkill.levels.max) {
-		Disp(ent, va("^3You have reached the maximum level %i.", Professions[prof]->primarySkill.levels.max));
-		return;
-	}
-
-
-	if (flags & ACCFLAGS_NOPROFCRLOSS) {
-		PlayerAcc_AddFlags(ent, -ACCFLAGS_NOPROFCRLOSS);
-	}
-
-	cost = Professions_LevelCost(prof, playerLevel, Time_Now() - Accounts_Prof_GetLastLevelup(ent->client->pers.Lmd.account));
-
-
-	int resCr = PlayerAcc_GetCredits(ent) - cost;
-	if (resCr < 0) {
-		Disp(ent, va("^3The next level is ^2%i^3 and costs ^2CR %i^3.  You need ^2%i^3 more credit%s.", playerLevel + 1, cost, -resCr, (resCr != -1) ? "s" : ""));
-		return;
-	}
-
-	if (Q_stricmp("confirm", arg) == 0) {
-		PlayerAcc_SetCredits(ent, resCr);
+		PlayerAcc_SetExperience(ent, resEXP);
 		//iomatix:
 		playerLevel++;
 		PlayerAcc_Prof_SetLevel(ent, playerLevel);
 		int NewSkillPoints_value = Professions_Add_That_Amount_SkillPoints(playerLevel);
-
-		Disp(ent, va("^3You are now at level ^2%i^3.\n ^3%i skill points recived.", playerLevel, NewSkillPoints_value));
+		
+		
 		WP_InitForcePowers(ent);
-		return;
-	}
 
-	Disp(ent, va(
-		CT_B"The next level costs "CT_V"%i"CT_B" credits.  Leveling up will leave you with "CT_V"%i"CT_B" credits.\n"
-		"Use \'"CT_C"BuyLevel confirm"CT_B"\' to level up .",
-		cost,
-		resCr));
+	   cost = Professions_LevelCost_EXP(prof, playerLevel);
+	   Disp(ent, va("^5Congratulation, Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value));
+	   G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
+	  
+	   return;
+
+}
+
+void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
+	if(lmd_is_buy_level.integer == 0){
+		int prof = PlayerAcc_Prof_GetProfession(ent);
+		Disp(ent, "^1You can not buy a level on this server. Gain experience to level up instead.");
+		if (prof == PROF_ADMIN) {
+			Disp(ent, "^2You are able to change this setting inside of the server.cfg file.\n Add this line: set lmd_is_buy_level 1");
+		}
+	}
+	else {
+		int playerLevel = PlayerAcc_Prof_GetLevel(ent);
+		int myCreds = PlayerAcc_GetCredits(ent), cost;
+		int flags = PlayerAcc_GetFlags(ent);
+		int prof = PlayerAcc_Prof_GetProfession(ent);
+		char arg[MAX_STRING_CHARS];
+		trap_Argv(1, arg, sizeof(arg));
+		if (prof == PROF_ADMIN) {
+			Disp(ent, "^3The god profession has no levels.");
+			return;
+		}
+
+		if (playerLevel <= 0) {
+			Disp(ent, "^3You are not logged in.");
+			return;
+		}
+
+		if (playerLevel >= Professions[prof]->primarySkill.levels.max) {
+			Disp(ent, va("^3You have reached the maximum level %i.", Professions[prof]->primarySkill.levels.max));
+			return;
+		}
+
+
+		if (flags & ACCFLAGS_NOPROFCRLOSS) {
+			PlayerAcc_AddFlags(ent, -ACCFLAGS_NOPROFCRLOSS);
+		}
+
+		cost = Professions_LevelCost(prof, playerLevel, Time_Now() - Accounts_Prof_GetLastLevelup(ent->client->pers.Lmd.account));
+
+
+		int resCr = PlayerAcc_GetCredits(ent) - cost;
+		if (resCr < 0) {
+			Disp(ent, va("^3The next level is ^2%i^3 and costs ^2CR %i^3.  You need ^2%i^3 more credit%s.", playerLevel + 1, cost, -resCr, (resCr != -1) ? "s" : ""));
+			return;
+		}
+
+		if (Q_stricmp("confirm", arg) == 0) {
+			PlayerAcc_SetCredits(ent, resCr);
+			//iomatix:
+			playerLevel++;
+			PlayerAcc_Prof_SetLevel(ent, playerLevel);
+			int NewSkillPoints_value = Professions_Add_That_Amount_SkillPoints(playerLevel);
+
+			Disp(ent, va("^3You are now at level ^2%i^3.\n ^3%i skill points recived.", playerLevel, NewSkillPoints_value));
+			WP_InitForcePowers(ent);
+			return;
+		}
+
+		Disp(ent, va(
+			CT_B"The next level costs "CT_V"%i"CT_B" credits.  Leveling up will leave you with "CT_V"%i"CT_B" credits.\n"
+			"Use \'"CT_C"BuyLevel confirm"CT_B"\' to level up .",
+			cost,
+			resCr));
+	}
 }
 
 void Profession_DisplayProfs(gentity_t *ent) {

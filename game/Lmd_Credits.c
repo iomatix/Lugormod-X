@@ -4,9 +4,35 @@
 #include "Lmd_Accounts_Core.h"
 #include "Lmd_Professions.h"
 
+
 qboolean PlayerItem_CanSpawnItem(gentity_t *player);
 qboolean PlayerItem_Spawn(gentity_t *player, gentity_t *item);
+extern void Experience_Level_Up(gentity_t *ent);
+void GiveExperience(gentity_t *ent, int exper, char *reason) {
+	int cur = PlayerAcc_GetExperience(ent);
+	if (exper < 0 && exper - exper < 0) exper = 0;
 
+	else if (exper > 0) {
+		char *msg = va("^3You received ^5EXP %i^3 %s.", exper, (reason != NULL) ? reason : "");
+		Disp(ent, msg);
+		trap_SendServerCommand(ent->s.number, va("exp \"%s\"", msg));
+		//G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
+	}
+	else if (exper < 0) {
+		char *msg = va("^3You lost ^1EXP %i^3 %s.", exper, (reason != NULL) ? reason : "");
+		Disp(ent, msg);
+		trap_SendServerCommand(ent->s.number, va("exp \"%s\"", msg));
+	}
+
+
+	PlayerAcc_SetExperience(ent, cur + exper);
+	Experience_Level_Up(ent);
+	
+	//auto check is level up 
+	
+
+
+}
 void GiveCredits(gentity_t *ent, int cr, char *reason) {
 	int cur = PlayerAcc_GetCredits(ent);
 	if(cr < 0 && cur - cr < 0)

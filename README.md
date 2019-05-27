@@ -19,6 +19,7 @@
 - Added level damage scaling with new server side variable.
 - Added lethality & thousand cuts skills.
 - Added new extern variables lmd_is_lethality_add_damage & lmd_is_thousandcuts_lethality to configure new skills.
+- New fully working leveling system with experience gain.
 
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)

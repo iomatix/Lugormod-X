@@ -11,6 +11,7 @@
 #include "Lmd_Commands_Core.h"
 #include "Lmd_Console.h"
 
+
 Account_t *Accounts_New(char *username, char *name, char *password);
 
 #define LEVEL_SCORE 11
@@ -172,6 +173,7 @@ void HiScore(gentity_t *ent, int field) {
 
 }
 
+extern int Professions_LevelCost_EXP(int prof, int playerLevel);
 int Jedi_GetAccSide(Account_t *acc);
 void GetStats(gentity_t *ent, Account_t *acc) {
 	int prof, time, lvl, authrank;
@@ -199,6 +201,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3Username:      ^2%s\n"
 		"^3Security code: ^2%s\n"
 		"^3Credits:       ^2%i\n"
+		"^3Experience:    ^5%i ^3/ ^2%i \n"
 		"^3Time:          ^2%i^3:^2%02i\n"
 		"^3Level:         ^2%i\n"
 		"^3Score:         ^2%i",
@@ -207,6 +210,8 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		Accounts_GetUsername(acc),
 		(secCode != NULL) ? secCode : "^1<none>",
 		Accounts_GetCredits(acc),
+		Accounts_GetExperience(acc),
+		Professions_LevelCost_EXP(PlayerAcc_Prof_GetProfession(ent), lvl),
 		time / 3600, (time / 60) % 60,
 		lvl, Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)

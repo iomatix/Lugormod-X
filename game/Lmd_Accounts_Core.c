@@ -570,10 +570,18 @@ char* Accounts_NewSeccode(Account_t *acc) {
 	Lmd_Accounts_Modify(acc);
 	return acc->secCode;
 }
-
+int Accounts_GetExperience(Account_t *acc) {
+	if (!acc)return 0;
+	return acc->experience;
+}
+void Accounts_SetExperience(Account_t *acc, int value) {
+	if (!acc)return;
+	if (value < 0)value = 0;
+	acc->experience = value;
+	Lmd_Accounts_Modify(acc);
+}
 int Accounts_GetCredits(Account_t *acc) {
-	if(!acc)
-		return 0;
+	if(!acc)return 0;
 	return acc->credits;
 }
 
