@@ -25,11 +25,10 @@
 - Added new skill tree for Jedi and new passive skills. ✔️
 - lmd_skillpoint_cost will have impact also on reset skill cost. Reseting skill is the same price as uprgrading. ✔️
 - Redesigned skill creation for mercenary. ✔️
-- Weapons skill has more weapons available now. ✔️
+- Mercenary weapons skill has access to more weapons now. ✔️
+- Skills above lmd_mastery_level_skills_level level availble after reaching the Mastery Level (40). ✔️ default 3, to unlock use 99 or 0. ✔️
 
 ## TODO
-- New weapons avaiable after reaching Mastery Level!
-- Last 15 points of passive skills avaiable after reaching Mastery Level!
 - New passive for mercenary, maybe more upgrades? //do not touch forces!
 
 - TODO: Make MaxAmmo function for explosive materials.  

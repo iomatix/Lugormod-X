@@ -693,8 +693,9 @@ void Cmd_SkillSelect_List(gentity_t *ent, int prof, profSkill_t *parent) {
 }
 
 void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolean down) {
-
+	//iomatix:
 	Account_t *acc = ent->client->pers.Lmd.account;
+	int profession_level = Accounts_Prof_GetLevel(acc);
 
 	if (!acc) {
 		return;
@@ -735,6 +736,17 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 
 		//iomatix re-designe
 		int nextLevel = level + 1;
+
+		if (lmd_mastery_level_skills_level.integer > 0)
+		{
+			if (nextLevel > lmd_mastery_level_skills_level.integer)
+			{
+				Disp(ent, va("^1Unlocked at ^2%i^3 profession level. You need to reach mastery level before increasing this skill.", MASTER_LEVEL));
+				return;
+			}
+
+		}
+
 		int cost = Professions_SkillCost(skill, nextLevel) - Professions_SkillCost(skill, level);
 		int points = Professions_AvailableSkillPoints(acc, prof, skill, NULL);
 		if (points < cost) {
@@ -742,10 +754,11 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			return;
 		}
 		//fixed by iomatix.
-		if(!skill) Disp(ent, ("^1MISSING SKILL!")); //debug
+		//if(!skill) Disp(ent, ("^1MISSING SKILL!")); //debug
+		
 		level++;
 		nextLevel++;
-
+		
 
 		if (level >= skill->levels.max) {
 			Disp(ent, "^3This skill is now at its highest level.");
@@ -755,17 +768,15 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			points -= cost;
 			cost = Professions_SkillCost(skill, nextLevel) - Professions_SkillCost(skill, level);
 			if (points >= cost) {
-				int i;
-				const char **descr = skill->levelDescriptions;
 				Disp(ent, va("^3You can increase this skill again.  It will cost ^2%i^3 points, leaving you with ^2%i^3 point%s left.",
 					cost, points - cost, (points - cost == 1) ? "" : "s"));
-
-				for (i = 0; i < level; i++) {
+				const char **descr = skill->levelDescriptions; //desc
+				for (int i = 0; i < level; i++) {
 					if (descr == NULL)
 						break;
 					descr++;
 				}
-				if (*descr != NULL) Disp(ent, va("^2Next level: ^5%s", *descr));
+				if (*descr != NULL) Disp(ent, va("^3Next level: ^8%s", *descr));
 			}
 			//else Disp(ent, "^2You do not have enough points to increase this skill."); iomatix: we don't need that it's only disturbing!!! who the hell get idea to disp it is good deal??? 
 		}
@@ -774,6 +785,15 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 	//check 
 	if (skill->setValue(acc, skill, level)) {
 		Disp(ent, va("^3The ^2%s^3 skill is now at level ^2%i^3.", skill->name, level));
+		const char **descr_now = skill->levelDescriptions; //desc
+		for (int i = 0; i < level-1; i++) {
+			if (descr_now == NULL)
+				break;
+			descr_now++;
+		}
+		if (*descr_now != NULL) Disp(ent, va("^3%s upgraded: ^2%s", skill->name, *descr_now));
+
+
 		Profession_UpdateSkillEffects(ent, prof);
 	}else Disp(ent, ("^1Something gone wrong!")); //debug
 }

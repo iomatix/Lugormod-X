@@ -1113,6 +1113,7 @@ extern	vmCvar_t	lmd_bounty_streaks_by;
 extern	vmCvar_t	lmd_skillpoint_cost;
 extern	vmCvar_t	lmd_exp_for_level;
 extern	vmCvar_t    lmd_skillpoints_perlevel;
+extern	vmCvar_t    lmd_mastery_level_skills_level;
 #include "../namespace_begin.h"
 
 // RoboPhred

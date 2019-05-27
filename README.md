@@ -15,6 +15,7 @@
 - Player can spend skillpoints to upgrade new fully working passive skills.
 - Improved console displays making it more clear for the user.
 - New weapons for Mercenary profession available through his skill.
+- To get access more powerful skills player must reach his Mastery Level now.
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 

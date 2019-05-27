@@ -21,5 +21,8 @@ List of all Extern Variables added by iomatix:
   
   That value is used in killing streak counter. After that value killing streak reward for killing the player is increasing.
 - **lmd_skillpoints_perlevel** 4 is default. 
-  
+
   That value determines how many skill points player will receive after each level-up. After reaching the Mastery Level the value slightly increasing. 
+- **lmd_mastery_level_skills_level**
+  
+  That value determines max level of the skills before reaching Mastery Level. 3 is default. 
