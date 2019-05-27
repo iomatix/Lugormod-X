@@ -32,7 +32,7 @@
 - New passive for mercenary, maybe more upgrades? //do not touch forces!
 
 - TODO: Make MaxAmmo function for explosive materials.  
-
+- TODO: Repair memory leaks with AI say command
 - TODO: Player after reaching level 120 is able to start over again from level 1 but with perma +25hp/+25force/+25shield boost. Repeatable. 
 - TODO: Add lootboxes called now Credits Boxes. Chances: 80% for 25-200CR, 15% for 200-1000CR, 4% for 1000-10000CR, 1% for 10000-10
 - TODO: Killing streak Bounty. After each lmd_bounty_streaks_by kills bounty is increasing. For killing bounty target player will recive Credit Boxes. new variable (lmd_bounty_streaks_by default "5")
