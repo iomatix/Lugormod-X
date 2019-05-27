@@ -33,8 +33,10 @@
 - Added new extern variable lmd_is_lethality_add_damage to configure the lethality skill. default 0, 1 to turn it on. ✔️ 
 - Added new extern variable lmd_is_thousandcuts_lethality to configure the thousand cuts skill. default 0, 1 to turn it on. ✔️ 
 - Added new passive skill Master of The Guns for Mercenery. ✔️ 
+- Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine)
 
 ## TODO
+- meditation fix, dets, trip, thermal sound fix
 - TODO: Add experience needed to level up. (Not tradable, add new cmd for admin to set experience.) It will block economic looses for servers. Level DOSEN'T need credits.
 - TODO: lmd_exp_for_level /default 450
 - TODO: Now skillpoints will cost credits to be spend (level(level+1)lmd_skillpoint_cost)  //default 150
@@ -54,6 +56,8 @@
 - TODO: Lootboxes for killstreak
 
 - TODO: Lightning turn off jetpacks for a while. 
+
+- TODO: New styles (god is using them, for force user)
 
 - TODO: USER FRIENDLY GUIDE
 - TODO: Adding openjk API support

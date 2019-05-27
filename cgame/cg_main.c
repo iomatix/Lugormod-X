@@ -1574,7 +1574,7 @@ static void CG_RegisterSounds( void ) {
 
 	for (i=1 ; i<3 ; i++)
 	{
-		trap_S_RegisterSound(va("sound/weapons/thermal/bounce%i.wav", i));
+		trap_S_RegisterSound(va("sound/weapons/thermal/bounce%i.mp3", i)); //update
 	}
 
 	trap_S_RegisterSound("sound/movers/switches/switch2.wav");

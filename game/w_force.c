@@ -5620,7 +5620,7 @@ void SeekerDroneUpdate(gentity_t *self)
 		self->client->ps.genericEnemyIndex = 1024+(int)self->client->ps.droneExistTime;
 		if (self->client->ps.droneFireTime < level.time)
 		{
-			G_Sound( self, CHAN_BODY, G_SoundIndex("sound/weapons/laser_trap/warning.wav") );
+			G_Sound( self, CHAN_BODY, G_SoundIndex("sound/weapons/laser_trap/warning.mp3") );
 			self->client->ps.droneFireTime = level.time + 100;
 		}
 		return;

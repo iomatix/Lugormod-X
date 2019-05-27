@@ -269,7 +269,7 @@ int Get_Merc_hp_maxs_value(gentity_t *ent)
 	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.2); //scale health
 	int skillHP = Lmd_Prof_Merc_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &mercSkill_hp_maxs);
 	if (skillHP > 0){
-		value = 13 * skillHP;
+		value += 13 * skillHP;
 		if (skillHP == mercSkill_hp_maxs.levels.max) value += 12; //bonus for maxed (13+12=25)
 	}
 	return value;
@@ -657,10 +657,10 @@ const mercItemTable_t mercWeaponTable[] = {
 { "Stun baton", 1, WP_STUN_BATON },
 #endif
 { "Blaster", 2, WP_BLASTER },
-{ "Thermal Detonators", 4, WP_THERMAL },
-{ "Detonation Packs",5,WP_DET_PACK },
-{ "Laser Trip Mines", 5, WP_TRIP_MINE },
-{ "Bowcaster", 5, WP_BOWCASTER },
+{ "Bowcaster", 4, WP_BOWCASTER },
+{ "Thermal Detonators", 5, WP_THERMAL },
+{ "Detonation Packs",10,WP_DET_PACK },
+{ "Laser Trip Mines", 12, WP_TRIP_MINE },
 { "Destructive EMP-2", 10, WP_DEMP2 },
 { "Disruptor", 10, WP_DISRUPTOR },
 { "Flechette", 14, WP_FLECHETTE },

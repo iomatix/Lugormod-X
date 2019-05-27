@@ -221,6 +221,7 @@ DataWriteResult_t Accounts_Write_Modules(void *target, char key[], int keySize, 
 	_m##_AUTO(time, ACCOUNTOFS(time), F_INT) \
 	_m##_AUTO(score, ACCOUNTOFS(score), F_INT) \
 	_m##_AUTO(credits, ACCOUNTOFS(credits), F_INT) \
+	_m##_AUTO(experience, ACCOUNTOFS(experience), F_INT) \
 	_m##_AUTO(flags, ACCOUNTOFS(flags), F_INT) \
 	_m##_DEFL(Accounts_Parse_Modules, Accounts_Write_Modules, NULL)
 

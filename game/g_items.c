@@ -496,7 +496,7 @@ qboolean PlaceShield(gentity_t *playerent)
 
 	if (shieldAttachSound == 0) {
 		shieldLoopSound = G_SoundIndex("sound/movers/doors/forcefield_lp.wav");
-		shieldAttachSound = G_SoundIndex("sound/weapons/detpack/stick.wav");
+		shieldAttachSound = G_SoundIndex("sound/weapons/detpack/stick.mp3");
 		shieldActivateSound = G_SoundIndex("sound/movers/doors/forcefield_on.wav");
 		shieldDeactivateSound = G_SoundIndex("sound/movers/doors/forcefield_off.wav");
 		shieldDamageSound = G_SoundIndex("sound/effects/bumpfield.wav");

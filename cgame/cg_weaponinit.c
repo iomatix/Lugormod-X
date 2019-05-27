@@ -470,11 +470,11 @@ void CG_RegisterWeapon( int weaponNum) {
 		break;
 
 	case WP_THERMAL:
-		weaponInfo->selectSound			= trap_S_RegisterSound("sound/weapons/thermal/select.wav");
+		weaponInfo->selectSound			= trap_S_RegisterSound("sound/weapons/thermal/select.mp3");
 
-		weaponInfo->flashSound[0]		= trap_S_RegisterSound( "sound/weapons/thermal/fire.wav");
+		weaponInfo->flashSound[0]		= trap_S_RegisterSound( "sound/weapons/thermal/fire.mp3");
 		weaponInfo->firingSound			= NULL_SOUND;
-		weaponInfo->chargeSound			= trap_S_RegisterSound( "sound/weapons/thermal/charge.wav");
+		weaponInfo->chargeSound			= trap_S_RegisterSound( "sound/weapons/thermal/charge.mp3");
 		weaponInfo->muzzleEffect		= NULL_FX;
 		weaponInfo->missileModel		= trap_R_RegisterModel( "models/weapons2/thermal/thermal_proj.md3" );
 		weaponInfo->missileSound		= NULL_SOUND;
@@ -483,9 +483,9 @@ void CG_RegisterWeapon( int weaponNum) {
 		weaponInfo->missileHitSound		= NULL_SOUND;
 		weaponInfo->missileTrailFunc	= 0;
 
-		weaponInfo->altFlashSound[0]	= trap_S_RegisterSound( "sound/weapons/thermal/fire.wav");
+		weaponInfo->altFlashSound[0]	= trap_S_RegisterSound( "sound/weapons/thermal/fire.mp3");
 		weaponInfo->altFiringSound		= NULL_SOUND;
-		weaponInfo->altChargeSound		= trap_S_RegisterSound( "sound/weapons/thermal/charge.wav");
+		weaponInfo->altChargeSound		= trap_S_RegisterSound( "sound/weapons/thermal/charge.mp3");
 		weaponInfo->altMuzzleEffect		= NULL_FX;
 		weaponInfo->altMissileModel		= trap_R_RegisterModel( "models/weapons2/thermal/thermal_proj.md3" );
 		weaponInfo->altMissileSound		= NULL_SOUND;
@@ -497,18 +497,18 @@ void CG_RegisterWeapon( int weaponNum) {
 		cgs.effects.thermalExplosionEffect		= trap_FX_RegisterEffect( "thermal/explosion" );
 		cgs.effects.thermalShockwaveEffect		= trap_FX_RegisterEffect( "thermal/shockwave" );
 
-		cgs.media.grenadeBounce1		= trap_S_RegisterSound( "sound/weapons/thermal/bounce1.wav" );
-		cgs.media.grenadeBounce2		= trap_S_RegisterSound( "sound/weapons/thermal/bounce2.wav" );
+		cgs.media.grenadeBounce1		= trap_S_RegisterSound( "sound/weapons/thermal/bounce1.mp3" );
+		cgs.media.grenadeBounce2		= trap_S_RegisterSound( "sound/weapons/thermal/bounce2.mp3" );
 
 		trap_S_RegisterSound( "sound/weapons/thermal/thermloop.wav" );
-		trap_S_RegisterSound( "sound/weapons/thermal/warning.wav" );
+		trap_S_RegisterSound( "sound/weapons/thermal/warning.mp3" );
 
 		break;
 
 	case WP_TRIP_MINE:
-		weaponInfo->selectSound			= trap_S_RegisterSound("sound/weapons/detpack/select.wav");
+		weaponInfo->selectSound			= trap_S_RegisterSound("sound/weapons/detpack/select.mp3");
 
-		weaponInfo->flashSound[0]		= trap_S_RegisterSound( "sound/weapons/laser_trap/fire.wav");
+		weaponInfo->flashSound[0]		= trap_S_RegisterSound( "sound/weapons/laser_trap/fire.mp3");
 		weaponInfo->firingSound			= NULL_SOUND;
 		weaponInfo->chargeSound			= NULL_SOUND;
 		weaponInfo->muzzleEffect		= NULL_FX;
@@ -519,7 +519,7 @@ void CG_RegisterWeapon( int weaponNum) {
 		weaponInfo->missileHitSound		= NULL_SOUND;
 		weaponInfo->missileTrailFunc	= 0;
 
-		weaponInfo->altFlashSound[0]	= trap_S_RegisterSound( "sound/weapons/laser_trap/fire.wav");
+		weaponInfo->altFlashSound[0]	= trap_S_RegisterSound( "sound/weapons/laser_trap/fire.mp3");
 		weaponInfo->altFiringSound		= NULL_SOUND;
 		weaponInfo->altChargeSound		= NULL_SOUND;
 		weaponInfo->altMuzzleEffect		= NULL_FX;
@@ -535,14 +535,14 @@ void CG_RegisterWeapon( int weaponNum) {
 
 		trap_FX_RegisterEffect( "tripMine/explosion" );
 		// NOTENOTE temp stuff
-		trap_S_RegisterSound( "sound/weapons/laser_trap/stick.wav" );
-		trap_S_RegisterSound( "sound/weapons/laser_trap/warning.wav" );
+		trap_S_RegisterSound( "sound/weapons/laser_trap/stick.mp3" );
+		trap_S_RegisterSound( "sound/weapons/laser_trap/warning.mp3" );
 		break;
 
 	case WP_DET_PACK:
-		weaponInfo->selectSound			= trap_S_RegisterSound("sound/weapons/detpack/select.wav");
+		weaponInfo->selectSound			= trap_S_RegisterSound("sound/weapons/detpack/select.mp3");
 
-		weaponInfo->flashSound[0]		= trap_S_RegisterSound( "sound/weapons/detpack/fire.wav");
+		weaponInfo->flashSound[0]		= trap_S_RegisterSound( "sound/weapons/detpack/fire.mp3");
 		weaponInfo->firingSound			= NULL_SOUND;
 		weaponInfo->chargeSound			= NULL_SOUND;
 		weaponInfo->muzzleEffect		= NULL_FX;
@@ -553,7 +553,7 @@ void CG_RegisterWeapon( int weaponNum) {
 		weaponInfo->missileHitSound		= NULL_SOUND;
 		weaponInfo->missileTrailFunc	= 0;
 
-		weaponInfo->altFlashSound[0]	= trap_S_RegisterSound( "sound/weapons/detpack/fire.wav");
+		weaponInfo->altFlashSound[0]	= trap_S_RegisterSound( "sound/weapons/detpack/fire.mp3");
 		weaponInfo->altFiringSound		= NULL_SOUND;
 		weaponInfo->altChargeSound		= NULL_SOUND;
 		weaponInfo->altMuzzleEffect		= NULL_FX;
@@ -565,9 +565,9 @@ void CG_RegisterWeapon( int weaponNum) {
 		weaponInfo->altMissileTrailFunc = 0;
 
 		trap_R_RegisterModel( "models/weapons2/detpack/det_pack.md3" );
-		trap_S_RegisterSound( "sound/weapons/detpack/stick.wav" );
-		trap_S_RegisterSound( "sound/weapons/detpack/warning.wav" );
-		trap_S_RegisterSound( "sound/weapons/explosions/explode5.wav" );
+		trap_S_RegisterSound( "sound/weapons/detpack/stick.mp3" );
+		trap_S_RegisterSound( "sound/weapons/detpack/warning.mp3" );
+		trap_S_RegisterSound( "sound/weapons/explosions/explode.mp3" );
 		break;
 	case WP_TURRET:
 		weaponInfo->flashSound[0]		= NULL_SOUND;

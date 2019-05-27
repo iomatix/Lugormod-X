@@ -2083,7 +2083,7 @@ void thermalDetonatorExplode( gentity_t *ent )
 {
 	if ( !ent->count )
 	{
-		G_Sound( ent, CHAN_WEAPON, G_SoundIndex( "sound/weapons/thermal/warning.wav" ) );
+		G_Sound( ent, CHAN_WEAPON, G_SoundIndex( "sound/weapons/thermal/warning.mp3" ) ); //update
 		ent->count = 1;
 		ent->genericValue5 = level.time + 500;
 		ent->think = thermalThinkStandard;
@@ -2540,7 +2540,7 @@ void laserTrapThink ( gentity_t *ent )
 	//turn on the beam effect
 	if ( !(ent->s.eFlags&EF_FIRING) )
 	{//arm me
-		G_Sound( ent, CHAN_WEAPON, G_SoundIndex( "sound/weapons/laser_trap/warning.wav" ) );
+		G_Sound( ent, CHAN_WEAPON, G_SoundIndex( "sound/weapons/laser_trap/warning.mp3" ) );
 		ent->s.eFlags |= EF_FIRING;
 	}
 	ent->think = laserTrapThink;
@@ -2583,7 +2583,7 @@ void laserTrapStick( gentity_t *ent, vec3_t endpos, vec3_t normal )
 	VectorCopy( ent->s.angles, ent->r.currentAngles );
 
 
-	G_Sound( ent, CHAN_WEAPON, G_SoundIndex( "sound/weapons/laser_trap/stick.wav" ) );
+	G_Sound( ent, CHAN_WEAPON, G_SoundIndex( "sound/weapons/laser_trap/stick.mp3" ) );
 	if ( ent->count )
 	{//a tripwire
 		//add draw line flag
@@ -2629,7 +2629,7 @@ void laserTrapStick( gentity_t *ent, vec3_t endpos, vec3_t normal )
 
 		if ( !(ent->s.eFlags&EF_FIRING) )
 		{//arm me
-			G_Sound( ent, CHAN_WEAPON, G_SoundIndex( "sound/weapons/laser_trap/warning.wav" ) );
+			G_Sound( ent, CHAN_WEAPON, G_SoundIndex( "sound/weapons/laser_trap/warning.mp3" ) );
 			ent->s.eFlags |= EF_FIRING;
 			ent->s.time = -1;
 			ent->s.bolt2 = 1;
@@ -2906,7 +2906,7 @@ void charge_stick (gentity_t *self, gentity_t *other, trace_t *trace)
 	VectorCopy(trace->plane.normal, self->pos2);
 	self->count = -1;
 
-	G_Sound(self, CHAN_WEAPON, G_SoundIndex("sound/weapons/detpack/stick.wav"));
+	G_Sound(self, CHAN_WEAPON, G_SoundIndex("sound/weapons/detpack/stick.mp3"));
 
 	tent = G_TempEntity( self->r.currentOrigin, EV_MISSILE_MISS );
 	tent->s.weapon = 0;
@@ -3041,7 +3041,7 @@ void BlowDetpacks(gentity_t *ent)
 				VectorCopy( found->r.currentOrigin, found->s.origin );
 				found->think = DetPackBlow;
 				found->nextthink = level.time + 100 + random() * 200;
-				G_Sound( found, CHAN_BODY, G_SoundIndex("sound/weapons/detpack/warning.wav") );
+				G_Sound( found, CHAN_BODY, G_SoundIndex("sound/weapons/detpack/warning.mp3") );
 			}
 		}
 		ent->client->ps.hasDetPackPlanted = qfalse;

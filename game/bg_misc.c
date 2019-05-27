@@ -1138,7 +1138,7 @@ Portable shield
 		IT_HOLDABLE,
 		HI_SHIELD,
 /* precache */ "",
-/* sounds */ "sound/weapons/detpack/stick.wav sound/movers/doors/forcefield_on.wav sound/movers/doors/forcefield_off.wav sound/movers/doors/forcefield_lp.wav sound/effects/bumpfield.wav",
+/* sounds */ "sound/weapons/detpack/stick.mp3 sound/movers/doors/forcefield_on.wav sound/movers/doors/forcefield_off.wav sound/movers/doors/forcefield_lp.wav sound/effects/bumpfield.wav",
 		"@MENUS_THIS_STATIONARY_ENERGY"					// description
 	},
 
