@@ -33,6 +33,7 @@ struct Account_s{
 	int time;
 	int score;
 	int credits;
+	int experience; //iomatix
 	int flags;
 
 	struct {
