@@ -301,7 +301,7 @@ int Get_Jedi_hp_maxs_value(gentity_t *ent) //Will (Health points)
 	int value = 40; //starting health
 	
 		
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 1.7); //scale health
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.1); //scale health
 	
 
 	int skillHP = Lmd_Prof_Jedi_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_hp_maxs);

@@ -1350,6 +1350,7 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 		return;
 	}
 	int extraForce = g_meditateExtraForce.integer;
+
 	if(extraForce < 0) extraForce = 0;
 	else if(extraForce > floor(Get_Jedi_mp_maxs_value(self)/1.5)) extraForce = floor(Get_Jedi_mp_maxs_value(self) / 1.5); //max additional extra force is 66% now
 
@@ -1359,11 +1360,16 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 	if (g_meditateExtraForce.integer && g_gametype.integer == GT_FFA && self->client->ps.legsAnim == BOTH_MEDITATE && self->client->ps.torsoAnim == BOTH_MEDITATE && PlayerAcc_Prof_GetProfession(self) <= PROF_JEDI) {
 		
 		fpmax += extraForce;
-		if(!overrideAmt || overrideAmt <= 0) overrideAmt = fpmax / 15;  //iomatix: 6% additional regen while meditating
+		if(!overrideAmt || overrideAmt <= 0) overrideAmt = fpmax / 10;  //iomatix: 10% additional regen while meditating
 	}
+	if (self->client->ps.fd.forcePower >= fpmax)
+	{
+		return;
+	}
+
 	int overload = 0;
 	if(PlayerAcc_Prof_GetProfession(self) == PROF_JEDI)  overload = Get_Jedi_overload_value_reg(self, passive_regen); //overload skill regen
-	
+
     if ( overrideAmt )
 	{ //custom regen amount
 		self->client->ps.fd.forcePower += overrideAmt + passive_regen + overload;
@@ -1373,10 +1379,12 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 		self->client->ps.fd.forcePower += passive_regen + overload;
 	}
 
-	if ( self->client->ps.fd.forcePower >= fpmax)
+	if (self->client->ps.fd.forcePower >= fpmax)
 	{ //cap it off at the max (default 100)
 		self->client->ps.fd.forcePower = fpmax;
+		return;
 	}
+
 }
 
 void WP_ForcePowerStart( gentity_t *self, forcePowers_t forcePower, int overrideAmt )

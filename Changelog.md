@@ -38,14 +38,15 @@
 - Added new extern variable lmd_exp_for_level. ✔️ 
 - Added new extern variable lmd_is_buy_level, set to 1 get access to the buylevel command. default 0 ✔️ 
 - True RPG leveling system is implemented. ✔️ 
+- Now admin commands work also on two arguments, without name argument it means self as an account argument. ✔️
+- Meditation bug is fixed. ✔️
 
 ## TODO
-- meditation fix!!!!!!
-- more exp based on level differences!!!!!!!!!!!!!!!!!!
-- lesser difference between level damages!!!
-- Add for admin commands self without parameter.
-- TODO: Adding new extern variable lmd_loss_exp_death. ????????
-- TODO: Add experience needed to level up. (Not tradable, add new cmd for admin to set experience.) It will block economic looses for servers. Level DOSEN'T need credits.
+
+
+
+- more exp based on level differences!!!!!!!!!!!!!!!!!! + credits
+
 
 - TODO: Now skillpoints will cost credits to be spend (level(level+1)lmd_skillpoint_cost)  //default 150
 

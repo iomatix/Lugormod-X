@@ -26,8 +26,9 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 	Account_t *acc;
 	char arg[MAX_STRING_CHARS];
 	char val[MAX_STRING_CHARS];
-	if (trap_Argc() < 4) {
-		Disp(ent, "^3Usage: Accountedit ^2<username or id> <stat> <value>\n"
+	if (trap_Argc() < 3) {
+		Disp(ent, "^3Usage: Accountedit ^5<username or id> <stat> <value>\n"
+			"^3Self: Accountedit ^5<stat> <value>\n"
 			"^3Stats are:\n"
 			"^2Name\n"
 			"^2Credits\n"
@@ -40,15 +41,33 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 	trap_Argv(1, arg, sizeof(arg));
 	//accIndex = getAccountIndexByName(arg); //dont check for name, what if someone sets their name to someone elses username?
 	//if(accIndex == -1)
-	acc = Accounts_GetById(atoi(arg));
-	if (!acc)
-		acc = Accounts_GetByUsername(arg);
-	if (!acc) {
-		Disp(ent, "^3Unable to find account.");
-		return;
+
+	if (trap_Argc() == 3) {
+
+		Disp(ent, "^3Self command.");
+	    acc = ent->client->pers.Lmd.account; //self
+		trap_Argv(1, arg, sizeof(arg));
+		trap_Argv(2, val, sizeof(val));
+		if (!acc) {
+			Disp(ent, "^1Unable to find account."); return;
+		}
+
 	}
-	trap_Argv(2, arg, sizeof(arg));
-	trap_Argv(3, val, sizeof(val));
+	else {
+		acc = Accounts_GetById(atoi(arg));
+		if (!acc) acc = Accounts_GetByUsername(arg);
+		if (!acc) {
+			Disp(ent, "^1Unable to find account.");
+			return;
+		}
+		trap_Argv(2, arg, sizeof(arg));
+		trap_Argv(3, val, sizeof(val));
+
+	}
+
+
+
+
 	if (Q_stricmp(arg, "name") == 0) {
 		ClientCleanName((const char *)val, arg, sizeof(arg));
 		if (!IsValidPlayerName(arg, NULL, qfalse)) {

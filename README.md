@@ -20,7 +20,7 @@
 - Added lethality & thousand cuts skills.
 - Added new extern variables lmd_is_lethality_add_damage & lmd_is_thousandcuts_lethality to configure new skills.
 - New fully working leveling system with experience gain.
-
+- Simplification for Admin commands. Self commands availble without using the account name argument.
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 

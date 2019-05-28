@@ -267,7 +267,7 @@ int Get_Merc_hp_maxs_value(gentity_t *ent)
 {
 	int value = 55; //starting health
 
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.2); //scale health
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.55); //scale health
 	int skillHP = Lmd_Prof_Merc_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &mercSkill_hp_maxs);
 	if (skillHP > 0){
 		value += 13 * skillHP;
