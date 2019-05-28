@@ -5352,7 +5352,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		if (attacker->client->pers.Lmd.account)level_attacker = PlayerAcc_Prof_GetLevel(attacker);
 		if (targ->client->pers.Lmd.account)level_targ = PlayerAcc_Prof_GetLevel(targ);
 		
-		damage += damage * ((level_attacker - level_targ)/120); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
+		//nerfed to 0.45% per level, 54% damage with 120 levels difference
+		damage += damage * ((level_attacker - level_targ)/240); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
 	}
 
 
