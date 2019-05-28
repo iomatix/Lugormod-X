@@ -36,7 +36,10 @@ When is set to 1 the damage output based on lethality skill will increase, with 
 When is set to 1 the additional damage output is converted to the lethality, subtracting it from HP directly. default 0, 1 to turn it on. Note: The skill will give additional lethality anyway based on the base damage output.
 
 - **lmd_rewardexp_kill**
-Set-up rewards for frags. Default 11.
+Set-up base rewards for frags. Default 15. The rewards depend on the level differences between players.
+
+- **lmd_is_differences_formula**
+Choose the gain formula. 1 is based on difference between players. 0 is normal constant formula.
 
 - **lmd_is_buy_level**
 When 1 players get access to buylevel command. Default 0.

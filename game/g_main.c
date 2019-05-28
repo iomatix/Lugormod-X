@@ -401,8 +401,10 @@ vmCvar_t lmd_allowEmptyHostname;
 
 vmCvar_t lmd_enableCorpseDrag;
 
+//iomatix
 vmCvar_t lmd_rewardcr_kill;
 vmCvar_t lmd_rewardexp_kill;
+vmCvar_t lmd_is_differences_formula;
 
 //RoboPhred: track this and force it to off
 vmCvar_t sv_allowdownload;
@@ -614,12 +616,16 @@ static cvarTable_t		gameCvarTable[] = {
 "Experimental.  Enable dragging corpses with the use key.",
 },
 
-{ &lmd_rewardcr_kill, "lmd_rewardcr_kill", "4", CVAR_ARCHIVE, 0, qtrue, qfalse,
+{ &lmd_rewardcr_kill, "lmd_rewardcr_kill", "45", CVAR_ARCHIVE, 0, qtrue, qfalse,
 "Give a player credits for killing other players.  Does not work for killing NPCs.",
 },
-{ &lmd_rewardexp_kill, "lmd_rewardexp_kill", "11", CVAR_ARCHIVE, 0, qtrue, qfalse,
+{ &lmd_rewardexp_kill, "lmd_rewardexp_kill", "15", CVAR_ARCHIVE, 0, qtrue, qfalse,
 "Give a player experience for killing other players.  Does not work for killing NPCs.",
 },
+{ &lmd_is_differences_formula, "lmd_is_differences_formula", "1", CVAR_ARCHIVE, 0, qtrue, qfalse,
+"Is the experience & credits gain formula multiplier based on difference between levels? 1 - Yes 0 - Normal constant formula",
+},
+ 
 
 //====================================================================================================
 //====================================================================================================

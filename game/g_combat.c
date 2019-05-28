@@ -2190,8 +2190,10 @@ void SetTeamQuick(gentity_t *ent, int team, qboolean doBegin);
 void Merc_Unhook (gentity_t *ent);
 //RoboPhred:
 void lmd_event_playerkilled(gentity_t *player, gentity_t *attacker, int meansOfDeath);
+//iomatix
 extern vmCvar_t lmd_rewardcr_kill;
 extern vmCvar_t lmd_rewardexp_kill;
+extern vmCvar_t lmd_is_differences_formula;
 void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int meansOfDeath ) {
 	//gentity_t	*ent;
 	int			anim;
@@ -2633,8 +2635,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 	//RoboPhred
 	if(attacker->client && attacker->s.eType == ET_PLAYER) {
-		if(attacker != self)
-			PlayerAcc_Stats_SetKills(attacker, PlayerAcc_Stats_GetKills(attacker) + 1);
+		if(attacker != self) PlayerAcc_Stats_SetKills(attacker, PlayerAcc_Stats_GetKills(attacker) + 1);
 		if(self->s.number < MAX_CLIENTS) {
 			if (!g_noPDuelCheck) {
 				gentity_t *temp = G_TempEntity( self->r.currentOrigin, EV_OBITUARY );
@@ -2646,9 +2647,29 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 					temp->s.isJediMaster = wasJediMaster;
 				}
 			}
-			//iomatix:       
-			if(lmd_rewardcr_kill.integer != 0 && attacker->s.number < MAX_CLIENTS && attacker != self) GiveCredits(attacker, lmd_rewardcr_kill.integer, va("for killing ^7%s", self->client->pers.netname));
-			if(lmd_rewardexp_kill.integer > 0 && attacker->s.number < MAX_CLIENTS && attacker != self) GiveExperience(attacker, lmd_rewardexp_kill.integer, va("for killing ^7%s", self->client->pers.netname));
+			//iomatix:
+			if (attacker->s.number < MAX_CLIENTS && attacker != self)
+			{
+				//optymalization added
+				int dead_pers_level = PlayerAcc_Prof_GetLevel(self);
+				int cr_exp_multiplier = dead_pers_level - PlayerAcc_Prof_GetLevel(attacker); //difference
+
+				int cr_exp_output;
+				//differ formula
+				if (lmd_is_differences_formula.integer == 1)cr_exp_multiplier = (120 + cr_exp_multiplier) / 22; //quick math, first 120 is Max Level second is ratio
+				else cr_exp_multiplier = dead_pers_level / 11; 	//normal
+				
+				if (lmd_rewardcr_kill.integer != 0) {
+					cr_exp_output = lmd_rewardcr_kill.integer*cr_exp_multiplier;
+					if (cr_exp_output < 1) cr_exp_output = 1;
+					GiveCredits(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
+				}
+				if (lmd_rewardexp_kill.integer != 0) {
+					cr_exp_output = lmd_rewardexp_kill.integer*cr_exp_multiplier;
+					if (cr_exp_output < 1) cr_exp_output = 1;
+					GiveExperience(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
+				}
+			}
 		}
 	}
 	if(self->client && self->s.eType == ET_PLAYER) {

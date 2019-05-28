@@ -40,13 +40,18 @@
 - True RPG leveling system is implemented. ✔️ 
 - Now admin commands work also on two arguments, without name argument it means self as an account argument. ✔️
 - Meditation bug is fixed. ✔️
+- lmd_is_differences_formula is added which allows to choose between: credits and experience gain depends on level difference between players if 1, or constant values for each level if 0.  ✔️
+
 
 ## TODO
+- save profession levels. changing profession cost adds skills reset cost. title var, new game plus vars, lootboxes vars 80%,15%, 4%, 1%
 
+- ammo pickup event bug fix if smaller magasine than normal
+- smaller ammo amounts
+- adjust explosives amounts
 
-
-- more exp based on level differences!!!!!!!!!!!!!!!!!! + credits
-
+- stash has exp
+- quests exp //if i'll learn it
 
 - TODO: Now skillpoints will cost credits to be spend (level(level+1)lmd_skillpoint_cost)  //default 150
 
