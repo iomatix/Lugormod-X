@@ -975,16 +975,12 @@ int Professions_LevelCost_EXP(int prof, int level) {
 	int nextlevel = level + 1;
 	//450 
 	int cost;
-	if(lmd_exp_for_level.integer <= 1){
-		lmd_exp_for_level.integer = 450; //default
-	}
-	if (nextlevel < MASTER_LEVEL)
-	{
-		cost = lmd_exp_for_level.integer * nextlevel/3.3;
-	}
-	else {//harder formula for players above 40 lvl
-		cost = lmd_exp_for_level.integer * nextlevel/2.3;
-	}
+	if(lmd_exp_for_level.integer <= 1) lmd_exp_for_level.integer = 450; //default
+	
+	if (nextlevel < 16) cost = lmd_exp_for_level.integer * nextlevel / 4.6;
+	else if (nextlevel < MASTER_LEVEL)	cost = lmd_exp_for_level.integer * nextlevel/3.3;
+	else cost = lmd_exp_for_level.integer * nextlevel / 2.3;									//harder formula for players above 40 lvl
+	
 	return cost;
 }
 

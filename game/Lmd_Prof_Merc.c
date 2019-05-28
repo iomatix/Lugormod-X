@@ -199,10 +199,11 @@ profSkill_t mercSkill_sd_maxs = {
 };
 ///////////
 const char *mercSkill_lethality_Descr[] = {
-	"4 percent of the Lethality",
-	"8 percent of the Lethality",
-	"12 percent of the Lethality",
-	"16 percent of the Lethality",
+	"5 percent of the Lethality",
+	"10 percent of the Lethality",
+	"15 percent of the Lethality",
+	"20 percent of the Lethality",
+	"25 percent of the Lethality",
 	NULL
 };
 
@@ -214,7 +215,7 @@ profSkill_t mercSkill_Lethality = {
 	mercSkill_lethality_Descr,
 
 	0,
-	SkillLevels_4,
+	SkillLevels_Default,
 	SkillPoints_Linear_12,
 
 	Lmd_Prof_Merc_GetSkill_lethality,

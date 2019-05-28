@@ -40,7 +40,7 @@
 - True RPG leveling system is implemented. ✔️ 
 
 ## TODO
-- meditation fix!!!!!!!
+- meditation fix!!!!!!
 - more exp based on level differences!!!!!!!!!!!!!!!!!!
 - lesser difference between level damages!!!
 - Add for admin commands self without parameter.

@@ -5352,7 +5352,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		if (attacker->client->pers.Lmd.account)level_attacker = PlayerAcc_Prof_GetLevel(attacker);
 		if (targ->client->pers.Lmd.account)level_targ = PlayerAcc_Prof_GetLevel(targ);
 		
-		damage += damage * ((level_attacker - level_targ)/100); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
+		damage += damage * ((level_attacker - level_targ)/120); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
 	}
 
 
@@ -5365,8 +5365,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 
 
 				if (PlayerProf_Merc_GetLethalitySkill(attacker) > 0) {  //is lethality upgraded?
-					//4->8->12->16 check the lethality descr   
-					lethalityoutput = (damage * PlayerProf_Merc_GetLethalitySkill(attacker)*4)/100; //gets the percent of damage value
+					//4->8->12->16->20 check the lethality descr   //update -> 5 10 15 20 25 
+					lethalityoutput = (damage * PlayerProf_Merc_GetLethalitySkill(attacker)*5)/100; //gets the percent of damage value
 					if (lmd_is_lethality_add_damage.integer == 0) damage -= lethalityoutput; //default add_damage = 0. It converts the damage instead of adding the damage.
 				}
 
