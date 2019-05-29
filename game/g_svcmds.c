@@ -324,7 +324,7 @@ qboolean	ConsoleCommand( void ) {
 			return qtrue;
 		trap_Argv(2, arg, sizeof(arg));
 		int i = atoi(arg);
-		Com_Printf("Points for level %i: %i.\nCost: CR %i\n", i, Professions_TotalSkillPoints(prof, i),
+		Com_Printf("Points for level %i: %i.\nCost: CR %i\n", i, Professions_TotalSkillPoints_Basic(i),
 			(i * (i+1)) * 50);
 		return qtrue;
 	}

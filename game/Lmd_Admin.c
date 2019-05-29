@@ -30,7 +30,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		Disp(ent, "^3Usage: Accountedit ^5<username or id> <stat> <value>\n"
 			"^3Self: Accountedit ^5<stat> <value>\n"
 			"^3Stats are:\n"
-			"^2Name\n"
+			"^2Alias\n"
 			"^2Credits\n"
 			"^2Experience\n"
 			"^2Profession\n"
@@ -72,7 +72,8 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 
 
 
-	if (Q_stricmp(arg, "name") == 0) {
+	if (Q_stricmp(arg, "alias") == 0 || Q_stricmp(arg, "name") == 0) {
+
 		ClientCleanName((const char *)val, arg, sizeof(arg));
 		if (!IsValidPlayerName(arg, NULL, qfalse)) {
 			Disp(ent, "^1That name is invalid or already in use.");
@@ -80,9 +81,9 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		}
 
 		Accounts_SetName(acc, arg);
-		Disp(ent, "^2Name changed.");
+		Disp(ent, "^2Alias changed.");
 	}
-	else if (Q_stricmp(arg, "credits") == 0) {
+	else if (Q_stricmp(arg, "credits") == 0 || Q_stricmp(arg, "cr") == 0) {
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
 			Disp(ent, "^3Invalid credit amount.");
@@ -95,7 +96,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		Accounts_SetCredits(acc, v);
 		Disp(ent, "^2Credits set.");
 	}
-	else if (Q_stricmp(arg, "experience") == 0) {
+	else if (Q_stricmp(arg, "experience") == 0 || Q_stricmp(arg, "exp") == 0) {
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
 			Disp(ent, "^3Invalid experience amount.");
@@ -109,7 +110,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		Disp(ent, "^5Experience set.");
 	}
 
-	else if (Q_stricmp(arg, "merclevel") == 0) {
+	else if (Q_stricmp(arg, "merclevel") == 0 || Q_stricmp(arg, "merclvl") == 0) {
 		int p = Accounts_Prof_GetProfession(acc);
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
@@ -118,16 +119,18 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		}
 		if (v < 1 || v > 255) {
 			{
-				Disp(ent, "^1Invalid level value. Between 1 and 255.");
+				Disp(ent, "^1Invalid level value. Please enter a nubmer between 1 and 255.");
 				return;
 			}
-			if (p == PROF_MERC)Accounts_Prof_SetLevel(acc,v);
-			Accounts_SetLevel_merc(acc,v);
 			
+			
+			if (p == PROF_MERC)Accounts_Prof_SetLevel(acc, v);
+			else Accounts_SetLevel_merc(acc, v);
+			Disp(ent, "^2Mercenary level is changed.");
 
 		}
 	}
-	else if (Q_stricmp(arg, "jedilevel") == 0) {
+	else if (Q_stricmp(arg, "jedilevel") == 0 || Q_stricmp(arg, "jedilvl") == 0) {
 		int p = Accounts_Prof_GetProfession(acc);
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
@@ -139,9 +142,11 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 				Disp(ent, "^1Invalid level value. Between 1 and 255.");
 				return;
 			}
-			if (p == PROF_JEDI)Accounts_Prof_SetLevel(acc,v);
-			Accounts_SetLevel_jedi(acc,v);
-		    
+			
+			
+			if (p == PROF_JEDI)Accounts_Prof_SetLevel(acc, v);
+			else Accounts_SetLevel_jedi(acc, v);
+			Disp(ent, "^2Jedi level is changed.");
 
 		}
 	}
@@ -150,7 +155,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		//	"^\n"
 		//	"^\n"
 		//	"^\n" 
-	else if (Q_stricmp(arg, "boxescr") == 0) {
+	else if (Q_stricmp(arg, "boxescr") == 0 || Q_stricmp(arg, "box") == 0) {
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
 			Disp(ent, "^1Invalid ^3Credit Boxes ^1amount.");
@@ -164,7 +169,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		Disp(ent, "^3Credit Boxes set.");
 	}
 		////
-	else if (Q_stricmp(arg, "ngp_count") == 0) {
+	else if (Q_stricmp(arg, "ngp_count") == 0 || Q_stricmp(arg, "ngp") == 0) {
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
 			Disp(ent, "^1Invalid ^5New Game Plus ^1amount.");
@@ -183,7 +188,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 
 
 	///////
-	else if (Q_stricmp(arg, "profession") == 0) {
+	else if (Q_stricmp(arg, "profession") == 0 || Q_stricmp(arg, "prof") == 0) {
 		int p = -1;
 		if (Q_stricmp(val, "none") == 0)
 			p = PROF_NONE;
@@ -201,7 +206,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		Professions_SetDefaultSkills(acc, p);
 		Disp(ent, "^2Profession changed.");
 	}
-	else if (Q_stricmp(arg, "level") == 0) {
+	else if (Q_stricmp(arg, "level") == 0 || Q_stricmp(arg, "lvl") == 0) {
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
 			Disp(ent, "^1Invalid level.");

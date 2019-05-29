@@ -46,3 +46,9 @@ When 1 players get access to buylevel command. Default 0.
 
 - **lmd_stashexp** & **lmd_stashcr**
 Allow to setup amount experience and credits inside stash.
+
+
+**They are usable in the game**
+
+- **target_experience** and **count_exp**. It stores experience data.
+New target entity target_experience with count_exp variable. EXAMPLE: place **target_experience** 0 targetname,experience,**count_exp**,200

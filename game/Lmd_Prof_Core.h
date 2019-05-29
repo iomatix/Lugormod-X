@@ -7,7 +7,10 @@
 void* Accounts_Prof_GetFieldData(Account_t *acc);
 
 void Accounts_Prof_SetModified(Account_t *acc);
-#define PlayerAcc_Prof_SetModified(ent) Accounts_Prof_SetModified(ent->client->pers.Lmd.account)
+#define PlayerAcc_Prof_SetModified(ent) Accounts_Prof_SetModified(ent->client->pers.Lmd.account);
+
+qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister);
+
 
 void Experience_Level_Up(gentity_t *ent);
 

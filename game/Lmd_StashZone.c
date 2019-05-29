@@ -12,6 +12,7 @@ void PlayerUsableGetKeys(gentity_t *ent);
 extern vmCvar_t lmd_stashdepotime;
 extern vmCvar_t lmd_stashrate;
 extern vmCvar_t lmd_stashcr;
+extern vmCvar_t lmd_stashexp;
 
 qboolean SpawnEntModel(gentity_t *ent, qboolean isSolid, qboolean isAnimated);
 void PlayerUsableGetKeys(gentity_t *ent);
@@ -745,8 +746,10 @@ void lmd_stashspawnpoint_spawnstash(gentity_t *ent){
 	stash->genericValue5 = ent->genericValue5;
 	//GenericValue 8: creditshift
 	stash->genericValue8 = ent->genericValue8;
+	stash->genericValue8_e = ent->genericValue8_e; //exp
 	//GenericValue 9: creditshiftrandom
 	stash->genericValue9 = ent->genericValue9;
+	stash->genericValue9_e = ent->genericValue9_e;
 	//healingrate: creditshifttime
 	//GenericValue 10: creditshifttime
 	stash->healingrate = ent->genericValue10;
@@ -818,6 +821,11 @@ void lmd_stashspawnpoint_spawnstash(gentity_t *ent){
 	else
 		stash->count = ent->genericValue6 + Q_irand(0, ent->genericValue7);
 
+	if (ent->genericValue6_e < 0)//exp
+		stash->count = lmd_stashcr.integer + Q_irand(0, ent->genericValue7_e);
+	else
+		stash->count = ent->genericValue6_e + Q_irand(0, ent->genericValue7_e);
+
 	lmd_stash_spawn(stash);
 
 	//GenericString 7: spawnmessage
@@ -825,7 +833,7 @@ void lmd_stashspawnpoint_spawnstash(gentity_t *ent){
 		Q_strncpyz(msg, ent->GenericStrings[7], sizeof(msg));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
 		if(ent->spawnflags & 4096)
-			Q_strcat(msg, sizeof(msg), va("\n^3Contains ^2CR %i", stash->count));
+			Q_strcat(msg, sizeof(msg), va("\n^3Contains  ^2%iCR and ^5%iEXP", stash->count, stash->count_exp));
 
 		for(i = 0;i<MAX_CLIENTS;i++){
 			player = &g_entities[i];
@@ -1039,7 +1047,7 @@ void lmd_stashspawnpoint(gentity_t *ent){
 	//	ent->count = 1;
 	//defaults to 1, but can be 0!
 	G_SpawnInt("count", "1", &ent->count);
-
+	G_SpawnInt("count_exp", "1", &ent->count_exp);
 	//basedeposittime: time in msecs needed to deposit.  lmd_stashdepo can modify this.
 	G_SpawnFloat("basedeposittime", "-1", &tmpFloat);
 	ent->genericValue4 = (int)ceil(tmpFloat * 1000.0f);
@@ -1050,20 +1058,20 @@ void lmd_stashspawnpoint(gentity_t *ent){
 
 	//credits: base cr amount
 	G_SpawnInt("credits", "-1", &ent->genericValue6);
-	
+	G_SpawnInt("experience", "-1", &ent->genericValue6_e);
 	//creditsrandom: random amount to add for core credits value.
 	G_SpawnInt("creditsrandom", "0", &ent->genericValue7);
-
+	G_SpawnInt("experiencerandom", "0", &ent->genericValue7_e);
 	//sound: sound to make on pickup.  If you want more sounds, such as drop/deposit sounds, use the targets or make a feature request.
 	G_SpawnString("sound", "sound/interface/secret_area.wav", &buf);
 	ent->noise_index = G_SoundIndex(buf);
 
 	//creditshift: credit amount to shift per second.  Can be positive (increase worth longer its picked up), or negitive (decrease worth longer its picked up).  If the stash amount reaches 0, the stash is reset.
 	G_SpawnInt("creditshift", "0", &ent->genericValue8);
-	
+	G_SpawnInt("experienceshift", "0", &ent->genericValue8_e);
 	//creditshiftrandom: random amount to add to offset each credit shift by.
 	G_SpawnInt("creditshiftrandom", "0", &ent->genericValue9);
-	
+	G_SpawnInt("experienceshiftrandom", "0", &ent->genericValue9_e);
 	//creditshifttime: how many seconds to run the shift for.
 	G_SpawnFloat("creditshifttime", "0", &tmpFloat);
 	ent->genericValue10 = (int)ceil(tmpFloat * 1000.0f);
@@ -1189,10 +1197,11 @@ void lmd_stashspawnpoint(gentity_t *ent){
 
 void lmd_stashdepo_deposit(gentity_t *ent, gentity_t *player){
 	int credits = player->client->Lmd.moneyStash->health;
+	int experience = player->client->Lmd.moneyStash->health;
 	//GenericValue6: bonuscredits
 	//GenericValue7: bonuscreditsrandom
 	credits += ent->genericValue6 + Q_irand(0, ent->genericValue7);
-
+	experience += ent->genericValue6_e + Q_irand(0, ent->genericValue7_e);
 	//2: deposittarget: target to use on deposit.
 	G_UseTargets2(ent, player, ent->target2);
 
@@ -1412,9 +1421,10 @@ void lmd_stashdepo(gentity_t *ent){
 
 	//GenericValue6: bonuscredits: get extra credits for depositing here.  Can be negitive to remove credits from the stash.  Will not remove more credits than the stash has.
 	G_SpawnInt("bonuscredits", "0", &ent->genericValue6);
+	G_SpawnInt("bonusexperience", "0", &ent->genericValue6_e);
 	//GenericValue7: bonusrandom: random amount to add to bonus credits.
 	G_SpawnInt("bonuscredits", "0", &ent->genericValue7);
-
+	G_SpawnInt("bonusexperience", "0", &ent->genericValue7_e);
 	//GenericStrings[1]: startdepomessage: message to add to the bottom of the startdepomessage of the stash.
 	G_SpawnString("startdepomessage", "", &ent->GenericStrings[1]);
 	//GenericStrings[2]: depositmessage: message to add to the bottom of the depositmessage of the stash.

@@ -44,10 +44,17 @@
 - lmd_stashexp added. Stash system supports new experience system now. ✔️
 - New admin commands implemented.
 - Current level synchronizes with data-based one.
+- Credit-boxes is added.
+- New Game Plus implemented. Gain more skillpoints with it.
+- Titles system.
+- Skills system is connected to economy. Manage it with credits.
+- Changeable aliases (nicknames) added.
 
 ## TODO
+- flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
+- Titles in stats display depends on level + new game plus points. Add section in stats command 
+- lootboxes for levels
 - save profession levels. changing profession cost adds skills reset cost. , new game plus vars, lootboxes one var 55%,25%, 15%, 4% , 1%. (buffor size capacity loading files limit)
-- commands for give lootboxes and open + admin commands for set lootboxes, (merclevel, jedilevel <- these need to reload level if merc/jedi)
 - Change profession checking to auth while buylevel cmd.
 - Merclevel/jedilevel update on levelup (buylevel and experience ways)
 - Add new game plus start user command. Add benefits from it. (prof core.c todo) !!!
@@ -66,7 +73,7 @@ add everything to stats command
 
 - TODO: Player after reaching level 120 is able to start over again from level 1 but with perma +25hp/+25force/+25shield boost. Repeatable. 
 - TODO: Killing streak Bounty. After each lmd_bounty_streaks_by kills bounty is increasing. For killing bounty target player will recive Credit Boxes. new variable (lmd_bounty_streaks_by default "5")
-- TODO: Add lootboxes called now Credits Boxes. Chances: 55% for 50-350CR, 25% for 360-1500CR, 15% for 1600-5500CR, 4% for 8000-10 000CR, 1% 20 000 - 175 000CR 
+
 - TODO: Repair memory leaks with AI say command
 
 - TODO: svcmds + commands + admin commands guide

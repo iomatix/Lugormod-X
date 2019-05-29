@@ -127,6 +127,7 @@ BG_field_t fields[] = {
 	{"delay", FOFS(delay), F_INT},
 	{"random", FOFS(random), F_FLOAT},
 	{"count", FOFS(count), F_INT},
+    {"count_exp", FOFS(count_exp), F_INT },
 	{"health", FOFS(health), F_INT},
 	{"light", 0, F_IGNORE},
 	{"dmg", FOFS(damage), F_INT},
@@ -284,6 +285,7 @@ void SP_emplaced_gun( gentity_t *ent );
 #define SP (~(1 << GT_SINGLE_PLAYER) & ~(1 << GT_SIEGE))
 
 void SP_target_credits( gentity_t *ent ); //Lugormod
+void SP_target_experience(gentity_t *ent); //Lugormod
 void SP_random_spot (gentity_t *ent); //Lugormod
 void SP_money_dispenser (gentity_t *ent);//Lugormod
 void SP_control_point (gentity_t *ent);//Lugormod
@@ -1005,6 +1007,7 @@ spawn_t	spawnInitValues[] = {
 	{"emplaced_eweb", SP_emplaced_gun, Logical_False},//Lugormod
 	{"target_fixdoor", SP_target_fixdoor, Logical_False}, //Lugormod
 	{"target_credits", SP_target_credits, Logical_True}, //Lugormod
+	{"target_experience", SP_target_experience, Logical_True }, //iomatix
 	{"rail_mover", SP_rail_mover, Logical_False}, //Lugormod
 	{"rail_track", SP_rail_track, Logical_True}, //Lugormod
 	{"rail_lane", SP_rail_lane, Logical_True}, //Lugormod

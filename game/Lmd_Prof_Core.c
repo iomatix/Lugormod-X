@@ -321,8 +321,11 @@ qboolean PlayerAcc_Prof_CanUseProfession(gentity_t *ent) {
 }
 
 void Accounts_Prof_SetProfession(Account_t *acc, int value) {
-	if (!acc)
-		return;
+	if (!acc) return;
+	//iomatix save 
+	if (Accounts_Prof_GetProfession(acc) == PROF_JEDI)Accounts_SetLevel_jedi(acc,Accounts_Prof_GetLevel(acc));
+	else if(Accounts_Prof_GetProfession(acc) == PROF_MERC)Accounts_SetLevel_merc(acc,Accounts_Prof_GetLevel(acc));
+	//
 
 	profData_t *data = PROFDATA(acc);
 
@@ -332,7 +335,12 @@ void Accounts_Prof_SetProfession(Account_t *acc, int value) {
 	data->profession = value;
 	data->data = G_Alloc(Professions[value]->data.size);
 	memset(data->data, 0, Professions[value]->data.size);
+	if (value == PROF_JEDI)  data->level = Accounts_GetLevel_jedi(acc);
+	else if (value == PROF_MERC)data->level = Accounts_GetLevel_merc(acc);
 	Lmd_Accounts_Modify(acc);
+	//iomatix load
+
+
 }
 
 int Accounts_Prof_GetLevel(Account_t *acc) {
@@ -345,11 +353,12 @@ void Accounts_Prof_SetLevel(Account_t *acc, int value) {
 	if (!acc) return;
 	profData_t *data = PROFDATA(acc);
 	data->level = value;
-	//iomatix saving
-	if (Accounts_Prof_GetProfession(acc) == PROF_MERC)Accounts_SetLevel_merc(acc,value);
-	else if (Accounts_Prof_GetProfession(acc) == PROF_JEDI)Accounts_SetLevel_jedi(acc,value);
 	data->lastLevelUp = Time_Now();
 	Lmd_Accounts_Modify(acc);
+
+	//iomatix saving
+	if (Accounts_Prof_GetProfession(acc) == PROF_MERC)Accounts_SetLevel_merc(acc, value);
+	else if (Accounts_Prof_GetProfession(acc) == PROF_JEDI)Accounts_SetLevel_jedi(acc, value);
 }
 
 int Accounts_Prof_GetLastLevelup(Account_t *acc) {
@@ -424,11 +433,25 @@ int Professions_Add_That_Amount_SkillPoints(int level) //that may be useful for 
 		p += floor((float)(lmd_skillpoints_perlevel.integer / 3)); 
 		if (level % 3 == 0) p += 1; //add the missing point every 3 levels (part of bonus).
 	}
+
 	return p;
 }
-int Professions_TotalSkillPoints(int prof, int level) {
+//iomatix:
+int Professions_TotalSkillPoints(Account_t *acc) {
+
+	if (!acc)return 0;
 	int p;
-	p = level*Professions_Add_That_Amount_SkillPoints(level);
+	
+	int level = Accounts_Prof_GetLevel(acc);
+	int prof = Accounts_Prof_GetProfession(acc);
+	//additional points for new game plus!
+	int nwg = Accounts_GetNewGamePlus_count(acc)*4;
+	p = level*Professions_Add_That_Amount_SkillPoints(level) + nwg;
+	return p;
+}
+int Professions_TotalSkillPoints_Basic(int level) {
+	int p;
+	p = level * Professions_Add_That_Amount_SkillPoints(level);
 	return p;
 }
 
@@ -457,8 +480,7 @@ int Professions_UsedSkillPoints(Account_t *acc, int prof, profSkill_t *skill) {
 		return 0;
 	}
 
-	if (skill == NULL)
-		skill = &Professions[prof]->primarySkill;
+	if (skill == NULL) skill = &Professions[prof]->primarySkill;
 
 	if (skill->getValue) {
 		int level = skill->getValue(acc, skill) - skill->levels.min;
@@ -498,10 +520,27 @@ int Professions_AvailableSkillPoints(Account_t *acc, int prof, profSkill_t *skil
 	if (parent)
 		*parent = skill;
 
-	return Professions_TotalSkillPoints(prof, level) - Professions_UsedSkillPoints(acc, prof, skill);
+	return Professions_TotalSkillPoints(acc) - Professions_UsedSkillPoints(acc, prof, skill);
 }
 
 int recallDroppedCredits(gentity_t *ent);
+void Profession_Reset(gentity_t *ent)
+{
+	PlayerAcc_SetScore(ent, 10);
+	PlayerAcc_SetExperience(ent, 0); //reset experience points.
+
+	recallDroppedCredits(ent);
+	Professions_SetDefaultSkills(ent->client->pers.Lmd.account, PlayerAcc_Prof_GetProfession(ent));
+
+
+	ent->client->ps.fd.forceDoInit = qtrue;
+	ent->flags &= ~FL_GODMODE;
+	if (ent->client->sess.sessionTeam != TEAM_SPECTATOR) {
+		ent->client->ps.persistant[PERS_SCORE]++;
+		ent->client->ps.stats[STAT_HEALTH] = ent->health = 0;
+		player_die(ent, ent, ent, 100000, MOD_SUICIDE);
+	}
+}
 qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 	int playerProfession = PlayerAcc_Prof_GetProfession(ent);
 	int myLevel = PlayerAcc_Prof_GetLevel(ent);
@@ -523,47 +562,44 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 		return qfalse;
 	}
 
+	//formula
+	int cost_skillpoints = lmd_profession_fee.integer + lmd_skillpoint_cost.integer * Professions_UsedSkillPoints(ent->client->pers.Lmd.account, playerProfession, NULL)/10; //reset for 1/10 of the cost
 	if (flags & ACCFLAGS_NOPROFCRLOSS) {
 		PlayerAcc_AddFlags(ent, -ACCFLAGS_NOPROFCRLOSS);
 		Disp(ent, "^3Your free profession change has been used up.");
 	}
 	else {
-		if (PlayerAcc_GetCredits(ent) <= lmd_profession_fee.integer)
+		if (PlayerAcc_GetCredits(ent) <= cost_skillpoints)
 		{
 			Disp(ent, "^3You've paid all your credits.");
 			PlayerAcc_SetCredits(ent, 0);
-			PlayerAcc_SetExperience(ent, 0);
+		
 
 		}
 		else
 		{
 			
-			int cost_skillpoints = lmd_skillpoint_cost.integer * Professions_UsedSkillPoints(ent->client->pers.Lmd.account, prof, &Professions[prof]->primarySkill);
-			Disp(ent, va("^3You've paid ^2%iCR", lmd_profession_fee.integer + cost_skillpoints));
+
+			
+			Disp(ent, va("^3You've paid ^2%iCR", cost_skillpoints));
 			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - cost_skillpoints);
-			PlayerAcc_SetExperience(ent, 0);
+			
 		}
 
 
 	}
 	//iomatix:
+
 	PlayerAcc_Prof_SetProfession(ent, prof);
-	if (playerProfession == PROF_JEDI)PlayerAcc_Prof_SetLevel(ent, PlayerAcc_GetLevel_jedi(ent));
-	else if (playerProfession == PROF_MERC)PlayerAcc_Prof_SetLevel(ent, PlayerAcc_GetLevel_merc(ent));
-	else PlayerAcc_Prof_SetLevel(ent, 1);
-	PlayerAcc_SetExperience(ent, 0); //reset experience points.
-	recallDroppedCredits(ent);
-	 
-	PlayerAcc_SetScore(ent, 10);
-	Professions_SetDefaultSkills(ent->client->pers.Lmd.account, prof);
+	/*
+	if (playerProfession == PROF_JEDI)Profession_Reset(ent, PlayerAcc_GetLevel_jedi(ent)); 
+	else if (playerProfession == PROF_MERC)Profession_Reset(ent, PlayerAcc_GetLevel_merc(ent));
+	else */
+	Profession_Reset(ent);
+
+	
+
 	Disp(ent, va("^3Your profession is now: ^2%s", Professions[prof]->name));
-	ent->client->ps.fd.forceDoInit = qtrue;
-	ent->flags &= ~FL_GODMODE;
-	if (ent->client->sess.sessionTeam != TEAM_SPECTATOR) {
-		ent->client->ps.persistant[PERS_SCORE]++;
-		ent->client->ps.stats[STAT_HEALTH] = ent->health = 0;
-		player_die(ent, ent, ent, 100000, MOD_SUICIDE);
-	}
 	return qtrue;
 }
 
@@ -735,6 +771,14 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			return;
 		}
 		level--;
+     /*
+		if (skill->setValue(acc, skill, level))
+		{
+			Profession_UpdateSkillEffects(ent, prof);
+			Disp(ent, "^3Skill is leveled down.");
+		} //free but not refundable
+		*/
+		return;
 	}
 	else {
 		if (level >= skill->levels.max) {
@@ -755,11 +799,18 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			}
 
 		}
-
+		//iomatix:
 		int cost = Professions_SkillCost(skill, nextLevel) - Professions_SkillCost(skill, level);
 		int points = Professions_AvailableSkillPoints(acc, prof, skill, NULL);
+
+		int Cr_cost = Accounts_GetCredits(acc) - lmd_skillpoint_cost.integer*cost; //the value is ready to set
 		if (points < cost) {
-			Disp(ent, va("^2Not enough points.\n ^3You need ^2%i^3 point%s more to level up this skill.", cost-points, (cost - points == 1) ? "" : "s"));
+			Disp(ent, va("^1Not enough Points.\n ^3You need ^2%i^3 Point%s more to level up this skill.", cost-points, (cost - points == 1) ? "" : "s"));
+			return;
+		}
+		if (Cr_cost < 0)
+		{
+			Disp(ent, va("^1Not enough Credits.\n ^3You need ^3%i^3 Credits more to level up this skill.", -Cr_cost));
 			return;
 		}
 		//fixed by iomatix.
@@ -767,7 +818,8 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 		
 		level++;
 		nextLevel++;
-		
+		Accounts_SetCredits(acc, Cr_cost);
+		Disp(ent, va("^3You've paid %iCR. %iCR left.", lmd_skillpoint_cost.integer*cost, Cr_cost));
 
 		if (level >= skill->levels.max) {
 			Disp(ent, "^3This skill is now at its highest level.");
@@ -801,7 +853,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			descr_now++;
 		}
 		if (*descr_now != NULL) Disp(ent, va("^3%s upgraded: ^2%s", skill->name, *descr_now));
-
+		
 
 		Profession_UpdateSkillEffects(ent, prof);
 	}else Disp(ent, ("^1Something gone wrong!")); //debug
@@ -895,13 +947,15 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 		if (skill->setValue && skill->levels.max > skill->levels.min) {
 			int points = Professions_AvailableSkillPoints(acc, prof, skill, NULL);
 			int cost = Professions_SkillCost(skill, level + 1) - Professions_SkillCost(skill, level);
-
+			int cost_cr = cost * lmd_skillpoint_cost.integer;  //cost credits
+			int cr_player = Accounts_GetCredits(acc);
 			if (level < skill->levels.max) {
-				if (points >= level + 1)
+				if (points >= level + 1 && cost_cr <= cr_player) {
 					Disp(ent, va("^3Use ^2/%s up^3 to increase the ^2%s^3 skill.  It will cost ^2%i^3 point%s, leaving you with ^2%i^3 point%s left.",
-						cmd, skill->name, cost, (cost == 1) ? "" : "s", points - cost, (points - cost == 1) ? "" : "s"));
-				else
-					Disp(ent, va("^3You do not have enough points to increase the ^2%s^3 skill.", skill->name));
+						cmd, skill->name, cost, (cost == 1) ? "" : "s"));
+					Disp(ent, va("Cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.", cost_cr, cr_player - cost_cr));
+				}
+				else Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.", skill->name));
 			}
 			else
 				Disp(ent, va("^3The ^2%s^3 skill is at its maximum level", skill->name));
@@ -960,7 +1014,7 @@ void Cmd_ResetSkills_f(gentity_t *ent, int iArg) {
 		return;
 	}
 
-	int cost = used * lmd_skillpoint_cost.integer;
+	int cost = used * lmd_skillpoint_cost.integer/10;
 
 	if (myCredits < cost) {
 		Disp(ent, va("^3The cost to reset your skills is ^2CR %i^3.", cost));
@@ -1073,8 +1127,8 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 	if(lmd_is_buy_level.integer == 0){
 		int prof = PlayerAcc_Prof_GetProfession(ent);
 		Disp(ent, "^1You can not buy a level on this server. Gain experience to level up instead.");
-		if (prof == PROF_ADMIN) {
-			Disp(ent, "^2You are able to change this setting inside of the server.cfg file.\n Add this line: set lmd_is_buy_level 1");
+		if (Auths_AccHasAdmin(ent->client->pers.Lmd.account)) {
+			Disp(ent, "^2You are able to change the setup inside of the server.cfg file by adding this line:\n ^5set lmd_is_buy_level 1");
 		}
 	}
 	else {
@@ -1181,33 +1235,7 @@ void Cmd_MercWeapon_f(gentity_t *ent, int iArg);
 void Cmd_Ysalamiri_f(gentity_t *ent, int iArg);
 //iomatix:
 
-int Open_Creditbox() { //todo
 
-
-	return 1;
-}
-void Cmd_Creditbox_f(gentity_t *ent, int iArg) {
-	char arg[MAX_TOKEN_CHARS];
-	trap_Argv(1, arg, sizeof(arg));
-	if (Q_stricmp("open", arg) == 0)
-	{
-		int chests = PlayerAcc_GetLootboxes(ent);
-		int credits_amount;
-		if (chests > 0)
-		{
-			chests--;
-			PlayerAcc_SetLootboxes(ent, chests);
-			credits_amount = Open_Creditbox(); //todo
-			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) + credits_amount);
-			Disp(ent, va("^2Recived ^3%i ^2Credits!", credits_amount));
-		}Disp(ent, "^1You have no Credit Boxes right now.");
-
-	}
-	else {
-
-		Disp(ent, "^3Type ^2creditbox open ^3to open one Credit Box.");
-	}
-}
 
 
 void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
@@ -1215,15 +1243,43 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 	trap_Argv(1, arg, sizeof(arg));
 	if (Q_stricmp("start", arg) == 0)
 	{
-		Disp(ent, "(debug)^1INFO: NEW GAME PLUS TODO todoNWG#.");
+		int p_level = PlayerAcc_Prof_GetLevel(ent);
+		if (p_level <= 1)
+		{
+			Disp(ent, "^1Your profession level is too small to start new game.");
+			return;
+		}
 
+
+		Disp(ent, "^2New Game Plus started.");
+		if (p_level > 1) {
+			int ng_points=0;
+			Profession_Reset(ent);
+			if (p_level >= 120)ng_points = 4; 
+			else if (p_level >= 80)ng_points = 2;
+			else if (p_level >= 40)ng_points = 1;
+			if (ng_points>0)Disp(ent, va("^3The New Game Plus Level is increased by %i",ng_points));
+			else Disp(ent, "^3New Game Plus Level isn't increased.");
+
+			PlayerAcc_SetNewGamePlus_count(ent, PlayerAcc_GetNewGamePlus_count(ent) + ng_points);
+		}
+
+	}
+	else if (Q_stricmp("reset", arg) == 0) {
+		int ng_points = PlayerAcc_GetNewGamePlus_count(ent);
+			if (ng_points != 0)
+			{
+				PlayerAcc_SetNewGamePlus_count(ent, 0);
+				Disp(ent, "^3Your New Game Plus progress is reseted!");
+			}
 	}
 	else {
 
-		Disp(ent, "^3Type ^5newgame start ^3to start New Game Plus mode.\n ^3WARNING: ^1That command available is available after reaching ^5120 level\n^1The command will reset your progress!");
+		Disp(ent, "^3Type ^5newgame start ^3to start New Game Plus mode.\n ^3WARNING: ^1The command will reset your progress for the active profession!\n ^3To gain benefits from NGP your current profession must be at least at 40 level.\n ^1You can reset the newgameplus progress by newgame reset command, it's irreversible!");
 	}
 	
 }
+
 
 
 /////
@@ -1236,8 +1292,7 @@ cmdEntry_t professionCommandEntries[] = {
 { "resetskills", "Reset your skills. This costs money; if no argument is provided the cost will be displayed.", Cmd_ResetSkills_f, 0, qfalse, 2, 257, 0, 0 },
 { "skills", "View and raise your profession skills. You can only raise skill levels if you have unallocated skill points.\nIf no argument is provided, your current skill levels will be listed.", Cmd_SkillSelect_f, 0, qfalse, 1, 257,0, 0 },
 { "weapons", "Select or unselect a weapon.", Cmd_MercWeapon_f, 0, qfalse, 1, 257, 0, PROF_MERC },
-{ "creditbox", "Open the Credit Box.", Cmd_Creditbox_f, 0, qfalse, 2, 257, 0, 0 },
-{ "newgame", "Start the new game plus mode.", Cmd_NewGameP_f, 0, qfalse, 2, 257, 0, 0 },
+{ "newgame", "Start a New Game. Gain unique benefits with New Game Plus mode after reaching the Mastery Level.", Cmd_NewGameP_f, 0, qfalse, 1, 129, 0, 0 },
 #ifndef LMD_EXPERIMENTAL
 { "ysalamiri","Use your Ysalamiri.  You can use the 'challenge to duel' button instead of this command.", Cmd_Ysalamiri_f, 0, qfalse, 0, 257,0, PROF_MERC },
 #endif

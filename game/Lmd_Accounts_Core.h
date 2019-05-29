@@ -33,6 +33,8 @@ char* Accounts_GetName(Account_t *acc);
 void Accounts_SetName(Account_t *acc, char *name);
 #define PlayerAcc_SetName(ent, value) Accounts_SetName(ent->client->pers.Lmd.account, value)
 
+
+
 int Accounts_GetPassword(Account_t *acc);
 
 void Accounts_SetPassword(Account_t *acc, char *password);
@@ -121,5 +123,6 @@ char* Accounts_GetSeccode(Account_t *acc);
 void Accounts_ClearSeccode(Account_t *acc);
 char* Accounts_NewSeccode(Account_t *acc);
 
+void ClientCleanName(const char *in, char *out, int outSize);
 
 #endif

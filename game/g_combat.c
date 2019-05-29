@@ -2660,13 +2660,11 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				else cr_exp_multiplier = dead_pers_level / 11; 	//normal
 				
 				if (lmd_rewardcr_kill.integer != 0) {
-					cr_exp_output = lmd_rewardcr_kill.integer*cr_exp_multiplier;
-					if (cr_exp_output < 1) cr_exp_output = 1;
+					cr_exp_output = 1 + lmd_rewardcr_kill.integer*cr_exp_multiplier;
 					GiveCredits(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
 				}
 				if (lmd_rewardexp_kill.integer != 0) {
-					cr_exp_output = lmd_rewardexp_kill.integer*cr_exp_multiplier;
-					if (cr_exp_output < 1) cr_exp_output = 1;
+					cr_exp_output = 1 + lmd_rewardexp_kill.integer*cr_exp_multiplier;
 					GiveExperience(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
 				}
 			}

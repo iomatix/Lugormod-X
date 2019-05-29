@@ -1350,10 +1350,79 @@ void Use_Target_Credits (gentity_t *ent, gentity_t *other, gentity_t *activator)
 	}
 }
 
+
+void Use_Target_Experience(gentity_t *ent, gentity_t *other, gentity_t *activator) {
+	//RoboPhred: silly lugor
+	int activatorCreds;
+
+	if (ent->flags & FL_INACTIVE) {
+		//if (ent->spawnflags & 1) {
+		//deactivated
+		return;
+	}
+	if (!activator || !activator->client || activator->NPC || activator->r.svFlags & SVF_BOT)
+		return;
+
+	if (activator->client->pers.Lmd.account == NULL)
+		return;
+
+	if (activator->health < 1)
+		return;
+
+	if (activator->client->pers.connected != CON_CONNECTED)
+		return;
+
+
+	if (activator->client->ps.pm_type == PM_SPECTATOR)//spectators don't pick stuff up
+		return;
+
+	if (ent->genericValue6_e && ent->genericValue6_e > level.time)
+		return;
+
+	activatorCreds = PlayerAcc_GetExperience(activator);
+
+
+	ent->genericValue6_e = 0;
+
+	if (ent->wait)
+		ent->genericValue6_e = level.time + ent->wait;
+
+	int amount = ent->count_exp;
+
+	if (ent->random > 0) {
+		amount += Q_irand(0, ent->random);
+	}
+
+	if (amount < 0 && (-amount) > activatorCreds) {
+		trap_SendServerCommand(activator->s.number, va("cp \"^3You cannot afford ^1EXP %i^3.\"", -amount));
+		amount = 0;
+		G_UseTargets2(ent, activator, ent->target2);
+	}
+	else {
+		if (!(ent->spawnflags & 1)) {
+			if (amount > 0) {
+				G_Sound(activator, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
+				trap_SendServerCommand(activator->s.number, va("cp \"^3You received ^2EXP %i^3.\"", amount));
+			}
+			else
+				trap_SendServerCommand(activator->s.number, va("cp \"^3You lost ^1EXP %i^3.\"", -amount));
+		}
+		PlayerAcc_SetExperience(activator, activatorCreds + amount);
+		G_UseTargets(ent, activator);
+	}
+}
 void SP_target_credits( gentity_t *ent ) {
 	//if ( !ent->count ) {
 	//	ent->count = 1;
 	//}
 	ent->use = Use_Target_Credits;
 	ent->genericValue6 = 0;
+}
+
+void SP_target_experience(gentity_t *ent) {
+	//if ( !ent->count ) {
+	//	ent->count = 1;
+	//}
+	ent->use = Use_Target_Experience;
+	ent->genericValue6_e = 0;
 }

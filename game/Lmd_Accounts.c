@@ -202,7 +202,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3Security code: ^2%s\n"
 		"^3Credits:       ^2%i\n"
 		"^3Experience:    ^5%i ^3/ ^2%i \n"
-		"^3Time:          ^2%i^3:^2%02i\n",
+		"^3Time:          ^2%i^3:^2%02i",
 		Accounts_GetId(acc),
 		Accounts_GetName(acc),
 		Accounts_GetUsername(acc),
@@ -213,12 +213,13 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		time / 3600, (time / 60) % 60));
 	  Disp(ent, va(
 		"^3Main Level:         ^2%i\n"
-		"^3Force User Level:         ^2%i\n"
-		"^3Mercenary Level:         ^2%i\n"
-		"^3Credits Boxes:         ^2%i\n"
-		"^3New Game Plus Level:         ^2%i\n"
+		"^3Force User Level:   ^2%i\n"
+		"^3Mercenary Level:    ^2%i\n"
+		"^3Credits Boxes:      ^2%i\n"
+		"^3New Game Plus Level: ^2%i\n"
+		"^3New Game Plus skill points: ^2%i\n"
 		"^3Score:         ^2%i",
-		lvl,Accounts_GetLevel_jedi(acc),Accounts_GetLevel_merc(acc),Accounts_GetLootboxes(acc),Accounts_GetNewGamePlus_count(acc), Accounts_GetScore(acc)));
+		lvl,Accounts_GetLevel_jedi(acc),Accounts_GetLevel_merc(acc),Accounts_GetLootboxes(acc),Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)
 		c = "^2None";
 	else if (prof == PROF_ADMIN)
@@ -996,10 +997,88 @@ void Cmd_Worthy_f(gentity_t *ent, int iArg) {
 
 void Cmd_Inventory_f(gentity_t *ent, int iArg);
 void Cmd_Property_f(gentity_t *ent, int iArg);
+//iomatix:
 
+void Cmd_aliasname_f(gentity_t *ent, int iArg) {
+	char val[MAX_STRING_CHARS];
+	char arg[MAX_TOKEN_CHARS];
+	trap_Argv(1, arg, sizeof(arg));
+	ClientCleanName((const char *)val, arg, sizeof(arg));
+	if (!IsValidPlayerName(arg, NULL, qfalse)) {
+		Disp(ent, "^1That name is invalid or already in use.");
+		return;
+	}
+	PlayerAcc_SetName(ent, arg);
+	Disp(ent, "^2Alias changed.");
+
+}
+int get_random(int min, int max)
+{
+	int tmp;
+	if (max >= min)
+		max -= min;
+	else
+	{
+		tmp = min - max;
+		min = max;
+		max = tmp;
+	}
+	return max ? (rand() % max + min) : min;
+}
+int Open_Creditbox(gentity_t *ent) { //Get random value from the credit box
+									 //Chances: 55% for 50-350CR, 25% for 360-1500CR, 15% for 1600-5500CR, 4% for 8000-20 000CR, 1% 20 000 - 175 000CR 
+	int value = get_random(0, 101);
+
+	if (value <= 55)
+	{
+		value = get_random(5, 35) * 10; //50-350 by 10
+		Disp(ent, "^3This box is almost empty...");
+	}
+	else if (value <= 80) {
+		value = get_random(36, 150) * 10; //360-1500 by 10
+		Disp(ent, "^3This is small box...");
+	}
+	else if (value <= 95) {
+		value = get_random(16, 55) * 100; //1600-5500 by 100
+		Disp(ent, "^3This is medium box...");
+	}
+	else if (value <= 99) {
+		value = get_random(16, 40) * 500; //8000-20000 by 500
+		Disp(ent, "^3This is large box...");
+	}
+	else if (value <= 101) {
+		value = get_random(20, 175) * 1000; //20 000-175 000 by 1000
+		Disp(ent, "^3This box full of credits!");
+	}
+	return value;
+}
+void Cmd_Creditbox_f(gentity_t *ent, int iArg) {
+	char arg[MAX_TOKEN_CHARS];
+	trap_Argv(1, arg, sizeof(arg));
+	if (Q_stricmp("open", arg) == 0)
+	{
+		int chests = PlayerAcc_GetLootboxes(ent);
+		int credits_amount;
+		if (chests > 0)
+		{
+			chests--;
+			PlayerAcc_SetLootboxes(ent, chests);
+			credits_amount = Open_Creditbox(ent); //todo
+			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) + credits_amount);
+			Disp(ent, va("^2Recived ^3%i ^2Credits!", credits_amount));
+		}else  Disp(ent, "^1You have no Credit Boxes right now.");
+
+	}
+	else {
+
+		Disp(ent, "^3Type ^2creditbox open ^3to open one Credit Box.");
+	}
+}
 cmdEntry_t accountCommandEntries[] = {
-	{ "chpasswd","Change the password for your account.", Cmd_ChPasswd_f, 0, qfalse, 1, 1, 0, 0 },
+{ "alias","Change your display name. ^3The account name won't change so please login with your old username. ", Cmd_aliasname_f, 0, qfalse, 1, 256, 0, 0 },
+{ "chpasswd","Change the password for your account.", Cmd_ChPasswd_f, 0, qfalse, 1, 1, 0, 0 },
 { "credits","Check your current wealth.", Cmd_Credits_f, 0, qfalse, 1, 128, ~(1 << GT_FFA), 0 },
+{ "creditbox", "Open the Credit Box.", Cmd_Creditbox_f, 0, qfalse, 2, 257, 0, 0 },
 { "dropcr", "Drop credits.", Cmd_Credits_f, 3, qfalse, 1, 128, ~(1 << GT_FFA), 0 },
 { "inventory","View and use items in your inventory.", Cmd_Inventory_f, 0, qfalse, 1, 1, ~(1 << GT_FFA), 0 },
 { "login"," Login to use the name you registered with \\register.", Cmd_Login_f, 0, qfalse, 0, 1, 0, 0, qtrue },

@@ -1,5 +1,7 @@
 #include "Lmd_Prof_Jedi.h"
 #include "Lmd_Prof_Merc.h"
+#include "Lmd_Professions_Public.h"
+
 //iomatix ^ ^
 enum{
 	PROF_NONE = 0,
@@ -45,7 +47,8 @@ enum{
 int Profession_LevelCost(int level, int time);
 char* Professions_GetName(int prof);
 
-int Professions_TotalSkillPoints(int prof, int level);
+int Professions_TotalSkillPoints(Account_t *acc);
+int Professions_TotalSkillPoints_Basic(int level);
 
 int Accounts_Prof_GetProfession(Account_t *acc);
 #define PlayerAcc_Prof_GetProfession(ent) Accounts_Prof_GetProfession(ent->client->pers.Lmd.account)

@@ -191,14 +191,14 @@ void money_stash_touch (gentity_t *self, gentity_t *other, trace_t *trace){
 		}
 		self->count = ammount;
 	}
-	if ( self->count_2 < 10) {
+	if ( self->count_exp < 10) {
 		int ammount_exp = 0;
 		int maxamt = 3;
 		ammount_exp = G_CountHumanPlayers(-1) * STASH_EXPERIENCE;
 		while (!Q_irand(0, 3) && maxamt--) {
 			ammount_exp *= 2;
 		}
-		self->count_2 = ammount_exp;
+		self->count_exp = ammount_exp;
 	}
 
 	other->client->ps.eFlags2 |= EF2_CANSEE;
@@ -338,7 +338,7 @@ void depositMoneyStash(gentity_t *ent){
 	}
 
 	int amount = current_stash->count;
-	int amount_exp = current_stash->count_2;
+	int amount_exp = current_stash->count_exp;
 	ent->client->Lmd.moneyStash = NULL;
 
 	G_FreeEntity(current_stash);

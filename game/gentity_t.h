@@ -278,7 +278,7 @@ struct gentity_s {
 	int			locationDamage[HL_MAX];		// Damage accumulated on different body locations
 
 	int			count; 
-	int			count_2; //iomatix
+	int			count_exp; //iomatix
 	int			bounceCount;
 	qboolean	alt_fire;
 
@@ -306,9 +306,13 @@ struct gentity_s {
 	int			genericValue4;
 	int			genericValue5;
 	int			genericValue6;
+	int			genericValue6_e;
 	int			genericValue7;
+	int			genericValue7_e;
 	int			genericValue8;
+	int			genericValue8_e;
 	int			genericValue9;
+	int			genericValue9_e;
 	int			genericValue10;
 	int			genericValue11;
 	int			genericValue12;
