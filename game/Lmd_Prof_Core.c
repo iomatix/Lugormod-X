@@ -342,10 +342,12 @@ int Accounts_Prof_GetLevel(Account_t *acc) {
 }
 
 void Accounts_Prof_SetLevel(Account_t *acc, int value) {
-	if (!acc)
-		return;
+	if (!acc) return;
 	profData_t *data = PROFDATA(acc);
 	data->level = value;
+	//iomatix saving
+	if (Accounts_Prof_GetProfession(acc) == PROF_MERC)Accounts_SetLevel_merc(acc,value);
+	else if (Accounts_Prof_GetProfession(acc) == PROF_JEDI)Accounts_SetLevel_jedi(acc,value);
 	data->lastLevelUp = Time_Now();
 	Lmd_Accounts_Modify(acc);
 }
@@ -535,19 +537,23 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 		}
 		else
 		{
-			Disp(ent, va("^3You've paid ^2%iCR", lmd_profession_fee.integer));
-			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - lmd_profession_fee.integer);
+			
+			int cost_skillpoints = lmd_skillpoint_cost.integer * Professions_UsedSkillPoints(ent->client->pers.Lmd.account, prof, &Professions[prof]->primarySkill);
+			Disp(ent, va("^3You've paid ^2%iCR", lmd_profession_fee.integer + cost_skillpoints));
+			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - cost_skillpoints);
 			PlayerAcc_SetExperience(ent, 0);
 		}
 
 
 	}
-
+	//iomatix:
 	PlayerAcc_Prof_SetProfession(ent, prof);
-	PlayerAcc_Prof_SetLevel(ent, 1);
-
+	if (playerProfession == PROF_JEDI)PlayerAcc_Prof_SetLevel(ent, PlayerAcc_GetLevel_jedi(ent));
+	else if (playerProfession == PROF_MERC)PlayerAcc_Prof_SetLevel(ent, PlayerAcc_GetLevel_merc(ent));
+	else PlayerAcc_Prof_SetLevel(ent, 1);
+	PlayerAcc_SetExperience(ent, 0); //reset experience points.
 	recallDroppedCredits(ent);
-
+	 
 	PlayerAcc_SetScore(ent, 10);
 	Professions_SetDefaultSkills(ent->client->pers.Lmd.account, prof);
 	Disp(ent, va("^3Your profession is now: ^2%s", Professions[prof]->name));
@@ -1048,6 +1054,7 @@ void Experience_Level_Up(gentity_t *ent)
 		//iomatix:
 		playerLevel++;
 		PlayerAcc_Prof_SetLevel(ent, playerLevel);
+	
 		int NewSkillPoints_value = Professions_Add_That_Amount_SkillPoints(playerLevel);
 		
 		
@@ -1172,9 +1179,56 @@ void Cmd_Flame_f(gentity_t *ent, int iArg);
 void Cmd_Ionlysaber_f(gentity_t *ent, int iArg);
 void Cmd_MercWeapon_f(gentity_t *ent, int iArg);
 void Cmd_Ysalamiri_f(gentity_t *ent, int iArg);
+//iomatix:
 
+int Open_Creditbox() { //todo
+
+
+	return 1;
+}
+void Cmd_Creditbox_f(gentity_t *ent, int iArg) {
+	char arg[MAX_TOKEN_CHARS];
+	trap_Argv(1, arg, sizeof(arg));
+	if (Q_stricmp("open", arg) == 0)
+	{
+		int chests = PlayerAcc_GetLootboxes(ent);
+		int credits_amount;
+		if (chests > 0)
+		{
+			chests--;
+			PlayerAcc_SetLootboxes(ent, chests);
+			credits_amount = Open_Creditbox(); //todo
+			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) + credits_amount);
+			Disp(ent, va("^2Recived ^3%i ^2Credits!", credits_amount));
+		}Disp(ent, "^1You have no Credit Boxes right now.");
+
+	}
+	else {
+
+		Disp(ent, "^3Type ^2creditbox open ^3to open one Credit Box.");
+	}
+}
+
+
+void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
+	char arg[MAX_TOKEN_CHARS];
+	trap_Argv(1, arg, sizeof(arg));
+	if (Q_stricmp("start", arg) == 0)
+	{
+		Disp(ent, "(debug)^1INFO: NEW GAME PLUS TODO todoNWG#.");
+
+	}
+	else {
+
+		Disp(ent, "^3Type ^5newgame start ^3to start New Game Plus mode.\n ^3WARNING: ^1That command available is available after reaching ^5120 level\n^1The command will reset your progress!");
+	}
+	
+}
+
+
+/////
 cmdEntry_t professionCommandEntries[] = {
-	{ "buylevel","Buys a level in your current profession if [cost] is enough to buy the next level.\nOtherwise your current level, and the cost to buy the next level will be displayed.", Cmd_BuyLevel_f, 0, qfalse, 1, 129, 0, 0 },
+{ "buylevel","Buys a level in your current profession if [cost] is enough to buy the next level.\nOtherwise your current level, and the cost to buy the next level will be displayed.", Cmd_BuyLevel_f, 0, qfalse, 1, 129, 0, 0 },
 { "cortosis", "Equips an armor that turns off hostile lightsabers and lowers incoming splash damage. Prevents usability of heavy splash weapons.", Cmd_Cortosis_f, 0, qfalse, 0, 64, ~(1 << GT_FFA), PROF_MERC },
 { "flame", "Shoots out a spew of flames.", Cmd_Flame_f, 0, qfalse, 1, 257, 0, PROF_MERC },
 { "ionlysaber", "You can't use forcepowers other than heal or drain - but you're also immune to them. Greatly reduces received splash damage.", Cmd_Ionlysaber_f, 0, qfalse, 0, 64, ~(1 << GT_FFA), PROF_JEDI },
@@ -1182,6 +1236,8 @@ cmdEntry_t professionCommandEntries[] = {
 { "resetskills", "Reset your skills. This costs money; if no argument is provided the cost will be displayed.", Cmd_ResetSkills_f, 0, qfalse, 2, 257, 0, 0 },
 { "skills", "View and raise your profession skills. You can only raise skill levels if you have unallocated skill points.\nIf no argument is provided, your current skill levels will be listed.", Cmd_SkillSelect_f, 0, qfalse, 1, 257,0, 0 },
 { "weapons", "Select or unselect a weapon.", Cmd_MercWeapon_f, 0, qfalse, 1, 257, 0, PROF_MERC },
+{ "creditbox", "Open the Credit Box.", Cmd_Creditbox_f, 0, qfalse, 2, 257, 0, 0 },
+{ "newgame", "Start the new game plus mode.", Cmd_NewGameP_f, 0, qfalse, 2, 257, 0, 0 },
 #ifndef LMD_EXPERIMENTAL
 { "ysalamiri","Use your Ysalamiri.  You can use the 'challenge to duel' button instead of this command.", Cmd_Ysalamiri_f, 0, qfalse, 0, 257,0, PROF_MERC },
 #endif

@@ -12,6 +12,7 @@ extern vmCvar_t lmd_stashdepotime;
 extern vmCvar_t lmd_stashrate;
 //Ufo:
 extern vmCvar_t lmd_stashcr;
+extern vmCvar_t lmd_stashexp;
 
 //RoboPhred
 #define MONEY_DISP_TIME lmd_stashrate.integer
@@ -23,6 +24,8 @@ extern vmCvar_t lmd_stashcr;
 //#define STASH_CASH 10 // credits/player
 //Ufo:
 #define STASH_CASH lmd_stashcr.integer // credits/player
+//iomatix
+#define STASH_EXPERIENCE lmd_stashexp.integer
 
 int G_CountHumanPlayers (int team);
 gentity_t *current_stash = NULL;
@@ -179,7 +182,7 @@ void money_stash_touch (gentity_t *self, gentity_t *other, trace_t *trace){
 		G_Sound(other, CHAN_AUTO, self->noise_index);
 	}
 
-	if (self->count < 10) {
+	if (self->count < 10 ) {
 		int ammount = 0;
 		int maxamt = 3;
 		ammount = G_CountHumanPlayers (-1) * STASH_CASH;
@@ -187,6 +190,15 @@ void money_stash_touch (gentity_t *self, gentity_t *other, trace_t *trace){
 			ammount *= 2;
 		}
 		self->count = ammount;
+	}
+	if ( self->count_2 < 10) {
+		int ammount_exp = 0;
+		int maxamt = 3;
+		ammount_exp = G_CountHumanPlayers(-1) * STASH_EXPERIENCE;
+		while (!Q_irand(0, 3) && maxamt--) {
+			ammount_exp *= 2;
+		}
+		self->count_2 = ammount_exp;
 	}
 
 	other->client->ps.eFlags2 |= EF2_CANSEE;
@@ -326,6 +338,7 @@ void depositMoneyStash(gentity_t *ent){
 	}
 
 	int amount = current_stash->count;
+	int amount_exp = current_stash->count_2;
 	ent->client->Lmd.moneyStash = NULL;
 
 	G_FreeEntity(current_stash);
@@ -337,8 +350,8 @@ void depositMoneyStash(gentity_t *ent){
 	PlayerAcc_Stats_SetStashes(ent, PlayerAcc_Stats_GetStashes(ent) + 1);
 
 	PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) + amount);
-
-	trap_SendServerCommand(ent->s.number, va("cp \"^3You received ^2%i^3 credits.\"", amount));
+	PlayerAcc_SetExperience(ent, PlayerAcc_GetExperience(ent) + amount_exp);
+	trap_SendServerCommand(ent->s.number, va("cp \"^3You received ^2%i^3 credits and ^2%i^3 experience.\"", amount, amount_exp));
 	trap_SendServerCommand(-1, va("print \"%s ^3deposited the money stash.\n\"", ent->client->pers.netname));
 	G_LogPrintf("%s deposited the money stash. CR %i.\n", ent->client->pers.netname, amount);
 }

@@ -61,6 +61,7 @@ void Accounts_Prof_SetLevel(Account_t *acc, int value);
 
 void Accounts_Prof_ClearData(Account_t *acc);
 
+int Professions_UsedSkillPoints(Account_t *acc, int prof, profSkill_t *skill);
 
 
 qboolean PlayerAcc_Prof_CanUseProfession(gentity_t *ent);

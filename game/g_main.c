@@ -349,6 +349,9 @@ vmCvar_t lmd_DataPath;
 vmCvar_t lmd_stashrate;
 vmCvar_t lmd_stashdepotime;
 vmCvar_t lmd_stashcr;
+//iomatix
+vmCvar_t lmd_stashexp;
+//
 vmCvar_t lmd_startingcr;
 vmCvar_t lmd_enforceentwait;
 vmCvar_t lmd_spturrets;
@@ -437,6 +440,10 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_stashcr, "lmd_stashCr", "10", CVAR_ARCHIVE, 0, qtrue, qfalse,
 "The default number of credits in a stash.  This is only used in the new lmd_stash* entity set, "
 "and only if no credits value is already given."
+},
+{ &lmd_stashexp, "lmd_stashExp", "10", CVAR_ARCHIVE, 0, qtrue, qfalse,
+"The default number of experience points in a stash.  This is only used in the new lmd_stash* entity set, "
+"and only if no experience value is already given."
 },
 { &lmd_admingodlevel, "lmd_adminGodLevel", "1", CVAR_ARCHIVE | CVAR_LATCH, 0, qtrue, qfalse,
 "The minimum admin level required to be able to use the God profession.  Set this to 0 to disable it fully.  "

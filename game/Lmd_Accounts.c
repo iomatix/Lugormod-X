@@ -202,9 +202,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3Security code: ^2%s\n"
 		"^3Credits:       ^2%i\n"
 		"^3Experience:    ^5%i ^3/ ^2%i \n"
-		"^3Time:          ^2%i^3:^2%02i\n"
-		"^3Level:         ^2%i\n"
-		"^3Score:         ^2%i",
+		"^3Time:          ^2%i^3:^2%02i\n",
 		Accounts_GetId(acc),
 		Accounts_GetName(acc),
 		Accounts_GetUsername(acc),
@@ -212,8 +210,15 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		Accounts_GetCredits(acc),
 		Accounts_GetExperience(acc),
 		Professions_LevelCost_EXP(PlayerAcc_Prof_GetProfession(ent), lvl),
-		time / 3600, (time / 60) % 60,
-		lvl, Accounts_GetScore(acc)));
+		time / 3600, (time / 60) % 60));
+	  Disp(ent, va(
+		"^3Main Level:         ^2%i\n"
+		"^3Force User Level:         ^2%i\n"
+		"^3Mercenary Level:         ^2%i\n"
+		"^3Credits Boxes:         ^2%i\n"
+		"^3New Game Plus Level:         ^2%i\n"
+		"^3Score:         ^2%i",
+		lvl,Accounts_GetLevel_jedi(acc),Accounts_GetLevel_merc(acc),Accounts_GetLootboxes(acc),Accounts_GetNewGamePlus_count(acc), Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)
 		c = "^2None";
 	else if (prof == PROF_ADMIN)

@@ -43,3 +43,6 @@ Choose the gain formula. 1 is based on difference between players. 0 is normal c
 
 - **lmd_is_buy_level**
 When 1 players get access to buylevel command. Default 0.
+
+- **lmd_stashexp** & **lmd_stashcr**
+Allow to setup amount experience and credits inside stash.

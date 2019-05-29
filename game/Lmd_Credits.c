@@ -41,19 +41,37 @@ void GiveCredits(gentity_t *ent, int cr, char *reason) {
 	else if(cr > 0) {
 		char *msg = va("^3You received ^2CR %i^3 %s.", cr, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
-		trap_SendServerCommand(ent->s.number, va("cp \"%s\"", msg));
+		trap_SendServerCommand(ent->s.number, va("cr \"%s\"", msg));
 		G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	}
 	else if(cr < 0){
 		char *msg = va("^3You lost ^1CR %i^3 %s.", cr, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
-		trap_SendServerCommand(ent->s.number, va("cp \"%s\"", msg));
+		trap_SendServerCommand(ent->s.number, va("cr \"%s\"", msg));
 	}
 
 	PlayerAcc_SetCredits(ent, cur + cr);
 
 }
+void GiveLootboxes(gentity_t *ent, int lx, char *reason) {
+	int lbx = PlayerAcc_GetLootboxes(ent);
+	if (lx < 0 && lbx - lx < 0) lx = 0;
 
+	else if (lx > 0) {
+		char *msg = va("^3You received ^2Credits-Box %i^3 %s.", lx, (reason != NULL) ? reason : "");
+		Disp(ent, msg);
+		trap_SendServerCommand(ent->s.number, va("box \"%s\"", msg));
+		G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
+	}
+	else if (lx < 0) {
+		char *msg = va("^3You lost ^1Credit-Box %i^3 %s.", lx, (reason != NULL) ? reason : "");
+		Disp(ent, msg);
+		trap_SendServerCommand(ent->s.number, va("box \"%s\"", msg));
+	}
+
+	PlayerAcc_SetLootboxes(ent, lbx + lx);
+
+}
 void hurl (gentity_t *ent, gentity_t *dropped);
 void Touch_Credits (gentity_t *ent, gentity_t *other, trace_t *trace) {
 

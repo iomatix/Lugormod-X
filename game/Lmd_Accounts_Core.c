@@ -34,6 +34,10 @@ struct Account_s{
 	int score;
 	int credits;
 	int experience; //iomatix
+	int level_jedi; //3
+	int level_merc; //4
+	int lootboxes;
+	int new_game_plus_counter;
 	int flags;
 
 	struct {
@@ -222,6 +226,10 @@ DataWriteResult_t Accounts_Write_Modules(void *target, char key[], int keySize, 
 	_m##_AUTO(score, ACCOUNTOFS(score), F_INT) \
 	_m##_AUTO(credits, ACCOUNTOFS(credits), F_INT) \
 	_m##_AUTO(experience, ACCOUNTOFS(experience), F_INT) \
+	_m##_AUTO(level_jedi, ACCOUNTOFS(level_jedi), F_INT) \
+	_m##_AUTO(level_merc, ACCOUNTOFS(level_merc), F_INT) \
+	_m##_AUTO(lootboxes, ACCOUNTOFS(lootboxes), F_INT) \
+	_m##_AUTO(new_game_plus_counter, ACCOUNTOFS(new_game_plus_counter), F_INT) \
 	_m##_AUTO(flags, ACCOUNTOFS(flags), F_INT) \
 	_m##_DEFL(Accounts_Parse_Modules, Accounts_Write_Modules, NULL)
 
@@ -570,6 +578,48 @@ char* Accounts_NewSeccode(Account_t *acc) {
 	Lmd_Accounts_Modify(acc);
 	return acc->secCode;
 }
+/////
+int Accounts_GetLevel_jedi(Account_t *acc) {
+	if (!acc)return 0;
+	return acc->level_jedi;
+}
+void Accounts_SetLevel_jedi(Account_t *acc, int value) {
+	if (!acc)return;
+	if (value < 0)value = 0;
+	acc->level_jedi = value;
+	Lmd_Accounts_Modify(acc);
+}
+int Accounts_GetLevel_merc(Account_t *acc) {
+	if (!acc)return 0;
+	return acc->level_merc;
+}
+void Accounts_SetLevel_merc(Account_t *acc, int value) {
+	if (!acc)return;
+	if (value < 0)value = 0;
+	acc->level_merc = value;
+	Lmd_Accounts_Modify(acc);
+}
+int Accounts_GetLootboxes(Account_t *acc) {
+	if (!acc)return 0;
+	return acc->lootboxes;
+}
+void Accounts_SetLootboxes(Account_t *acc, int value) {
+	if (!acc)return;
+	if (value < 0)value = 0;
+	acc->lootboxes = value;
+	Lmd_Accounts_Modify(acc);
+}
+int Accounts_GetNewGamePlus_count(Account_t *acc) {
+	if (!acc)return 0;
+	return acc->new_game_plus_counter;
+}
+void Accounts_SetNewGamePlus_count(Account_t *acc, int value) {
+	if (!acc)return;
+	if (value < 0)value = 0;
+	acc->new_game_plus_counter = value;
+	Lmd_Accounts_Modify(acc);
+}
+//
 int Accounts_GetExperience(Account_t *acc) {
 	if (!acc)return 0;
 	return acc->experience;

@@ -21,6 +21,7 @@
 - Added new extern variables lmd_is_lethality_add_damage & lmd_is_thousandcuts_lethality to configure new skills.
 - New fully working leveling system with experience gain. Credits and experience gain depends on level difference between players by default. 
 - Simplification for Admin commands. Self commands availble without using the account name argument.
+- Experience system supports stashes system now.
 
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)

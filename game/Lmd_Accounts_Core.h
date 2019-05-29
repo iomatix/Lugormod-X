@@ -38,16 +38,43 @@ int Accounts_GetPassword(Account_t *acc);
 void Accounts_SetPassword(Account_t *acc, char *password);
 #define PlayerAcc_SetPassword(ent, password) Accounts_SetPassword(ent->client->pers.Lmd.account, password)
 
+//iomatix
 void GiveExperience(gentity_t *ent, int cr, char *reason);
 void GiveCredits(gentity_t *ent, int cr, char *reason);
+void GiveLootboxes(gentity_t *ent, int cr, char *reason);
+////////////
+int Accounts_GetLevel_jedi(Account_t *acc);
+#define PlayerAcc_GetLevel_jedi(ent) Accounts_GetLevel_jedi(ent->client->pers.Lmd.account)
+
+void Accounts_SetLevel_jedi(Account_t *acc, int value);
+#define PlayerAcc_SetLevel_jedi(ent, value) Accounts_SetLevel_jedi(ent->client->pers.Lmd.account, value)
+////
+int Accounts_GetLevel_merc(Account_t *acc);
+#define PlayerAcc_GetLevel_merc(ent) Accounts_GetLevel_merc(ent->client->pers.Lmd.account)
+
+void Accounts_SetLevel_merc(Account_t *acc, int value);
+#define PlayerAcc_SetLevel_merc(ent, value) Accounts_SetLevel_merc(ent->client->pers.Lmd.account, value)
 
 
+///////
+int Accounts_GetLootboxes(Account_t *acc);
+#define PlayerAcc_GetLootboxes(ent) Accounts_GetLootboxes(ent->client->pers.Lmd.account)
+
+void Accounts_SetLootboxes(Account_t *acc, int value);
+#define PlayerAcc_SetLootboxes(ent, value) Accounts_SetLootboxes(ent->client->pers.Lmd.account, value)
+///////////
 int Accounts_GetExperience(Account_t *acc);
 #define PlayerAcc_GetExperience(ent) Accounts_GetExperience(ent->client->pers.Lmd.account)
 
 void Accounts_SetExperience(Account_t *acc, int value);
 #define PlayerAcc_SetExperience(ent, value) Accounts_SetExperience(ent->client->pers.Lmd.account, value)
+///////////
+int Accounts_GetNewGamePlus_count(Account_t *acc);
+#define PlayerAcc_GetNewGamePlus_count(ent) Accounts_GetNewGamePlus_count(ent->client->pers.Lmd.account)
 
+void Accounts_SetNewGamePlus_count(Account_t *acc, int value);
+#define PlayerAcc_SetNewGamePlus_count(ent, value) Accounts_SetNewGamePlus_count(ent->client->pers.Lmd.account, value)
+////
 int Accounts_GetCredits(Account_t *acc);
 #define PlayerAcc_GetCredits(ent) Accounts_GetCredits(ent->client->pers.Lmd.account)
 
