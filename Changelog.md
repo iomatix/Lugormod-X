@@ -51,6 +51,7 @@
 - Changeable aliases (nicknames) added.
 
 ## TODO
+- skills cost hotfix!
 - flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
 - Titles in stats display depends on level + new game plus points. Add section in stats command 
 - lootboxes for levels
