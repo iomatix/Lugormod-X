@@ -248,6 +248,6 @@ typedef enum {
 // a GetClientState syscall will be made to get the current strings
 
 	UI_MENU_RESET
-} uiExport_t;
+} ui EXPort_t;
 
 #endif

@@ -5371,7 +5371,7 @@ static void Jedi_Combat( void )
 		//Get the move info
 		NAV_GetLastMove( &info );
 		if ( !(info.flags & NIF_MACRO_NAV) )
-		{//micro-navigation told us to step off a ledge, try using macronav for now
+		{//mi CRo-navigation told us to step off a ledge, try using macronav for now
 			NPC_MoveToGoal( qfalse );
 		}
 		//reset the timers.

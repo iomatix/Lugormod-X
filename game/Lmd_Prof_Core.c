@@ -581,7 +581,7 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 			
 
 			
-			Disp(ent, va("^3You've paid ^2%iCR", cost_skillpoints));
+			Disp(ent, va("^3You've paid ^2%i CR", cost_skillpoints));
 			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - cost_skillpoints);
 			
 		}
@@ -819,7 +819,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 		level++;
 		nextLevel++;
 		Accounts_SetCredits(acc, Cr_cost);
-		Disp(ent, va("^3You've paid %iCR. %iCR left.", lmd_skillpoint_cost.integer*cost, Cr_cost));
+		Disp(ent, va("^3You've paid ^2%i CR^3. ( ^2%i CR ^3left )", lmd_skillpoint_cost.integer*cost, Cr_cost));
 
 		if (level >= skill->levels.max) {
 			Disp(ent, "^3This skill is now at its highest level.");
@@ -952,7 +952,7 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 			if (level < skill->levels.max) {
 				if (points >= level + 1 && cost_cr <= cr_player) {
 					Disp(ent, va("^3Use ^2/%s up^3 to increase the ^2%s^3 skill.  It will cost ^2%i^3 point%s, leaving you with ^2%i^3 point%s left.",
-						cmd, skill->name, cost, (cost == 1) ? "" : "s", points-cost, (points - cost == 1) ? "" : "s", ));
+						cmd, skill->name, cost, (cost == 1) ? "" : "s", points-cost, (points - cost == 1) ? "" : "s" ));
 					Disp(ent, va("^3The cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.", cost_cr, cr_player - cost_cr));
 				}
 				else Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.", skill->name));
@@ -1020,7 +1020,7 @@ void Cmd_ResetSkills_f(gentity_t *ent, int iArg) {
 		Disp(ent, va("^3The cost to reset your skills is ^2CR %i^3.", cost));
 		return;
 	}
-	Disp(ent, va("^3You've paid %iCR to reset your skills.", cost));
+	Disp(ent, va("^3Paid ^2%i CR ^3to reset your skills.", cost));
 	PlayerAcc_SetCredits(ent, myCredits - cost);
 	Accounts_Prof_ClearData(ent->client->pers.Lmd.account);
 	Professions_SetDefaultSkills(ent->client->pers.Lmd.account, prof);
@@ -1097,7 +1097,7 @@ void Experience_Level_Up(gentity_t *ent)
 	
 	resEXP = resEXP - cost; // new cost
 	if (resEXP < 0) {
-		Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));
+		Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", PlayerAcc_GetExperience(ent), cost));
 		Disp(ent, va("^3You need ^5%i EXP ^3more.\n", -resEXP));
 		return;
 	}
@@ -1108,7 +1108,34 @@ void Experience_Level_Up(gentity_t *ent)
 		//iomatix:
 		playerLevel++;
 		PlayerAcc_Prof_SetLevel(ent, playerLevel);
-	
+	    //credit boxes reward
+		Disp(ent, "^3Got a Credit Box for reaching a new level!");
+		if (playerLevel < 40) {
+			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
+			if(playerLevel % 5 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
+			if(playerLevel % 10 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
+		}
+		else {
+			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 2);
+			if (playerLevel % 5 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
+			if (playerLevel % 10 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 2);
+
+		}
+		
+		//credit boxes special levels bonuses:
+		if (playerLevel == 40) {
+			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 15);
+			Disp(ent, "^5You've got a special bonus for reaching the ^3Mastery Level^5!");
+		}
+		else if(playerLevel == 60)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 10);
+		else if (playerLevel == 100)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 20);
+		else if (playerLevel == 120) {
+			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 50);
+			Disp(ent, "^5You've got a special bonus for reaching ^3level Cap!\n ^2Don't hesitate to try a ^3New Game Plus ^2mode.");
+		}
+		/////
+
+
 		int NewSkillPoints_value = Professions_Add_That_Amount_SkillPoints(playerLevel);
 		
 		
@@ -1116,7 +1143,8 @@ void Experience_Level_Up(gentity_t *ent)
 
 	   cost = Professions_LevelCost_EXP(prof, playerLevel);
 	   Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));
-	   Disp(ent, va("^5Congratulation, Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value));
+	   Disp(ent, va("^5Congratulation! Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value));
+	   trap_SendServerCommand(ent->s.number, va("^5Congratulation! Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value));
 	   G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	   WP_InitForcePowers(ent);
 	   return;

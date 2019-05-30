@@ -1138,7 +1138,7 @@ cmdEntry_t adminCommandEntries[] = {
 { "gethere", "Teleport a player in front of you.", Cmd_Teleport_f, 0, qtrue, 3, 0,(1 << GT_SIEGE) | (1 << GT_CTF) | (1 << GT_CTY) | (1 << GT_BATTLE_GROUND) | (1 << GT_SABER_RUN) },
 { "goto", "Teleport to infront of <player>.", Cmd_Teleport_f, 1, qtrue, 4, 0, (1 << GT_SIEGE) | (1 << GT_CTF) | (1 << GT_CTY) | (1 << GT_BATTLE_GROUND) | (1 << GT_SABER_RUN) },
 { "gotopoint", "Teleports you to the given cordinates.  If no cordinates specified, it teleports you to the location you are aiming at.", Cmd_GotoPoint_f, 0, qtrue, 4, 0, (1 << GT_SIEGE) | (1 << GT_CTF) | (1 << GT_CTY) | (1 << GT_BATTLE_GROUND) | (1 << GT_SABER_RUN) },
-{ "hicredits","Display top ten wealthiest players.", HiScore, 2, qtrue, 1, 129, 0 },
+{ "hi CRedits","Display top ten wealthiest players.", HiScore, 2, qtrue, 1, 129, 0 },
 { "hideadmin", "Toggles your visibility in the admin list.", Cmd_HideAdminStatus_f, 0, qtrue, 2, 0, 0 },
 { "jail", "Jail a player. If no argument is provided, the target in sight will be jailed.", Cmd_Jail_f, 0, qtrue, 4, 0, 0 },//~(1 << GT_FFA)},
 { "jmquit", "Quit being Jedi Master in Jedi Master game type.", Cmd_JmQuit_f, 0, qtrue, 2, 0, ~(1 << GT_JEDIMASTER) },

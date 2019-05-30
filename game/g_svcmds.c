@@ -383,7 +383,7 @@ qboolean	ConsoleCommand( void ) {
 		HiScore(NULL, 1);
 		return qtrue;
 	}
-	if ((Q_stricmp (cmd, "hicredits") == 0)){
+	if ((Q_stricmp (cmd, "hi CRedits") == 0)){
 		HiScore(NULL, 2);
 		return qtrue;
 	}

@@ -833,7 +833,7 @@ void lmd_stashspawnpoint_spawnstash(gentity_t *ent){
 		Q_strncpyz(msg, ent->GenericStrings[7], sizeof(msg));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
 		if(ent->spawnflags & 4096)
-			Q_strcat(msg, sizeof(msg), va("\n^3Contains  ^2%iCR and ^5%iEXP", stash->count, stash->count_exp));
+			Q_strcat(msg, sizeof(msg), va("\n^3Contains  ^2%i CR and ^5%i EXP", stash->count, stash->count_exp));
 
 		for(i = 0;i<MAX_CLIENTS;i++){
 			player = &g_entities[i];

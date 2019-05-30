@@ -196,30 +196,30 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 	secCode = Accounts_GetSeccode(acc);
 
 	Disp(ent, va(
+		"^8===== Account Information =====\n"
 		"^3Id:            ^2%i\n"
-		"^3Name:          ^7%s\n"
+		"^3Alias:         ^7%s\n"
 		"^3Username:      ^2%s\n"
 		"^3Security code: ^2%s\n"
-		"^3Credits:       ^2%i\n"
-		"^3Experience:    ^5%i ^3/ ^2%i \n"
 		"^3Time:          ^2%i^3:^2%02i",
 		Accounts_GetId(acc),
 		Accounts_GetName(acc),
 		Accounts_GetUsername(acc),
 		(secCode != NULL) ? secCode : "^1<none>",
-		Accounts_GetCredits(acc),
-		Accounts_GetExperience(acc),
 		Professions_LevelCost_EXP(PlayerAcc_Prof_GetProfession(ent), lvl),
 		time / 3600, (time / 60) % 60));
 	  Disp(ent, va(
-		"^3Main Level:         ^2%i\n"
-		"^3Force User Level:   ^2%i\n"
-		"^3Mercenary Level:    ^2%i\n"
-		"^3Credits Boxes:      ^2%i\n"
+		"^8===== Progress Information =====\n"
+		"^3Main Level:    ^2%i\n"
+		"^3Credits:       ^2%i\n"
+		"^3Experience:    ^5%i ^3/ ^2%i \n"
+		"^3Force User Level:    ^2%i\n"
+		"^3Mercenary Level:     ^2%i\n"
+		"^3Credits Boxes:       ^2%i\n"
 		"^3New Game Plus Level: ^2%i\n"
 		"^3New Game Plus skill points: ^2%i\n"
 		"^3Score:         ^2%i",
-		lvl,Accounts_GetLevel_jedi(acc),Accounts_GetLevel_merc(acc),Accounts_GetLootboxes(acc),Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
+		lvl, Accounts_GetCredits(acc), Accounts_GetExperience(acc), Accounts_GetLevel_jedi(acc),Accounts_GetLevel_merc(acc),Accounts_GetLootboxes(acc),Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)
 		c = "^2None";
 	else if (prof == PROF_ADMIN)
@@ -248,6 +248,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 	if (prof == PROF_NONE)
 		Disp(ent, va("^3Next level up: ^2%i^3 points and ^2%i^3 hours", (lvl * LEVEL_SCORE), (lvl * lvl * 2)));
 	Disp(ent, va(
+		"^8===== Statistics =====\n"
 		"^3Logins:        ^2%i\n"
 		"^3Last login:    ^2%s\n"
 		"^3Kills:         ^2%i\n"
@@ -266,7 +267,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		Accounts_Stats_GetShots(acc), Accounts_Stats_GetHits(acc), c));
 
 	if (authlist[0])
-		Disp(ent, va("^3Authfile(s):   ^2%s", authlist));
+		Disp(ent, va(" ^1===== ADMIN =====\n^3Authfile(s):   ^2%s", authlist));
 	if (authrank)
 		Disp(ent, va("^3Authrank:      ^2%i", authrank));
 	if (!ent) {

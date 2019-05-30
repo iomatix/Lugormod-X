@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
+// Mi CRosoft Visual C++ generated include file.
 // Used by JK2game.rc
 //
 #define VERSION_MINOR_RELEASE           0

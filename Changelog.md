@@ -42,16 +42,21 @@
 - Meditation bug is fixed. ✔️
 - lmd_is_differences_formula is added which allows to choose between: credits and experience gain depends on level difference between players if 1, or constant values for each level if 0.  ✔️
 - lmd_stashexp added. Stash system supports new experience system now. ✔️
-- New admin commands implemented.
-- Current level synchronizes with data-based one.
-- Credit-boxes is added.
-- New Game Plus implemented. Gain more skillpoints with it.
-- Titles system.
-- Skills system is connected to economy. Manage it with credits.
-- Changeable aliases (nicknames) added.
+- New admin commands implemented. ✔️
+- Current level synchronizes with data-based one. ✔️
+- Credit-boxes are added. Gain them by leveling up. ✔️
+- New Game Plus implemented. Gain more skillpoints with it. ✔️
+- Skills system is connected to economy. Manage it with credits. ✔️
+- Changeable aliases (nicknames) added. ✔️
+- Stats panel re-designed.  ✔️
+- Lightnings turn off the jetpack for a while.  ✔️
+- Rage drains health from hurted enemies. ✔️
+- Longer Grip which depends on the skill level.
+
+- Titles system. x
 
 ## TODO
-- skills cost hotfix!
+- grip longer
 - flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
 - Titles in stats display depends on level + new game plus points. Add section in stats command 
 - lootboxes for levels

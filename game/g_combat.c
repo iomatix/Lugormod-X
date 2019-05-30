@@ -5361,6 +5361,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	}
 
 	//iomatix damage_modifiers :
+	
+
 	//Lethality & Thousand Cuts skills + level damage scale depending on level differences between players
 																												//deal with NPC?
 	if (lmd_damage_level_scale.integer == 1 && mod && attacker->client && targ->client && targ->s.eType != ET_NPC && attacker->s.eType != ET_NPC) {
@@ -5403,6 +5405,15 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 
 
 			}else if (PlayerAcc_Prof_GetProfession(attacker) == PROF_JEDI && mod == MOD_SABER) { //jedi class check and is he using the saber?
+
+					 //rage regens hp on hit with saber
+				/*
+				int vampiric_rage_level = PlayerProf_Jedi_GetRageSkill(attacker);
+				if (vampiric_rage_level > 0 && (mod == MOD_SABER || mod == MOD_FORCE_DARK)) attacker->health += vampiric_rage_level * damage / 10;
+				*/		
+				
+
+
 				if (PlayerProf_Jedi_GetThousandCutsSkill(attacker) > 0) { //is thousandcuts upgraded?
 
 					//5->10->15->20 check the thousandcuts descr level 1,2,3,4
@@ -5668,8 +5679,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			}
 		}
 	}
+	
 
-	if ( mod == MOD_DEMP2 || mod == MOD_DEMP2_ALT )
+
+	if ( mod == MOD_DEMP2 || mod == MOD_DEMP2_ALT  )
 	{//FIXME: screw with non-animal vehicles, too?
 		if ( targ->client )
 		{

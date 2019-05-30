@@ -287,10 +287,21 @@ const unsigned int jediPassiveCount = sizeof(jediSkill_Passive_Subskills) / size
 ////functions:
 //functions for passive skills:
 //GetSkill
+/*
+int Lmd_Prof_Jedi_GetDrain(Account_t *acc) {
+	if (!acc) return 0;
+	
+	return jediSkill_Dark_Drain.getValue(acc, &jediSkill_Dark_Drain);
+}
+int Lmd_Prof_Jedi_GetRage(Account_t *acc) {
+	if (!acc) 	return 0;
+	
+	return jediSkill_Dark_Rage.getValue(acc, &jediSkill_Dark_Rage);
+}
+*/
 int Lmd_Prof_Jedi_GetThousandCutsSkill(Account_t *acc) {
-	if (!acc) {
-		return 0;
-	}
+	if (!acc) return 0;
+	
 	return jediSkill_Passive_thousandcuts.getValue(acc, &jediSkill_Passive_thousandcuts);
 }
 //FUNCTIONS

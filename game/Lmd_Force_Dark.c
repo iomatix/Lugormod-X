@@ -14,15 +14,12 @@ int WP_AbsorbConversion(gentity_t *attacked, int atdAbsLevel, gentity_t *attacke
 void BotForceNotification (gclient_t *bot, gentity_t *attacker);
 
 qboolean Force_Grip_Available(gentity_t *self, const void* vData) {
-	if (self->client->ps.fd.forceGripUseTime > level.time)
-		return qfalse;
+	if (self->client->ps.fd.forceGripUseTime > level.time) return qfalse;
 	//TODO: move into generic usability code?
-	if (self->client->ps.forceHandExtend != HANDEXTEND_NONE)
-		return qfalse;
+	if (self->client->ps.forceHandExtend != HANDEXTEND_NONE)	return qfalse;
 
 	//TODO: move into generic usability code?
-	if (self->client->ps.weaponTime > 0)
-		return qfalse;
+	if (self->client->ps.weaponTime > 0) return qfalse;
 
 	return qtrue;
 }
@@ -38,7 +35,7 @@ qboolean Force_Grip_Start(gentity_t *self, const void* vData) {
 
 	trace_t tr;
 	vec3_t tfrom, tto, fwd;
-
+	
 	int gripdist = Force_Grip_Distance(self, data);
 
 	VectorCopy(self->client->ps.origin, tfrom);
@@ -110,6 +107,7 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 	vec3_t fwd, fwd_o, start_o, nvel;
 	int gripDist;
 
+
 	if (self->client->ps.forceHandExtend != HANDEXTEND_FORCE_HOLD || self->client->ps.fd.forcePower < 1){
 		return qfalse;
 	}
@@ -138,7 +136,7 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 
 	gripDist = Force_Grip_Distance(self, data);
 	gripDist *= Force_Grip_AbsorbPower(self, gripEnt, data);
-
+	
 	if (!gripDist)	{
 		return qfalse;
 	}
@@ -156,8 +154,7 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 
 	trap_Trace(&tr, self->client->ps.origin, NULL, NULL, gripEnt->client->ps.origin, self->s.number, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0f && tr.entityNum != gripEnt->s.number)
-		return qfalse;
+	if (tr.fraction != 1.0f && tr.entityNum != gripEnt->s.number) return qfalse;
 
 	if (self->client->ps.fd.forcePowerDebounce[FP_GRIP] < level.time){
 		//2 damage per second while choking, resulting in 10 damage total (not including The Squeeze<tm>)
@@ -169,9 +166,12 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 	Jetpack_Off(gripEnt); //make sure the guy being gripped has his jetpack off.
 #endif
 
+
+		
+	
 	gripEnt->client->ps.fd.forceGripBeingGripped = level.time + 1000;
 
-	if ((level.time - gripEnt->client->ps.fd.forceGripStarted) > data->duration){
+	if ((level.time - gripEnt->client->ps.fd.forceGripStarted) > data->duration){ //iomatix
 		return qfalse;
 	}
 
@@ -181,7 +181,7 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 		
 		//we can move, so we can be thrown off an edge.
 		gripEnt->client->ps.otherKiller = self->s.number;
-		gripEnt->client->ps.otherKillerTime = level.time + 5000;
+		gripEnt->client->ps.otherKillerTime = level.time + 6000; //iomatix
 		gripEnt->client->ps.otherKillerDebounceTime = level.time + 100;
 
 		if(data->moveType == 1) {
@@ -253,7 +253,7 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 				Force_StopPower(gripEnt, FP_GRIP);
 			}
 		}
-		else if ((level.time - gripEnt->client->ps.fd.forceGripStarted) > 4000)
+		else if ( ((level.time - gripEnt->client->ps.fd.forceGripStarted) > data->duration))  //iomatix test data->duration
 			return qfalse;
 	}
 	return qtrue;
@@ -262,7 +262,7 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 void Force_Grip_Stop(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceGrip_t);
 	//Ufo:
-	self->client->ps.fd.forceGripUseTime = level.time + 4000;
+	self->client->ps.fd.forceGripUseTime = level.time + 3000; //cooldown
 	if (data->throatcrush && g_entities[self->client->ps.fd.forceGripEntityNum].client &&
 		g_entities[self->client->ps.fd.forceGripEntityNum].health > 0 &&
 		g_entities[self->client->ps.fd.forceGripEntityNum].inuse &&
@@ -288,11 +288,11 @@ void Force_Grip_Stop(gentity_t *self, const void *vData) {
 
 forceGrip_t Force_Grip_Levels[5] = {
 	//Ufo: fixed omni of level 3
-	{MAX_GRIP_DISTANCE,	2, 0,	5000, 0, GRIP_DRAIN_AMOUNT, 1, qfalse,	qfalse},
-	{MAX_GRIP_DISTANCE,	2, 20,	4000, 1, GRIP_DRAIN_AMOUNT, 1, qtrue,	qfalse},
-	{MAX_GRIP_DISTANCE,	2, 40,	4000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
-	{MAX_GRIP_DISTANCE * 2,	2, 40,	4000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
-	{MAX_GRIP_DISTANCE * 4,	2, 40,	4000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE,	2, 0,	25000, 0, GRIP_DRAIN_AMOUNT, 1, qfalse,	qfalse},
+	{MAX_GRIP_DISTANCE,	2, 20,	20000, 1, GRIP_DRAIN_AMOUNT, 1, qtrue,	qfalse},
+	{MAX_GRIP_DISTANCE,	2, 40,	15000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE * 2,	2, 40,	10000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE * 4,	2, 40,	5000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
 };
 
 forcePower_t Force_Grip = {
@@ -362,7 +362,15 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 		if (target->s.genericenemyindex < level.time)
 			target->s.genericenemyindex = level.time + 2000;
 	}
-	if ( target->client ){
+	
+		if (target->client->jetPackOn)  //disable jetpack temporarily
+		{
+#ifndef LMD_NEW_JETPACK
+			Jetpack_Off(target);
+#endif
+			target->client->jetPackToggleTime = level.time + Q_irand(150, 1500);
+		}
+
 		//an enemy or object
 		if (target->client->noLightningTime >= level.time){ 
 			//give them power and don't hurt them.
@@ -376,8 +384,7 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 			int	dmg = 1; //Q_irand(1, 2);
 
 			float absorb = Force_Lightning_AbsorbPower(self, target, data);
-			if(absorb == 0)
-				return;
+			if(absorb == 0)return;
 			if(absorb != 1) {
 				absorb = 1.0f - absorb;
 				target->client->noLightningTime = level.time + 100 + (absorb * 300.0f);
@@ -414,7 +421,7 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 			}
 		}
 	}
-}
+
 
 qboolean Force_Lightning_Run(gentity_t *self, const void* vData) {
 	GETFORCEDATA(forceLightning_t);

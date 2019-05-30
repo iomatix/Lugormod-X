@@ -118,15 +118,13 @@ qboolean Force_UsePower(gentity_t *ent, int power) {
 	}
 
 	//Temp
-	if(!ForcePowers[power])
-		return qfalse;
+	if(!ForcePowers[power])return qfalse;
 
 	void *data = Force_GetPlayerForceData(ent, power);
 
 	if(!ForcePowers[power]->hold) {
 		if (ent->client->ps.fd.forcePowersActive & (1 << power)) {
-			if (ent->client->ps.forceAllowDeactivateTime >= level.time)
-				return qfalse;
+			if (ent->client->ps.forceAllowDeactivateTime >= level.time) return qfalse;
 			Force_StopPower(ent, power);
 			return qtrue;
 		}
