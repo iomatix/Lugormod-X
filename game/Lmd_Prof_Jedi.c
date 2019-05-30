@@ -731,11 +731,11 @@ profSkill_t jediSkill_Dark_Lightning = {
 };
 
 const char *jediSkill_Dark_Rage_Descr[] = {
-	"Gain the Rage force power.  Do 1/5 more saber damage while active.  Health decreases at 40 points every 3 seconds. Passive 6% Lifesteal.",
-	"Do 2/5 more saber damage while active.  Health decreases at 20 points every 3 seconds. Passive 13% Lifesteal.",
-	"Do 3/5 more saber damage while active.  Health decreases at 40 points every 9 seconds. Passive 20% Lifesteal.",
-	"Do 4/5 more saber damage while active.  Health decreases at 10 points every 3 seconds. Passive 26% Lifesteal.",
-	"Do twice as much saber damage while active.  Health decreases at 4 points every 3 seconds. Passive 33% Lifesteal.",
+	"Gain the Rage force power.  Do 1/5 more saber damage while active.  Health decreases at 40 points every 3 seconds. Passive 6 percent of the Lifesteal.",
+	"Do 2/5 more saber damage while active.  Health decreases at 20 points every 3 seconds. Passive 13 percent of the Lifesteal.",
+	"Do 3/5 more saber damage while active.  Health decreases at 40 points every 9 seconds. Passive 20 percent of the Lifesteal.",
+	"Do 4/5 more saber damage while active.  Health decreases at 10 points every 3 seconds. Passive 26 percent of the Lifesteal.",
+	"Do twice as much saber damage while active.  Health decreases at 4 points every 3 seconds. Passive 33% percent of the Lifesteal.",
 	NULL
 };
 
@@ -1081,7 +1081,6 @@ void Jedi_Spawn(gentity_t *ent) {
 	ent->client->ps.fd.forcePowerMax =  Get_Jedi_mp_maxs_value(ent); 
 	ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax; //starting value
 	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = Get_Jedi_hp_maxs_value(ent); //default formula
-		
 
 
 }
