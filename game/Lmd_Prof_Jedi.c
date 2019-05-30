@@ -731,11 +731,11 @@ profSkill_t jediSkill_Dark_Lightning = {
 };
 
 const char *jediSkill_Dark_Rage_Descr[] = {
-	"Gain the Rage force power.  Do 1/5 more saber damage while active.  Health decreases at 40 points every 3 seconds. Passive 6 percent of the Lifesteal.",
-	"Do 2/5 more saber damage while active.  Health decreases at 20 points every 3 seconds. Passive 13 percent of the Lifesteal.",
-	"Do 3/5 more saber damage while active.  Health decreases at 40 points every 9 seconds. Passive 20 percent of the Lifesteal.",
-	"Do 4/5 more saber damage while active.  Health decreases at 10 points every 3 seconds. Passive 26 percent of the Lifesteal.",
-	"Do twice as much saber damage while active.  Health decreases at 4 points every 3 seconds. Passive 33% percent of the Lifesteal.",
+	"Gain the Rage force power.  Do 1/5 more saber damage while active.  Health decreases at 40 points every 3 seconds. Passive 5 percent of the Lifesteal.",
+	"Do 2/5 more saber damage while active.  Health decreases at 20 points every 3 seconds. Passive 10 percent of the Lifesteal.",
+	"Do 3/5 more saber damage while active.  Health decreases at 40 points every 9 seconds. Passive 15 percent of the Lifesteal.",
+	"Do 4/5 more saber damage while active.  Health decreases at 10 points every 3 seconds. Passive 20 percent of the Lifesteal.",
+	"Do twice as much saber damage while active.  Health decreases at 4 points every 3 seconds. Passive 25 percent of the Lifesteal.",
 	NULL
 };
 

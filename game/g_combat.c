@@ -5411,10 +5411,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 				int vampiric_rage_level = PlayerProf_Jedi_GetRageSkill(attacker);
 				if (vampiric_rage_level > 0 && (mod == MOD_SABER || mod == MOD_FORCE_DARK))
 				{
-
-				  
-					if (attacker->health + vampiric_rage_level * damage / 15 > attacker->client->pers.maxHealth) attacker->health = attacker->client->pers.maxHealth;
-					else attacker->health += vampiric_rage_level * damage / 15;  //max is 33% life steal
+					if (attacker->health + vampiric_rage_level * damage / 20 > attacker->client->pers.maxHealth) attacker->health = attacker->client->pers.maxHealth;
+					else attacker->health += vampiric_rage_level * damage / 20;  //max is 25% life steal
 				}
 						
 				
