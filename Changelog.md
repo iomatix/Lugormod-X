@@ -19,7 +19,7 @@
 - Reworked skillpoints checking system. Old one was totally bugged. ✔️
 - Added more basic information in command-popup and repaired old messy ones for usable commands. ✔️
 - Health, Force Power and Shield formula is re-balanced. ✔️
-- When meditating Force Power rains 20% faster.  ✔️
+- When meditating Force Power raises 20% faster.  ✔️
 - Meditation formula re-balanced.  ✔️
 - Player can spend skillpoints to upgrade their max hp/power/shield capacity. ✔️
 - Added new skill tree for Jedi and new passive skills. ✔️
@@ -33,7 +33,6 @@
 - Added new extern variable lmd_is_lethality_add_damage to configure the lethality skill. default 0, 1 to turn it on. ✔️ 
 - Added new extern variable lmd_is_thousandcuts_lethality to configure the thousand cuts skill. default 0, 1 to turn it on. ✔️ 
 - Added new passive skill Master of The Guns for Mercenery. ✔️ 
-- Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
 - Added new extern variable lmd_rewardexp_kill to set-up the reward for kill. ✔️ 
 - Added new extern variable lmd_exp_for_level. ✔️ 
 - Added new extern variable lmd_is_buy_level, set to 1 get access to the buylevel command. default 0 ✔️ 
@@ -41,7 +40,6 @@
 - Now admin commands work also on two arguments, without name argument it means self as an account argument. ✔️
 - Meditation bug is fixed. ✔️
 - lmd_is_differences_formula is added which allows to choose between: credits and experience gain depends on level difference between players if 1, or constant values for each level if 0.  ✔️
-- lmd_stashexp added. Stash system supports new experience system now. ✔️
 - New admin commands implemented. ✔️
 - Current level synchronizes with data-based one. ✔️
 - Credit-boxes are added. Gain them by leveling up. ✔️
@@ -51,6 +49,9 @@
 - Stats panel re-designed.  ✔️
 - Lightnings turn off the jetpack for a while.  ✔️
 - Rage drains health from hurted enemies. ✔️
+- Added target_experience and count_exp for quests it allows to gain experience as a reward for doing quests. ✔️
+- lmd_stashexp added. Stash system supports new experience system now. ???
+- Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
 - Longer Grip which depends on the skill level.
 
 - Titles system. x

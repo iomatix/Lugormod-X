@@ -287,18 +287,9 @@ const unsigned int jediPassiveCount = sizeof(jediSkill_Passive_Subskills) / size
 ////functions:
 //functions for passive skills:
 //GetSkill
-/*
-int Lmd_Prof_Jedi_GetDrain(Account_t *acc) {
-	if (!acc) return 0;
-	
-	return jediSkill_Dark_Drain.getValue(acc, &jediSkill_Dark_Drain);
-}
-int Lmd_Prof_Jedi_GetRage(Account_t *acc) {
-	if (!acc) 	return 0;
-	
-	return jediSkill_Dark_Rage.getValue(acc, &jediSkill_Dark_Rage);
-}
-*/
+
+
+
 int Lmd_Prof_Jedi_GetThousandCutsSkill(Account_t *acc) {
 	if (!acc) return 0;
 	
@@ -709,7 +700,11 @@ profSkill_t jediSkill_Dark_Drain = {
 	Lmd_Prof_Jedi_CanSetSkill_Drain,
 	Lmd_Prof_Jedi_SetSkill_Drain
 };
+int Lmd_Prof_Jedi_GetDrain(Account_t *acc) {
+	if (!acc) return 0;
 
+	return jediSkill_Dark_Drain.getValue(acc, &jediSkill_Dark_Drain);
+}
 const char *jediSkill_Dark_Lightnig_Descr[] = {
 	"Gain the Lightning force power.  Shoot a burst of electricity for half a second directly at the target.",
 	"Shoot lightning continuously.  Take half as long to use the power again after stopping.",
@@ -736,11 +731,11 @@ profSkill_t jediSkill_Dark_Lightning = {
 };
 
 const char *jediSkill_Dark_Rage_Descr[] = {
-	"Gain the Rage force power.  Do 1/5 more saber damage while active.  Health decreases at 40 points every 3 seconds.",
-	"Do 2/5 more saber damage while active.    Health decreases at 20 points every 3 seconds.",
-	"Do 3/5 more saber damage while active.  Health decreases at 40 points every 9 seconds.",
-	"Do 4/5 more saber damage while active.  Health decreases at 10 points every 3 seconds.",
-	"Do twice as much saber damage while active.  Health decreases at 4 points every 3 seconds.",
+	"Gain the Rage force power.  Do 1/5 more saber damage while active.  Health decreases at 40 points every 3 seconds. Passive 6% Lifesteal.",
+	"Do 2/5 more saber damage while active.  Health decreases at 20 points every 3 seconds. Passive 13% Lifesteal.",
+	"Do 3/5 more saber damage while active.  Health decreases at 40 points every 9 seconds. Passive 20% Lifesteal.",
+	"Do 4/5 more saber damage while active.  Health decreases at 10 points every 3 seconds. Passive 26% Lifesteal.",
+	"Do twice as much saber damage while active.  Health decreases at 4 points every 3 seconds. Passive 33% Lifesteal.",
 	NULL
 };
 
@@ -761,6 +756,11 @@ profSkill_t jediSkill_Dark_Rage = {
 	Lmd_Prof_Jedi_SetSkill_Rage
 };
 
+int Lmd_Prof_Jedi_GetRage(Account_t *acc) {
+	if (!acc) 	return 0;
+
+	return jediSkill_Dark_Rage.getValue(acc, &jediSkill_Dark_Rage);
+}
 const char *jediSkill_Dark_Energize_Descr[] = {
 	"Make the skill more powerful!",
 	"Make the skill more powerful!",

@@ -445,7 +445,7 @@ int Professions_TotalSkillPoints(Account_t *acc) {
 	int level = Accounts_Prof_GetLevel(acc);
 	int prof = Accounts_Prof_GetProfession(acc);
 	//additional points for new game plus!
-	int nwg = Accounts_GetNewGamePlus_count(acc)*4;
+	int nwg = Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer;
 	p = level*Professions_Add_That_Amount_SkillPoints(level) + nwg;
 	return p;
 }

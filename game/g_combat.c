@@ -5407,10 +5407,15 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			}else if (PlayerAcc_Prof_GetProfession(attacker) == PROF_JEDI && mod == MOD_SABER) { //jedi class check and is he using the saber?
 
 					 //rage regens hp on hit with saber
-				/*
+				
 				int vampiric_rage_level = PlayerProf_Jedi_GetRageSkill(attacker);
-				if (vampiric_rage_level > 0 && (mod == MOD_SABER || mod == MOD_FORCE_DARK)) attacker->health += vampiric_rage_level * damage / 10;
-				*/		
+				if (vampiric_rage_level > 0 && (mod == MOD_SABER || mod == MOD_FORCE_DARK))
+				{
+
+					attacker->health += vampiric_rage_level * damage / 15; //max is 33% life steal
+					if (attacker->health > attacker->maxHealth) attacker->health = attacker->maxHealth;
+				}
+						
 				
 
 

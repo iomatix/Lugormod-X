@@ -1,6 +1,6 @@
  jampgamex86
 
- Timestamp is 5cef2aba (Thu May 30 02:58:34 2019)
+ Timestamp is 5cefec60 (Thu May 30 16:44:48 2019)
 
  Preferred load address is 20000000
 
@@ -43,16 +43,19 @@
 
   Address         Publics by Value              Rva+Base       Lib:Object
 
- 0000:00000000       ___guard_fids_count        00000000     <absolute>
- 0000:00000000       ___guard_fids_table        00000000     <absolute>
- 0000:00000000       ___guard_flags             00000000     <absolute>
  0000:00000000       __except_list              00000000     <absolute>
+ 0000:00000000       ___guard_fids_table        00000000     <absolute>
+ 0000:00000000       ___guard_fids_count        00000000     <absolute>
+ 0000:00000000       ___guard_flags             00000000     <absolute>
  0000:0000000c       ___safe_se_handler_count   0000000c     <absolute>
  0000:00000000       ___ImageBase               20000000     <linker-defined>
  0001:0000b5a0       ?AltFiring@@YAHPAUbot_state_s@@@Z 2000c5a0 f   ai_main.obj
  0001:0000b610       ?AngleDifference@@YAMMM@Z  2000c610 f   ai_main.obj
  0001:0000b6b0       ?ApproachTracing@@YAXPAUbot_state_s@@@Z 2000c6b0 f   ai_main.obj
+ 0001:0000ba10       ?Lmd_Prof_Jedi_GetSkill_overload@@YAHPAXPAUprofSkill_s@@@Z 2000ca10 f   Lmd_Prof_Jedi.obj
+ 0001:0000ba70       ?Lmd_Prof_Jedi_SetSkill_overload@@YAHPAXPAUprofSkill_s@@H@Z 2000ca70 f   Lmd_Prof_Jedi.obj
  0001:0000bae0       ?BotAI@@YAHHM@Z            2000cae0 f   ai_main.obj
+ 0001:0000bed0       ?Lmd_Prof_Jedi_SetSkill_thousandcuts@@YAHPAXPAUprofSkill_s@@H@Z 2000ced0 f   Lmd_Prof_Jedi.obj
  0001:0000bfd0       ?BotAILoadMap@@YAHH@Z      2000cfd0 f   ai_main.obj
  0001:0000c060       ?BotAIRegularUpdate@@YAXXZ 2000d060 f   ai_main.obj
  0001:0000c0c0       ?BotAISetup@@YAHH@Z        2000d0c0 f   ai_main.obj
@@ -2889,53 +2892,52 @@
  0001:001c6050       ?Lmd_Prof_Jedi_CanSetSkill_mp_maxs@@YAHPAXPAUprofSkill_s@@H@Z 201c7050 f   Lmd_Prof_Jedi.obj
  0001:001c60d0       ?Lmd_Prof_Jedi_CanSetSkill_overload@@YAHPAXPAUprofSkill_s@@H@Z 201c70d0 f   Lmd_Prof_Jedi.obj
  0001:001c6150       ?Lmd_Prof_Jedi_CanSetSkill_thousandcuts@@YAHPAXPAUprofSkill_s@@H@Z 201c7150 f   Lmd_Prof_Jedi.obj
- 0001:001c61d0       ?Lmd_Prof_Jedi_GetLevel@@YAHPAUAccount_s@@PAUprofSkill_s@@@Z 201c71d0 f   Lmd_Prof_Jedi.obj
- 0001:001c6210       ?Lmd_Prof_Jedi_GetSkill_Absorb@@YAHPAXPAUprofSkill_s@@@Z 201c7210 f   Lmd_Prof_Jedi.obj
- 0001:001c6280       ?Lmd_Prof_Jedi_GetSkill_Drain@@YAHPAXPAUprofSkill_s@@@Z 201c7280 f   Lmd_Prof_Jedi.obj
- 0001:001c62f0       ?Lmd_Prof_Jedi_GetSkill_Energize@@YAHPAXPAUprofSkill_s@@@Z 201c72f0 f   Lmd_Prof_Jedi.obj
- 0001:001c6360       ?Lmd_Prof_Jedi_GetSkill_Grip@@YAHPAXPAUprofSkill_s@@@Z 201c7360 f   Lmd_Prof_Jedi.obj
- 0001:001c63d0       ?Lmd_Prof_Jedi_GetSkill_Heal@@YAHPAXPAUprofSkill_s@@@Z 201c73d0 f   Lmd_Prof_Jedi.obj
- 0001:001c6440       ?Lmd_Prof_Jedi_GetSkill_Jump@@YAHPAXPAUprofSkill_s@@@Z 201c7440 f   Lmd_Prof_Jedi.obj
- 0001:001c64b0       ?Lmd_Prof_Jedi_GetSkill_Lightning@@YAHPAXPAUprofSkill_s@@@Z 201c74b0 f   Lmd_Prof_Jedi.obj
- 0001:001c6520       ?Lmd_Prof_Jedi_GetSkill_MindTrick@@YAHPAXPAUprofSkill_s@@@Z 201c7520 f   Lmd_Prof_Jedi.obj
- 0001:001c6590       ?Lmd_Prof_Jedi_GetSkill_Protect@@YAHPAXPAUprofSkill_s@@@Z 201c7590 f   Lmd_Prof_Jedi.obj
- 0001:001c6600       ?Lmd_Prof_Jedi_GetSkill_Pull@@YAHPAXPAUprofSkill_s@@@Z 201c7600 f   Lmd_Prof_Jedi.obj
- 0001:001c6670       ?Lmd_Prof_Jedi_GetSkill_Push@@YAHPAXPAUprofSkill_s@@@Z 201c7670 f   Lmd_Prof_Jedi.obj
- 0001:001c66e0       ?Lmd_Prof_Jedi_GetSkill_Rage@@YAHPAXPAUprofSkill_s@@@Z 201c76e0 f   Lmd_Prof_Jedi.obj
- 0001:001c6750       ?Lmd_Prof_Jedi_GetSkill_Saber_Attack@@YAHPAXPAUprofSkill_s@@@Z 201c7750 f   Lmd_Prof_Jedi.obj
- 0001:001c67c0       ?Lmd_Prof_Jedi_GetSkill_Saber_Defend@@YAHPAXPAUprofSkill_s@@@Z 201c77c0 f   Lmd_Prof_Jedi.obj
- 0001:001c6830       ?Lmd_Prof_Jedi_GetSkill_Saber_Throw@@YAHPAXPAUprofSkill_s@@@Z 201c7830 f   Lmd_Prof_Jedi.obj
- 0001:001c68a0       ?Lmd_Prof_Jedi_GetSkill_Seeing@@YAHPAXPAUprofSkill_s@@@Z 201c78a0 f   Lmd_Prof_Jedi.obj
- 0001:001c6910       ?Lmd_Prof_Jedi_GetSkill_Speed@@YAHPAXPAUprofSkill_s@@@Z 201c7910 f   Lmd_Prof_Jedi.obj
- 0001:001c6980       ?Lmd_Prof_Jedi_GetSkill_TeamHeal@@YAHPAXPAUprofSkill_s@@@Z 201c7980 f   Lmd_Prof_Jedi.obj
- 0001:001c69f0       ?Lmd_Prof_Jedi_GetSkill_hp_maxs@@YAHPAXPAUprofSkill_s@@@Z 201c79f0 f   Lmd_Prof_Jedi.obj
- 0001:001c6a60       ?Lmd_Prof_Jedi_GetSkill_mp_maxs@@YAHPAXPAUprofSkill_s@@@Z 201c7a60 f   Lmd_Prof_Jedi.obj
- 0001:001c6ad0       ?Lmd_Prof_Jedi_GetSkill_overload@@YAHPAXPAUprofSkill_s@@@Z 201c7ad0 f   Lmd_Prof_Jedi.obj
- 0001:001c6b40       ?Lmd_Prof_Jedi_GetSkill_thousandcuts@@YAHPAXPAUprofSkill_s@@@Z 201c7b40 f   Lmd_Prof_Jedi.obj
- 0001:001c6bb0       ?Lmd_Prof_Jedi_GetThousandCutsSkill@@YAHPAUAccount_s@@@Z 201c7bb0 f   Lmd_Prof_Jedi.obj
- 0001:001c6bf0       ?Lmd_Prof_Jedi_SetLevel@@YAHPAUAccount_s@@PAUprofSkill_s@@H@Z 201c7bf0 f   Lmd_Prof_Jedi.obj
- 0001:001c6c50       ?Lmd_Prof_Jedi_SetSkill_Absorb@@YAHPAXPAUprofSkill_s@@H@Z 201c7c50 f   Lmd_Prof_Jedi.obj
- 0001:001c6cd0       ?Lmd_Prof_Jedi_SetSkill_Drain@@YAHPAXPAUprofSkill_s@@H@Z 201c7cd0 f   Lmd_Prof_Jedi.obj
- 0001:001c6d50       ?Lmd_Prof_Jedi_SetSkill_Energize@@YAHPAXPAUprofSkill_s@@H@Z 201c7d50 f   Lmd_Prof_Jedi.obj
- 0001:001c6dd0       ?Lmd_Prof_Jedi_SetSkill_Grip@@YAHPAXPAUprofSkill_s@@H@Z 201c7dd0 f   Lmd_Prof_Jedi.obj
- 0001:001c6e50       ?Lmd_Prof_Jedi_SetSkill_Heal@@YAHPAXPAUprofSkill_s@@H@Z 201c7e50 f   Lmd_Prof_Jedi.obj
- 0001:001c6ed0       ?Lmd_Prof_Jedi_SetSkill_Jump@@YAHPAXPAUprofSkill_s@@H@Z 201c7ed0 f   Lmd_Prof_Jedi.obj
- 0001:001c6f50       ?Lmd_Prof_Jedi_SetSkill_Lightning@@YAHPAXPAUprofSkill_s@@H@Z 201c7f50 f   Lmd_Prof_Jedi.obj
- 0001:001c6fd0       ?Lmd_Prof_Jedi_SetSkill_MindTrick@@YAHPAXPAUprofSkill_s@@H@Z 201c7fd0 f   Lmd_Prof_Jedi.obj
- 0001:001c7050       ?Lmd_Prof_Jedi_SetSkill_Protect@@YAHPAXPAUprofSkill_s@@H@Z 201c8050 f   Lmd_Prof_Jedi.obj
- 0001:001c70d0       ?Lmd_Prof_Jedi_SetSkill_Pull@@YAHPAXPAUprofSkill_s@@H@Z 201c80d0 f   Lmd_Prof_Jedi.obj
- 0001:001c7150       ?Lmd_Prof_Jedi_SetSkill_Push@@YAHPAXPAUprofSkill_s@@H@Z 201c8150 f   Lmd_Prof_Jedi.obj
- 0001:001c71d0       ?Lmd_Prof_Jedi_SetSkill_Rage@@YAHPAXPAUprofSkill_s@@H@Z 201c81d0 f   Lmd_Prof_Jedi.obj
- 0001:001c7250       ?Lmd_Prof_Jedi_SetSkill_Saber_Attack@@YAHPAXPAUprofSkill_s@@H@Z 201c8250 f   Lmd_Prof_Jedi.obj
- 0001:001c72d0       ?Lmd_Prof_Jedi_SetSkill_Saber_Defend@@YAHPAXPAUprofSkill_s@@H@Z 201c82d0 f   Lmd_Prof_Jedi.obj
- 0001:001c7350       ?Lmd_Prof_Jedi_SetSkill_Saber_Throw@@YAHPAXPAUprofSkill_s@@H@Z 201c8350 f   Lmd_Prof_Jedi.obj
- 0001:001c73d0       ?Lmd_Prof_Jedi_SetSkill_Seeing@@YAHPAXPAUprofSkill_s@@H@Z 201c83d0 f   Lmd_Prof_Jedi.obj
- 0001:001c7450       ?Lmd_Prof_Jedi_SetSkill_Speed@@YAHPAXPAUprofSkill_s@@H@Z 201c8450 f   Lmd_Prof_Jedi.obj
- 0001:001c74d0       ?Lmd_Prof_Jedi_SetSkill_TeamHeal@@YAHPAXPAUprofSkill_s@@H@Z 201c84d0 f   Lmd_Prof_Jedi.obj
- 0001:001c7550       ?Lmd_Prof_Jedi_SetSkill_hp_maxs@@YAHPAXPAUprofSkill_s@@H@Z 201c8550 f   Lmd_Prof_Jedi.obj
- 0001:001c75d0       ?Lmd_Prof_Jedi_SetSkill_mp_maxs@@YAHPAXPAUprofSkill_s@@H@Z 201c85d0 f   Lmd_Prof_Jedi.obj
- 0001:001c7650       ?Lmd_Prof_Jedi_SetSkill_overload@@YAHPAXPAUprofSkill_s@@H@Z 201c8650 f   Lmd_Prof_Jedi.obj
- 0001:001c76d0       ?Lmd_Prof_Jedi_SetSkill_thousandcuts@@YAHPAXPAUprofSkill_s@@H@Z 201c86d0 f   Lmd_Prof_Jedi.obj
+ 0001:001c61d0       ?Lmd_Prof_Jedi_GetDrain@@YAHPAUAccount_s@@@Z 201c71d0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6210       ?Lmd_Prof_Jedi_GetLevel@@YAHPAUAccount_s@@PAUprofSkill_s@@@Z 201c7210 f   Lmd_Prof_Jedi.obj
+ 0001:001c6280       ?Lmd_Prof_Jedi_GetRage@@YAHPAUAccount_s@@@Z 201c7280 f   Lmd_Prof_Jedi.obj
+ 0001:001c62f0       ?Lmd_Prof_Jedi_GetSkill_Absorb@@YAHPAXPAUprofSkill_s@@@Z 201c72f0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6360       ?Lmd_Prof_Jedi_GetSkill_Drain@@YAHPAXPAUprofSkill_s@@@Z 201c7360 f   Lmd_Prof_Jedi.obj
+ 0001:001c63d0       ?Lmd_Prof_Jedi_GetSkill_Energize@@YAHPAXPAUprofSkill_s@@@Z 201c73d0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6440       ?Lmd_Prof_Jedi_GetSkill_Grip@@YAHPAXPAUprofSkill_s@@@Z 201c7440 f   Lmd_Prof_Jedi.obj
+ 0001:001c64b0       ?Lmd_Prof_Jedi_GetSkill_Heal@@YAHPAXPAUprofSkill_s@@@Z 201c74b0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6520       ?Lmd_Prof_Jedi_GetSkill_Jump@@YAHPAXPAUprofSkill_s@@@Z 201c7520 f   Lmd_Prof_Jedi.obj
+ 0001:001c6590       ?Lmd_Prof_Jedi_GetSkill_Lightning@@YAHPAXPAUprofSkill_s@@@Z 201c7590 f   Lmd_Prof_Jedi.obj
+ 0001:001c6600       ?Lmd_Prof_Jedi_GetSkill_MindTrick@@YAHPAXPAUprofSkill_s@@@Z 201c7600 f   Lmd_Prof_Jedi.obj
+ 0001:001c6670       ?Lmd_Prof_Jedi_GetSkill_Protect@@YAHPAXPAUprofSkill_s@@@Z 201c7670 f   Lmd_Prof_Jedi.obj
+ 0001:001c66e0       ?Lmd_Prof_Jedi_GetSkill_Pull@@YAHPAXPAUprofSkill_s@@@Z 201c76e0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6750       ?Lmd_Prof_Jedi_GetSkill_Push@@YAHPAXPAUprofSkill_s@@@Z 201c7750 f   Lmd_Prof_Jedi.obj
+ 0001:001c67c0       ?Lmd_Prof_Jedi_GetSkill_Rage@@YAHPAXPAUprofSkill_s@@@Z 201c77c0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6830       ?Lmd_Prof_Jedi_GetSkill_Saber_Attack@@YAHPAXPAUprofSkill_s@@@Z 201c7830 f   Lmd_Prof_Jedi.obj
+ 0001:001c68a0       ?Lmd_Prof_Jedi_GetSkill_Saber_Defend@@YAHPAXPAUprofSkill_s@@@Z 201c78a0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6910       ?Lmd_Prof_Jedi_GetSkill_Saber_Throw@@YAHPAXPAUprofSkill_s@@@Z 201c7910 f   Lmd_Prof_Jedi.obj
+ 0001:001c6980       ?Lmd_Prof_Jedi_GetSkill_Seeing@@YAHPAXPAUprofSkill_s@@@Z 201c7980 f   Lmd_Prof_Jedi.obj
+ 0001:001c69f0       ?Lmd_Prof_Jedi_GetSkill_Speed@@YAHPAXPAUprofSkill_s@@@Z 201c79f0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6a60       ?Lmd_Prof_Jedi_GetSkill_TeamHeal@@YAHPAXPAUprofSkill_s@@@Z 201c7a60 f   Lmd_Prof_Jedi.obj
+ 0001:001c6ad0       ?Lmd_Prof_Jedi_GetSkill_hp_maxs@@YAHPAXPAUprofSkill_s@@@Z 201c7ad0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6b40       ?Lmd_Prof_Jedi_GetSkill_mp_maxs@@YAHPAXPAUprofSkill_s@@@Z 201c7b40 f   Lmd_Prof_Jedi.obj
+ 0001:001c6bf0       ?Lmd_Prof_Jedi_GetSkill_thousandcuts@@YAHPAXPAUprofSkill_s@@@Z 201c7bf0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6c50       ?Lmd_Prof_Jedi_GetThousandCutsSkill@@YAHPAUAccount_s@@@Z 201c7c50 f   Lmd_Prof_Jedi.obj
+ 0001:001c6cd0       ?Lmd_Prof_Jedi_SetLevel@@YAHPAUAccount_s@@PAUprofSkill_s@@H@Z 201c7cd0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6d50       ?Lmd_Prof_Jedi_SetSkill_Absorb@@YAHPAXPAUprofSkill_s@@H@Z 201c7d50 f   Lmd_Prof_Jedi.obj
+ 0001:001c6dd0       ?Lmd_Prof_Jedi_SetSkill_Drain@@YAHPAXPAUprofSkill_s@@H@Z 201c7dd0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6e50       ?Lmd_Prof_Jedi_SetSkill_Energize@@YAHPAXPAUprofSkill_s@@H@Z 201c7e50 f   Lmd_Prof_Jedi.obj
+ 0001:001c6ed0       ?Lmd_Prof_Jedi_SetSkill_Grip@@YAHPAXPAUprofSkill_s@@H@Z 201c7ed0 f   Lmd_Prof_Jedi.obj
+ 0001:001c6f50       ?Lmd_Prof_Jedi_SetSkill_Heal@@YAHPAXPAUprofSkill_s@@H@Z 201c7f50 f   Lmd_Prof_Jedi.obj
+ 0001:001c6fd0       ?Lmd_Prof_Jedi_SetSkill_Jump@@YAHPAXPAUprofSkill_s@@H@Z 201c7fd0 f   Lmd_Prof_Jedi.obj
+ 0001:001c7050       ?Lmd_Prof_Jedi_SetSkill_Lightning@@YAHPAXPAUprofSkill_s@@H@Z 201c8050 f   Lmd_Prof_Jedi.obj
+ 0001:001c70d0       ?Lmd_Prof_Jedi_SetSkill_MindTrick@@YAHPAXPAUprofSkill_s@@H@Z 201c80d0 f   Lmd_Prof_Jedi.obj
+ 0001:001c7150       ?Lmd_Prof_Jedi_SetSkill_Protect@@YAHPAXPAUprofSkill_s@@H@Z 201c8150 f   Lmd_Prof_Jedi.obj
+ 0001:001c71d0       ?Lmd_Prof_Jedi_SetSkill_Pull@@YAHPAXPAUprofSkill_s@@H@Z 201c81d0 f   Lmd_Prof_Jedi.obj
+ 0001:001c7250       ?Lmd_Prof_Jedi_SetSkill_Push@@YAHPAXPAUprofSkill_s@@H@Z 201c8250 f   Lmd_Prof_Jedi.obj
+ 0001:001c72d0       ?Lmd_Prof_Jedi_SetSkill_Rage@@YAHPAXPAUprofSkill_s@@H@Z 201c82d0 f   Lmd_Prof_Jedi.obj
+ 0001:001c7350       ?Lmd_Prof_Jedi_SetSkill_Saber_Attack@@YAHPAXPAUprofSkill_s@@H@Z 201c8350 f   Lmd_Prof_Jedi.obj
+ 0001:001c73d0       ?Lmd_Prof_Jedi_SetSkill_Saber_Defend@@YAHPAXPAUprofSkill_s@@H@Z 201c83d0 f   Lmd_Prof_Jedi.obj
+ 0001:001c7450       ?Lmd_Prof_Jedi_SetSkill_Saber_Throw@@YAHPAXPAUprofSkill_s@@H@Z 201c8450 f   Lmd_Prof_Jedi.obj
+ 0001:001c74d0       ?Lmd_Prof_Jedi_SetSkill_Seeing@@YAHPAXPAUprofSkill_s@@H@Z 201c84d0 f   Lmd_Prof_Jedi.obj
+ 0001:001c7550       ?Lmd_Prof_Jedi_SetSkill_Speed@@YAHPAXPAUprofSkill_s@@H@Z 201c8550 f   Lmd_Prof_Jedi.obj
+ 0001:001c75d0       ?Lmd_Prof_Jedi_SetSkill_TeamHeal@@YAHPAXPAUprofSkill_s@@H@Z 201c85d0 f   Lmd_Prof_Jedi.obj
+ 0001:001c7650       ?Lmd_Prof_Jedi_SetSkill_hp_maxs@@YAHPAXPAUprofSkill_s@@H@Z 201c8650 f   Lmd_Prof_Jedi.obj
+ 0001:001c76d0       ?Lmd_Prof_Jedi_SetSkill_mp_maxs@@YAHPAXPAUprofSkill_s@@H@Z 201c86d0 f   Lmd_Prof_Jedi.obj
  0001:001c7750       ?Merc_Spawn@@YAXPAUgentity_s@@@Z 201c8750 f   Lmd_Prof_Merc.obj
  0001:001c7a00       ?Cmd_Cortosis_f@@YAXPAUgentity_s@@H@Z 201c8a00 f   Lmd_Prof_Merc.obj
  0001:001c7b30       ?Cmd_Flame_f@@YAXPAUgentity_s@@H@Z 201c8b30 f   Lmd_Prof_Merc.obj
@@ -3977,8 +3979,8 @@
  0001:00293a40       _atoi                      20294a40 f   LIBCMTD:atox.obj
  0001:00293a60       _atol                      20294a60 f   LIBCMTD:atox.obj
  0001:00293a80       _atoll                     20294a80 f   LIBCMTD:atox.obj
- 0001:00293aa0       __chkstk                   20294aa0 f   LIBCMTD:chkstk.obj
  0001:00293aa0       __alloca_probe             20294aa0 f   LIBCMTD:chkstk.obj
+ 0001:00293aa0       __chkstk                   20294aa0 f   LIBCMTD:chkstk.obj
  0001:00293ad0       __invoke_watson_if_error   20294ad0 f i LIBCMTD:wassert.obj
  0001:00293b00       __wassert                  20294b00 f   LIBCMTD:wassert.obj
  0001:00294740       __scprintf                 20295740 f   LIBCMTD:sprintf.obj
@@ -4835,8 +4837,8 @@
  0001:002da7b0       ??0bad_exception@std@@QAE@ABV01@@Z 202db7b0 f i LIBCMTD:frame.obj
  0001:002da7e0       ??0bad_exception@std@@QAE@PBD@Z 202db7e0 f i LIBCMTD:frame.obj
  0001:002da810       ??1bad_exception@std@@UAE@XZ 202db810 f i LIBCMTD:frame.obj
- 0001:002da830       ??_Ebad_exception@std@@UAEPAXI@Z 202db830 f i LIBCMTD:frame.obj
  0001:002da830       ??_Gbad_exception@std@@UAEPAXI@Z 202db830 f i LIBCMTD:frame.obj
+ 0001:002da830       ??_Ebad_exception@std@@UAEPAXI@Z 202db830 f i LIBCMTD:frame.obj
  0001:002db420       ?__uncaught_exception@@YA_NXZ 202dc420 f   LIBCMTD:frame.obj
  0001:002db450       ?_is_exception_typeof@@YAHABVtype_info@@PAU_EXCEPTION_POINTERS@@@Z 202dc450 f   LIBCMTD:frame.obj
  0001:002db530       __SetWinRTOutOfMemoryExceptionCallback 202dc530 f   LIBCMTD:frame.obj
@@ -4923,8 +4925,8 @@
  0001:002e1b59       __abnormal_termination     202e2b59 f   LIBCMTD:exsup.obj
  0001:002e1b7c       __NLG_Notify1              202e2b7c f   LIBCMTD:exsup.obj
  0001:002e1b85       __NLG_Notify               202e2b85 f   LIBCMTD:exsup.obj
- 0001:002e1b9c       __NLG_Dispatch             202e2b9c     LIBCMTD:exsup.obj
  0001:002e1b9c       __NLG_Dispatch2            202e2b9c     LIBCMTD:exsup.obj
+ 0001:002e1b9c       __NLG_Dispatch             202e2b9c     LIBCMTD:exsup.obj
  0001:002e1ba4       __NLG_Call                 202e2ba4 f   LIBCMTD:exsup.obj
  0001:002e1ba6       __NLG_Return2              202e2ba6     LIBCMTD:exsup.obj
  0001:002e1bb0       ??3@YAXPAX@Z               202e2bb0 f   LIBCMTD:dbgdel.obj
@@ -4936,8 +4938,8 @@
  0001:002e1d40       ??4type_info@@AAEAAV0@ABV0@@Z 202e2d40 f   LIBCMTD:typinfo.obj
  0001:002e1d50       ??8type_info@@QBE_NABV0@@Z 202e2d50 f   LIBCMTD:typinfo.obj
  0001:002e1d90       ??9type_info@@QBE_NABV0@@Z 202e2d90 f   LIBCMTD:typinfo.obj
- 0001:002e1dd0       ??_Gtype_info@@UAEPAXI@Z   202e2dd0 f i LIBCMTD:typinfo.obj
  0001:002e1dd0       ??_Etype_info@@UAEPAXI@Z   202e2dd0 f i LIBCMTD:typinfo.obj
+ 0001:002e1dd0       ??_Gtype_info@@UAEPAXI@Z   202e2dd0 f i LIBCMTD:typinfo.obj
  0001:002e1e00       ?_name_internal_method@type_info@@QBEPBDPAU__type_info_node@@@Z 202e2e00 f   LIBCMTD:typinfo.obj
  0001:002e1e20       ?_type_info_dtor_internal_method@type_info@@QAEXXZ 202e2e20 f   LIBCMTD:typinfo.obj
  0001:002e1e40       ?before@type_info@@QBE_NABV1@@Z 202e2e40 f   LIBCMTD:typinfo.obj
@@ -4962,10 +4964,10 @@
  0001:002e2190       ??_E__non_rtti_object@std@@UAEPAXI@Z 202e3190 f i LIBCMTD:stdexcpt.obj
  0001:002e21c0       ??_Ebad_cast@std@@UAEPAXI@Z 202e31c0 f i LIBCMTD:stdexcpt.obj
  0001:002e21c0       ??_Gbad_cast@std@@UAEPAXI@Z 202e31c0 f i LIBCMTD:stdexcpt.obj
- 0001:002e21f0       ??_Ebad_typeid@std@@UAEPAXI@Z 202e31f0 f i LIBCMTD:stdexcpt.obj
  0001:002e21f0       ??_Gbad_typeid@std@@UAEPAXI@Z 202e31f0 f i LIBCMTD:stdexcpt.obj
- 0001:002e2220       ??_Gexception@std@@UAEPAXI@Z 202e3220 f i LIBCMTD:stdexcpt.obj
+ 0001:002e21f0       ??_Ebad_typeid@std@@UAEPAXI@Z 202e31f0 f i LIBCMTD:stdexcpt.obj
  0001:002e2220       ??_Eexception@std@@UAEPAXI@Z 202e3220 f i LIBCMTD:stdexcpt.obj
+ 0001:002e2220       ??_Gexception@std@@UAEPAXI@Z 202e3220 f i LIBCMTD:stdexcpt.obj
  0001:002e2250       ?_Copy_str@exception@std@@AAEXPBD@Z 202e3250 f   LIBCMTD:stdexcpt.obj
  0001:002e22b0       ?_Tidy@exception@std@@AAEXXZ 202e32b0 f   LIBCMTD:stdexcpt.obj
  0001:002e22f0       ?what@exception@std@@UBEPBDXZ 202e32f0 f   LIBCMTD:stdexcpt.obj
@@ -5007,8 +5009,8 @@
  0001:002e4d00       _wcstod                    202e5d00 f   LIBCMTD:wcstod.obj
  0001:002e4d20       __mbschr                   202e5d20 f   LIBCMTD:mbschr.obj
  0001:002e4d40       __mbschr_l                 202e5d40 f   LIBCMTD:mbschr.obj
- 0001:002e4ee0       __strnicmp                 202e5ee0 f   LIBCMTD:strnicmp.obj
  0001:002e4ee0       _strnicmp                  202e5ee0 f   LIBCMTD:strnicmp.obj
+ 0001:002e4ee0       __strnicmp                 202e5ee0 f   LIBCMTD:strnicmp.obj
  0001:002e50b0       __strnicmp_l               202e60b0 f   LIBCMTD:strnicmp.obj
  0001:002e5340       ??0Block@_HeapManager@@QAE@XZ 202e6340 f i LIBCMTD:undname.obj
  0001:002e5360       ??0DName@@QAE@AAPBDD@Z     202e6360 f   LIBCMTD:undname.obj
@@ -5258,13 +5260,13 @@
  0001:002f070e       _ReadConsoleW@20           202f170e f   kernel32:KERNEL32.dll
  0001:002f0714       _CreateFileW@28            202f1714 f   kernel32:KERNEL32.dll
  0001:002f071a       _SetEnvironmentVariableA@8 202f171a f   kernel32:KERNEL32.dll
- 0001:002f0ba0       _strupr                    202f1ba0 f   LIBCMTD:strupr.obj
  0001:002f0ba0       __strupr                   202f1ba0 f   LIBCMTD:strupr.obj
+ 0001:002f0ba0       _strupr                    202f1ba0 f   LIBCMTD:strupr.obj
  0001:002f0c90       __strupr_l                 202f1c90 f   LIBCMTD:strupr.obj
  0001:002f0cb0       __strupr_s                 202f1cb0 f   LIBCMTD:strupr.obj
  0001:002f0cd0       __strupr_s_l               202f1cd0 f   LIBCMTD:strupr.obj
- 0001:002f0d10       _memicmp                   202f1d10 f   LIBCMTD:memicmp.obj
  0001:002f0d10       __memicmp                  202f1d10 f   LIBCMTD:memicmp.obj
+ 0001:002f0d10       _memicmp                   202f1d10 f   LIBCMTD:memicmp.obj
  0001:002f0e60       __memicmp_l                202f1e60 f   LIBCMTD:memicmp.obj
  0001:002f1080       ?_strlwr_s_l_stat@@YAHPADIPAUlocaleinfo_struct@@@Z 202f2080 f   LIBCMTD:strlwr.obj
  0001:002f1510       __strlwr                   202f2510 f   LIBCMTD:strlwr.obj
@@ -5273,8 +5275,8 @@
  0001:002f1620       __strlwr_s                 202f2620 f   LIBCMTD:strlwr.obj
  0001:002f1640       __strlwr_s_l               202f2640 f   LIBCMTD:strlwr.obj
  0001:002f1680       ___ascii_stricmp           202f2680 f   LIBCMTD:stricmp.obj
- 0001:002f1700       __stricmp                  202f2700 f   LIBCMTD:stricmp.obj
  0001:002f1700       _stricmp                   202f2700 f   LIBCMTD:stricmp.obj
+ 0001:002f1700       __stricmp                  202f2700 f   LIBCMTD:stricmp.obj
  0001:002f1830       __stricmp_l                202f2830 f   LIBCMTD:stricmp.obj
  0001:002f1a10       ___ascii_memicmp           202f2a10 f   LIBCMTD:_memicmp.obj
  0002:00000000       ___xc_a                    20310000     LIBCMTD:crt0init.obj
@@ -5474,14 +5476,17 @@
  0002:0000160c       ??_C@_08HCCPDHOE@unknown?$AA?$AA@ 2031160c     ai_wpnav.obj
  0002:00001618       ??_C@_0DJ@GNLLPBIP@?$FO3Waypoint?5?$CFi?6Flags?5?9?5?$CFi?5?$CI?$CFs?$CJ?5?$CIw@ 20311618     ai_wpnav.obj
  0002:0000165c       ??_C@_0DI@MKIILHHG@?$FO1FATAL?5ERROR?3?5Could?5not?5allocat@ 2031165c     ai_wpnav.obj
+ 0002:00001694       ??_C@_09NNHDMKJA@lightning?$AA@ 20311694     Lmd_Prof_Jedi.obj
  0002:000016a0       ??_C@_0CE@PGKIIABD@?$FO3Warning?3?5Waypoint?5limit?5hit?5?$CI?$CF@ 203116a0     ai_wpnav.obj
  0002:000016cc       ??_C@_0DC@KPGPDBHG@?$FO1ERROR?3?5Could?5not?5allocated?5mem@ 203116cc     ai_wpnav.obj
  0002:00001708       ??_C@_0CF@NKJDHHPL@?$FO3Waypoint?5number?5?$CFi?5does?5not?5ex@ 20311708     ai_wpnav.obj
  0002:00001734       ??_C@_0DE@ODOAIDAB@?$FO3Waypoint?5index?5?$CFi?5should?5exist@ 20311734     ai_wpnav.obj
+ 0002:00001768       ??_C@_0L@GOMEJHNC@team_force?$AA@ 20311768     Lmd_Prof_Jedi.obj
  0002:00001774       ??_C@_0CN@OAEDPBFH@?$FO3WPFlagsModify?3?5Waypoint?5?$CFi?5doe@ 20311774     ai_wpnav.obj
  0002:000017ac       ??_C@_0DC@CGOLCOPN@?$FO3Point?5?$CFi?5is?5not?5connected?5to?5?$CF@ 203117ac     ai_wpnav.obj
  0002:000017e8       ??_C@_0DL@OFFLGMHM@?$FO1Could?5not?5link?5?$CFi?5to?5?$CFi?0?5unrea@ 203117e8     ai_wpnav.obj
  0002:00001830       ??_C@_0HP@CMIAOCMB@?$FO3Since?5points?5cannot?5be?5connect@ 20311830     ai_wpnav.obj
+ 0002:000018b0       ??_C@_0O@CKIEBGPL@saber_offense?$AA@ 203118b0     Lmd_Prof_Jedi.obj
  0002:000018c8       ??_C@_0DA@CFKANIBG@?$FO1Could?5not?5link?5?$CFi?5to?5?$CFi?0?5waypo@ 203118c8     ai_wpnav.obj
  0002:00001904       ??_C@_0CB@IOBANBFK@?$FO3Finished?5connecting?5?$CFi?5to?5?$CFi?4?6@ 20311904     ai_wpnav.obj
  0002:0000192c       ??_C@_0BF@JOOKCKMH@info_siege_objective?$AA@ 2031192c     ai_wpnav.obj
@@ -5505,6 +5510,7 @@
  0002:00001b00       ??_C@_05OCEANLMH@?$CFs?$CFi?5?$AA@ 20311b00     ai_wpnav.obj
  0002:00001b08       ??_C@_07KBOPLHBN@?$CFs?$HN?5?$CFf?6?$AA@ 20311b08     ai_wpnav.obj
  0002:00001b18       ??_C@_0HE@HFDPPPGP@Path?5data?5has?5been?5saved?5and?5upd@ 20311b18     ai_wpnav.obj
+ 0002:00001b8c       ??_C@_0BD@HFOGLFCG@?$CL12?5Force?5capacity?$AA@ 20311b8c     Lmd_Prof_Jedi.obj
  0002:00001ba4       ??_C@_07JBFDOFDL@terrain?$AA@ 20311ba4     ai_wpnav.obj
  0002:00001bb0       ??_C@_0BN@GMKAPJAJ@Error?3?5RMG?5with?5no?5terrain?$CB?6?$AA@ 20311bb0     ai_wpnav.obj
  0002:00001bd4       ??_C@_0CA@CHDIAGJI@Total?5routing?5time?5taken?3?5?$CFims?6?$AA@ 20311bd4     ai_wpnav.obj
@@ -5532,6 +5538,8 @@
  0002:0000228c       ??_C@_0BB@GABGAACE@bot_wp_spawntele?$AA@ 2031228c     ai_wpnav.obj
  0002:000022a0       ??_C@_0BC@HGOOCCHA@bot_wp_addflagged?$AA@ 203122a0     ai_wpnav.obj
  0002:000022b8       ??_C@_0BGK@KOKBEDBG@?$FO3Flag?5string?5needed?5for?5bot_wp_@ 203122b8     ai_wpnav.obj
+ 0002:00002424       ??_C@_0BK@EKNDENPC@Your?5skills?5with?5a?5saber?4?$AA@ 20312424     Lmd_Prof_Jedi.obj
+ 0002:00002440       ??_C@_0CE@PJBIANGP@Train?5your?5deffensive?5saber?5skil@ 20312440     Lmd_Prof_Jedi.obj
  0002:0000246c       ??_C@_0BD@IJIOBJAA@bot_wp_switchflags?$AA@ 2031246c     ai_wpnav.obj
  0002:00002488       ??_C@_0LK@DHKCNLAF@?$FO3Flag?5string?5needed?5for?5bot_wp_@ 20312488     ai_wpnav.obj
  0002:00002568       ??_C@_0GE@MFIBKMLO@?$FO3Waypoint?5number?5?$CIto?5modify?$CJ?5ne@ 20312568     ai_wpnav.obj
@@ -6065,6 +6073,9 @@
  0002:00003960       _cmddata                   20313960     asmserv.obj
  0002:00006728       _vxdcmd                    20316728     asmserv.obj
  0002:00006740       _dangerous                 20316740     asmserv.obj
+ 0002:000067a8       ??_C@_0GO@KEJONLKI@Do?53?15?5more?5saber?5damage?5while?5a@ 203167a8     Lmd_Prof_Jedi.obj
+ 0002:00006818       ??_C@_0GO@BKGDPJJC@Do?54?15?5more?5saber?5damage?5while?5a@ 20316818     Lmd_Prof_Jedi.obj
+ 0002:00006888       ??_C@_0HC@IMEJHBBA@Do?5twice?5as?5much?5saber?5damage?5wh@ 20316888     Lmd_Prof_Jedi.obj
  0002:00007100       ??_C@_0O@KOIBPDHB@?$CLINF?57F800000?$AA@ 20317100     asmserv.obj
  0002:00007110       ??_C@_0O@LBJLGPFB@?9INF?5FF800000?$AA@ 20317110     asmserv.obj
  0002:00007120       ??_C@_0L@HLIFJGMB@?$CLNAN?5?$CF08lX?$AA@ 20317120     asmserv.obj
@@ -11999,7 +12010,7 @@
  0002:0002c9cc       ??_C@_0BC@LOKOIJIH@JKA?5Galaxies?5v0?41?$AA@ 2033c9cc     gls_crashreport.obj
  0002:0002c9e4       ??_C@_0BH@KHGNMAMA@Version?3?5?$CFs?5?$CIWindows?$CJ?6?$AA@ 2033c9e4     gls_crashreport.obj
  0002:0002ca00       ??_C@_0BD@PEHKIMLP@Side?3?5Server?9side?6?$AA@ 2033ca00     gls_crashreport.obj
- 0002:0002ca18       ??_C@_08CABGNPCF@02?358?305?$AA@ 2033ca18     gls_crashreport.obj
+ 0002:0002ca18       ??_C@_08OKBDDGIJ@16?344?313?$AA@ 2033ca18     gls_crashreport.obj
  0002:0002ca24       ??_C@_0BI@BNEPMDPF@Build?5Date?1Time?3?5?$CFs?5?$CFs?6?$AA@ 2033ca24     gls_crashreport.obj
  0002:0002ca40       ??_C@_0IK@MOIFLKOC@Crash?5type?3?5Exception?6?6?9?9?9?9?9?9?9?9?9@ 2033ca40     gls_crashreport.obj
  0002:0002cae8       ??_C@_0HA@HGKPACMJ@?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9@ 2033cae8     gls_crashreport.obj
@@ -13972,23 +13983,18 @@
  0002:00045834       ??_C@_04GHHNIPCF@push?$AA@ 20355834     Lmd_Prof_Jedi.obj
  0002:0004583c       ??_C@_04BEGLKOGM@pull?$AA@ 2035583c     Lmd_Prof_Jedi.obj
  0002:00045844       ??_C@_09FIPNJMOG@telepathy?$AA@ 20355844     Lmd_Prof_Jedi.obj
- 0002:00045850       ??_C@_06FDAMAAOH@Attack?$AA@ 20355850     Lmd_Prof_Jedi.obj
- 0002:00045858       ??_C@_04LLMAECPB@grip?$AA@ 20355858     Lmd_Prof_Jedi.obj
- 0002:00045860       ??_C@_0BK@EKNDENPC@Your?5skills?5with?5a?5saber?4?$AA@ 20355860     Lmd_Prof_Jedi.obj
- 0002:00045880       ??_C@_09NNHDMKJA@lightning?$AA@ 20355880     Lmd_Prof_Jedi.obj
- 0002:0004588c       ??_C@_04GMEHGJGM@rage?$AA@ 2035588c     Lmd_Prof_Jedi.obj
- 0002:00045894       ??_C@_07LFLAEFDO@protect?$AA@ 20355894     Lmd_Prof_Jedi.obj
- 0002:000458a0       ??_C@_06NHOHABNA@absorb?$AA@ 203558a0     Lmd_Prof_Jedi.obj
- 0002:000458a8       ??_C@_09NLDMPPKD@team_heal?$AA@ 203558a8     Lmd_Prof_Jedi.obj
- 0002:000458b4       ??_C@_0CE@PJBIANGP@Train?5your?5deffensive?5saber?5skil@ 203558b4     Lmd_Prof_Jedi.obj
- 0002:000458e0       ??_C@_0L@GOMEJHNC@team_force?$AA@ 203558e0     Lmd_Prof_Jedi.obj
- 0002:000458f0       ??_C@_05GBKIIGFP@drain?$AA@ 203558f0     Lmd_Prof_Jedi.obj
- 0002:000458f8       ??_C@_03PBKHLJLI@see?$AA@  203558f8     Lmd_Prof_Jedi.obj
- 0002:000458fc       ??_C@_0O@CKIEBGPL@saber_offense?$AA@ 203558fc     Lmd_Prof_Jedi.obj
- 0002:0004590c       ??_C@_0O@EGAGBADA@saber_defense?$AA@ 2035590c     Lmd_Prof_Jedi.obj
- 0002:0004591c       ??_C@_0M@GFJIEEBJ@saber_throw?$AA@ 2035591c     Lmd_Prof_Jedi.obj
- 0002:0004592c       ??_C@_07DEKLMBNG@hp_maxs?$AA@ 2035592c     Lmd_Prof_Jedi.obj
- 0002:00045938       ??_C@_07HMELMPLC@mp_maxs?$AA@ 20355938     Lmd_Prof_Jedi.obj
+ 0002:00045850       ??_C@_04LLMAECPB@grip?$AA@ 20355850     Lmd_Prof_Jedi.obj
+ 0002:00045860       ??_C@_04GMEHGJGM@rage?$AA@ 20355860     Lmd_Prof_Jedi.obj
+ 0002:00045880       ??_C@_07LFLAEFDO@protect?$AA@ 20355880     Lmd_Prof_Jedi.obj
+ 0002:0004588c       ??_C@_06NHOHABNA@absorb?$AA@ 2035588c     Lmd_Prof_Jedi.obj
+ 0002:00045894       ??_C@_09NLDMPPKD@team_heal?$AA@ 20355894     Lmd_Prof_Jedi.obj
+ 0002:000458a8       ??_C@_05GBKIIGFP@drain?$AA@ 203558a8     Lmd_Prof_Jedi.obj
+ 0002:000458b4       ??_C@_06FDAMAAOH@Attack?$AA@ 203558b4     Lmd_Prof_Jedi.obj
+ 0002:000458e0       ??_C@_03PBKHLJLI@see?$AA@  203558e0     Lmd_Prof_Jedi.obj
+ 0002:000458fc       ??_C@_0O@EGAGBADA@saber_defense?$AA@ 203558fc     Lmd_Prof_Jedi.obj
+ 0002:0004590c       ??_C@_0M@GFJIEEBJ@saber_throw?$AA@ 2035590c     Lmd_Prof_Jedi.obj
+ 0002:0004591c       ??_C@_07DEKLMBNG@hp_maxs?$AA@ 2035591c     Lmd_Prof_Jedi.obj
+ 0002:0004592c       ??_C@_07HMELMPLC@mp_maxs?$AA@ 2035592c     Lmd_Prof_Jedi.obj
  0002:00045944       ??_C@_08BIHEIABG@overload?$AA@ 20355944     Lmd_Prof_Jedi.obj
  0002:00045950       ??_C@_0N@DPMOALPA@thousandcuts?$AA@ 20355950     Lmd_Prof_Jedi.obj
  0002:00045960       ??_C@_06KFCOAPHL@?$CL10?5HP?$AA@ 20355960     Lmd_Prof_Jedi.obj
@@ -14000,10 +14006,9 @@
  0002:000459ec       ??_C@_0CA@GFFIBJB@Increase?5total?5Health?5capacity?4?$AA@ 203559ec     Lmd_Prof_Jedi.obj
  0002:00045a14       ??_C@_05JCKDCDAK@Throw?$AA@ 20355a14     Lmd_Prof_Jedi.obj
  0002:00045a1c       ??_C@_0DB@DPJJGECF@Your?5ability?5to?5throw?5the?5saber?5@ 20355a1c     Lmd_Prof_Jedi.obj
- 0002:00045a58       ??_C@_07GJJCKENN@Neutral?$AA@ 20355a58     Lmd_Prof_Jedi.obj
- 0002:00045a64       ??_C@_0BG@KOGMCL@Neutral?5force?5powers?4?$AA@ 20355a64     Lmd_Prof_Jedi.obj
- 0002:00045a80       ??_C@_0BD@HFOGLFCG@?$CL12?5Force?5capacity?$AA@ 20355a80     Lmd_Prof_Jedi.obj
- 0002:00045a98       ??_C@_0BD@LPPCBEAP@?$CL25?5Force?5capacity?$AA@ 20355a98     Lmd_Prof_Jedi.obj
+ 0002:00045a64       ??_C@_0BD@LPPCBEAP@?$CL25?5Force?5capacity?$AA@ 20355a64     Lmd_Prof_Jedi.obj
+ 0002:00045a80       ??_C@_07GJJCKENN@Neutral?$AA@ 20355a80     Lmd_Prof_Jedi.obj
+ 0002:00045a98       ??_C@_0BG@KOGMCL@Neutral?5force?5powers?4?$AA@ 20355a98     Lmd_Prof_Jedi.obj
  0002:00045ab0       ??_C@_0BE@CIIMD@Powers?5of?5the?5Jedi?4?$AA@ 20355ab0     Lmd_Prof_Jedi.obj
  0002:00045ac8       ??_C@_0BE@LAPAALDJ@Powers?5of?5the?5Sith?4?$AA@ 20355ac8     Lmd_Prof_Jedi.obj
  0002:00045ae0       ??_C@_0BF@CKABEMJN@Skills?5with?5a?5saber?4?$AA@ 20355ae0     Lmd_Prof_Jedi.obj
@@ -14109,11 +14114,8 @@
  0002:00047374       ??_C@_0CH@CEMFEKBG@Shoot?5lightning?5twice?5as?5far?5as?5@ 20357374     Lmd_Prof_Jedi.obj
  0002:000473a4       ??_C@_09JCCOMJEA@Lightning?$AA@ 203573a4     Lmd_Prof_Jedi.obj
  0002:000473b0       ??_C@_0CP@HGNGHHKK@Shocks?5others?5with?5a?5damaging?5li@ 203573b0     Lmd_Prof_Jedi.obj
- 0002:000473e8       ??_C@_0HD@OIBAONNE@Gain?5the?5Rage?5force?5power?4?5?5Do?51@ 203573e8     Lmd_Prof_Jedi.obj
- 0002:00047478       ??_C@_0FJ@LKANNPAJ@Do?52?15?5more?5saber?5damage?5while?5a@ 20357478     Lmd_Prof_Jedi.obj
- 0002:000474e8       ??_C@_0FH@IEFOOACD@Do?53?15?5more?5saber?5damage?5while?5a@ 203574e8     Lmd_Prof_Jedi.obj
- 0002:00047550       ??_C@_0FH@DEEHKMIP@Do?54?15?5more?5saber?5damage?5while?5a@ 20357550     Lmd_Prof_Jedi.obj
- 0002:000475b8       ??_C@_0FL@GCDENDMG@Do?5twice?5as?5much?5saber?5damage?5wh@ 203575b8     Lmd_Prof_Jedi.obj
+ 0002:000473e8       ??_C@_0IJ@NGJKEEHM@Gain?5the?5Rage?5force?5power?4?5?5Do?51@ 203573e8     Lmd_Prof_Jedi.obj
+ 0002:00047478       ??_C@_0GO@JHLIOLAJ@Do?52?15?5more?5saber?5damage?5while?5a@ 20357478     Lmd_Prof_Jedi.obj
  0002:00047628       ??_C@_0FL@MKFICAC@IONLYSABER?5activated?5?$CIit?5can?5be?5@ 20357628     Lmd_Prof_Jedi.obj
  0002:00047698       __real@4000cccccccccccd    20357698     Lmd_Prof_Jedi.obj
  0002:000476a8       __real@405e000000000000    203576a8     Lmd_Prof_Jedi.obj
