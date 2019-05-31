@@ -530,8 +530,9 @@ void Profession_Reset(gentity_t *ent)
 	PlayerAcc_SetExperience(ent, 0); //reset experience points.
 
 	recallDroppedCredits(ent);
-	Professions_SetDefaultSkills(ent->client->pers.Lmd.account, PlayerAcc_Prof_GetProfession(ent));
 
+	Professions_SetDefaultSkills(ent->client->pers.Lmd.account, PlayerAcc_Prof_GetProfession(ent));
+	
 
 	ent->client->ps.fd.forceDoInit = qtrue;
 	ent->flags &= ~FL_GODMODE;
@@ -1282,7 +1283,9 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 		Disp(ent, "^2New Game Plus started.");
 		if (p_level > 1) {
 			int ng_points=0;
+			PlayerAcc_Prof_SetLevel(ent, 1);
 			Profession_Reset(ent);
+			
 			if (p_level >= 120)ng_points = 4; 
 			else if (p_level >= 80)ng_points = 2;
 			else if (p_level >= 40)ng_points = 1;
@@ -1290,6 +1293,7 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 			else Disp(ent, "^3New Game Plus Level isn't increased.");
 
 			PlayerAcc_SetNewGamePlus_count(ent, PlayerAcc_GetNewGamePlus_count(ent) + ng_points);
+
 		}
 
 	}

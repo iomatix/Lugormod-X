@@ -243,7 +243,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 	Disp(ent, va(
 		"^8===== Account Information =====\n"
 		"^3Id:            ^2%i\n"
-		"^3Alias:         ^7%s %s\n"
+		"^3Name:         ^8%s %s\n"
 		"^3Username:      ^2%s\n"
 		"^3Security code: ^2%s\n"
 		"^3Time:          ^2%i^3:^2%02i",
@@ -265,7 +265,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3New Game Plus Level: ^2%i\n"
 		"^3New Game Plus skill points: ^2%i\n"
 		"^3Score:         ^2%i",
-		lvl, Accounts_GetCredits(acc), Accounts_GetExperience(acc), Accounts_GetLevel_jedi(acc),Accounts_GetLevel_merc(acc),Accounts_GetLootboxes(acc),Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
+		lvl, Accounts_GetCredits(acc), Accounts_GetExperience(acc), Professions_LevelCost_EXP(PlayerAcc_Prof_GetProfession(ent),PlayerAcc_Prof_GetLevel(ent)), Accounts_GetLevel_jedi(acc),Accounts_GetLevel_merc(acc),Accounts_GetLootboxes(acc),Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)
 		c = "^2None";
 	else if (prof == PROF_ADMIN)
