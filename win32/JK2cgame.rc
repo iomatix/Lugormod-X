@@ -51,7 +51,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,4,7,4
+ FILEVERSION 3,0,1,0
  PRODUCTVERSION 1,0,1,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
@@ -67,12 +67,12 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "Raven Software, RoboPhred"
-            VALUE "CompanyName", "Activision Inc, RoboPhredDev"
-            VALUE "FileDescription", "Lugormod U#"
-            VALUE "FileVersion", "2.4.7.4"
-            VALUE "InternalName", "Lugormod U# Client"
-            VALUE "LegalCopyright", "Copyright (C) 2007-2014"
+            VALUE "Comments", "Raven Software, RoboPhred, iomatix"
+            VALUE "CompanyName", "Activision Inc, iomatix"
+            VALUE "FileDescription", "Lugormod X"
+            VALUE "FileVersion", "3.0.1.0"
+            VALUE "InternalName", "Lugormod X Client"
+            VALUE "LegalCopyright", "Copyright (C) 2007-2019"
             VALUE "OriginalFilename", "JAcgame.dll"
             VALUE "ProductName", "Jedi Knight®: Jedi Academy (MP)"
             VALUE "ProductVersion", "1, 0, 1, 0"

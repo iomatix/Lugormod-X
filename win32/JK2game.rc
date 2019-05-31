@@ -51,7 +51,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,4,8,3
+ FILEVERSION 3,0,1,0
  PRODUCTVERSION 1,0,1,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
@@ -68,11 +68,11 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "Comments", "Raven Software, Lugor, RoboPhred, iomatix"
-            VALUE "CompanyName", "Activision Inc, RoboPhredDev"
-            VALUE "FileDescription", "Lugormod U#"
+            VALUE "CompanyName", "Activision Inc, iomatix"
+            VALUE "FileDescription", "Lugormod X"
             VALUE "FileVersion", "3.0.1.0"
-            VALUE "InternalName", "Lugormod U#"
-            VALUE "LegalCopyright", "Copyright (C) 2007-2015"
+            VALUE "InternalName", "Lugormod X"
+            VALUE "LegalCopyright", "Copyright (C) 2007-2019"
             VALUE "LegalTrademarks", "Lugormod X"
             VALUE "OriginalFilename", "jampgamex86.dll"
             VALUE "ProductName", "Lugormod X, Jedi Knight®: Jedi Academy (MP)"

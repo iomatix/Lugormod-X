@@ -1,6 +1,6 @@
  jampgamex86
 
- Timestamp is 5cf1b514 (Sat Jun 01 01:13:24 2019)
+ Timestamp is 5cf1ba01 (Sat Jun 01 01:34:25 2019)
 
  Preferred load address is 20000000
 
@@ -43,10 +43,10 @@
 
   Address         Publics by Value              Rva+Base       Lib:Object
 
+ 0000:00000000       __except_list              00000000     <absolute>
+ 0000:00000000       ___guard_fids_count        00000000     <absolute>
  0000:00000000       ___guard_flags             00000000     <absolute>
  0000:00000000       ___guard_fids_table        00000000     <absolute>
- 0000:00000000       ___guard_fids_count        00000000     <absolute>
- 0000:00000000       __except_list              00000000     <absolute>
  0000:0000000c       ___safe_se_handler_count   0000000c     <absolute>
  0000:00000000       ___ImageBase               20000000     <linker-defined>
  0001:0000b690       ?AltFiring@@YAHPAUbot_state_s@@@Z 2000c690 f   ai_main.obj
@@ -4842,8 +4842,8 @@
  0001:002db1f0       ??0bad_exception@std@@QAE@ABV01@@Z 202dc1f0 f i LIBCMTD:frame.obj
  0001:002db220       ??0bad_exception@std@@QAE@PBD@Z 202dc220 f i LIBCMTD:frame.obj
  0001:002db250       ??1bad_exception@std@@UAE@XZ 202dc250 f i LIBCMTD:frame.obj
- 0001:002db270       ??_Gbad_exception@std@@UAEPAXI@Z 202dc270 f i LIBCMTD:frame.obj
  0001:002db270       ??_Ebad_exception@std@@UAEPAXI@Z 202dc270 f i LIBCMTD:frame.obj
+ 0001:002db270       ??_Gbad_exception@std@@UAEPAXI@Z 202dc270 f i LIBCMTD:frame.obj
  0001:002dbe60       ?__uncaught_exception@@YA_NXZ 202dce60 f   LIBCMTD:frame.obj
  0001:002dbe90       ?_is_exception_typeof@@YAHABVtype_info@@PAU_EXCEPTION_POINTERS@@@Z 202dce90 f   LIBCMTD:frame.obj
  0001:002dbf70       __SetWinRTOutOfMemoryExceptionCallback 202dcf70 f   LIBCMTD:frame.obj
@@ -4965,14 +4965,14 @@
  0001:002e2b40       ??1bad_typeid@std@@UAE@XZ  202e3b40 f   LIBCMTD:stdexcpt.obj
  0001:002e2b60       ??1exception@std@@UAE@XZ   202e3b60 f   LIBCMTD:stdexcpt.obj
  0001:002e2b80       ??4exception@std@@QAEAAV01@ABV01@@Z 202e3b80 f   LIBCMTD:stdexcpt.obj
- 0001:002e2bd0       ??_E__non_rtti_object@std@@UAEPAXI@Z 202e3bd0 f i LIBCMTD:stdexcpt.obj
  0001:002e2bd0       ??_G__non_rtti_object@std@@UAEPAXI@Z 202e3bd0 f i LIBCMTD:stdexcpt.obj
- 0001:002e2c00       ??_Gbad_cast@std@@UAEPAXI@Z 202e3c00 f i LIBCMTD:stdexcpt.obj
+ 0001:002e2bd0       ??_E__non_rtti_object@std@@UAEPAXI@Z 202e3bd0 f i LIBCMTD:stdexcpt.obj
  0001:002e2c00       ??_Ebad_cast@std@@UAEPAXI@Z 202e3c00 f i LIBCMTD:stdexcpt.obj
- 0001:002e2c30       ??_Gbad_typeid@std@@UAEPAXI@Z 202e3c30 f i LIBCMTD:stdexcpt.obj
+ 0001:002e2c00       ??_Gbad_cast@std@@UAEPAXI@Z 202e3c00 f i LIBCMTD:stdexcpt.obj
  0001:002e2c30       ??_Ebad_typeid@std@@UAEPAXI@Z 202e3c30 f i LIBCMTD:stdexcpt.obj
- 0001:002e2c60       ??_Gexception@std@@UAEPAXI@Z 202e3c60 f i LIBCMTD:stdexcpt.obj
+ 0001:002e2c30       ??_Gbad_typeid@std@@UAEPAXI@Z 202e3c30 f i LIBCMTD:stdexcpt.obj
  0001:002e2c60       ??_Eexception@std@@UAEPAXI@Z 202e3c60 f i LIBCMTD:stdexcpt.obj
+ 0001:002e2c60       ??_Gexception@std@@UAEPAXI@Z 202e3c60 f i LIBCMTD:stdexcpt.obj
  0001:002e2c90       ?_Copy_str@exception@std@@AAEXPBD@Z 202e3c90 f   LIBCMTD:stdexcpt.obj
  0001:002e2cf0       ?_Tidy@exception@std@@AAEXXZ 202e3cf0 f   LIBCMTD:stdexcpt.obj
  0001:002e2d30       ?what@exception@std@@UBEPBDXZ 202e3d30 f   LIBCMTD:stdexcpt.obj
@@ -5014,8 +5014,8 @@
  0001:002e5740       _wcstod                    202e6740 f   LIBCMTD:wcstod.obj
  0001:002e5760       __mbschr                   202e6760 f   LIBCMTD:mbschr.obj
  0001:002e5780       __mbschr_l                 202e6780 f   LIBCMTD:mbschr.obj
- 0001:002e5920       __strnicmp                 202e6920 f   LIBCMTD:strnicmp.obj
  0001:002e5920       _strnicmp                  202e6920 f   LIBCMTD:strnicmp.obj
+ 0001:002e5920       __strnicmp                 202e6920 f   LIBCMTD:strnicmp.obj
  0001:002e5af0       __strnicmp_l               202e6af0 f   LIBCMTD:strnicmp.obj
  0001:002e5d80       ??0Block@_HeapManager@@QAE@XZ 202e6d80 f i LIBCMTD:undname.obj
  0001:002e5da0       ??0DName@@QAE@AAPBDD@Z     202e6da0 f   LIBCMTD:undname.obj
@@ -5280,8 +5280,8 @@
  0001:002f2060       __strlwr_s                 202f3060 f   LIBCMTD:strlwr.obj
  0001:002f2080       __strlwr_s_l               202f3080 f   LIBCMTD:strlwr.obj
  0001:002f20c0       ___ascii_stricmp           202f30c0 f   LIBCMTD:stricmp.obj
- 0001:002f2140       __stricmp                  202f3140 f   LIBCMTD:stricmp.obj
  0001:002f2140       _stricmp                   202f3140 f   LIBCMTD:stricmp.obj
+ 0001:002f2140       __stricmp                  202f3140 f   LIBCMTD:stricmp.obj
  0001:002f2270       __stricmp_l                202f3270 f   LIBCMTD:stricmp.obj
  0001:002f2450       ___ascii_memicmp           202f3450 f   LIBCMTD:_memicmp.obj
  0002:00000000       ___xc_a                    20310000     LIBCMTD:crt0init.obj
@@ -12005,7 +12005,7 @@
  0002:0002c9bc       ??_C@_0BC@LOKOIJIH@JKA?5Galaxies?5v0?41?$AA@ 2033c9bc     gls_crashreport.obj
  0002:0002c9d4       ??_C@_0BH@KHGNMAMA@Version?3?5?$CFs?5?$CIWindows?$CJ?6?$AA@ 2033c9d4     gls_crashreport.obj
  0002:0002c9f0       ??_C@_0BD@PEHKIMLP@Side?3?5Server?9side?6?$AA@ 2033c9f0     gls_crashreport.obj
- 0002:0002ca08       ??_C@_08HJHDEAJK@01?312?355?$AA@ 2033ca08     gls_crashreport.obj
+ 0002:0002ca08       ??_C@_08FPIBGPKH@01?333?353?$AA@ 2033ca08     gls_crashreport.obj
  0002:0002ca14       ??_C@_0BI@BNEPMDPF@Build?5Date?1Time?3?5?$CFs?5?$CFs?6?$AA@ 2033ca14     gls_crashreport.obj
  0002:0002ca30       ??_C@_0IK@MOIFLKOC@Crash?5type?3?5Exception?6?6?9?9?9?9?9?9?9?9?9@ 2033ca30     gls_crashreport.obj
  0002:0002cad8       ??_C@_0HA@HGKPACMJ@?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9@ 2033cad8     gls_crashreport.obj
@@ -15286,8 +15286,8 @@
  0002:00050708       ??_C@_0CM@FGMNMBFG@f?3?2dd?2vctools?2crt?2crtw32?2startup@ 20360708     LIBCMTD:threadex.obj
  0002:00050734       ??_C@_1BK@FHMHFMNL@?$AA_?$AAv?$AAs?$AAn?$AAp?$AAr?$AAi?$AAn?$AAt?$AAf?$AA_?$AAl?$AA?$AA@ 20360734     LIBCMTD:vsnprint.obj
  0002:00050750       ??_C@_1EC@FABAOFFO@?$AA?$CI?$AAc?$AAo?$AAu?$AAn?$AAt?$AA?5?$AA?$DN?$AA?$DN?$AA?5?$AA0?$AA?$CJ?$AA?5?$AA?$HM?$AA?$HM?$AA?5?$AA?$CI?$AAs?$AAt?$AAr?$AAi?$AAn?$AAg?$AA?5?$AA?$CB?$AA?$DN?$AA?5?$AAN?$AAU?$AAL?$AAL?$AA?$CJ@ 20360750     LIBCMTD:vsnprint.obj
- 0002:00050794       __pDefaultRawDllMain       20360794     LIBCMTD:dllcrt0.obj
  0002:00050794       __pRawDllMain              20360794     LIBCMTD:dllcrt0.obj
+ 0002:00050794       __pDefaultRawDllMain       20360794     LIBCMTD:dllcrt0.obj
  0002:00050798       ??_C@_0CL@OOIKPIHN@f?3?2dd?2vctools?2crt?2crtw32?2startup@ 20360798     LIBCMTD:dllcrt0.obj
  0002:000507c4       ??_C@_03JGHBODFD@pow?$AA@  203607c4     LIBCMTD:fpexcept.obj
  0002:000507c8       ??_C@_05HGHHAHAP@log10?$AA@ 203607c8     LIBCMTD:fpexcept.obj
