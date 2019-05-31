@@ -51,6 +51,7 @@
 - Rage drains health from hurted enemies. ✔️
 - Added target_experience and count_exp for quests it allows to gain experience as a reward for doing quests. ✔️
 - The title system. ✔️
+
 ///
 - lmd_stashexp added. Stash system supports new experience system now. ???
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
