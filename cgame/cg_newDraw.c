@@ -590,7 +590,7 @@ void CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y
     break;
   case CG_PLAYER_FORCE_VALUE:
     CG_DrawPlayerForceValue(&rect, scale, color, shader, textStyle);
-	return ;
+	break;
   case CG_PLAYER_AMMO_ICON:
     CG_DrawPlayerAmmoIcon(&rect, ownerDrawFlags & CG_SHOW_2DONLY);
     break;

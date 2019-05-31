@@ -50,51 +50,36 @@
 - Lightnings turn off the jetpack for a while.  ✔️
 - Rage drains health from hurted enemies. ✔️
 - Added target_experience and count_exp for quests it allows to gain experience as a reward for doing quests. ✔️
+- The title system. ✔️
+///
 - lmd_stashexp added. Stash system supports new experience system now. ???
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
 - Longer Grip which depends on the skill level.
 
-- Titles system. x
+
 
 ## TODO
+- Titles system. (Stats)
+- Try repair crosschair hud for force.  (CG_PLAYER_ARMOR_VALUE  CG_PLAYER_AMMO_VALUE   CG_PLAYER_FORCE_VALUE)
 - grip longer
 - flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
 - Titles in stats display depends on level + new game plus points. Add section in stats command 
 - lootboxes for levels
-- save profession levels. changing profession cost adds skills reset cost. , new game plus vars, lootboxes one var 55%,25%, 15%, 4% , 1%. (buffor size capacity loading files limit)
-- Change profession checking to auth while buylevel cmd.
-- Merclevel/jedilevel update on levelup (buylevel and experience ways)
-- Add new game plus start user command. Add benefits from it. (prof core.c todo) !!!
-add everything to stats command
 
 
-- ammo pickup event bug fix if smaller magasine than normal //engine limitation?
-- smaller ammo amounts
-- adjust explosives amounts
-
-- stash has exp
-- quests exp //if i'll learn it
-
-- TODO: Now skillpoints will cost credits to be spend (level(level+1)lmd_skillpoint_cost)  //default 150
-
-
-- TODO: Player after reaching level 120 is able to start over again from level 1 but with perma +25hp/+25force/+25shield boost. Repeatable. 
 - TODO: Killing streak Bounty. After each lmd_bounty_streaks_by kills bounty is increasing. For killing bounty target player will recive Credit Boxes. new variable (lmd_bounty_streaks_by default "5")
 
 - TODO: Repair memory leaks with AI say command
 
 - TODO: svcmds + commands + admin commands guide
-
-- TODO: Lootbox for level up each 10 lvls %10
-- TODO: Messages time control.
+- TODO: Messages time control. -> trap_SendServerCommand
 - TODO: Add drop item from inventory.
-- TODO: Repair selling option trading system. Add message (motd) + try to console disp. If not create new buy/sell inv options.
-- TODO: Messages motd for duel types.
+- TODO: Trading system + droping items. Add message trap_SendServerCommand
+- TODO: Messages motd for duel types. trap_SendServerCommand
 - TODO: Lootboxes for killstreak
 
-- TODO: Lightning turn off jetpacks for a while. 
 
-- TODO: New styles (god is using them, for force user)
+- TODO: New styles (god is using them, for force user) Cmd_SaberAttackCycle_f ??
 
 - TODO: USER FRIENDLY GUIDE
 - TODO: Adding openjk API support

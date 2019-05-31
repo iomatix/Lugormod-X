@@ -173,12 +173,57 @@ void HiScore(gentity_t *ent, int field) {
 
 }
 
+//iomatix:
+//Titles system 
+char * GetTitle_system(gentity_t *ent)
+{
+	 int level = PlayerAcc_Prof_GetLevel(ent)+ PlayerAcc_GetNewGamePlus_count(ent); 
+	 if (PlayerAcc_Prof_GetProfession(ent) == PROF_JEDI) {
+		 //jedi titles
+		 if (level < 10)return "Apprentice";
+		 else if (level < 20)return "Disciple";
+		 else if (level < 30)return "Adept";
+		 else if (level < 40)
+		 {
+			 if(Jedi_GetSide(ent) == FORCE_DARKSIDE) return "Darth";
+			 else if (Jedi_GetSide(ent) == FORCE_LIGHTSIDE) return "Knight";
+			 else return "Nomad";
+
+		 }
+		 else if (level < 80)return "Lord";
+		 else if (level < 100)return "Count";
+		 else if (level < 130)return "Sage";
+		 else if (level < 170)return "Master";
+		 else if (level < 200)return "Luminary"; 
+		 else return "Legend";
+	 }
+	 else if (PlayerAcc_Prof_GetProfession(ent) == PROF_MERC)
+	 {//merc titles
+		 if (level < 10)return "Freshmeat";
+		 else if (level < 20)return "Rifleman";
+		 else if (level < 30)return "Mercenary";
+		 else if (level < 40)return "Specialist";
+		 else if (level < 100)return "Bounty Hunter";
+		 else if (level < 150)return "Assassin";
+		 else if (level < 180)return "Commander";
+		 else if (level < 230)return "Master of Hunt";
+		 else return "Legend";
+
+
+	 }
+	 else return "Stranger";
+	
+
+}
+
+
 extern int Professions_LevelCost_EXP(int prof, int playerLevel);
 int Jedi_GetAccSide(Account_t *acc);
 void GetStats(gentity_t *ent, Account_t *acc) {
 	int prof, time, lvl, authrank;
 	char *c;
 	char *authlist;
+	char *the_title = GetTitle_system(ent);
 	char lastLogin[MAX_STRING_CHARS];
 
 	char *secCode;
@@ -198,11 +243,12 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 	Disp(ent, va(
 		"^8===== Account Information =====\n"
 		"^3Id:            ^2%i\n"
-		"^3Alias:         ^7%s\n"
+		"^3Alias:         ^7%s %s\n"
 		"^3Username:      ^2%s\n"
 		"^3Security code: ^2%s\n"
 		"^3Time:          ^2%i^3:^2%02i",
 		Accounts_GetId(acc),
+		the_title,
 		Accounts_GetName(acc),
 		Accounts_GetUsername(acc),
 		(secCode != NULL) ? secCode : "^1<none>",

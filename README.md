@@ -16,22 +16,26 @@
 - Improved console displays making it more clear for the user.
 - New weapons for Mercenary profession available through his skill.
 - To get access more powerful skills player must reach his Mastery Level now.
-- Added level damage scaling with new server side variable.
-- Added lethality & thousand cuts skills.
-- Added new extern variables lmd_is_lethality_add_damage & lmd_is_thousandcuts_lethality to configure new skills.
+- Added level damage scaling.
+- New and chagned skills.
+- A lot of new extern variables to configure the server.
 - New fully working leveling system with experience gain. Credits and experience gain depends on level difference between players by default. 
 - Simplification for Admin commands. Self commands availble without using the account name argument.
-- Experience system supports stashes system now.
+- Credit Boxes.
+- Profession level saving.
+- New Game Plus mode with additional skillpoints as a reward.
+- Experience as a reward for quests.
+- Title system.
 
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 
 ### I'm working on:
-- New-Game + after reaching max level capacity.
 - Bounty for killing streaks.
 - Messages time control.
 - Adding extern variable for profession credits fee.
 - Bug fixes.
+- Experience system supports stashes system now.
 - A lot of more...
 
 ### Main long-terms Goals:
