@@ -64,8 +64,7 @@
 - grip longer
 - flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
 - Titles in stats display depends on level + new game plus points. Add section in stats command 
-- lootboxes for levels
-
+- TODO: Add drop item from inventory.  todo: drop (+recall), sell (drop+buyoption + recall) inventory_core.c
 
 - TODO: Killing streak Bounty. After each lmd_bounty_streaks_by kills bounty is increasing. For killing bounty target player will recive Credit Boxes. new variable (lmd_bounty_streaks_by default "5")
 
@@ -73,7 +72,7 @@
 
 - TODO: svcmds + commands + admin commands guide
 - TODO: Messages time control. -> trap_SendServerCommand
-- TODO: Add drop item from inventory.
+
 - TODO: Trading system + droping items. Add message trap_SendServerCommand
 - TODO: Messages motd for duel types. trap_SendServerCommand
 - TODO: Lootboxes for killstreak

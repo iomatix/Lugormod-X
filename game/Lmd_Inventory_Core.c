@@ -727,6 +727,7 @@ void Cmd_Inventory_f(gentity_t *ent, int iArg){
 	int argc = trap_Argc();
 	char arg[MAX_STRING_CHARS];
 	if(argc < 2){
+		//iomatix, todo: drop (+recall), sell (drop+buyoption + recall)
 		Disp(ent, "^3Usage: Inventory {list ^5[catagory/name] [offset]^3} {use ^2<index/name>^3} {destroy ^2<index/name>^3}");
 		return;
 	}

@@ -1125,7 +1125,7 @@ cmdEntry_t accountCommandEntries[] = {
 { "alias","Change your display name. ^3The account name won't change so please login with your old username. ", Cmd_aliasname_f, 0, qfalse, 1, 256, 0, 0 },
 { "chpasswd","Change the password for your account.", Cmd_ChPasswd_f, 0, qfalse, 1, 1, 0, 0 },
 { "credits","Check your current wealth.", Cmd_Credits_f, 0, qfalse, 1, 128, ~(1 << GT_FFA), 0 },
-{ "creditbox", "Open the Credit Box.", Cmd_Creditbox_f, 0, qfalse, 2, 257, 0, 0 },
+{ "creditbox", "Open the Credit Box.", Cmd_Creditbox_f, 0, qfalse, 1, 128, 0, 0 },
 { "dropcr", "Drop credits.", Cmd_Credits_f, 3, qfalse, 1, 128, ~(1 << GT_FFA), 0 },
 { "inventory","View and use items in your inventory.", Cmd_Inventory_f, 0, qfalse, 1, 1, ~(1 << GT_FFA), 0 },
 { "login"," Login to use the name you registered with \\register.", Cmd_Login_f, 0, qfalse, 0, 1, 0, 0, qtrue },
