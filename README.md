@@ -8,8 +8,8 @@
 - AI unlocked. AI is able to use Force user or Mercenary profession.
 - Level cap changed up to 120 and added mastery level for Force Users which starts on 40 profession level.
 - Reaching mastery level allows to use force of the opposite side and unlocks new power ups.
-- Profession change requires a constant credits fee now. (default: 1350 credits)
-- Force, health and shield capacity grows per level depending on profession level.
+- Profession change requires a credits fee now which depends on skill points used.
+- Force, health and shield capacity grows per level depend on profession level.
 - Health, Force Power and Shield formula is re-balanced.
 - Reworked skillpoints system with clear and RPG style formula.
 - Player can spend skillpoints to upgrade new fully working passive skills.
@@ -21,11 +21,12 @@
 - A lot of new extern variables to configure the server.
 - New fully working leveling system with experience gain. Credits and experience gain depends on level difference between players by default. 
 - Simplification for Admin commands. Self commands availble without using the account name argument.
-- Credit Boxes.
+- Credit Boxes. Gain them with level up, killstreaks and bounty hunting. 
 - Profession level saving.
 - New Game Plus mode with additional skillpoints as a reward.
 - Experience as a reward for quests.
 - Title system.
+
 
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)

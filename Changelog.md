@@ -63,9 +63,9 @@
 - Perfect Aim mercenary skill is added. ✔️
 
 ///
-- lmd_stashexp added. Stash system supports new experience system now. ???
+- lmd_stashexp added. Stash system supports new experience system now. 50%
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
-- Longer Grip which depends on the skill level.
+- Longer Grip which depends on the skill level. 80% Search for limiter function... whereveri it is hidden.
 
 
 
@@ -78,16 +78,12 @@
 - TODO: Add drop item from inventory.  todo: drop (+recall), sell (drop+buyoption + recall) inventory_core.c
 
 - TODO: Killing streak Bounty. After each lmd_bounty_streaks_by kills bounty is increasing. For killing bounty target player will recive Credit Boxes. new variable (lmd_bounty_streaks_by default "5")
-
-- TODO: Repair memory leaks with AI say command
+- TODO: Lootboxes for killstreak
 
 - TODO: svcmds + commands + admin commands guide
-- TODO: Messages time control. -> trap_SendServerCommand
 
 - TODO: Trading system + droping items. Add message trap_SendServerCommand
 - TODO: Messages motd for duel types. trap_SendServerCommand
-- TODO: Lootboxes for killstreak
-
 
 - TODO: New styles (god is using them, for force user) Cmd_SaberAttackCycle_f ??
 
