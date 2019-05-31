@@ -77,6 +77,7 @@ typedef struct mercFields_s{
 		int sd_maxs;
 		int lethality;
 		int rifle_master;
+		int perfect_aim;
 	} skills;
 	int weaponselect;
 }mercFields_t;
@@ -102,6 +103,7 @@ typedef struct mercFields_s{
 	_m##_AUTO(sd_maxs, MERCFIELDOFS(skills.sd_maxs), F_INT) \
 	_m##_AUTO(lethality, MERCFIELDOFS(skills.lethality), F_INT) \
 	_m##_AUTO(rifle_master, MERCFIELDOFS(skills.rifle_master), F_INT) \
+	_m##_AUTO(perfect_aim, MERCFIELDOFS(skills.perfect_aim), F_INT) \
 	_m##_AUTO(weaponselect, MERCFIELDOFS(weaponselect), F_INT)
 
 MercFields_Base(DEFINE_FIELD_PRE)
@@ -247,9 +249,41 @@ profSkill_t mercSkill_rifle_master = {
 	Lmd_Prof_Merc_SetSkill_rifle_master,
 };
 
+/////// too op? 4,8,12,16,20,24%? nerf?
+const char *mercSkill_perfect_aim_Descr[] = {
+	"4 percent chance for additional 30 percent critical damage.",
+	"8 percent chance for additional 60 percent of critical damage.",
+	"12 percent chance for additional 90 percent of critical damage.",
+	"16 percent chance for additional 120 percent of critical damage.",
+	"20 percent chance for additional 150 percent of critical damage.",
+	"24 percent chance for additional 180 percent of critical damage.",
+	NULL
+};
+
+STD_SKILLS_FUNCS(perfect_aim)
+
+profSkill_t mercSkill_perfect_aim = {
+	"Perfect Aim",
+	"Get chance for additional critical damage dealt with non-explosive weapons.",
+	mercSkill_perfect_aim_Descr,
+
+	0,
+	SkillLevels_6,
+	SkillPoints_Linear_12,
+
+	Lmd_Prof_Merc_GetSkill_perfect_aim,
+	Lmd_Prof_Merc_CanSetSkill_perfect_aim,
+	Lmd_Prof_Merc_SetSkill_perfect_aim,
+};
 
 //functions for passive skills:
 //GetSkill
+int Lmd_Prof_Merc_Getperfect_aimSkill(Account_t *acc) {
+	if (!acc) {
+		return 0;
+	}
+	return mercSkill_perfect_aim.getValue(acc, &mercSkill_perfect_aim);
+}
 int Lmd_Prof_Merc_Getrifle_masterSkill(Account_t *acc) {
 	if (!acc) {
 		return 0;
@@ -581,6 +615,7 @@ profSkill_t mercSkills[] = {
 	mercSkill_sd_maxs,
 	mercSkill_Lethality,
 	mercSkill_rifle_master,
+	mercSkill_perfect_aim,
 };
 const unsigned int mercSkillCount = sizeof(mercSkills) / sizeof(profSkill_t);
 

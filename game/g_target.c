@@ -1402,12 +1402,12 @@ void Use_Target_Experience(gentity_t *ent, gentity_t *other, gentity_t *activato
 		if (!(ent->spawnflags & 1)) {
 			if (amount > 0) {
 				G_Sound(activator, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
-				trap_SendServerCommand(activator->s.number, va("cp \"^3You received ^2EXP %i^3.\"", amount));
+				trap_SendServerCommand(activator->s.number, va("cp \"^3You received ^5EXP %i^3.\"", amount));
 			}
 			else
 				trap_SendServerCommand(activator->s.number, va("cp \"^3You lost ^1EXP %i^3.\"", -amount));
 		}
-		PlayerAcc_SetExperience(activator, activatorCreds + amount);
+		GiveExperience(activator, amount, NULL);
 		G_UseTargets(ent, activator);
 	}
 }

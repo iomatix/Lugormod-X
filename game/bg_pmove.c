@@ -246,7 +246,7 @@ float forceJumpStrength[NUM_FORCE_POWER_LEVELS + 2] =
 	420,
 	590,
 	840,
-	840,
+	940,
 	960
 };
 

@@ -4610,7 +4610,7 @@ void G_LocationBasedDamageModifier(gentity_t *ent, vec3_t point, int mod, int df
 		*damage *= 0.6;
 		break;
 	case HL_HEAD:
-		*damage *= 1.3;
+		*damage *= 2;
 		break;
 	default:
 		break; //do nothing then
@@ -4727,6 +4727,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	float		hamt = 0;
 	float		shieldAbsorbed = 0;
 
+	
 	//RoboPhred
 	if (!targ->takedamage) {
 		return;
@@ -4769,7 +4770,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		G_Damage(&g_entities[targ->damageRedirectTo], inflictor, attacker, dir, point, damage, dflags, mod);
 		return;
 	}
-
+	
 
 	if (mod == MOD_DEMP2 && targ && targ->inuse && targ->client)
 	{
@@ -5404,6 +5405,16 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 
 				}
 
+				if (PlayerProf_Merc_Getperfect_aimSkill(attacker) > 0 && mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET
+					&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
+					&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH) {
+					int perfect_aim_value = PlayerProf_Merc_Getperfect_aimSkill(attacker);
+					int perfectaim_chance = Q_irand(0,100); 
+					if (perfectaim_chance <= (4 * perfect_aim_value)) { //5->10->15->20->25->30 % //nerfed to 4->8->12->16->20->24
+						damage += damage * (perfect_aim_value*0.3f); // 30->60->90->120->150%->180 additional damage
+					}
+
+				}
 				
 			}else if (PlayerAcc_Prof_GetProfession(attacker) == PROF_JEDI && mod == MOD_SABER) { //jedi class check and is he using the saber?
 

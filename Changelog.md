@@ -56,6 +56,11 @@
 - Main skills need more points to upgrade. ✔️
 - lmd_skillpoints_perlevel 5 by default.  ✔️
 - AI memory leaks fixed. GetIdealDestination in StandardBotAI ✔️
+- Creditboxes reworked. ✔️
+- Player must confirm resetskills command to reset skills now. ✔️
+- Level 5 Jump. The player can not use it to fly but jumps higher. ✔️
+- Head damage is increased. ✔️
+- Perfect Aim mercenary skill is added. ✔️
 
 ///
 - lmd_stashexp added. Stash system supports new experience system now. ???
@@ -66,6 +71,7 @@
 
 ## TODO
 - grip longer
+
 - Try repair crosschair hud for force.  (CG_PLAYER_ARMOR_VALUE  CG_PLAYER_AMMO_VALUE   CG_PLAYER_FORCE_VALUE)
 - flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
 - Titles in stats display depends on level + new game plus points. Add section in stats command 

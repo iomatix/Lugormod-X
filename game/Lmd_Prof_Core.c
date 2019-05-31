@@ -352,6 +352,7 @@ int Accounts_Prof_GetLevel(Account_t *acc) {
 void Accounts_Prof_SetLevel(Account_t *acc, int value) {
 	if (!acc) return;
 	profData_t *data = PROFDATA(acc);
+	if (value < 1)value = 1;
 	data->level = value;
 	data->lastLevelUp = Time_Now();
 	Lmd_Accounts_Modify(acc);
@@ -806,12 +807,12 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 
 		int Cr_cost = Accounts_GetCredits(acc) - lmd_skillpoint_cost.integer*cost; //the value is ready to set
 		if (points < cost) {
-			Disp(ent, va("^1Not enough Points.\n ^3You need ^2%i^3 Point%s more to level up this skill.", cost-points, (cost - points == 1) ? "" : "s"));
+			Disp(ent, va("^1Not enough Points.\n^3You need ^2%i^3 Point%s more to level up this skill.", cost-points, (cost - points == 1) ? "" : "s"));
 			return;
 		}
 		if (Cr_cost < 0)
 		{
-			Disp(ent, va("^1Not enough Credits.\n ^3You need ^3%i^3 Credits more to level up this skill.", -Cr_cost));
+			Disp(ent, va("^1Not enough Credits.\n^3You need ^3%i^3 Credits more to level up this skill.", -Cr_cost));
 			return;
 		}
 		//fixed by iomatix.
@@ -1001,6 +1002,13 @@ void Cmd_ResetSkills_f(gentity_t *ent, int iArg) {
 		return;
 	}
 
+	char arg[MAX_TOKEN_CHARS];
+	trap_Argv(1, arg, sizeof(arg));
+	if (Q_stricmp("confirm", arg) == 0)
+	{
+	
+
+
 	used = Professions_UsedSkillPoints(acc, prof, &Professions[prof]->primarySkill);
 
 	if (Professions[prof]->primarySkill.subSkills.count == 0) {
@@ -1028,6 +1036,12 @@ void Cmd_ResetSkills_f(gentity_t *ent, int iArg) {
 	Profession_UpdateSkillEffects(ent, prof);
 
 	Disp(ent, "^2Your skills have been reseted!");
+	}
+	else
+	{
+		int cost = used * lmd_skillpoint_cost.integer / 10;
+		Disp(ent, va("^3Skill reset will cost ^2%i CR.\n^3Type ^8resetskills ^3confirm to reset your skills.", cost));
+	}
 }
 
 //FIXME: should be replaced by Profession_SkillCost
@@ -1111,16 +1125,20 @@ void Experience_Level_Up(gentity_t *ent)
 		PlayerAcc_Prof_SetLevel(ent, playerLevel);
 	    //credit boxes reward
 		Disp(ent, "^3Got a Credit Box for reaching a new level!");
-		if (playerLevel < 40) {
+		if (playerLevel >= 30 && playerLevel < 60) {
 			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
 			if(playerLevel % 5 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
 			if(playerLevel % 10 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
 		}
+		else if(playerLevel < 100){
+			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
+			if (playerLevel % 5 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
+			if (playerLevel % 10 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 2);
+		}
 		else {
 			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 2);
 			if (playerLevel % 5 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
-			if (playerLevel % 10 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 2);
-
+			if (playerLevel % 10 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
 		}
 		
 		//credit boxes special levels bonuses:
@@ -1325,7 +1343,7 @@ cmdEntry_t professionCommandEntries[] = {
 { "flame", "Shoots out a spew of flames.", Cmd_Flame_f, 0, qfalse, 1, 257, 0, PROF_MERC },
 { "ionlysaber", "You can't use forcepowers other than heal or drain - but you're also immune to them. Greatly reduces received splash damage.", Cmd_Ionlysaber_f, 0, qfalse, 0, 64, ~(1 << GT_FFA), PROF_JEDI },
 { "profession", "Choose a profession. ^1You will start from level one and lost part of credits if you choose a new profession.", Cmd_Profession_f, 0, qfalse, 1, 256, 0, 0 },
-{ "resetskills", "Reset your skills. This costs money; if no argument is provided the cost will be displayed.", Cmd_ResetSkills_f, 0, qfalse, 2, 257, 0, 0 },
+{ "resetskills", "Reset your skills. ^1This costs money! ^3if no argument is provided the cost will be displayed.", Cmd_ResetSkills_f, 0, qfalse, 2, 257, 0, 0 },
 { "skills", "View and raise your profession skills. You can only raise skill levels if you have unallocated skill points.\nIf no argument is provided, your current skill levels will be listed.", Cmd_SkillSelect_f, 0, qfalse, 1, 257,0, 0 },
 { "weapons", "Select or unselect a weapon.", Cmd_MercWeapon_f, 0, qfalse, 1, 257, 0, PROF_MERC },
 { "newgame", "Start a New Game. Gain unique benefits with New Game Plus mode after reaching the Mastery Level.", Cmd_NewGameP_f, 0, qfalse, 1, 129, 0, 0 },

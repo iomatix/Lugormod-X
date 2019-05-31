@@ -379,7 +379,7 @@ const char *jediSkill_Neutral_Jump_Descr[] = {
 	"Jump higher.",
 	"Jump higher.",
 	"Jump higher.",
-	"Jump higher.  Jump in the air.",
+	"Jump higher.",
 	NULL
 };
 
@@ -1141,7 +1141,7 @@ profession_t jediProf = {
 	{
 		"ForceUser",
 		"One who has learned the powers of the force.  A force user may specalize in light or dark powers, and excells at close quarter combat.\n"
-		"Those proficient in the force increase its power as they increase in level.\n Force user is able to learn next specialization after reaching the Mastery Level. It is ^240 level of the current profession.",
+		"Those proficient in the force increase its power as they increase in level.\nForce user is able to learn next specialization after reaching the Mastery Level. It is ^240 level of the current profession.",
 	jediProf_Descr,
 
 	1,

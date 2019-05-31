@@ -121,7 +121,7 @@ forceLevitate_t Force_Levitation_Levels[5] = {
 	{forceJumpStrength[2], 10, qfalse},
 	{forceJumpStrength[3], 10, qfalse},
 	{forceJumpStrength[4], 10, qfalse},
-	{forceJumpStrength[5], 10, qtrue},
+	{forceJumpStrength[5], 10, qfalse}, //iomatix no double jump qtrue->qfalse
 };
 forcePower_t Force_Levitation = {
 	Force_Levitation_Available,

@@ -61,13 +61,13 @@ void GiveLootboxes(gentity_t *ent, int lx, char *reason) {
 	if (lx < 0 && lbx - lx < 0) lx = 0;
 
 	else if (lx > 0) {
-		char *msg = va("^3You received ^2Credits-Box %i^3 %s.", lx, (reason != NULL) ? reason : "");
+		char *msg = va("^3You received ^8Credits-Box %i^3 %s.", lx, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
 		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 		G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	}
 	else if (lx < 0) {
-		char *msg = va("^3You lost ^1Credit-Box %i^3 %s.", lx, (reason != NULL) ? reason : "");
+		char *msg = va("^3You lost ^8Credit-Box %i^3 %s.", lx, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
 		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 	}
