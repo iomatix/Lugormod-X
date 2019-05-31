@@ -3895,6 +3895,10 @@ void GetIdealDestination(bot_state_t *bs)
 	vec3_t usethisvec, a;
 	gentity_t *badthing;
 
+
+
+	
+
 #ifdef _DEBUG
 	trap_Cvar_Update(&bot_nogoals);
 
@@ -4069,7 +4073,7 @@ void GetIdealDestination(bot_state_t *bs)
 
 			tempInt = GetNearestVisibleWP(usethisvec, 0);
 
-			if (tempInt != -1 && TotalTrailDistance(bs->wpCurrent->index, tempInt, bs) != -1)
+			if (gWPArray[tempInt] && tempInt != -1 && TotalTrailDistance(bs->wpCurrent->index, tempInt, bs) != -1)
 			{
 				bs->wpDestination = gWPArray[tempInt];
 				bs->wpDestSwitchTime = level.time + Q_irand(5000, 10000);
@@ -4093,7 +4097,7 @@ void GetIdealDestination(bot_state_t *bs)
 
 			tempInt = GetNearestVisibleWP(usethisvec, 0);
 
-			if (tempInt != -1 && TotalTrailDistance(bs->wpCurrent->index, tempInt, bs) != -1)
+			if (gWPArray[tempInt] && tempInt != -1 && TotalTrailDistance(bs->wpCurrent->index, tempInt, bs) != -1)
 			{
 				bs->wpDestination = gWPArray[tempInt];
 				bs->wpDestSwitchTime = level.time + Q_irand(5000, 10000);
@@ -4147,7 +4151,7 @@ void GetIdealDestination(bot_state_t *bs)
 				}
 			}
 		}
-		else if (bChicken != 2 && bs->wpDestSwitchTime < level.time)
+		else if (gWPArray[tempInt] && bChicken != 2 && bs->wpDestSwitchTime < level.time)
 		{
 			tempInt = GetNearestVisibleWP(usethisvec, 0);
 
@@ -7826,8 +7830,9 @@ void StandardBotAI(bot_state_t *bs, float thinktime)
 			VectorCopy(ang, bs->goalAngles);
 		}
 
-		if (bs->destinationGrabTime < level.time /*&& (!bs->wpDestination || (bs->currentEnemy && bs->frame_Enemy_Vis))*/)
+		if (bs->destinationGrabTime < level.time /*&&(!bs->wpDestination || (bs->currentEnemy && bs->frame_Enemy_Vis))*/)
 		{
+			//iomatix: Memory leaks to fix: 
 			GetIdealDestination(bs);
 		}
 

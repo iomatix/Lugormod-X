@@ -2661,11 +2661,11 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				
 				if (lmd_rewardcr_kill.integer != 0) {
 					cr_exp_output = 1 + lmd_rewardcr_kill.integer*cr_exp_multiplier;
-					GiveCredits(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
+					GiveCredits(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)\n", self->client->pers.netname, dead_pers_level));
 				}
 				if (lmd_rewardexp_kill.integer != 0) {
 					cr_exp_output = 1 + lmd_rewardexp_kill.integer*cr_exp_multiplier;
-					GiveExperience(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
+					GiveExperience(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)\n", self->client->pers.netname, dead_pers_level));
 				}
 			}
 		}
@@ -4804,7 +4804,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		return;
 	}
 
-	if ( targ->client ) //are we sure targ != NULL?
+	if ( targ->client ) //are we sure targ != NULL?        //iomatix YES !!!!!!!! 
 	{
 
 		//don't take damage when sitting
@@ -5160,7 +5160,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			|| g_gametype.integer == GT_BATTLE_GROUND
 			|| PlayerAcc_Prof_GetProfession(targ) == PROF_JEDI)
 			&& targ->client->ps.weapon == WP_SABER))
-		{//if the target is a trueJedi, reduce splash and explosive damage to 72%
+		{//if the target is a trueJedi, reduce splash and explosive damage to 80%
 			switch ( mod )
 			{
 			case MOD_REPEATER_ALT:
@@ -5176,28 +5176,29 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			case MOD_TRIP_MINE_SPLASH:
 			case MOD_TIMED_MINE_SPLASH:
 			case MOD_DET_PACK_SPLASH:
-				damage *= 0.72;
+				damage *= 0.8;
 				break;
 			}
 		}
-		else if ( (targ->client->ps.trueNonJedi 
-			|| ((g_gametype.integer == GT_SIEGE
+		else if ( (           //targ->client->ps.trueNonJedi || Jed & non Jedi now
+			 ((g_gametype.integer == GT_SIEGE
 			|| g_gametype.integer == GT_BATTLE_GROUND)
 			&& targ->client->ps.weapon != WP_SABER))
 			&& mod == MOD_SABER 
 			&& !(gameMode(5) &&
 			targ->client->ps.saberInFlight))
 		{//if the target is a trueNonJedi, take more saber damage... combined with the 1.5 in the w_saber stuff, this is 6 times damage!
-			//iomatix nerf?
-			if ( damage < 100 )
-			{
-				damage *= 4;
-				if ( damage > 100 )
-				{
-					damage = 100;
-				}
-			}
+			//iomatix remake
+			if ( damage < 100 ) damage *= 4;
+			else if (damage < 200) damage *= 3;
+			else damage *= 2;
+			
+				
+				
+
+			
 		}
+
 	}
 
 	if (attacker->client && targ->client 

@@ -51,6 +51,11 @@
 - Rage drains health from hurted enemies. ✔️
 - Added target_experience and count_exp for quests it allows to gain experience as a reward for doing quests. ✔️
 - The title system. ✔️
+- Lightning memory leak fixed. ✔️
+- Skillpoints cost default is 350 now. ✔️
+- Main skills need more points to upgrade. ✔️
+- lmd_skillpoints_perlevel 5 by default.  ✔️
+- AI memory leaks fixed. GetIdealDestination in StandardBotAI ✔️
 
 ///
 - lmd_stashexp added. Stash system supports new experience system now. ???
@@ -60,9 +65,8 @@
 
 
 ## TODO
-- Titles system. (Stats)
-- Try repair crosschair hud for force.  (CG_PLAYER_ARMOR_VALUE  CG_PLAYER_AMMO_VALUE   CG_PLAYER_FORCE_VALUE)
 - grip longer
+- Try repair crosschair hud for force.  (CG_PLAYER_ARMOR_VALUE  CG_PLAYER_AMMO_VALUE   CG_PLAYER_FORCE_VALUE)
 - flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
 - Titles in stats display depends on level + new game plus points. Add section in stats command 
 - TODO: Add drop item from inventory.  todo: drop (+recall), sell (drop+buyoption + recall) inventory_core.c

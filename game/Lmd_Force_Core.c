@@ -1,4 +1,4 @@
-
+#define LMD_NEW_FORCEPOWERS
 #ifdef LMD_NEW_FORCEPOWERS
 
 #include "g_local.h"
@@ -170,10 +170,8 @@ void Force_Update(gentity_t *ent) {
 		if(!ForcePowers[i])
 			continue;
 		//FIXME: check if forcepower is still available.
-		if(stopAll || !WP_ForcePowerAvailable(ent, i, 0))
-			Force_StopPower(ent, i);
-		else if(ForcePowers[i]->run && ForcePowers[i]->run(ent, Force_GetPlayerForceData(ent, i)) == qfalse)
-			Force_StopPower(ent, i);
+		if(stopAll || !WP_ForcePowerAvailable(ent, i, 0)) Force_StopPower(ent, i);
+		else if(ForcePowers[i]->run && ForcePowers[i]->run(ent, Force_GetPlayerForceData(ent, i)) == qfalse)Force_StopPower(ent, i);
 	}
 }
 

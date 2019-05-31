@@ -252,7 +252,6 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		Accounts_GetName(acc),
 		Accounts_GetUsername(acc),
 		(secCode != NULL) ? secCode : "^1<none>",
-		Professions_LevelCost_EXP(PlayerAcc_Prof_GetProfession(ent), lvl),
 		time / 3600, (time / 60) % 60));
 	  Disp(ent, va(
 		"^8===== Progress Information =====\n"

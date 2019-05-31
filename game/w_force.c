@@ -14,7 +14,6 @@ extern void G_Knockdown( gentity_t *victim, int duration );
 int Jedi_GetForceRegenDebounce(gentity_t *ent);
 
 #define METROID_JUMP 1
-
 //RoboPhred
 qboolean isBuddy(gentity_t *ent,gentity_t *other);
 

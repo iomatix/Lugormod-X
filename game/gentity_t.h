@@ -235,6 +235,7 @@ struct gentity_s {
 	float		radius;
 
 	int			maxHealth; //used as a base for crosshair health display
+//	int         maxForce; //used as a base for crosshair force display
 
 	float		speed;
 	vec3_t		movedir;

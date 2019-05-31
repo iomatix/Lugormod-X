@@ -9,20 +9,23 @@ qboolean PlayerItem_CanSpawnItem(gentity_t *player);
 qboolean PlayerItem_Spawn(gentity_t *player, gentity_t *item);
 extern void Experience_Level_Up(gentity_t *ent);
 void GiveExperience(gentity_t *ent, int exper, char *reason) {
+	if (PlayerAcc_Prof_GetLevel(ent) >= 120) { PlayerAcc_SetExperience(ent, 0); return; } //if max level don't give exp
 	int cur = PlayerAcc_GetExperience(ent);
 	if (exper < 0 && exper - exper < 0) exper = 0;
 
 	else if (exper > 0) {
 		char *msg = va("^3You received ^5EXP %i^3 %s.", exper, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
-		trap_SendServerCommand(ent->s.number, va("exp \"%s\"", msg));
+		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 		//G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	}
 	else if (exper < 0) {
 		char *msg = va("^3You lost ^1EXP %i^3 %s.", exper, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
-		trap_SendServerCommand(ent->s.number, va("exp \"%s\"", msg));
+		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 	}
+
+
 
 
 	PlayerAcc_SetExperience(ent, cur + exper);
@@ -41,13 +44,13 @@ void GiveCredits(gentity_t *ent, int cr, char *reason) {
 	else if(cr > 0) {
 		char *msg = va("^3You received ^2CR %i^3 %s.", cr, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
-		trap_SendServerCommand(ent->s.number, va("cr \"%s\"", msg));
+		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 		G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	}
 	else if(cr < 0){
 		char *msg = va("^3You lost ^1CR %i^3 %s.", cr, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
-		trap_SendServerCommand(ent->s.number, va("cr \"%s\"", msg));
+		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 	}
 
 	PlayerAcc_SetCredits(ent, cur + cr);
@@ -60,13 +63,13 @@ void GiveLootboxes(gentity_t *ent, int lx, char *reason) {
 	else if (lx > 0) {
 		char *msg = va("^3You received ^2Credits-Box %i^3 %s.", lx, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
-		trap_SendServerCommand(ent->s.number, va("box \"%s\"", msg));
+		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 		G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	}
 	else if (lx < 0) {
 		char *msg = va("^3You lost ^1Credit-Box %i^3 %s.", lx, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
-		trap_SendServerCommand(ent->s.number, va("box \"%s\"", msg));
+		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 	}
 
 	PlayerAcc_SetLootboxes(ent, lbx + lx);

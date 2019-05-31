@@ -459,7 +459,7 @@ int Professions_SkillCost(profSkill_t *skill, int level) {
 	//If we have a min level, dont count it
 	if (level <= skill->levels.min) return 0;
 	level -= skill->levels.min;
-	if (skill->points.type == SPT_TRIANGULAR) return 1+(level * (level + 1));
+	if (skill->points.type == SPT_TRIANGULAR) return 1+(level * (level + 1)*2);
 	else if (skill->points.type == SPT_LINEAR) return level;
 	else if (skill->points.type == SPT_LINEAR_2) return level*2;
 	else if (skill->points.type == SPT_LINEAR_5) return level * 5;
@@ -1071,7 +1071,7 @@ void Cmd_BuyLevel_Confirm(gentity_t *ent, void *dataptr) {
 	Cmd_BuyLevel_Confirm_Data_t *data = (Cmd_BuyLevel_Confirm_Data_t *)dataptr;
 	int newCr = PlayerAcc_GetCredits(ent) - data->cost;
 	if (newCr < 0) {
-		Disp(ent, va("^3You no longer have enough credits to level up. You need ^2%i^3 more.", -newCr));
+		Disp(ent, va("^3You no longer have enough credits to level up. You need ^2%i^3 more to reach a next profession level.", -newCr));
 		return;
 	}
 
@@ -1143,9 +1143,13 @@ void Experience_Level_Up(gentity_t *ent)
 		
 
 	   cost = Professions_LevelCost_EXP(prof, playerLevel);
-	   Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));
-	   Disp(ent, va("^5Congratulation! Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value));
-	   trap_SendServerCommand(ent->s.number, va("^5Congratulation! Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value));
+	   Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));      
+	   char *msg_other = va("^1%s ^3becomes more powerful. One's level is ^1%i^3 now.\n.", PlayerAcc_GetName(ent), playerLevel);
+	 char *msg = va("^5Congratulation! Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value);
+		   
+	   Disp(ent, msg);
+	   trap_SendServerCommand(-1, va("print \"%s\"", msg_other));
+	   trap_SendServerCommand(ent->s.number, va("cp \"%s\"", msg));
 	   G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	   WP_InitForcePowers(ent);
 	   return;

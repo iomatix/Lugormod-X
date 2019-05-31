@@ -129,8 +129,7 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 	{
 		self->client->ps.fd.forceGripEntityNum = ENTITYNUM_NONE;
 
-		if (gripEnt && gripEnt->client && gripEnt->inuse)
-			gripEnt->client->ps.forceGripChangeMovetype = PM_NORMAL;
+		if (gripEnt && gripEnt->client && gripEnt->inuse) gripEnt->client->ps.forceGripChangeMovetype = PM_NORMAL;
 		return qfalse;
 	}
 
@@ -167,7 +166,7 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 #endif
 
 
-		
+	
 	
 	gripEnt->client->ps.fd.forceGripBeingGripped = level.time + 1000;
 
@@ -250,6 +249,7 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 
 			if (gripEnt->client->ps.fd.forcePowersActive & (1 << FP_GRIP)){ 
 				//choking, so don't let him keep gripping himself
+
 				Force_StopPower(gripEnt, FP_GRIP);
 			}
 		}
@@ -353,75 +353,75 @@ float Force_Lightning_AbsorbPower(gentity_t *self, gentity_t *targ, const forceL
 		modPowerLevel = powerLevel;
 	return ((float)modPowerLevel) / ((float)powerLevel);
 }
-
+//iomatix fixed it:
 extern void Jedi_Decloak( gentity_t *self );
 void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, const forceLightning_t *data) {
-
+	
+	int	dmg = 0;
 	if (!target->client && target->s.eType == ET_NPC){
 		//g2animent
-		if (target->s.genericenemyindex < level.time)
-			target->s.genericenemyindex = level.time + 2000;
+		if (target->s.genericenemyindex < level.time) target->s.genericenemyindex = level.time + 2000;
 	}
 	
-		if (target->client->jetPackOn)  //disable jetpack temporarily
-		{
-#ifndef LMD_NEW_JETPACK
-			Jetpack_Off(target);
-#endif
-			target->client->jetPackToggleTime = level.time + Q_irand(150, 1500);
-		}
 
+			
 		//an enemy or object
-		if (target->client->noLightningTime >= level.time){ 
+	if (target->client) {
+		if (target->client->noLightningTime >= level.time) {
 			//give them power and don't hurt them.
 			target->client->ps.fd.forcePower++;
-			if (target->client->ps.fd.forcePower > 100)
-				target->client->ps.fd.forcePower = 100;
+			if (target->client->ps.fd.forcePower > 100) target->client->ps.fd.forcePower = 100;
 			return;
 		}
-		if (ForcePowerUsableOn(self, target, FP_LIGHTNING)){
-			//Ufo: default damage is too high
-			int	dmg = 1; //Q_irand(1, 2);
+	
 
+		if (ForcePowerUsableOn(self, target, FP_LIGHTNING)){
+			//Ufo: default damage is too hig
+			dmg = Q_irand(1, 2);
+			
 			float absorb = Force_Lightning_AbsorbPower(self, target, data);
-			if(absorb == 0)return;
+			if(absorb == 0) return;
 			if(absorb != 1) {
 				absorb = 1.0f - absorb;
 				target->client->noLightningTime = level.time + 100 + (absorb * 300.0f);
 			}
-
-			if ( self->client->ps.weapon == WP_MELEE && data->twohanded )
-			{//2-handed lightning
-				//jackin' 'em up, Palpatine-style
-				dmg *= 2;
-			}
-			if (g_gametype.integer == GT_REBORN ) {
-				dmg *=3;
-			}
+		}
+			if ( self->client->ps.weapon == WP_MELEE && data->twohanded )dmg *= 2;//2-handed lightning //jackin' 'em up, Palpatine-style	
+			if (g_gametype.integer == GT_REBORN ) dmg *= 3;
+				
+			
 
 
-			if (dmg){
+			if (dmg > 0)G_Damage(target, self, self, dir, self->client->ps.origin, dmg, 0, MOD_FORCE_DARK);
 				//rww - Shields can now absorb lightning too.
-				G_Damage( target, self, self, dir, self->client->ps.origin, dmg, 0, MOD_FORCE_DARK );
-			}
-			if ( target->client ){
-				if ( !Q_irand( 0, 2 ) ){
-					G_Sound( target, CHAN_BODY, G_SoundIndex( va("sound/weapons/force/lightninghit%i", Q_irand(1, 3) )) );
-				}
+				
+			
+			
+				if ( !Q_irand( 0, 2 ) ) G_Sound(target, CHAN_BODY, G_SoundIndex(va("sound/weapons/force/lightninghit%i", Q_irand(1, 3))));
+					
+				
 
-				if (target->client->ps.electrifyTime < (level.time + 400)){
-					//only update every 400ms to reduce bandwidth usage (as it is passing a 32-bit time value)
-					target->client->ps.electrifyTime = level.time + 800;
-				}
+				if (target->client->ps.electrifyTime < (level.time + 400))target->client->ps.electrifyTime = level.time + 800;
+					//only update every 400ms to reduce bandwidth usage (as it is passing a 32-bit time value)		
 				if ( target->client->ps.powerups[PW_CLOAKED] ){
 					//disable cloak temporarily
 					Jedi_Decloak( target );
 					target->client->cloakToggleTime = level.time + Q_irand( 3000, 10000 );
 				}
-			}
-		}
-	}
 
+				if (target->client->jetPackOn)  //disable jetpack temporarily
+				{
+#ifndef LMD_NEW_JETPACK
+					Jetpack_Off(target);
+#endif
+					target->client->jetPackToggleTime = level.time + Q_irand(150, 1500);
+				}
+
+	
+		}
+	
+	}
+	
 
 qboolean Force_Lightning_Run(gentity_t *self, const void* vData) {
 	GETFORCEDATA(forceLightning_t);
@@ -536,7 +536,7 @@ qboolean Force_Lightning_Run(gentity_t *self, const void* vData) {
 		traceEnt = &g_entities[tr.entityNum];
 		Force_Lightning_Damage( self, traceEnt, forward, data);
 	}
-	Force_DrainForceEnergy(self, FP_LIGHTNING, data->forcepower);
+     Force_DrainForceEnergy(self, FP_LIGHTNING, data->forcepower);
 	return qtrue;
 }
 

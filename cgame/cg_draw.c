@@ -1045,7 +1045,7 @@ void CG_DrawForcePower( menuDef_t *menuHUD )
 	vec4_t			calcColor;
 	float			value,inc,percent;
 	itemDef_t		*focusItem;
-	const int		maxForcePower = 100;
+	const int		maxForcePower = 100; //iomatix
 	qboolean	flash=qfalse;
 
 	// Can we find the menu?
