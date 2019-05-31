@@ -88,6 +88,7 @@
 - TODO: New styles (god is using them, for force user) Cmd_SaberAttackCycle_f ??
 
 - TODO: USER FRIENDLY GUIDE
+- TODO: Skills documented with commands belove.
 - TODO: Adding openjk API support
 - TODO: RGB lightsabers
 - TODO: Custom swords
