@@ -2695,7 +2695,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				{
 					GiveLootboxes(attacker, 1, va("for ^1x%i ^3kill streak", attacker->client->pers.Lmd.killstreak));
 					//send bounty information
-					char *msg_b = va("\n^3New Bounty!\nKill ^1%s ^3to get ^2x%i ^3Credit-Box.", attacker->client->pers.netname, attacker->client->pers.Lmd.killstreak/lmd_bounty_streaks_by.integer);
+				
+					char *msg_b = va("\n^3New Bounty!\n^3Kill ^1%s ^3to get ^2x%i ^3Credit-Box.", attacker->client->pers.netname, attacker->client->pers.Lmd.killstreak/lmd_bounty_streaks_by.integer);
 					trap_SendServerCommand(-1, va("print \"%s\"", msg_b));
 					trap_SendServerCommand(-1, va("cp \"%s\"", msg_b));
 

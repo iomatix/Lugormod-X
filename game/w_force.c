@@ -700,7 +700,7 @@ void WP_InitForcePowers( gentity_t *ent )
 				//Event isn't very reliable, I made it a string. This way I can send it to just one
 				//client also, as opposed to making a broadcast event.
 				//Lugormod changed second argument to 0
-				trap_SendServerCommand(ent->s.number, va("nfr %i %i %i", maxRank, 0, ent->client->sess.sessionTeam));
+				trap_SendServerCommand(ent->s.number, va("nfr %i %i %i", maxRank, 0, ent->client->sess.sessionTeam));				
 				//Arg1 is new max rank, arg2 is non-0 if force menu should be shown, arg3 is the current team
 #endif
 			}

@@ -193,8 +193,9 @@ void trap_SendServerCommand( int clientNum, const char *text ) {
 		updateTime = level.time + 500;
 	}
 #ifdef DEBUG_SYSCALLS
-	Com_Printf("Called "__FUNCTION__"\n");
+	Com_Printf(va("Called "__FUNCTION__" %s\n", text));
 #endif
+
 	if(clientNum >= 0) {
 		if(count[clientNum] > 50) //real num is 127
 			return;

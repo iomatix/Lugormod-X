@@ -323,22 +323,27 @@ qboolean PlayerAcc_Prof_CanUseProfession(gentity_t *ent) {
 void Accounts_Prof_SetProfession(Account_t *acc, int value) {
 	if (!acc) return;
 	//iomatix save 
-	if (Accounts_Prof_GetProfession(acc) == PROF_JEDI)Accounts_SetLevel_jedi(acc,Accounts_Prof_GetLevel(acc));
-	else if(Accounts_Prof_GetProfession(acc) == PROF_MERC)Accounts_SetLevel_merc(acc,Accounts_Prof_GetLevel(acc));
+	int level = Accounts_Prof_GetLevel(acc);
+	if (level < 1) level = 1;
+	if (Accounts_Prof_GetProfession(acc) == PROF_JEDI)Accounts_SetLevel_jedi(acc, level);
+	else if(Accounts_Prof_GetProfession(acc) == PROF_MERC)Accounts_SetLevel_merc(acc, level);
 	//
 
 	profData_t *data = PROFDATA(acc);
 
 	Accounts_Prof_ClearData(acc);
-
+	level = 0; //iomatix: reset level to 0!
 	G_Free(data->data);
 	data->profession = value;
 	data->data = G_Alloc(Professions[value]->data.size);
 	memset(data->data, 0, Professions[value]->data.size);
-	if (value == PROF_JEDI)  data->level = Accounts_GetLevel_jedi(acc);
-	else if (value == PROF_MERC)data->level = Accounts_GetLevel_merc(acc);
-	Lmd_Accounts_Modify(acc);
 	//iomatix load
+	if (value == PROF_JEDI) level = Accounts_GetLevel_jedi(acc);
+	else if (value == PROF_MERC) level = Accounts_GetLevel_merc(acc);
+	if (level < 1) level = 1;
+	data->level = level;
+	Lmd_Accounts_Modify(acc);
+	
 
 
 }
@@ -593,10 +598,7 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 	//iomatix:
 
 	PlayerAcc_Prof_SetProfession(ent, prof);
-	/*
-	if (playerProfession == PROF_JEDI)Profession_Reset(ent, PlayerAcc_GetLevel_jedi(ent)); 
-	else if (playerProfession == PROF_MERC)Profession_Reset(ent, PlayerAcc_GetLevel_merc(ent));
-	else */
+
 	Profession_Reset(ent);
 
 	
@@ -1004,12 +1006,14 @@ void Cmd_ResetSkills_f(gentity_t *ent, int iArg) {
 
 	char arg[MAX_TOKEN_CHARS];
 	trap_Argv(1, arg, sizeof(arg));
+
+	used = Professions_UsedSkillPoints(acc, prof, &Professions[prof]->primarySkill);
 	if (Q_stricmp("confirm", arg) == 0)
 	{
 	
 
 
-	used = Professions_UsedSkillPoints(acc, prof, &Professions[prof]->primarySkill);
+	
 
 	if (Professions[prof]->primarySkill.subSkills.count == 0) {
 		Disp(ent, "^3This profession has no skills.");
@@ -1040,7 +1044,7 @@ void Cmd_ResetSkills_f(gentity_t *ent, int iArg) {
 	else
 	{
 		int cost = used * lmd_skillpoint_cost.integer / 10;
-		Disp(ent, va("^3Skill reset will cost ^2%i CR.\n^3Type ^8resetskills ^3confirm to reset your skills.", cost));
+		Disp(ent, va("^3Skill reset will cost ^2%iCR.\n^3Type ^8resetskills confirm ^3to reset your skills.", cost));
 	}
 }
 
@@ -1090,6 +1094,7 @@ void Cmd_BuyLevel_Confirm(gentity_t *ent, void *dataptr) {
 	}
 
 }
+
 
 void Experience_Level_Up(gentity_t *ent)
 {
@@ -1165,12 +1170,14 @@ void Experience_Level_Up(gentity_t *ent)
 	   char *playername = PlayerAcc_GetName(ent);
 	   char *msg_other = va("\n^1%s ^3becomes more powerful. One's level is ^1%i^3 now.\n", playername, playerLevel);
 	   G_LogPrintf("Level up: %s is %i now.\n", playername, playerLevel);
-	 char *msg = va("^5Congratulation! Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value);
+	   char *msg = va("^5Congratulation! Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value);
 	   Disp(ent, msg);
 	   trap_SendServerCommand(-1, va("print \"%s\"", msg_other));
-	   trap_SendServerCommand(ent->s.number, va("cp \"%s\"", msg));
-	   G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	   WP_InitForcePowers(ent);
+	  
+	   G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
+	   trap_SendServerCommand(ent->s.number, va("cp \"%s\"", msg));
+	   
 	   return;
 
 }
@@ -1211,7 +1218,7 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 		}
 
 		cost = Professions_LevelCost(prof, playerLevel, Time_Now() - Accounts_Prof_GetLastLevelup(ent->client->pers.Lmd.account));
-
+		cost += (Professions_LevelCost_EXP(prof, playerLevel) - PlayerAcc_GetExperience(ent) )/4;
 
 		int resCr = PlayerAcc_GetCredits(ent) - cost;
 		if (resCr < 0) {
@@ -1222,12 +1229,12 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 		if (Q_stricmp("confirm", arg) == 0) {
 			PlayerAcc_SetCredits(ent, resCr);
 			//iomatix:
-			playerLevel++;
-			PlayerAcc_Prof_SetLevel(ent, playerLevel);
-			int NewSkillPoints_value = Professions_Add_That_Amount_SkillPoints(playerLevel);
+			
+			PlayerAcc_SetExperience(ent, 1+(Professions_LevelCost_EXP(prof, playerLevel)-PlayerAcc_GetExperience(ent)));
+			Experience_Level_Up(ent);
+		
 
-			Disp(ent, va("^3You are now at level ^2%i^3.\n ^3%i skill points recived.", playerLevel, NewSkillPoints_value));
-			WP_InitForcePowers(ent);
+			
 			return;
 		}
 
