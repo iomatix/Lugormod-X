@@ -46,7 +46,9 @@ When 1 players get access to buylevel command. Default 0.
 
 - **lmd_stashexp** & **lmd_stashcr**
 Allow to setup amount experience and credits inside stash.
+- **lmd_startingCr**
 
+Starting credits value for new registered account. Default 1350.
 
 **They are usable in the game**
 

@@ -428,7 +428,7 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_DataPath, "lmd_datapath", "default", CVAR_ARCHIVE | CVAR_LATCH, 0, qfalse, qfalse,
 "The data path that lugormod will use for its accounts, entity sets, and other files."
 },
-{ &lmd_startingcr, "lmd_startingCr", "0", CVAR_ARCHIVE, 0, qfalse, qfalse,
+{ &lmd_startingcr, "lmd_startingCr", "1350", CVAR_ARCHIVE, 0, qfalse, qfalse,
 "The number of credits a newly registered player starts with",
 },
 { &lmd_stashrate, "lmd_stashRate", "60000", CVAR_ARCHIVE, 0, qtrue, qfalse,
@@ -437,11 +437,11 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_stashdepotime, "lmd_stashDepoTime", "15000", CVAR_ARCHIVE, 0, qtrue, qfalse,
 "The time in miliseconds needed to deposit a stash."
 },
-{ &lmd_stashcr, "lmd_stashCr", "10", CVAR_ARCHIVE, 0, qtrue, qfalse,
+{ &lmd_stashcr, "lmd_stashCr", "10000", CVAR_ARCHIVE, 0, qtrue, qfalse,
 "The default number of credits in a stash.  This is only used in the new lmd_stash* entity set, "
 "and only if no credits value is already given."
 },
-{ &lmd_stashexp, "lmd_stashExp", "10", CVAR_ARCHIVE, 0, qtrue, qfalse,
+{ &lmd_stashexp, "lmd_stashExp", "10000", CVAR_ARCHIVE, 0, qtrue, qfalse,
 "The default number of experience points in a stash.  This is only used in the new lmd_stash* entity set, "
 "and only if no experience value is already given."
 },
