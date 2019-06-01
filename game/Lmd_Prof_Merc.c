@@ -1756,6 +1756,7 @@ void Merc_Spawn(gentity_t *ent)
 	ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax = 75;
 
 	//iomatix:
+	ent->client->pers.Lmd.killstreak = 0; //killstreak reset
 	//HEALTH
 	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] =  Get_Merc_hp_maxs_value(ent); //iomatix HP skill
 

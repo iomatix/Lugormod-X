@@ -5,7 +5,9 @@
 void Spawn_NoProf(gentity_t *ent){
 	ent->client->ps.trueNonJedi = qfalse;
 	ent->client->ps.trueJedi = qfalse;
-
+	//
+	ent->client->pers.Lmd.killstreak = 0;
+	//
 	ent->client->ps.weapon = WP_SABER;
 	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_SABER);
 }
@@ -20,6 +22,9 @@ profession_t noProf = {
 
 void Spawn_GodProf(gentity_t *ent){
 	int i;
+	//klling streak:
+	ent->client->pers.Lmd.killstreak = 0; //reset on spawn
+	//
 	ent->client->ps.weapon = WP_SABER;
 	ent->client->ps.stats[STAT_WEAPONS] = (1 << (LAST_USEABLE_WEAPON+1))  - ( 1 << WP_NONE );
 	for ( i = 0 ; i < MAX_WEAPONS ; i++ ) {

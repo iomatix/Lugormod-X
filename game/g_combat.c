@@ -2661,15 +2661,52 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				
 				if (lmd_rewardcr_kill.integer != 0) {
 					cr_exp_output = 1 + lmd_rewardcr_kill.integer*cr_exp_multiplier;
-					GiveCredits(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)\n", self->client->pers.netname, dead_pers_level));
+					GiveCredits(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
 				}
 				if (lmd_rewardexp_kill.integer != 0) {
 					cr_exp_output = 1 + lmd_rewardexp_kill.integer*cr_exp_multiplier;
-					GiveExperience(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)\n", self->client->pers.netname, dead_pers_level));
+					GiveExperience(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
 				}
+
+
+
+				//killing streaks
+				//Bounty
+				if (lmd_bounty_streaks_by.integer < 1)lmd_bounty_streaks_by.integer = 1;
+				if (self->client->pers.Lmd.killstreak >= lmd_bounty_streaks_by.integer)
+				{
+					int bounty_reward = floor((float)self->client->pers.Lmd.killstreak/lmd_bounty_streaks_by.integer);
+					char *msg_bd = va("\n^8%s^3's got a bounty for killing ^1%s.", attacker->client->pers.netname, self->client->pers.netname);
+					GiveCredits(attacker, self->client->pers.Lmd.killstreak*(self->client->pers.Lmd.killstreak+1)*4, "as a bounty bonus");
+					GiveLootboxes(attacker, bounty_reward, "as a bounty");
+					trap_SendServerCommand(-1, va("print \"%s\"", msg_bd));
+
+
+					char *msg_bd_self = va("\n^2You've ^3got a bounty for killing ^1%s.", self->client->pers.netname);
+					trap_SendServerCommand(attacker->s.number, va("cp \"%s\"", msg_bd_self));
+
+
+				}
+
+				//Attacker gain killing streak
+				attacker->client->pers.Lmd.killstreak += 1; //increase
+				if (attacker->client->pers.Lmd.killstreak%lmd_bounty_streaks_by.integer == 0)
+				{
+					GiveLootboxes(attacker, 1, va("for ^1x%i ^3kill streak", attacker->client->pers.Lmd.killstreak));
+					//send bounty information
+					char *msg_b = va("\n^3New Bounty!\nKill ^1%s ^3to get ^2x%i ^3Credit-Box.", attacker->client->pers.netname, attacker->client->pers.Lmd.killstreak/lmd_bounty_streaks_by.integer);
+					trap_SendServerCommand(-1, va("print \"%s\"", msg_b));
+					trap_SendServerCommand(-1, va("cp \"%s\"", msg_b));
+
+
+				}
+
+
+
 			}
 		}
 	}
+
 	if(self->client && self->s.eType == ET_PLAYER) {
 		PlayerAcc_Stats_SetDeaths(self, PlayerAcc_Stats_GetDeaths(self) + 1);
 		lmd_event_playerkilled(self, attacker, meansOfDeath);
@@ -4610,7 +4647,7 @@ void G_LocationBasedDamageModifier(gentity_t *ent, vec3_t point, int mod, int df
 		*damage *= 0.6;
 		break;
 	case HL_HEAD:
-		*damage *= 2;
+		*damage *= 3; //iomatix: 3x damage for head hits
 		break;
 	default:
 		break; //do nothing then
@@ -5161,7 +5198,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			|| g_gametype.integer == GT_BATTLE_GROUND
 			|| PlayerAcc_Prof_GetProfession(targ) == PROF_JEDI)
 			&& targ->client->ps.weapon == WP_SABER))
-		{//if the target is a trueJedi, reduce splash and explosive damage to 80%
+		{//if the target is a trueJedi, reduce splash and explosive damage to 85%
 			switch ( mod )
 			{
 			case MOD_REPEATER_ALT:
@@ -5177,7 +5214,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			case MOD_TRIP_MINE_SPLASH:
 			case MOD_TIMED_MINE_SPLASH:
 			case MOD_DET_PACK_SPLASH:
-				damage *= 0.8;
+				damage *= 0.85;
 				break;
 			}
 		}
@@ -5192,7 +5229,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			//iomatix remake
 			if ( damage < 100 ) damage *= 4;
 			else if (damage < 200) damage *= 3;
-			else damage *= 2;
+			else damage *= 2; //saber x2 damage when no saber in hand of the target
 			
 				
 				

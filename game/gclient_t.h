@@ -114,6 +114,7 @@ typedef struct {
 		qboolean wasKing;
 		int chicken;
 		int kingScore;
+		int killstreak;
 		//RoboPhred:
 		//void            *nickPointer;
 		Account_t *account;

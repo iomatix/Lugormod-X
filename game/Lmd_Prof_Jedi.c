@@ -1065,6 +1065,7 @@ void Cmd_Ionlysaber_f(gentity_t *ent, int iArg)
 void Jedi_Spawn(gentity_t *ent) {
 	ent->client->ps.trueNonJedi = qfalse;
 	//iomatix:
+	ent->client->pers.Lmd.killstreak = 0; //kill streak reset
 	if (lmd_jedi_pickup_weapons.integer > 0) {
 		ent->client->ps.trueJedi = qfalse;
 	}

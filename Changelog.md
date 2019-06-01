@@ -58,11 +58,12 @@
 - AI memory leaks fixed. GetIdealDestination in StandardBotAI ✔️
 - Creditboxes reworked. ✔️
 - Player must confirm resetskills command to reset skills now. ✔️
-- Level 5 Jump. The player can not use it to fly but jumps higher. ✔️
 - Head damage is increased. ✔️
 - Perfect Aim mercenary skill is added. ✔️
+- Bounty system with rewards is added. ✔️
 
 ///
+- Level 5 Jump. The player can not use it to fly but jumps higher. ??
 - lmd_stashexp added. Stash system supports new experience system now. 50%
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
 - Longer Grip which depends on the skill level. 80% Search for limiter function... whereveri it is hidden.
@@ -77,8 +78,7 @@
 - Titles in stats display depends on level + new game plus points. Add section in stats command 
 - TODO: Add drop item from inventory.  todo: drop (+recall), sell (drop+buyoption + recall) inventory_core.c
 
-- TODO: Killing streak Bounty. After each lmd_bounty_streaks_by kills bounty is increasing. For killing bounty target player will recive Credit Boxes. new variable (lmd_bounty_streaks_by default "5")
-- TODO: Lootboxes for killstreak
+
 
 - TODO: svcmds + commands + admin commands guide
 

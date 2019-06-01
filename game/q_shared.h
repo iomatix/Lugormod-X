@@ -2254,6 +2254,8 @@ typedef enum {
 // so if a playerState_t is transmitted, the entityState_t can be fully derived
 // from it.
 typedef struct playerState_s {
+	//int killstreak; //iomatix bounty killstreak moved to pers
+
 	int			commandTime;	// cmd->serverTime of last executed command
 	int			pm_type;
 	int			bobCycle;		// for view bobbing and footstep generation
