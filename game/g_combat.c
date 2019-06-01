@@ -2594,9 +2594,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		obit = modNames[ meansOfDeath ];
 	}
 
-	G_LogPrintf("Kill: %i %i %i: %s killed %s by %s\n", 
-		killer, self->s.number, meansOfDeath, killerName, 
-		self->client->pers.netname, obit );
+	G_LogPrintf("Kill: %i %i %i: %s killed %s by %s\n", killer, self->s.number, meansOfDeath, killerName, self->client->pers.netname, obit );
 
 	if ( g_austrian.integer 
 		&& (g_gametype.integer == GT_DUEL) 
@@ -2676,8 +2674,11 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				if (self->client->pers.Lmd.killstreak >= lmd_bounty_streaks_by.integer)
 				{
 					int bounty_reward = floor((float)self->client->pers.Lmd.killstreak/lmd_bounty_streaks_by.integer);
+					int bounty_bonus = self->client->pers.Lmd.killstreak*(self->client->pers.Lmd.killstreak + 1);
 					char *msg_bd = va("\n^8%s^3's got a bounty for killing ^1%s.", attacker->client->pers.netname, self->client->pers.netname);
-					GiveCredits(attacker, self->client->pers.Lmd.killstreak*(self->client->pers.Lmd.killstreak+1)*4, "as a bounty bonus");
+					
+					GiveCredits(attacker, bounty_bonus*4, "as a bounty bonus");
+					GiveExperience(attacker, bounty_bonus*5, "as a bounty bonus");
 					GiveLootboxes(attacker, bounty_reward, "as a bounty");
 					trap_SendServerCommand(-1, va("print \"%s\"", msg_bd));
 

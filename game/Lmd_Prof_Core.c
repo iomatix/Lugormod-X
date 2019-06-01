@@ -1052,9 +1052,9 @@ int Professions_LevelCost_EXP(int prof, int level) {
 	int cost;
 	if(lmd_exp_for_level.integer <= 1) lmd_exp_for_level.integer = 450; //default
 	
-	if (nextlevel < 16) cost = lmd_exp_for_level.integer * nextlevel / 4.6;
-	else if (nextlevel < MASTER_LEVEL)	cost = lmd_exp_for_level.integer * nextlevel/3.3;
-	else cost = lmd_exp_for_level.integer * nextlevel / 2.3;									//harder formula for players above 40 lvl
+	if (nextlevel < 16) cost = lmd_exp_for_level.integer * level * nextlevel / 7.5f;
+	else if (nextlevel < MASTER_LEVEL)	cost = lmd_exp_for_level.integer * level * nextlevel/7.3f;
+	else cost = lmd_exp_for_level.integer * level * nextlevel / 6.426f;									//harder formula for players above 40 lvl
 	
 	return cost;
 }
@@ -1161,8 +1161,10 @@ void Experience_Level_Up(gentity_t *ent)
 		
 
 	   cost = Professions_LevelCost_EXP(prof, playerLevel);
-	   Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));      
-	   char *msg_other = va("\n^1%s ^3becomes more powerful. One's level is ^1%i^3 now.\n.", PlayerAcc_GetName(ent), playerLevel);
+	   Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));
+	   char *playername = PlayerAcc_GetName(ent);
+	   char *msg_other = va("\n^1%s ^3becomes more powerful. One's level is ^1%i^3 now.\n", playername, playerLevel);
+	   G_LogPrintf("Level up: %s is %i now.\n", playername, playerLevel);
 	 char *msg = va("^5Congratulation! Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value);
 	   Disp(ent, msg);
 	   trap_SendServerCommand(-1, va("print \"%s\"", msg_other));
