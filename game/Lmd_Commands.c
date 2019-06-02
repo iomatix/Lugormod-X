@@ -360,6 +360,7 @@ void Cmd_Challenge_f(gentity_t *ent, int iArg){
 	}
 
 	if (trap_Argc() < 2) {
+		trap_SendServerCommand(ent->s.number, "chat \"^3Challenge your opponent for special duel.\"");
 		Disp(ent, "^3Usage: /challenge ^2<types ...>\n"
 			"Valid types are: power, force, fullforce, training, tiny, titan, bet, hibet");
 		return;
@@ -565,14 +566,16 @@ void Cmd_Resize_f (gentity_t *ent, int iArg){
 	}
 
 	if (duelInProgress(&ent->client->ps)){
-		Disp(ent, "^3You cannot do this while in a duel.");
+		//Disp(ent, "^3You cannot do this while in a duel.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while in a duel.\"");
 		return;
 	}
 
 
 	//RoboPhred
 	if(ent->client->sess.spectatorState != SPECTATOR_NOT){
-		Disp(ent, "^3You cannot do this while spectating.");
+		//Disp(ent, "^3You cannot do this while spectating.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while spectating.\"");
 		return;
 	}
 
@@ -768,7 +771,8 @@ void Cmd_Ionlyduel_f (gentity_t *ent, int iArg)
 	//ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_MELEE);
 	//ent->client->ps.weapon = WP_MELEE;
 	ent->client->pers.Lmd.persistantFlags |= SPF_IONLYDUEL;
-	Disp (ent, "IONLYDUEL activated (it can be deactivated by engaging in a duel)\n");
+	//Disp (ent, "IONLYDUEL activated (it can be deactivated by engaging in a duel)\n");
+	trap_SendServerCommand(ent->s.number, "chat \"^3IONLYDUEL ^2activated ^3(it can be deactivated by engaging in a duel)\"");
 }
 
 qboolean ThereIsAKing (void);
@@ -776,17 +780,21 @@ gentity_t* GetKing (void);
 void Cmd_King_f (gentity_t *ent, int iArg)
 {
 	if (g_gametype.integer == GT_JEDIMASTER || !(g_privateDuel.integer & PD_KING)) {
-		Disp( ent, "King mode is off.");
+		//Disp( ent, "King mode is off.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1King mode is off.\"");
 		return;
 	}
 	gentity_t *kingent = GetKing();
 	if (!ThereIsAKing() || !kingent || !kingent->client) {
-		Disp( ent, "There is no King.");
+		//Disp( ent, "There is no King.");
+		trap_SendServerCommand(ent->s.number, "chat \"^3There is no King.\"");
 	} else {
-		Disp( ent, va("%s is the King, and has won %i duels.", kingent->client->pers.netname, kingent->client->pers.Lmd.kingScore));
+		//Disp( ent, va("%s is the King, and has won %i duels.", kingent->client->pers.netname, kingent->client->pers.Lmd.kingScore));
+		trap_SendServerCommand(ent->s.number, va("chat \"%s ^3is the King, and has won ^2%i ^3duels.\"", kingent->client->pers.netname, kingent->client->pers.Lmd.kingScore));
 	}
 	if (g_bestKing && g_bestKing->client) {
-			Disp( ent, va("%s is the best King with %i duels won.", g_bestKing->client->pers.netname, g_bestKingScore));
+			//Disp( ent, va("%s is the best King with %i duels won.", g_bestKing->client->pers.netname, g_bestKingScore));
+			trap_SendServerCommand(ent->s.number, va("chat \"%s ^3is the best King with ^2%i ^3duels won.\"", g_bestKing->client->pers.netname, g_bestKingScore));
 	}
 }
 
@@ -803,7 +811,8 @@ void Cmd_DropStuff_f (gentity_t *ent, int iArg) {
 
 	//RoboPhred
 	if(ent->client->sess.spectatorState != SPECTATOR_NOT){
-		Disp(ent, "^3You cannot do this while spectating.");
+		//Disp(ent, "^3You cannot do this while spectating.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while spectating.\"");
 		return;
 	}
 
@@ -906,11 +915,13 @@ void Cmd_ChatMode_f(gentity_t *ent, int iArg){
 				continue;
 			if(Q_stricmpn(arg, name, len) == 0){
 				ent->client->pers.Lmd.chatMode[set] = i;
-				Disp(ent, va("^3Chat mode set to: ^2%s", name));
+				//Disp(ent, va("^3Chat mode set to: ^2%s", name));
+				trap_SendServerCommand(ent->s.number, va("chat \"^3Chat mode set to: ^2%s.\"", name));
 				return;
 			}
 		}
-		Disp(ent, "^3Invalid chat mode.");
+		//Disp(ent, "^3Invalid chat mode.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1Invalid chat mode.\"");
 	}
 	else{
 		ent->client->pers.Lmd.chatMode[set]++;
@@ -921,7 +932,8 @@ void Cmd_ChatMode_f(gentity_t *ent, int iArg){
 				break;
 			}
 		}
-		Disp(ent, va("^3Chat mode for ^2%s^3 is ^2%s", set ? "say" : "team", getChatModeName(ent->client->pers.Lmd.chatMode[set])));
+		//Disp(ent, va("^3Chat mode for ^2%s^3 is ^2%s", set ? "say" : "team", getChatModeName(ent->client->pers.Lmd.chatMode[set])));
+		trap_SendServerCommand(ent->s.number, va("chat \"^3Chat mode for ^2%s^3 is ^2%s.\"", set ? "say" : "team", getChatModeName(ent->client->pers.Lmd.chatMode[set])));
 	}
 }
 
@@ -933,23 +945,26 @@ void Cmd_dispMotd_f(gentity_t *ent, int iArg){
 int StashHolder(void);
 void Cmd_Stash_f(gentity_t *ent, int iArg){
 	int check = StashHolder();
-	if(check == -3)
+	if(check == -3)//trap_SendServerCommand(ent->s.number, "chat \"^3The stash is doing highly improbable things...\"");
 		Disp(ent, "^3The stash is doing highly improbable things...");
-	else if(check == -2)
+	else if(check == -2)//trap_SendServerCommand(ent->s.number, "chat \"^3There is no money stash spawned."\"");
 		Disp(ent, "^3There is no money stash spawned");
-	else if(check == -1)
+	else if(check == -1)//trap_SendServerCommand(ent->s.number, "chat \"^3There is currently a money stash spawned."\"");
 		Disp(ent, "^3There is currently a money stash spawned");
 	else{
-		Disp(ent, va("%s^7 ^3is holding onto the money stash", g_entities[check].client->pers.netname));
+		//Disp(ent, va("%s^7 ^3is holding onto the money stash", g_entities[check].client->pers.netname));
+		trap_SendServerCommand(ent->s.number, va("chat \"%s^7 ^3is holding onto the money stash.\"", g_entities[check].client->pers.netname));
 	}
 }
 
 void dropMoneyStash(gentity_t *ent);
 void Cmd_DropStash_f(gentity_t *ent, int iArg){
 	if(!ent->client->Lmd.moneyStash)
-		Disp(ent, "^3You do not have a stash.");
+		//Disp(ent, "^3You do not have a stash.");
+	trap_SendServerCommand(ent->s.number, "chat \"^1You do not have a stash.\"");
 	else{
-		Disp(ent, "^3Stash dropped.");
+		//Disp(ent, "^3Stash dropped.");
+		trap_SendServerCommand(ent->s.number, "chat \"^3Stash dropped.\"");
 		dropMoneyStash(ent);
 	}
 }
@@ -960,17 +975,19 @@ void Cmd_Examine_f (gentity_t *ent, int iArg)
 	char msg[MAX_STRING_CHARS] = "";
 	if(ent->client->sess.spectatorState != SPECTATOR_NOT)
 	{
-		Disp(ent, "^3You cannot use this command while spectating.");
+	//	Disp(ent, "^3You cannot use this command while spectating.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot use this command while spectating.\"");
 		return;
 	}
 	if(!targ || !targ->inuse)
 	{
-		Disp(ent, "^3Nothing to examine.");
+		//Disp(ent, "^3Nothing to examine.");
+		trap_SendServerCommand(ent->s.number, "chat \"^3Nothing to examine.\"");
 		return;
 	}
 	if(targ->client && targ->s.number < MAX_CLIENTS)
 	{
-		Q_strcat(msg, sizeof(msg), va("^3Player\n^3Name: ^7%s", targ->client->pers.netname));
+		Q_strcat(msg, sizeof(msg), va("^3Player\n^3Name: ^7%s\n", targ->client->pers.netname));
 	}
 	else
 	{
@@ -991,6 +1008,7 @@ void Cmd_Examine_f (gentity_t *ent, int iArg)
 	{
 		msg[strlen(msg) - 1] = 0; //remove ending linefeed.
 		Disp(ent, msg);
+		//trap_SendServerCommand(ent->s.number, va("chat \"%s\"",msg));
 	}
 }
 
@@ -1026,7 +1044,8 @@ void Cmd_Interact_f(gentity_t *ent, int iArg);
 	
 void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	if (!ent->client->pers.Lmd.account) {
-		Disp(ent, "^1You must be logged in to use the command.");
+		//Disp(ent, "^1You must be logged in to use the command.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1You must be logged in to use this command.\"");
 		return;
 	}
 
@@ -1036,6 +1055,7 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	char *who_target;
 	char *who_principal;
 	if (trap_Argc() < 2) {
+		trap_SendServerCommand(ent->s.number, "chat \"^3Offer a reward for someone's life.\"");
 		Disp(ent, "^1Usage: bounty <name> <credits_amount>\n^3Name must be an account alias not the username or an id.");
 		return;
 	}
@@ -1043,21 +1063,25 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	trap_Argv(2, val, sizeof(val));
 	acc = Accounts_GetByName(arg);
 	if (!acc) {
-		Disp(ent, "^1The player dosen't exist or is unregistered.");
+		//Disp(ent, "^1The player dosen't exist or is unregistered.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1The player dosen't exist or is unregistered.\"");
 		return;
 	}
 	int v = atoi(val); //take cost.
 	if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
-		Disp(ent, "^3Invalid credit amount.");
+		//Disp(ent, "^3Invalid credit amount.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1Invalid credit amount.\"");
 		return;
 	}
 	if (v < 35) {
-		Disp(ent, "^1Invalid amount, ^3credits ^1must be at least equal ^235 CR^3.");
+		//Disp(ent, "^1Invalid amount, ^3credits ^1must be at least equal ^235 CR^3.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1Invalid amount, ^3credits ^1must be at least equal ^235 CR^3.\"");
 		return;
 	}
 	int principal_Budget = PlayerAcc_GetCredits(ent);
 	if (v > principal_Budget) {
-		Disp(ent, va("^1You do not have that amount of credits! ^2%i CR ^3 available.", principal_Budget));
+		//Disp(ent, va("^1You do not have that amount of credits! ^2%i CR ^3 available.", principal_Budget));
+		trap_SendServerCommand(ent->s.number, va("chat \"^1You do not have that amount of credits! ^2%i CR ^3 available.\"", principal_Budget));
 		return;
 	}
 	

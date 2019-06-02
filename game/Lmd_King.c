@@ -281,8 +281,7 @@ void CalcScore(gentity_t *winner, gentity_t *loser){
 		loserScore = 1;
 	}
 
-	if (winnerProf == PROF_NONE || winnerProf == PROF_BOT)
-		checkLevelUp(winner);
+	if (winnerProf == PROF_NONE || winnerProf == PROF_BOT) checkLevelUp(winner);
 
 	PlayerAcc_SetScore(winner, winnerScore);
 	PlayerAcc_SetScore(loser, loserScore);

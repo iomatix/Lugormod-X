@@ -843,8 +843,8 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 		level++;
 		nextLevel++;
 		Accounts_SetCredits(acc, Cr_cost);
-		//Disp(ent, va("^3You've paid ^2%i CR^3. ( ^2%i CR ^3left )", lmd_skillpoint_cost.integer*cost, Cr_cost));
-		trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR^3. ^2%i CR ^3has left.\"", lmd_skillpoint_cost.integer*cost, Cr_cost));
+		Disp(ent, va("^3You've paid ^2%i CR^3. ^2%i CR ^3has left.", lmd_skillpoint_cost.integer*cost, Cr_cost));
+		//trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR^3. ^2%i CR ^3has left.\"", lmd_skillpoint_cost.integer*cost, Cr_cost));
 		if (level >= skill->levels.max) {
 			//Disp(ent, "^3This skill is now at its highest level.");
 			trap_SendServerCommand(ent->s.number, "chat \"^3This skill is now at its highest level.\"");
@@ -986,7 +986,7 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 			if (level < skill->levels.max) {
 				if (points >= level + 1 && cost_cr <= cr_player) {
 					Disp(ent, va("^3Use ^2/%s up^3 to increase the ^2%s^3 skill.", cmd, skill->name ));
-					trap_SendServerCommand(ent->s.number, va("chat \"^3The Cost is ^2%i^3 point%s, leaving you with ^2%i^3 point%s and ^2%i CR^3.\"", cost, (cost == 1) ? "" : "s", points - cost, (points - cost == 1) ? "" : "s", cost_cr));
+					trap_SendServerCommand(ent->s.number, va("chat \"^3The Cost is ^2%i^3 point%s and ^2%i CR^3.\"", cost, (cost == 1) ? "" : "s", cost_cr));
 					//Disp(ent, va("^3The cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.", cost_cr, cr_player - cost_cr));
 				}
 				else //Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.", skill->name));
