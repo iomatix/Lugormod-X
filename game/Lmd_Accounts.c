@@ -248,13 +248,13 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3Username:      ^2%s\n"
 		"^3Security code: ^2%s\n"
 		"^3Time:          ^2%i^3:^2%02i\n"
-		"^3Black List:    ^2%iCR",
+		"%s",
 		Accounts_GetId(acc),
 		the_title,
 		Accounts_GetName(acc),
 		Accounts_GetUsername(acc),
 		(secCode != NULL) ? secCode : "^1<none>",
-		time / 3600, (time / 60) % 60, Accounts_GetBountyReward(acc)));
+		time / 3600, (time / 60) % 60, (Accounts_GetBountyReward(acc) > 0) ? va("^8Black List: ^1%i ^8CR", Accounts_GetBountyReward(acc)) : "^3You are not listed on ^8The Black List^3." ));
 	  Disp(ent, va(
 		"^8===== Progress Information =====\n"
 		"^3Main Level:    ^2%i\n"
