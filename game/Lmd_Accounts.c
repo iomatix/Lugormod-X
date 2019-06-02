@@ -247,13 +247,14 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3Name:         ^8%s %s\n"
 		"^3Username:      ^2%s\n"
 		"^3Security code: ^2%s\n"
-		"^3Time:          ^2%i^3:^2%02i",
+		"^3Time:          ^2%i^3:^2%02i"
+		"^3Bounty:        ^2%iCR\n",
 		Accounts_GetId(acc),
 		the_title,
 		Accounts_GetName(acc),
 		Accounts_GetUsername(acc),
 		(secCode != NULL) ? secCode : "^1<none>",
-		time / 3600, (time / 60) % 60));
+		time / 3600, (time / 60) % 60, Accounts_GetBountyReward(acc)));
 	  Disp(ent, va(
 		"^8===== Progress Information =====\n"
 		"^3Main Level:    ^2%i\n"
@@ -294,7 +295,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 	if (prof == PROF_NONE) Disp(ent, va("^3Next level up: ^2%i^3 points and ^2%i^3 hours", (lvl * (lvl+1) * LEVEL_SCORE), (lvl * lvl * 2)));
 	Disp(ent, va(
 		"^8===== Statistics =====\n"
-		"^3Bounty:        ^2%i\n"
+		"^3Highest Streak: ^2x%i\n"
 		"^3Logins:        ^2%i\n"
 		"^3Last login:    ^2%s\n"
 		"^3Kills:         ^2%i\n"
@@ -305,7 +306,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3Total shots:   ^2%i\n"
 		"^3Shots hit:     ^2%i\n"
 		"^3Profession:    ^2%s",
-		Accounts_GetBountyReward(acc),
+		Accounts_GetMaxKillstreak(acc),
 		Accounts_GetLogins(acc),
 		lastLogin,
 		Accounts_Stats_GetKills(acc),
@@ -969,7 +970,7 @@ void Cmd_Credits_f(gentity_t *ent, int iArg) {
 	else if (iArg == 3) {
 		if (ent->s.m_iVehicleNum || ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
 			ent->client->pers.Lmd.jailTime > level.time) {
-			return;
+			return; 
 		}
 		DropCredits(ent, numCreds);
 	}

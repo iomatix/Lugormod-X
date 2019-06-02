@@ -1136,7 +1136,7 @@ void Cmd_Property_f(gentity_t *ent, int iArg);
 void Cmd_Say2_f(gentity_t *ent, int iArg);
 
 cmdEntry_t adminCommandEntries[] = {
-	{ "accountedit", "Modify a player account.", Cmd_AccountEdit_f, 0, qtrue, 1, 0, 0 },
+{ "accountedit", "Modify a player account.", Cmd_AccountEdit_f, 0, qtrue, 1, 0, 0 },
 { "accountinfo", "Get account information on the specified player", Cmd_AccountInfo_f, 0, qtrue, 4, 0, 0 },
 { "addloc", "Add a description of the current location.", Cmd_AddLocation_f, 0, qtrue, 1, 0, 0 },
 { "announce", "Show a message on the center of player's screens.", Cmd_Announce_f, 0, qtrue, 3, 0, 0 },

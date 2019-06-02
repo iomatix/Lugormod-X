@@ -88,6 +88,15 @@ int Accounts_GetBountyReward(Account_t *acc);
 
 void Accounts_SetBountyReward(Account_t *acc, int value);
 #define PlayerAcc_SetBountyReward(ent, value) Accounts_SetBountyReward(ent->client->pers.Lmd.account, value)
+
+
+int Accounts_GetMaxKillstreak(Account_t *acc);
+#define PlayerAcc_GetMaxKillstreak(ent) Accounts_GetMaxKillstreak(ent->client->pers.Lmd.account)
+
+void Accounts_SetMaxKillstreak(Account_t *acc, int value);
+#define PlayerAcc_SetMaxKillstreak(ent, value) Accounts_SetMaxKillstreak(ent->client->pers.Lmd.account, value)
+
+
 //
 int Accounts_GetScore(Account_t *acc);
 #define PlayerAcc_GetScore(ent) Accounts_GetScore(ent->client->pers.Lmd.account)

@@ -1041,7 +1041,21 @@ Cmd disable
 
 void Cmd_Confirm_f(gentity_t *ent, int iArg);
 void Cmd_Interact_f(gentity_t *ent, int iArg);
+void Bounty_List_disp(gentity_t *ent)
+{
+	//Bounties:
+	int num_accounts = Accounts_Count();
+	Account_t *acc;
+	Disp(ent, "^0====== ^8Black List^0 ======");
+	for (int i = 0; i < num_accounts; i++) {
+		acc = Accounts_Get(i);
+		if (!acc) continue;
+		if (Accounts_Prof_GetProfession(acc) == PROF_ADMIN )continue;
+		if (Accounts_GetBountyReward(acc) <= 0)continue;
+		Disp(ent,va("%s^3: ^2%i CR", Accounts_GetName(acc), Accounts_GetBountyReward(acc) ));
+	}
 	
+}
 void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	if (!ent->client->pers.Lmd.account) {
 		//Disp(ent, "^1You must be logged in to use the command.");
@@ -1055,8 +1069,9 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	char *who_target;
 	char *who_principal;
 	if (trap_Argc() < 2) {
-		trap_SendServerCommand(ent->s.number, "chat \"^3Offer a reward for someone's life.\"");
+		trap_SendServerCommand(ent->s.number, "chat \"^3Offer a reward for someone's life or check out the ^8Black List^3.\"");
 		Disp(ent, "^1Usage: bounty <name> <credits_amount>\n^3Name must be an account alias not the username or an id.");
+		Bounty_List_disp(ent);
 		return;
 	}
 	trap_Argv(1, arg, sizeof(arg));
@@ -1097,10 +1112,10 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	//messages:
 	char *msg_line_1 = "^3New Bounty!";
 	char *msg_line_2 = va("^3%s^3 pays ^2%i CR^3 for the %s's^3 ^3head.", who_principal,v, who_target);
-	char *msg_line_3 = va("^3Total Bounty is: ^2%i CR", Accounts_GetBountyReward(acc));
+	char *msg_line_3 = va("^3Total Bounty is: ^2%i CR.", Accounts_GetBountyReward(acc));
 	char *msg_all = va("%s\n%s\n%s", msg_line_1, msg_line_2, msg_line_3);
 	//employer
-	trap_SendServerCommand(ent->s.number,va("chat \"^3You've paid ^2%i CR ^3for %s's^3 head\"",v,who_target));
+	trap_SendServerCommand(ent->s.number,va("chat \"^3You've paid ^2%i CR ^3for %s's^3 head.\"",v,who_target));
 
 	//send to all
 	trap_SendServerCommand_ToAll(ent->s.number, va("cp \"%s\"", msg_all));
@@ -1114,7 +1129,7 @@ cmdEntry_t playerCommandEntries[] = {
 	//{"testline", "\n", Cmd_TestLine_f, 0, 1, 0, 0, 0},
 	{"actions", "List and use your current pending actions.", Cmd_Action_f, 0, qfalse, 0, 0, 0, 0},
 	{"admins", "List currently logged in admins and their level.", Cmd_AdminInfo_f, 0, qfalse, 0, 0, 0, 0},
-    {"bounty", "Set a reward for killing the player.", Cmd_SetBounty_f, 0, qfalse, 0, 0, 0, 0 },
+    {"bounty", "Check bounties list or set a reward for killing the player.", Cmd_SetBounty_f, 0, qfalse, 0, 0, 0, 0 },
 	{"buddy", "Make the player your buddy.", Cmd_BuddyClient_f, 0, qfalse, 0, 0, 0, 0},
 	{"challenge", "Challenge someone to a 'special' duel. For example '\\^5challenge power' ^3will challenge someone to a duel where both players have unlimited force power.", Cmd_Challenge_f, 0, qfalse, 0, 2, ~(1 << GT_FFA), 0},
 	{"chatmode", "Switches your team chat mode.  If no mode is set, the next mode in the sequence is selected.", Cmd_ChatMode_f, 0, qfalse, 0, 0, 0, 0},

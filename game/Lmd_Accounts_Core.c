@@ -39,6 +39,7 @@ struct Account_s{
 	int lootboxes;
 	int new_game_plus_counter;
 	int bountyReward;
+	int max_killstreak;
 	int flags;
 
 	struct {
@@ -232,9 +233,9 @@ DataWriteResult_t Accounts_Write_Modules(void *target, char key[], int keySize, 
 	_m##_AUTO(lootboxes, ACCOUNTOFS(lootboxes), F_INT) \
 	_m##_AUTO(new_game_plus_counter, ACCOUNTOFS(new_game_plus_counter), F_INT) \
 	_m##_AUTO(bountyReward, ACCOUNTOFS(bountyReward), F_INT) \
+	_m##_AUTO(max_killstreak, ACCOUNTOFS(max_killstreak), F_INT) \
 	_m##_AUTO(flags, ACCOUNTOFS(flags), F_INT) \
 	_m##_DEFL(Accounts_Parse_Modules, Accounts_Write_Modules, NULL)
-
 AccountFields_Base(DEFINE_FIELD_PRE)
 
 DATAFIELDS_BEGIN(AccountFields)
@@ -647,6 +648,17 @@ void Accounts_SetCredits(Account_t *acc, int value) {
 }
 
 
+int Accounts_GetMaxKillstreak(Account_t *acc) {
+	if (!acc)return 0;
+	return acc->max_killstreak;
+}
+
+void Accounts_SetMaxKillstreak(Account_t *acc, int value) {
+	if (!acc) return;
+	if (value < 0) value = 0;
+	acc->max_killstreak = value;
+	Lmd_Accounts_Modify(acc);
+}
 int Accounts_GetBountyReward(Account_t *acc) {
 	if (!acc)return 0;
 	return acc->bountyReward;

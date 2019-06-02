@@ -65,6 +65,8 @@
 - Profession Commands Reworked. ✔️
 - Account Commands Rework. ✔️
 - Player Commands Rework. ✔️
+- Highest killstreak statistic is added. ✔️
+- List bounty. ✔️
 
 ///
 - Level 5 Jump. The player can not use it to fly but jumps higher. ??
@@ -79,10 +81,7 @@
 
 - Try repair crosschair hud for force.  (CG_PLAYER_ARMOR_VALUE  CG_PLAYER_AMMO_VALUE   CG_PLAYER_FORCE_VALUE)
 - flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
-- Titles in stats display depends on level + new game plus points. Add section in stats command 
 - TODO: Add drop item from inventory.  todo: drop (+recall), sell (drop+buyoption + recall) inventory_core.c
-
-
 
 - TODO: svcmds + commands + admin commands guide
 

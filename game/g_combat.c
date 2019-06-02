@@ -2713,6 +2713,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				//Attacker gains killing streak
 				attacker->client->pers.Lmd.killstreak += 1; //increase
 				attacker->client->pers.Lmd.killstreak_bounty += 1;
+				if (attacker->client->pers.Lmd.account && PlayerAcc_GetMaxKillstreak(attacker) < attacker->client->pers.Lmd.killstreak)PlayerAcc_SetMaxKillstreak(attacker, attacker->client->pers.Lmd.killstreak_bounty); //save statistics
 				if(attacker->client->pers.Lmd.killstreak%lmd_bounty_streaks_by.integer == 0)GiveLootboxes(attacker, 1, va("for ^1x%i ^3kill streak", attacker->client->pers.Lmd.killstreak));
 				if (attacker->client->pers.Lmd.killstreak_bounty%lmd_bounty_streaks_by.integer == 0)
 				{
@@ -4672,7 +4673,7 @@ void G_LocationBasedDamageModifier(gentity_t *ent, vec3_t point, int mod, int df
 		*damage *= 0.6;
 		break;
 	case HL_HEAD:
-		*damage *= 3; //iomatix: 3x damage for head hits
+		*damage *= 4; //iomatix: 4x damage for head hits
 		break;
 	default:
 		break; //do nothing then
