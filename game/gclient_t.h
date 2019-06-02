@@ -115,6 +115,8 @@ typedef struct {
 		int chicken;
 		int kingScore;
 		int killstreak;
+		int killstreak_bounty; //bounty for killstreaks (to save it after death)
+
 		//RoboPhred:
 		//void            *nickPointer;
 		Account_t *account;

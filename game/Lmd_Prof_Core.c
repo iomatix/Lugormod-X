@@ -737,9 +737,9 @@ void Cmd_SkillSelect_List(gentity_t *ent, int prof, profSkill_t *parent) {
 	if (group) {
 		if (group->setValue)
 			// TODO: Not garenteed that this is the case.
-			s = va(" ^3for use inside the ^2%s^3 skill.\nLeveling up the ^2%s^3 skill will give you more points for these skills", group->name, group->name);
+			s = va(" ^3for use inside the ^2%s^3 category.\nLeveling up the ^2%s^3 skill will give you more points for these skills", group->name, group->name);
 		else
-			s = va(" ^3for use inside the ^2%s^3 skill", group->name);
+			s = va(" ^3for use inside the ^2%s^3 category", group->name);
 	}
 	else
 		s = "";
@@ -844,7 +844,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 		nextLevel++;
 		Accounts_SetCredits(acc, Cr_cost);
 		//Disp(ent, va("^3You've paid ^2%i CR^3. ( ^2%i CR ^3left )", lmd_skillpoint_cost.integer*cost, Cr_cost));
-		trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR^3. (^2%i CR has ^3left)\"", lmd_skillpoint_cost.integer*cost, Cr_cost));
+		trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR^3. ^2%i CR ^3has left.\"", lmd_skillpoint_cost.integer*cost, Cr_cost));
 		if (level >= skill->levels.max) {
 			//Disp(ent, "^3This skill is now at its highest level.");
 			trap_SendServerCommand(ent->s.number, "chat \"^3This skill is now at its highest level.\"");
@@ -985,11 +985,9 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 			int cr_player = Accounts_GetCredits(acc);
 			if (level < skill->levels.max) {
 				if (points >= level + 1 && cost_cr <= cr_player) {
-					//Disp(ent, va("^3Use ^2/%s up^3 to increase the ^2%s^3 skill. It will cost ^2%i^3 point%s, leaving you with ^2%i^3 point%s left.",
-					//	cmd, skill->name, cost, (cost == 1) ? "" : "s", points-cost, (points - cost == 1) ? "" : "s" ));
-					trap_SendServerCommand(ent->s.number, va("chat \"^3Use ^2/%s up^3 to increase the ^2%s^3 skill. Cost is ^2%i^3 point%s, leaving you with ^2%i^3 point%s.\"", cmd, skill->name, cost, (cost == 1) ? "" : "s", points - cost, (points - cost == 1) ? "" : "s"));
+					Disp(ent, va("^3Use ^2/%s up^3 to increase the ^2%s^3 skill.", cmd, skill->name ));
+					trap_SendServerCommand(ent->s.number, va("chat \"^3The Cost is ^2%i^3 point%s, leaving you with ^2%i^3 point%s and ^2%i CR^3.\"", cost, (cost == 1) ? "" : "s", points - cost, (points - cost == 1) ? "" : "s", cost_cr));
 					//Disp(ent, va("^3The cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.", cost_cr, cr_player - cost_cr));
-					trap_SendServerCommand(ent->s.number, va("chat \"^3The cost is: ^2%i CR^3. Leaving you with ^2%i CR^3.\"", cost_cr, cr_player - cost_cr));
 				}
 				else //Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.", skill->name));
 				trap_SendServerCommand(ent->s.number, va("chat \"^1You do not have enough points or credits to increase the ^2%s^1 skill.\"", skill->name));
@@ -1423,13 +1421,13 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 
 /////
 cmdEntry_t professionCommandEntries[] = {
-{ "buylevel","Buys a level in your current profession if [cost] is enough to buy the next level.\n			Otherwise your current level, and the cost to buy the next level will be displayed.", Cmd_BuyLevel_f, 0, qfalse, 1, 129, 0, 0 },
+{ "buylevel","Buys a level in your current profession if [cost] is enough to buy the next level. Otherwise your current level, and the cost to buy the next level will be displayed.", Cmd_BuyLevel_f, 0, qfalse, 1, 129, 0, 0 },
 { "cortosis", "Equips an armor that turns off hostile lightsabers and lowers incoming splash damage. Prevents usability of heavy splash weapons.", Cmd_Cortosis_f, 0, qfalse, 0, 64, ~(1 << GT_FFA), PROF_MERC },
 { "flame", "Shoots out a spew of flames.", Cmd_Flame_f, 0, qfalse, 1, 257, 0, PROF_MERC },
 { "ionlysaber", "You can't use forcepowers other than heal or drain - but you're also immune to them. Greatly reduces received splash damage.", Cmd_Ionlysaber_f, 0, qfalse, 0, 64, ~(1 << GT_FFA), PROF_JEDI },
 { "profession", "Choose a profession. ^1You will start from level one and lost part of credits if you choose a new profession.", Cmd_Profession_f, 0, qfalse, 1, 256, 0, 0 },
 { "resetskills", "Reset your skills. ^1This costs money! ^3if no argument is provided the cost will be displayed.", Cmd_ResetSkills_f, 0, qfalse, 2, 257, 0, 0 },
-{ "skills", "View and raise your profession skills. You can only raise skill levels if you have unallocated skill points.\n			If no argument is provided, your current skill levels will be listed.", Cmd_SkillSelect_f, 0, qfalse, 1, 257,0, 0 },
+{ "skills", "View and raise your profession skills. You can only raise skill levels if you have unallocated skill points. If no argument is provided, your current skill levels will be listed.", Cmd_SkillSelect_f, 0, qfalse, 1, 257,0, 0 },
 { "weapons", "Select or unselect a weapon.", Cmd_MercWeapon_f, 0, qfalse, 1, 257, 0, PROF_MERC },
 { "newgame", "Start a New Game. Gain unique benefits with New Game Plus mode after reaching the Mastery Level.", Cmd_NewGameP_f, 0, qfalse, 1, 129, 0, 0 },
 #ifndef LMD_EXPERIMENTAL

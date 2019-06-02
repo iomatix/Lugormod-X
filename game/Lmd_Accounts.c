@@ -294,6 +294,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		Disp(ent, va("^3Next level up: ^2%i^3 points and ^2%i^3 hours", (lvl * LEVEL_SCORE), (lvl * lvl * 2)));
 	Disp(ent, va(
 		"^8===== Statistics =====\n"
+		"^3Bounty:        ^2%i\n"
 		"^3Logins:        ^2%i\n"
 		"^3Last login:    ^2%s\n"
 		"^3Kills:         ^2%i\n"
@@ -304,6 +305,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3Total shots:   ^2%i\n"
 		"^3Shots hit:     ^2%i\n"
 		"^3Profession:    ^2%s",
+		Accounts_GetBountyReward(acc),
 		Accounts_GetLogins(acc),
 		lastLogin,
 		Accounts_Stats_GetKills(acc),

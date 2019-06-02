@@ -38,6 +38,7 @@ struct Account_s{
 	int level_merc; //4
 	int lootboxes;
 	int new_game_plus_counter;
+	int bountyReward;
 	int flags;
 
 	struct {
@@ -230,6 +231,7 @@ DataWriteResult_t Accounts_Write_Modules(void *target, char key[], int keySize, 
 	_m##_AUTO(level_merc, ACCOUNTOFS(level_merc), F_INT) \
 	_m##_AUTO(lootboxes, ACCOUNTOFS(lootboxes), F_INT) \
 	_m##_AUTO(new_game_plus_counter, ACCOUNTOFS(new_game_plus_counter), F_INT) \
+	_m##_AUTO(bountyReward, ACCOUNTOFS(bountyReward), F_INT) \
 	_m##_AUTO(flags, ACCOUNTOFS(flags), F_INT) \
 	_m##_DEFL(Accounts_Parse_Modules, Accounts_Write_Modules, NULL)
 
@@ -644,6 +646,19 @@ void Accounts_SetCredits(Account_t *acc, int value) {
 	Lmd_Accounts_Modify(acc);
 }
 
+
+int Accounts_GetBountyReward(Account_t *acc) {
+	if (!acc)return 0;
+	return acc->bountyReward;
+}
+
+void Accounts_SetBountyReward(Account_t *acc, int value) {
+	if (!acc) return;
+	if (value < 0) value = 0;
+	acc->bountyReward = value;
+	Lmd_Accounts_Modify(acc);
+}
+//
 int Accounts_GetScore(Account_t *acc) {
 	if(!acc)
 		return 0;

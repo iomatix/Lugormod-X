@@ -1023,23 +1023,86 @@ Cmd disable
 
 void Cmd_Confirm_f(gentity_t *ent, int iArg);
 void Cmd_Interact_f(gentity_t *ent, int iArg);
+	
+void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
+	if (!ent->client->pers.Lmd.account) {
+		Disp(ent, "^1You must be logged in to use the command.");
+		return;
+	}
 
+	Account_t *acc;
+	char arg[MAX_STRING_CHARS];
+	char val[MAX_STRING_CHARS];
+	char *who_target;
+	char *who_principal;
+	if (trap_Argc() < 2) {
+		Disp(ent, "^1Usage: bounty <name> <credits_amount>\n^3Name must be an account alias not the username or an id.");
+		return;
+	}
+	trap_Argv(1, arg, sizeof(arg));
+	trap_Argv(2, val, sizeof(val));
+	acc = Accounts_GetByName(arg);
+	if (!acc) {
+		Disp(ent, "^1The player dosen't exist or is unregistered.");
+		return;
+	}
+	int v = atoi(val); //take cost.
+	if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
+		Disp(ent, "^3Invalid credit amount.");
+		return;
+	}
+	if (v < 35) {
+		Disp(ent, "^1Invalid amount, ^3credits ^1must be at least equal ^235 CR^3.");
+		return;
+	}
+	int principal_Budget = PlayerAcc_GetCredits(ent);
+	if (v > principal_Budget) {
+		Disp(ent, va("^1You do not have that amount of credits! ^2%i CR ^3 available.", principal_Budget));
+		return;
+	}
+	
+	who_target = Accounts_GetName(acc); //be sure to get actual name of the target player.
+	who_principal = PlayerAcc_GetName(ent); //take a name of the employer
+	int theBounty = Accounts_GetBountyReward(acc); //It's actual bounty amount
+	if (theBounty < 0) theBounty = 0;
+	principal_Budget -= v; //new value for the employer
+	theBounty += v; //the value gone to increase the Bounty
+	//transaction:
+	Accounts_SetBountyReward(acc, theBounty);
+    PlayerAcc_SetCredits(ent,principal_Budget); 
+	//messages:
+	char *msg_line_1 = "^3New Bounty!";
+	char *msg_line_2 = va("^3%s^3 pays ^2%i CR^3 for the %s's^3 ^3head.", who_principal,v, who_target);
+	char *msg_line_3 = va("^3Total Bounty is: ^2%i CR", Accounts_GetBountyReward(acc));
+	char *msg_all = va("%s\n%s\n%s", msg_line_1, msg_line_2, msg_line_3);
+	//employer
+	trap_SendServerCommand(ent->s.number,va("chat \"^3You've paid ^2%i CR ^3for %s's^3 head\"",v,who_target));
+
+	//send to all
+	trap_SendServerCommand_ToAll(ent->s.number, va("cp \"%s\"", msg_all));
+	trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_1));
+	trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_2));
+	trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_3));
+	
+
+}
 cmdEntry_t playerCommandEntries[] = {
 	//{"testline", "\n", Cmd_TestLine_f, 0, 1, 0, 0, 0},
 	{"actions", "List and use your current pending actions.", Cmd_Action_f, 0, qfalse, 0, 0, 0, 0},
 	{"admins", "List currently logged in admins and their level.", Cmd_AdminInfo_f, 0, qfalse, 0, 0, 0, 0},
+    {"bounty", "Set a reward for killing the player.", Cmd_SetBounty_f, 0, qfalse, 0, 0, 0, 0 },
 	{"buddy", "Make the player your buddy.", Cmd_BuddyClient_f, 0, qfalse, 0, 0, 0, 0},
-	{"challenge", "Challenge someone to a 'special' duel. For example '\\challenge power' will challenge someone to a duel where both players have unlimited force power.", Cmd_Challenge_f, 0, qfalse, 0, 2, ~(1 << GT_FFA), 0},
+	{"challenge", "Challenge someone to a 'special' duel. For example '\\^5challenge power' ^3will challenge someone to a duel where both players have unlimited force power.", Cmd_Challenge_f, 0, qfalse, 0, 2, ~(1 << GT_FFA), 0},
 	{"chatmode", "Switches your team chat mode.  If no mode is set, the next mode in the sequence is selected.", Cmd_ChatMode_f, 0, qfalse, 0, 0, 0, 0},
 	{"class", "Pick your Battle Ground class. With no argument it will display how many of each class there are on your team.", Cmd_SiegeClass_f, 0, qfalse, 0, 0, ~(1 << GT_BATTLE_GROUND), 0},
 	{"confirm", "Confirm an action, or toggle the confirmation requirement.", Cmd_Confirm_f, 0, 0, 0, 0, 0},
 	//{"defender", "\nPlace a defender.", Cmd_Defender_f, 0, 1, 0, 0, 0},
-	{"drinkme", "`What a curious feeling!' said Alice; `I must be shutting up like a telescope.'\n^1WARNING!^7 Consumed upon use.", Cmd_Resize_f, 75, qfalse, 0, 4, ~(1 << GT_FFA), 0},
+	{"drinkme", "`What a curious feeling!' said Alice; `I must be shutting up like a telescope.' ^1WARNING!^7 Consumed upon use.", Cmd_Resize_f, 75, qfalse, 0, 4, ~(1 << GT_FFA), 0},
 	{"drophi", "Drop the holdable item.", Cmd_DropStuff_f, 1, qfalse, 0, 8, ~(1 << GT_FFA), 0},
 	{"dropjp", "Drop your jetpack.", Cmd_DropStuff_f, 3, qfalse, 0, 8, ~(1 << GT_FFA), 0},
 	{"dropstash", "If you are holding it, drop the money stash.", Cmd_DropStash_f, 0, qfalse, 0, 128, ~(1 << GT_FFA), 0},
 	{"dropwp", "Drop your weapon.", Cmd_DropStuff_f, 2, qfalse, 0, 8, ~(1 << GT_FFA), 0},
-	{"eatme", "Let's see how deep the rabbit hole goes.\n^1WARNING!^7 Consumed upon use." , Cmd_Resize_f, 135, qfalse, 0, 4, ~(1 << GT_FFA), 0}, 
+	{"eatme", "Let's see how deep the rabbit hole goes. ^1WARNING!^7 Consumed upon use." , Cmd_Resize_f, 135, qfalse, 0, 4, ~(1 << GT_FFA), 0}, 
 	{"emote", "Do an emote. If no argument is provided all available emotes will be listed." , Cmd_emote_f, 0, qfalse, 0, 32, 0, 0}, 
 	{"examine", "Examine the object in front of you.", Cmd_Examine_f, 0, qfalse, 0, 0, 0, 0},
 	{"factions", "View and interact with player factions." , Cmd_Factions_f, 0, qfalse, 0, 0, 0, 0}, 

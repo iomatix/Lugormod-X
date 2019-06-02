@@ -83,6 +83,12 @@ int Accounts_GetCredits(Account_t *acc);
 void Accounts_SetCredits(Account_t *acc, int value);
 #define PlayerAcc_SetCredits(ent, value) Accounts_SetCredits(ent->client->pers.Lmd.account, value)
 
+int Accounts_GetBountyReward(Account_t *acc);
+#define PlayerAcc_GetBountyReward(ent) Accounts_GetBountyReward(ent->client->pers.Lmd.account)
+
+void Accounts_SetBountyReward(Account_t *acc, int value);
+#define PlayerAcc_SetBountyReward(ent, value) Accounts_SetBountyReward(ent->client->pers.Lmd.account, value)
+//
 int Accounts_GetScore(Account_t *acc);
 #define PlayerAcc_GetScore(ent) Accounts_GetScore(ent->client->pers.Lmd.account)
 
