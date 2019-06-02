@@ -1049,6 +1049,7 @@ void Bounty_List_disp(gentity_t *ent,int iArg)
 	if (trap_Argc() < 2) {
 		int num_accounts = Accounts_Count();
 		Account_t *acc;
+		int count = 0;
 		trap_SendServerCommand(ent->s.number, "chat \"^3This is ^8The Black List^3.\"");
 		Disp(ent, "\n^0============ ^8Black List^0 ============\n");
 		for (int i = 0; i < num_accounts; i++) {
@@ -1057,7 +1058,10 @@ void Bounty_List_disp(gentity_t *ent,int iArg)
 			if (Accounts_Prof_GetProfession(acc) == PROF_ADMIN)continue;
 			if (Accounts_GetBountyReward(acc) <= 0)continue;
 			Disp(ent, va("^0|^8%i^0| ^1%s^8: ^3%i CR\n", i, Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
+			count++;
 		}
+		Disp(ent, "^0====================================\n");
+		Disp(ent, va("^0============ ^8%i Preys^0 ============\n",count));
 		Disp(ent, "^0====================================\n");
 	}
 	else {
