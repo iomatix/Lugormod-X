@@ -854,7 +854,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			points -= cost;
 			cost = Professions_SkillCost(skill, nextLevel) - Professions_SkillCost(skill, level);
 			if (points >= cost) {
-				Disp(ent, va("^3You can increase this skill again.  It will cost ^2%i^3 points, leaving you with ^2%i^3 point%s left.",
+				Disp(ent, va("^3You can increase this skill again.  It will cost ^2%i^3 points, leaving you with ^2%i^3 point%s.",
 					cost, points - cost, (points - cost == 1) ? "" : "s"));
 				const char **descr = skill->levelDescriptions; //desc
 				for (int i = 0; i < level; i++) {
@@ -987,9 +987,9 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 				if (points >= level + 1 && cost_cr <= cr_player) {
 					//Disp(ent, va("^3Use ^2/%s up^3 to increase the ^2%s^3 skill. It will cost ^2%i^3 point%s, leaving you with ^2%i^3 point%s left.",
 					//	cmd, skill->name, cost, (cost == 1) ? "" : "s", points-cost, (points - cost == 1) ? "" : "s" ));
-					trap_SendServerCommand(ent->s.number, va("chat \"^3Use ^2/%s up^3 to increase the ^2%s^3 skill. Cost is ^2%i^3 point%s, leaving you with ^2%i^3 point%s left.\"", cmd, skill->name, cost, (cost == 1) ? "" : "s", points - cost, (points - cost == 1) ? "" : "s"));
+					trap_SendServerCommand(ent->s.number, va("chat \"^3Use ^2/%s up^3 to increase the ^2%s^3 skill. Cost is ^2%i^3 point%s, leaving you with ^2%i^3 point%s.\"", cmd, skill->name, cost, (cost == 1) ? "" : "s", points - cost, (points - cost == 1) ? "" : "s"));
 					//Disp(ent, va("^3The cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.", cost_cr, cr_player - cost_cr));
-					trap_SendServerCommand(ent->s.number, va("chat \"^3The cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.\"", cost_cr, cr_player - cost_cr));
+					trap_SendServerCommand(ent->s.number, va("chat \"^3The cost is: ^2%i CR^3. Leaving you with ^2%i CR^3.\"", cost_cr, cr_player - cost_cr));
 				}
 				else //Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.", skill->name));
 				trap_SendServerCommand(ent->s.number, va("chat \"^1You do not have enough points or credits to increase the ^2%s^1 skill.\"", skill->name));
