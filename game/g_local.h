@@ -1147,6 +1147,7 @@ void	trap_Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufs
 void	trap_LocateGameData(gentity_t *gEnts, int numGEntities, int sizeofGEntity_t, playerState_t *gameClients, int sizeofGameClient);
 void	trap_DropClient(int clientNum, const char *reason);
 void	trap_SendServerCommand(int clientNum, const char *text);
+void	trap_SendServerCommand_ToAll(int clientNum_NotUse, const char *text);
 void	trap_SetConfigstring(int num, const char *string);
 void	trap_GetConfigstring(int num, char *buffer, int bufferSize);
 void	trap_GetUserinfo(int num, char *buffer, int bufferSize);

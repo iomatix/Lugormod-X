@@ -73,15 +73,16 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 
 
 	if (Q_stricmp(arg, "alias") == 0 || Q_stricmp(arg, "name") == 0) {
-
+	   
 		ClientCleanName((const char *)val, arg, sizeof(arg));
-		if (!IsValidPlayerName(arg, NULL, qfalse)) {
+		if (!IsValidPlayerName(arg, NULL, qtrue)) {
 			Disp(ent, "^1That name is invalid or already in use.");
 			return;
 		}
-
+		
 		Accounts_SetName(acc, arg);
-		Disp(ent, "^2Alias changed.");
+		Disp(ent, "^2Alias changed.\nIf player is logged-in, the command will affect after logout.");
+		return;
 	}
 	else if (Q_stricmp(arg, "credits") == 0 || Q_stricmp(arg, "cr") == 0) {
 		int v = atoi(val);
@@ -90,11 +91,12 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 			return;
 		}
 		if (v < 0) {
-			Disp(ent, "^1Invalid amount, ^3credits ^1must be greater than or equal to zero.");
+			Disp(ent, "^1Invalid amount, ^3credits ^1must be greater than or equal zero.");
 			return;
 		}
 		Accounts_SetCredits(acc, v);
 		Disp(ent, "^2Credits set.");
+		return;
 	}
 	else if (Q_stricmp(arg, "experience") == 0 || Q_stricmp(arg, "exp") == 0) {
 		int v = atoi(val);
@@ -103,15 +105,15 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 			return;
 		}
 		if (v < 0) {
-			Disp(ent, "^1Invalid amount, ^5experience ^1must be greater than or equal to zero.");
+			Disp(ent, "^1Invalid amount, ^5experience ^1must be greater than or equal zero.");
 			return;
 		}
 		Accounts_SetExperience(acc, v);
 		Disp(ent, "^5Experience set.");
+		return;
 	}
 
 	else if (Q_stricmp(arg, "merclevel") == 0 || Q_stricmp(arg, "merclvl") == 0) {
-		int p = Accounts_Prof_GetProfession(acc);
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
 			Disp(ent, "^1Invalid level.");
@@ -122,16 +124,17 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 				Disp(ent, "^1Invalid level value. Please enter a nubmer between 1 and 255.");
 				return;
 			}
+		}
 			
 			
-			if (p == PROF_MERC)Accounts_Prof_SetLevel(acc, v);
+			if(Accounts_Prof_GetProfession(acc) == PROF_MERC)Accounts_Prof_SetLevel(acc, v);
 			else Accounts_SetLevel_merc(acc, v);
 			Disp(ent, "^2Mercenary level is changed.");
-
-		}
+			return;
+		
+		
 	}
 	else if (Q_stricmp(arg, "jedilevel") == 0 || Q_stricmp(arg, "jedilvl") == 0) {
-		int p = Accounts_Prof_GetProfession(acc);
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
 			Disp(ent, "^1Invalid level.");
@@ -142,19 +145,19 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 				Disp(ent, "^1Invalid level value. Between 1 and 255.");
 				return;
 			}
+		}
+
 			
 			
-			if (p == PROF_JEDI)Accounts_Prof_SetLevel(acc, v);
+			if (Accounts_Prof_GetProfession(acc) == PROF_JEDI)Accounts_Prof_SetLevel(acc, v);
 			else Accounts_SetLevel_jedi(acc, v);
 			Disp(ent, "^2Jedi level is changed.");
-
-		}
+			return;
+		
+		
 	}
-		////
-		//"^\n"
-		//	"^\n"
-		//	"^\n"
-		//	"^\n" 
+	
+
 	else if (Q_stricmp(arg, "boxescr") == 0 || Q_stricmp(arg, "box") == 0) {
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
@@ -167,6 +170,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		}
 		Accounts_SetLootboxes(acc, v);
 		Disp(ent, "^3Credit Boxes set.");
+		return;
 	}
 		////
 	else if (Q_stricmp(arg, "ngp_count") == 0 || Q_stricmp(arg, "ngp") == 0) {
@@ -183,6 +187,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		
 		Accounts_SetNewGamePlus_count(acc, v);
 		Disp(ent, "^5New Game Plus count set.");
+		return;
 	}
 
 
@@ -205,6 +210,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		Accounts_Prof_SetProfession(acc, p);
 		Professions_SetDefaultSkills(acc, p);
 		Disp(ent, "^2Profession changed.");
+		return;
 	}
 	else if (Q_stricmp(arg, "level") == 0 || Q_stricmp(arg, "lvl") == 0) {
 		int v = atoi(val);
@@ -217,11 +223,12 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 			return;
 		}
 		if (v > 255) {
-			Disp(ent, "^1Invalid level, level must be less than 255.\n Max buyable level is 120.");
+			Disp(ent, "^1Invalid level, level must be less than 255.\nMax reachable level is 120.");
 			return;
 		}
 		Accounts_Prof_SetLevel(acc, v);
 		Disp(ent, "^2Level set.");
+		return;
 	}
 	else if (Q_stricmp(arg, "score") == 0) {
 		int v = atoi(val);
@@ -235,6 +242,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		}
 		Accounts_SetScore(acc, v);
 		Disp(ent, "^2Score set.");
+		return;
 	}
 	else {
 		Disp(ent, "^1Invalid stat.  Use the command without args to view the available stats.");

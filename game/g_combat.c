@@ -2675,17 +2675,17 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				{
 					int bounty_reward = floor((float)self->client->pers.Lmd.killstreak/lmd_bounty_streaks_by.integer);
 					int bounty_bonus = self->client->pers.Lmd.killstreak*(self->client->pers.Lmd.killstreak + 1);
-					char *msg_bd = va("\n^8%s^3's got a bounty for killing ^1%s.", attacker->client->pers.netname, self->client->pers.netname);
+					char *msg_bd = va("^8%s^3's got a bounty for killing ^1%s.", attacker->client->pers.netname, self->client->pers.netname);
 					
 					GiveCredits(attacker, bounty_bonus*4, "as a bounty bonus");
 					GiveExperience(attacker, bounty_bonus*5, "as a bounty bonus");
 					GiveLootboxes(attacker, bounty_reward, "as a bounty");
-					trap_SendServerCommand(-1, va("print \"%s\"", msg_bd));
-
-
-					char *msg_bd_self = va("\n^2You've ^3got a bounty for killing ^1%s.", self->client->pers.netname);
+					//trap_SendServerCommand_ToAll(attacker->s.number, va("print \"\n%s\n\"", msg_bd));
+					trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_bd));
+					
+					char *msg_bd_self = va("^2You've ^3got a bounty for killing ^1%s.", self->client->pers.netname);
 					trap_SendServerCommand(attacker->s.number, va("cp \"%s\"", msg_bd_self));
-
+					trap_SendServerCommand(attacker->s.number, va("chat \"%s\"", msg_bd_self));
 
 				}
 
@@ -2695,12 +2695,13 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				{
 					GiveLootboxes(attacker, 1, va("for ^1x%i ^3kill streak", attacker->client->pers.Lmd.killstreak));
 					//send bounty information
-				
-					char *msg_b = va("\n^3New Bounty!\n^3Kill ^1%s ^3to get ^2x%i ^3Credit-Box.", attacker->client->pers.netname, attacker->client->pers.Lmd.killstreak/lmd_bounty_streaks_by.integer);
-					trap_SendServerCommand(-1, va("print \"%s\"", msg_b));
-					trap_SendServerCommand(-1, va("cp \"%s\"", msg_b));
-
-
+					char *msg_b_line1 = "^3A New Bounty!";
+					char *msg_b_line2 = va("^3Kill ^1%s ^3to get ^2x%i ^3Credit-Box.", attacker->client->pers.netname, attacker->client->pers.Lmd.killstreak/lmd_bounty_streaks_by.integer);
+					char *msg_b = va("%s\n%s", msg_b_line1, msg_b_line2);
+					//trap_SendServerCommand_ToAll(attacker->s.number, va("print \"\n%s\n\"", msg_b));
+					trap_SendServerCommand_ToAll(attacker->s.number, va("cp \"%s\"", msg_b));
+					trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_b_line1));
+					trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_b_line2));
 				}
 
 

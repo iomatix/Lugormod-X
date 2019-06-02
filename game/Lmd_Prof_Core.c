@@ -555,17 +555,20 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 	int flags = PlayerAcc_GetFlags(ent);
 
 	if (!ent->client->pers.Lmd.account) {
-		Disp(ent, "^3You need to be registered to do this. Type '\\help register' for more information.");
+		//Disp(ent, "^3You need to be registered to do this. Type '\\help register' for more information.");
+		trap_SendServerCommand(ent->s.number, "chat \"^3You need to be registered to do this. Type '\\help register' for more information.\"");
 		return qfalse;
 	}
 
 	if (prof < 0 || prof >= NUM_PROFESSIONS) {
-		Disp(ent, "^3That is not a valid profession.");
+		//Disp(ent, "^3That is not a valid profession.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1That is not a valid profession.\"");
 		return qfalse;
 	}
 
 	if (prof == playerProfession) {
-		Disp(ent, "^3Your profession was not changed.");
+		//Disp(ent, "^3Your profession was not changed.");
+		trap_SendServerCommand(ent->s.number, "chat \"^3Your profession was not changed. ^1You can not switch to the same profession.\"");
 		return qfalse;
 	}
 
@@ -573,12 +576,14 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 	int cost_skillpoints = lmd_profession_fee.integer + lmd_skillpoint_cost.integer * Professions_UsedSkillPoints(ent->client->pers.Lmd.account, playerProfession, NULL)/10; //reset for 1/10 of the cost
 	if (flags & ACCFLAGS_NOPROFCRLOSS) {
 		PlayerAcc_AddFlags(ent, -ACCFLAGS_NOPROFCRLOSS);
-		Disp(ent, "^3Your free profession change has been used up.");
+		//Disp(ent, "^3Your free profession change has been used up.");
+		trap_SendServerCommand(ent->s.number, "chat \"^3Your free profession change has been used up.\"");
 	}
 	else {
 		if (PlayerAcc_GetCredits(ent) <= cost_skillpoints)
 		{
-			Disp(ent, "^3You've paid all your credits.");
+			//Disp(ent, "^3You've paid all your credits.");
+			trap_SendServerCommand(ent->s.number, "chat \"^3You've paid all your credits.\"");
 			PlayerAcc_SetCredits(ent, 0);
 		
 
@@ -588,7 +593,8 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 			
 
 			
-			Disp(ent, va("^3You've paid ^2%i CR", cost_skillpoints));
+			//Disp(ent, va("^3You've paid ^2%i CR", cost_skillpoints));
+			trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR\"", cost_skillpoints));
 			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - cost_skillpoints);
 			
 		}
@@ -603,7 +609,8 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 
 	
 
-	Disp(ent, va("^3Your profession is now: ^2%s", Professions[prof]->name));
+	//Disp(ent, va("^3Your profession is now: ^2%s", Professions[prof]->name));
+	trap_SendServerCommand(ent->s.number, va("chat \"^3Your profession is now: ^2%s\"", Professions[prof]->name));
 	return qtrue;
 }
 
@@ -692,6 +699,7 @@ void Cmd_SkillSelect_List(gentity_t *ent, int prof, profSkill_t *parent) {
 	}
 
 	Disp(ent, va("^3Skills for ^%c%s^3 %s", (blocker) ? '1' : '2', parent->name, s));
+	//trap_SendServerCommand(ent->s.number, va("chat \"^3Skills for ^%c%s^3 %s\"", (blocker) ? '1' : '2', parent->name, s));
 
 
 	for (i = 0; i < parent->subSkills.count; i++) {
@@ -723,6 +731,7 @@ void Cmd_SkillSelect_List(gentity_t *ent, int prof, profSkill_t *parent) {
 		}
 
 		Disp(ent, va("^%c%-20s %s", c, skill->name, s));
+		//trap_SendServerCommand(ent->s.number, va("chat \"^%c%-20s %s\"", c, skill->name, s));
 	}
 
 	if (group) {
@@ -736,9 +745,11 @@ void Cmd_SkillSelect_List(gentity_t *ent, int prof, profSkill_t *parent) {
 		s = "";
 
 	if (points > 0)
-		Disp(ent, va("^3You have ^2%i^3 skill point%s available%s.", points, (points != 1) ? "s" : "", s));
+    //Disp(ent, va("^3You have ^2%i^3 skill point%s available%s.", points, (points != 1) ? "s" : "", s));
+	trap_SendServerCommand(ent->s.number, va("chat \"^3You have ^2%i^3 skill point%s available%s.\"", points, (points != 1) ? "s" : "", s));
 	else
-		Disp(ent, va("^3You have no skill points available%s.", s));
+		//Disp(ent, va("^3You have no skill points available%s.", s));
+	trap_SendServerCommand(ent->s.number, va("chat \"^3You have no skill points available%s.\"", s));
 }
 
 void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolean down) {
@@ -751,27 +762,32 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 	}
 
 	if (!skill->getValue || !skill->setValue || skill->levels.max <= skill->levels.min) {
-		Disp(ent, "^3This skill cannot be leveled.");
+		//Disp(ent, "^3This skill cannot be leveled.");
+		trap_SendServerCommand(ent->s.number, "chat \"^3This skill cannot be leveled.\"");
 		return;
 	}
 
 	profSkill_t *blocker;
 	if (Lmd_Prof_SkillIsAchieveable(acc, prof, skill, &blocker) == qfalse) {
+		//Disp(ent, va("^3You cannot level this skill while ^2%s^3 is leveled.", blocker->name));
+		trap_SendServerCommand(ent->s.number, va("chat \"^1You cannot level this skill while ^2%s^1 is leveled.\"", blocker->name));
 		if (blocker->name == "Sith" || blocker->name == "Jedi") {
-			Disp(ent, va("^3Unlocked at ^2%i^3 profession level.", MASTER_LEVEL));
+			//Disp(ent, va("^3Unlocked at ^2%i^3 profession level.", MASTER_LEVEL));
+			trap_SendServerCommand(ent->s.number, va("chat \"^3Unlocked at ^2%i^3 profession level.\"", MASTER_LEVEL));
 		}
-		Disp(ent, va("^3You cannot level this skill while ^2%s^3 is leveled.", blocker->name));
 		return;
 	}
 
 	int level = skill->getValue(acc, skill);
 	if (down) {
 		if (!skill->levels.canRemove) {
-			Disp(ent, "^3This skill cannot be leveled down.");
+			//Disp(ent, "^3This skill cannot be leveled down.");
+			trap_SendServerCommand(ent->s.number, "chat \"^1This skill cannot be leveled down.\"");
 			return;
 		}
 		if (level <= skill->levels.min) {
-			Disp(ent, "^3This skill is already at its lowest level.");
+			//Disp(ent, "^3This skill is already at its lowest level.");
+			trap_SendServerCommand(ent->s.number, "chat \"^3This skill is already at its lowest level.\"");
 			return;
 		}
 		level--;
@@ -786,7 +802,8 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 	}
 	else {
 		if (level >= skill->levels.max) {
-			Disp(ent, "^3This skill is already at its highest level.");
+			//Disp(ent, "^3This skill is already at its highest level.");
+			trap_SendServerCommand(ent->s.number, "chat \"^3This skill is already at its highest level.\"");
 			return;
 		}
 		
@@ -798,7 +815,8 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 		{
 			if (nextLevel > lmd_mastery_level_skills_level.integer && profession_level < MASTER_LEVEL)
 			{
-				Disp(ent, va("^1Unlocked at ^2%i^3 profession level. You need to reach mastery level before increasing this skill.", MASTER_LEVEL));
+				//Disp(ent, va("^1Unlocked at ^2%i^3 profession level. You need to reach mastery level before increasing this skill.", MASTER_LEVEL));
+				trap_SendServerCommand(ent->s.number, va("chat \"^1Unlocked at ^2%i^1 profession level. ^3You need to reach ^6Mastery Level ^3before increasing this skill.\"", MASTER_LEVEL));
 				return;
 			}
 
@@ -809,12 +827,14 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 
 		int Cr_cost = Accounts_GetCredits(acc) - lmd_skillpoint_cost.integer*cost; //the value is ready to set
 		if (points < cost) {
-			Disp(ent, va("^1Not enough Points.\n^3You need ^2%i^3 Point%s more to level up this skill.", cost-points, (cost - points == 1) ? "" : "s"));
+			//Disp(ent, va("^1Not enough Points.\n^3You need ^2%i^3 Point%s more to level up this skill.", cost-points, (cost - points == 1) ? "" : "s"));
+			trap_SendServerCommand(ent->s.number, va("chat \"^1Not enough Points. ^3You need ^2%i^3 Point%s more to level up this skill.\"", cost - points, (cost - points == 1) ? "" : "s"));
 			return;
 		}
 		if (Cr_cost < 0)
 		{
-			Disp(ent, va("^1Not enough Credits.\n^3You need ^3%i^3 Credits more to level up this skill.", -Cr_cost));
+			//Disp(ent, va("^1Not enough Credits.\n^3You need ^3%i^3 Credits more to level up this skill.", -Cr_cost));
+			trap_SendServerCommand(ent->s.number, va("chat \"^1Not enough Credits. ^3You need ^3%i^3 Credits more to level up this skill.\"", lmd_skillpoint_cost.integer*cost, Cr_cost));
 			return;
 		}
 		//fixed by iomatix.
@@ -823,10 +843,11 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 		level++;
 		nextLevel++;
 		Accounts_SetCredits(acc, Cr_cost);
-		Disp(ent, va("^3You've paid ^2%i CR^3. ( ^2%i CR ^3left )", lmd_skillpoint_cost.integer*cost, Cr_cost));
-
+		//Disp(ent, va("^3You've paid ^2%i CR^3. ( ^2%i CR ^3left )", lmd_skillpoint_cost.integer*cost, Cr_cost));
+		trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR^3. (^2%i CR has ^3left)\"", lmd_skillpoint_cost.integer*cost, Cr_cost));
 		if (level >= skill->levels.max) {
-			Disp(ent, "^3This skill is now at its highest level.");
+			//Disp(ent, "^3This skill is now at its highest level.");
+			trap_SendServerCommand(ent->s.number, "chat \"^3This skill is now at its highest level.\"");
 		}
 		else {
 			//iomatix
@@ -842,6 +863,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 					descr++;
 				}
 				if (*descr != NULL) Disp(ent, va("^3Next level: ^8%s", *descr));
+				//trap_SendServerCommand(ent->s.number, va("chat \"^3Next level: ^8%s.\"", *descr));
 			}
 			//else Disp(ent, "^2You do not have enough points to increase this skill."); iomatix: we don't need that it's only disturbing!!! who the hell get idea to disp it is good deal??? 
 		}
@@ -849,7 +871,8 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 
 	//check 
 	if (skill->setValue(acc, skill, level)) {
-		Disp(ent, va("^3The ^2%s^3 skill is now at level ^2%i^3.", skill->name, level));
+		//Disp(ent, va("^3The ^2%s^3 skill is now at level ^2%i^3.", skill->name, level));
+		trap_SendServerCommand(ent->s.number, va("chat \"^3The ^2%s^3 skill is now at level ^2%i^3.\"", skill->name, level));
 		const char **descr_now = skill->levelDescriptions; //desc
 		for (int i = 0; i < level-1; i++) {
 			if (descr_now == NULL)
@@ -857,7 +880,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			descr_now++;
 		}
 		if (*descr_now != NULL) Disp(ent, va("^3%s upgraded: ^2%s", skill->name, *descr_now));
-		
+		//trap_SendServerCommand(ent->s.number, va("chat \"^3%s upgraded: ^2%s\"", skill->name, *descr_now));
 
 		Profession_UpdateSkillEffects(ent, prof);
 	}else Disp(ent, ("^1Something gone wrong!")); //debug
@@ -895,9 +918,11 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 				}
 			}
 			if (index == -1)
-				Disp(ent, va("^3\'^2%s^3\' does not match any skills.", arg));
+				//Disp(ent, va("^3\'^2%s^3\' does not match any skills.", arg));
+			trap_SendServerCommand(ent->s.number, va("chat \"^3\'^2%s^3\' does not match any skills.\"", arg));
 			else if (index == -2)
-				Disp(ent, va("^3Multiple skills match \'^2%s^3\'.", arg));
+				//Disp(ent, va("^3Multiple skills match \'^2%s^3\'.", arg));
+			trap_SendServerCommand(ent->s.number, va("chat \"^3Multiple skills match \'^2%s^3\'.\"", arg));
 			else
 				Cmd_SkillSelect(ent, prof, &skill->subSkills.skill[index], depth + 1);
 			return;
@@ -914,27 +939,31 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 		}
 
 		Disp(ent, va("^2%s", skill->name));
-
+		//trap_SendServerCommand(ent->s.number, va("chat \"^2%s\"", skill->name));
 		if (skill->subSkills.count > 0) {
 			//Display the help text before the subskill list.
 			Disp(ent, va("^5%s", skill->baseDescription));
+			//trap_SendServerCommand(ent->s.number, va("chat \"^5%s\"", skill->baseDescription));
 			Cmd_SkillSelect_List(ent, prof, skill);
 			Disp(ent, va("^3Use ^2/%s <skill>^3 to manipulate skills within this skill.", cmd));
+			//trap_SendServerCommand(ent->s.number, va("chat \"^3Use ^2/%s <skill>^3 to manipulate skills within this skill.\"", cmd));
 		}
 		else {
 			if (Lmd_Prof_SkillIsAchieveable(acc, prof, skill, &blocker) == qfalse) {
+				//Disp(ent, va("^3You cannot level this skill while ^2%s^3 is leveled.", blocker->name));
+				trap_SendServerCommand(ent->s.number, va("chat \"^1You cannot level this skill while ^2%s^1 is leveled.\"", blocker->name));
 				if (blocker->name == "Sith" || blocker->name == "Jedi") {
-					//Disp(ent, va("^3Unlocked at ^2%s^3 profession level.", MASTER_LEVEL));
+					//Disp(ent, va("^3Unlocked at ^2%i^3 profession level.", MASTER_LEVEL));
+					trap_SendServerCommand(ent->s.number, va("chat \"^3Unlocked at ^6%i^3 profession level.\"", MASTER_LEVEL));
 				}
-
-				Disp(ent, va("^3You cannot level this skill while ^2%s^3 is leveled.", blocker->name));
-
 			}
 			else if (skill->getValue) {
 				//Only show if it was not already shown by SkillSelect_List
 				Disp(ent, va("^3Level ^2%i^3 out of ^2%i^3", level, skill->levels.max));
+				//trap_SendServerCommand(ent->s.number, va("chat \"^3Level ^2%i^3 out of ^2%i^3\"", level, skill->levels.max));
 			}
 			Disp(ent, va("^5%s", skill->baseDescription));
+			//trap_SendServerCommand(ent->s.number, va("chat \"^5%s\"", skill->baseDescription));
 		}
 
 		if (level < skill->levels.max) {
@@ -946,6 +975,7 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 			}
 			if (*descr != NULL)
 				Disp(ent, va("^2Next level: ^5%s", *descr));
+			//trap_SendServerCommand(ent->s.number, va("chat \"^2Next level: ^5%s.\"", *descr));
 		}
 
 		if (skill->setValue && skill->levels.max > skill->levels.min) {
@@ -955,20 +985,27 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 			int cr_player = Accounts_GetCredits(acc);
 			if (level < skill->levels.max) {
 				if (points >= level + 1 && cost_cr <= cr_player) {
-					Disp(ent, va("^3Use ^2/%s up^3 to increase the ^2%s^3 skill.  It will cost ^2%i^3 point%s, leaving you with ^2%i^3 point%s left.",
-						cmd, skill->name, cost, (cost == 1) ? "" : "s", points-cost, (points - cost == 1) ? "" : "s" ));
-					Disp(ent, va("^3The cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.", cost_cr, cr_player - cost_cr));
+					//Disp(ent, va("^3Use ^2/%s up^3 to increase the ^2%s^3 skill. It will cost ^2%i^3 point%s, leaving you with ^2%i^3 point%s left.",
+					//	cmd, skill->name, cost, (cost == 1) ? "" : "s", points-cost, (points - cost == 1) ? "" : "s" ));
+					trap_SendServerCommand(ent->s.number, va("chat \"^3Use ^2/%s up^3 to increase the ^2%s^3 skill. Cost is ^2%i^3 point%s, leaving you with ^2%i^3 point%s left.\"", cmd, skill->name, cost, (cost == 1) ? "" : "s", points - cost, (points - cost == 1) ? "" : "s"));
+					//Disp(ent, va("^3The cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.", cost_cr, cr_player - cost_cr));
+					trap_SendServerCommand(ent->s.number, va("chat \"^3The cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.\"", cost_cr, cr_player - cost_cr));
 				}
-				else Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.", skill->name));
+				else //Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.", skill->name));
+				trap_SendServerCommand(ent->s.number, va("chat \"^1You do not have enough points or credits to increase the ^2%s^1 skill.\"", skill->name));
 			}
 			else
-				Disp(ent, va("^3The ^2%s^3 skill is at its maximum level", skill->name));
+				//Disp(ent, va("^3The ^2%s^3 skill is at its maximum level", skill->name));
+			trap_SendServerCommand(ent->s.number, va("chat \"^3The ^2%s^3 skill is at its maximum level.\"", skill->name));
 			if (skill->levels.canRemove) {
-				if (level > skill->levels.min)
+				if (level > skill->levels.min) //trap_SendServerCommand(ent->s.number, va("chat \"^3Use ^2/%s down^3 to decrease the ^2%s^3 skill.  You will regain ^2%i^3 point%s, bringing you up to ^2%i^3 point%s total.\"", 
+					//cmd, skill->name, cost, (cost == 1) ? "" : "s", points + cost, (points + cost == 1) ? "" : "s"));
 					Disp(ent, va("^3Use ^2/%s down^3 to decrease the ^2%s^3 skill.  You will regain ^2%i^3 point%s, bringing you up to ^2%i^3 point%s total.",
 						cmd, skill->name, cost, (cost == 1) ? "" : "s", points + cost, (points + cost == 1) ? "" : "s"));
+				
 				else
-					Disp(ent, va("^3The ^2%s^3 skill is at its minimum level.", skill->name));
+				//Disp(ent, va("^3The ^2%s^3 skill is at its minimum level.", skill->name));
+				trap_SendServerCommand(ent->s.number, va("chat \"^3The ^2%s^3 skill is at its minimum level.\"", skill->name));
 			}
 		}
 	}
@@ -978,7 +1015,8 @@ extern vmCvar_t g_maxForceLevel;
 void Cmd_SkillSelect_f(gentity_t *ent, int iArg) {
 	//Ufo:
 	if (ent->client->ps.duelInProgress) {
-		Disp(ent, "^3You cannot select skills at this time.");
+		//Disp(ent, "^3You cannot select skills at this time.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot select skills at this time. ^3Duel in progress...\"");
 		return;
 	}
 
@@ -986,6 +1024,7 @@ void Cmd_SkillSelect_f(gentity_t *ent, int iArg) {
 
 	if (!Professions[prof]->primarySkill.subSkills.count) {
 		Disp(ent, "^3This profession has no skills.");
+		trap_SendServerCommand(ent->s.number, "chat \"3This profession has no skills.\"");
 		return;
 	}
 	Disp(ent, "^4===========================================");
@@ -1016,35 +1055,42 @@ void Cmd_ResetSkills_f(gentity_t *ent, int iArg) {
 	
 
 	if (Professions[prof]->primarySkill.subSkills.count == 0) {
-		Disp(ent, "^3This profession has no skills.");
+		//Disp(ent, "^3This profession has no skills.");
+		trap_SendServerCommand(ent->s.number, "chat \"^3This profession has no skills.\"");
 		return;
 	}
 
 
 
 	if (used == 0) {
-		Disp(ent, "^3All your skills are already at their lowest level.");
+		//Disp(ent, "^3All your skills are already at their lowest level.");
+		trap_SendServerCommand(ent->s.number, "chat \"^3All your skills are already at their lowest level.\"");
 		return;
 	}
 
 	int cost = used * lmd_skillpoint_cost.integer/10;
 
 	if (myCredits < cost) {
-		Disp(ent, va("^3The cost to reset your skills is ^2CR %i^3.", cost));
+		//Disp(ent, va("^3The cost to reset your skills is ^2CR %i^3.", cost));
+		trap_SendServerCommand(ent->s.number, va("chat \"^3The cost to reset your skills is ^2CR %i^3.\"", cost));
 		return;
 	}
-	Disp(ent, va("^3Paid ^2%i CR ^3to reset your skills.", cost));
+	//Disp(ent, va("^3Paid ^2%i CR ^3to reset your skills.", cost));
+	trap_SendServerCommand(ent->s.number, va("chat \"^3Paid ^2%i CR ^3to reset your skills.\"",cost));
 	PlayerAcc_SetCredits(ent, myCredits - cost);
 	Accounts_Prof_ClearData(ent->client->pers.Lmd.account);
 	Professions_SetDefaultSkills(ent->client->pers.Lmd.account, prof);
 	Profession_UpdateSkillEffects(ent, prof);
 
-	Disp(ent, "^2Your skills have been reseted!");
+	//Disp(ent, "^2Your skills have been reseted!");
+		trap_SendServerCommand(ent->s.number, "chat \"^2Your skills have been reseted!\"");
 	}
 	else
 	{
 		int cost = used * lmd_skillpoint_cost.integer / 10;
-		Disp(ent, va("^3Skill reset will cost ^2%iCR.\n^3Type ^8resetskills confirm ^3to reset your skills.", cost));
+		//Disp(ent, va("^3Skill reset will cost ^2%iCR.\n^3Type ^8resetskills confirm ^3to reset your skills.", cost));
+		trap_SendServerCommand(ent->s.number, va("chat \"^3Skill reset will cost ^2%iCR.\"", cost));
+		trap_SendServerCommand(ent->s.number, "chat \"^3Type ^8resetskills confirm ^3to reset your skills.\"");
 	}
 }
 
@@ -1089,12 +1135,12 @@ void Cmd_BuyLevel_Confirm(gentity_t *ent, void *dataptr) {
 	Cmd_BuyLevel_Confirm_Data_t *data = (Cmd_BuyLevel_Confirm_Data_t *)dataptr;
 	int newCr = PlayerAcc_GetCredits(ent) - data->cost;
 	if (newCr < 0) {
-		Disp(ent, va("^3You no longer have enough credits to level up. You need ^2%i^3 more to reach a next profession level.", -newCr));
+		//Disp(ent, va("^3You no longer have enough credits to level up. You need ^2%i^3 more to reach a next profession level.", -newCr));
+		trap_SendServerCommand(ent->s.number, va("chat \"^3You no longer have enough credits to level up. You need ^2%i^3 more to reach a next profession level.\"", -newCr));
 		return;
 	}
 
 }
-
 
 void Experience_Level_Up(gentity_t *ent)
 {
@@ -1129,7 +1175,8 @@ void Experience_Level_Up(gentity_t *ent)
 		playerLevel++;
 		PlayerAcc_Prof_SetLevel(ent, playerLevel);
 	    //credit boxes reward
-		Disp(ent, "^3Got a Credit Box for reaching a new level!");
+		//Disp(ent, "^3Got a ^2Credit Box ^3for reaching a new level!");
+		trap_SendServerCommand(ent->s.number, "chat \"^3Got a Credit Box for reaching a new level!\"");
 		if (playerLevel >= 30 && playerLevel < 60) {
 			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
 			if(playerLevel % 5 == 0)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 1);
@@ -1149,13 +1196,16 @@ void Experience_Level_Up(gentity_t *ent)
 		//credit boxes special levels bonuses:
 		if (playerLevel == 40) {
 			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 15);
-			Disp(ent, "^5You've got a special bonus for reaching the ^3Mastery Level^5!");
+			//Disp(ent, "^5You've got a special bonus for reaching the ^6Mastery Level^5!");
+			trap_SendServerCommand(ent->s.number, "chat \"^5You've got a special bonus for reaching the ^6Mastery Level^5!\"");
 		}
 		else if(playerLevel == 60)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 10);
 		else if (playerLevel == 100)PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 20);
 		else if (playerLevel == 120) {
 			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent) + 50);
-			Disp(ent, "^5You've got a special bonus for reaching ^3level Cap!\n^2Don't hesitate to try a ^3New Game Plus ^2mode.");
+			//Disp(ent, "^5You've got a special bonus for reaching ^3level Cap!\n^2Don't hesitate to try a ^3New Game Plus ^2mode.");
+			trap_SendServerCommand(ent->s.number, "chat \"^5You've got a special bonus for reaching ^3The Level Cap!\"");
+			trap_SendServerCommand(ent->s.number, "chat \"^2Don't hesitate to try a ^3New Game Plus ^2mode.\"");
 		}
 		/////
 
@@ -1168,16 +1218,26 @@ void Experience_Level_Up(gentity_t *ent)
 	   cost = Professions_LevelCost_EXP(prof, playerLevel);
 	   Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));
 	   char *playername = PlayerAcc_GetName(ent);
-	   char *msg_other = va("\n^1%s ^3becomes more powerful. One's level is ^1%i^3 now.\n", playername, playerLevel);
+	   char *msg_other = va("^1%s ^3becomes more powerful. One's level is ^1%i^3 now.", playername, playerLevel);
 	   G_LogPrintf("Level up: %s is %i now.\n", playername, playerLevel);
-	   char *msg = va("^5Congratulation! Level Increased!\n^3Your level is ^2%i^3.\n^3%i skill points recived.", playerLevel, NewSkillPoints_value);
-	   Disp(ent, msg);
-	   trap_SendServerCommand(-1, va("print \"%s\"", msg_other));
+	   char *msg_line_1 = "^5Congratulation! Level Increased!";
+	   char *msg_line_2 = va("^3Your level is ^2%i^3.", playerLevel);
+	   char *msg_line_3 = va("^2%i ^3skill points recived.", NewSkillPoints_value);
+	   
+	   
+
+	   char *msg = va("%s\n%s\n%s", msg_line_1, msg_line_2, msg_line_3);
+	   //Disp(ent, msg);
+	   trap_SendServerCommand(-1, va("print \"\n%s\n\"", msg_other));
+	   trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_other));
 	   WP_InitForcePowers(ent);
-	  
+
+
 	   G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	   trap_SendServerCommand(ent->s.number, va("cp \"%s\"", msg));
-	   
+	   trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_1));
+	   trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_2));
+	   trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_3));
 	   return;
 
 }
@@ -1185,9 +1245,10 @@ void Experience_Level_Up(gentity_t *ent)
 void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 	if(lmd_is_buy_level.integer == 0){
 		int prof = PlayerAcc_Prof_GetProfession(ent);
-		Disp(ent, "^1You can not buy a level on this server. Gain experience to level up instead.");
+		//Disp(ent, "^1You can not buy a level on this server. Gain experience to level up instead.");
+		trap_SendServerCommand(ent->s.number, "chat \"^1You can not buy a level on this server. Gain experience to level up instead.\"");
 		if (Auths_AccHasAdmin(ent->client->pers.Lmd.account)) {
-			Disp(ent, "^2You are able to change the setup inside of the server.cfg file by adding this line:\n ^5set lmd_is_buy_level 1");
+			Disp(ent, "^2You are able to change the setup inside of the server.cfg file by adding this line:\n^5set lmd_is_buy_level 1");
 		}
 	}
 	else {
@@ -1198,17 +1259,20 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 		char arg[MAX_STRING_CHARS];
 		trap_Argv(1, arg, sizeof(arg));
 		if (prof == PROF_ADMIN) {
-			Disp(ent, "^3The god profession has no levels.");
+			//Disp(ent, "^3The god profession has no levels.");
+			trap_SendServerCommand(ent->s.number, "chat \"^3The god profession has no levels.\"");
 			return;
 		}
 
 		if (playerLevel <= 0) {
-			Disp(ent, "^3You are not logged in.");
+			//Disp(ent, "^3You are not logged in.");
+			trap_SendServerCommand(ent->s.number, "chat \"^1You are not logged in.\"");
 			return;
 		}
 
 		if (playerLevel >= Professions[prof]->primarySkill.levels.max) {
-			Disp(ent, va("^3You have reached the maximum level %i.", Professions[prof]->primarySkill.levels.max));
+			//Disp(ent, va("^3You have reached the maximum level %i.", Professions[prof]->primarySkill.levels.max));
+			trap_SendServerCommand(ent->s.number, va("chat \"^3You have reached the maximum level.\"", Professions[prof]->primarySkill.levels.max));
 			return;
 		}
 
@@ -1222,7 +1286,8 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 
 		int resCr = PlayerAcc_GetCredits(ent) - cost;
 		if (resCr < 0) {
-			Disp(ent, va("^3The next level is ^2%i^3 and costs ^2CR %i^3.  You need ^2%i^3 more credit%s.", playerLevel + 1, cost, -resCr, (resCr != -1) ? "s" : ""));
+			//Disp(ent, va("^3The next level is ^2%i^3 and costs ^2CR %i^3. You need ^2%i^3 more credit%s.", playerLevel + 1, cost, -resCr, (resCr != -1) ? "s" : ""));
+			trap_SendServerCommand(ent->s.number, va("chat \"^3The next level is ^2%i^3 and costs ^2CR %i^3. You need ^2%i^3 more credit%s.\"", playerLevel + 1, cost, -resCr, (resCr != -1) ? "s" : ""));
 			return;
 		}
 
@@ -1249,7 +1314,8 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 void Profession_DisplayProfs(gentity_t *ent) {
 	int prof = PlayerAcc_Prof_GetProfession(ent);
 	int i;
-	Disp(ent, va("^3Your current profession is: ^2%s", Professions[prof]->name));
+	//Disp(ent, va("^3Your current profession is: ^2%s", Professions[prof]->name));
+	trap_SendServerCommand(ent->s.number, va("chat \"^3Your current profession is: ^2%s\"", Professions[prof]->name));
 	Disp(ent, "^3Available professions are:");
 	for (i = 0; i < NUM_PROFESSIONS; i++) {
 		if ((i == PROF_ADMIN && !Auths_PlayerHasAuthFlag(ent, AUTH_GODPROF)) || i == PROF_BOT) {
@@ -1305,7 +1371,7 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 		int p_level = PlayerAcc_Prof_GetLevel(ent);
 		if (p_level <= 1)
 		{
-			Disp(ent, "^1Your profession level is too small to start new game.");
+			trap_SendServerCommand(ent->s.number, "chat \"^1Your profession level is too small to start the new game.\"");
 			return;
 		}
 
@@ -1319,9 +1385,13 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 			if (p_level >= 120)ng_points = 4; 
 			else if (p_level >= 80)ng_points = 2;
 			else if (p_level >= 40)ng_points = 1;
-			if (ng_points>0)Disp(ent, va("^3The New Game Plus Level is increased by %i",ng_points));
-			else Disp(ent, "^3New Game Plus Level isn't increased.");
-
+			if (ng_points > 0) {
+				trap_SendServerCommand(ent->s.number, va("chat \"^3The New Game Plus Level is increased by ^2%i. ^3You've got additional skillpoints.\"", ng_points));
+			 
+			}
+			else trap_SendServerCommand(ent->s.number,"chat \"^3The New Game Plus Level isn't increased. You must reach at least ^6Mastery Level.\"");
+			trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s ^8started a New Game.\"", PlayerAcc_GetName(ent)));
+			
 			PlayerAcc_SetNewGamePlus_count(ent, PlayerAcc_GetNewGamePlus_count(ent) + ng_points);
 
 		}
@@ -1332,12 +1402,19 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 			if (ng_points != 0)
 			{
 				PlayerAcc_SetNewGamePlus_count(ent, 0);
-				Disp(ent, "^3Your New Game Plus progress is reseted!");
+				trap_SendServerCommand(ent->s.number, "chat \"^3Your New Game Plus progress is reseted!\"");
+
+			}
+			else
+			{
+				trap_SendServerCommand(ent->s.number, "chat \"^1Your New Game Plus Level is^5 0 ^1already.\"");
+
 			}
 	}
 	else {
 
-		Disp(ent, "^3Type ^5newgame start ^3to start New Game Plus mode.\n ^3WARNING: ^1The command will reset your progress for the active profession!\n ^3To gain benefits from NGP your current profession must be at least at 40 level.\n ^1You can reset the newgameplus progress by newgame reset command, it's irreversible!");
+		Disp(ent, "^3WARNING: ^1The command will reset your progress for the active profession!\n ^1You can reset the newgameplus progress by ^3newgame reset ^1command, it's irreversible!");
+		trap_SendServerCommand(ent->s.number, "chat \"^3Type ^5newgame start ^3to start New Game Plus mode. To gain benefits from NGP your current profession must be at least at ^640 level^3.\"");
 	}
 	
 }
@@ -1346,13 +1423,13 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 
 /////
 cmdEntry_t professionCommandEntries[] = {
-{ "buylevel","Buys a level in your current profession if [cost] is enough to buy the next level.\nOtherwise your current level, and the cost to buy the next level will be displayed.", Cmd_BuyLevel_f, 0, qfalse, 1, 129, 0, 0 },
+{ "buylevel","Buys a level in your current profession if [cost] is enough to buy the next level.\n			Otherwise your current level, and the cost to buy the next level will be displayed.", Cmd_BuyLevel_f, 0, qfalse, 1, 129, 0, 0 },
 { "cortosis", "Equips an armor that turns off hostile lightsabers and lowers incoming splash damage. Prevents usability of heavy splash weapons.", Cmd_Cortosis_f, 0, qfalse, 0, 64, ~(1 << GT_FFA), PROF_MERC },
 { "flame", "Shoots out a spew of flames.", Cmd_Flame_f, 0, qfalse, 1, 257, 0, PROF_MERC },
 { "ionlysaber", "You can't use forcepowers other than heal or drain - but you're also immune to them. Greatly reduces received splash damage.", Cmd_Ionlysaber_f, 0, qfalse, 0, 64, ~(1 << GT_FFA), PROF_JEDI },
 { "profession", "Choose a profession. ^1You will start from level one and lost part of credits if you choose a new profession.", Cmd_Profession_f, 0, qfalse, 1, 256, 0, 0 },
 { "resetskills", "Reset your skills. ^1This costs money! ^3if no argument is provided the cost will be displayed.", Cmd_ResetSkills_f, 0, qfalse, 2, 257, 0, 0 },
-{ "skills", "View and raise your profession skills. You can only raise skill levels if you have unallocated skill points.\nIf no argument is provided, your current skill levels will be listed.", Cmd_SkillSelect_f, 0, qfalse, 1, 257,0, 0 },
+{ "skills", "View and raise your profession skills. You can only raise skill levels if you have unallocated skill points.\n			If no argument is provided, your current skill levels will be listed.", Cmd_SkillSelect_f, 0, qfalse, 1, 257,0, 0 },
 { "weapons", "Select or unselect a weapon.", Cmd_MercWeapon_f, 0, qfalse, 1, 257, 0, PROF_MERC },
 { "newgame", "Start a New Game. Gain unique benefits with New Game Plus mode after reaching the Mastery Level.", Cmd_NewGameP_f, 0, qfalse, 1, 129, 0, 0 },
 #ifndef LMD_EXPERIMENTAL

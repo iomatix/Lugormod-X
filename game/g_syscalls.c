@@ -214,6 +214,45 @@ void trap_SendServerCommand( int clientNum, const char *text ) {
 	}
 }
 
+void trap_SendServerCommand_ToAll(int clientNum_NotUse, const char *text) { //Send to all without client->s.number
+	if (clientNum_NotUse >= MAX_CLIENTS) return;
+	char newText[SERVERCOMMAND_MAX];
+	Q_strncpyz(newText, text, sizeof(newText));
+	text = newText;
+
+	static unsigned int updateTime = 0;
+	static unsigned int count[MAX_CLIENTS] = { 0 };
+	if (level.time > updateTime) {
+		memset(&count, 0, sizeof(count));
+		updateTime = level.time + 500;
+	}
+#ifdef DEBUG_SYSCALLS
+	Com_Printf(va("Called "__FUNCTION__" %s\n", text));
+#endif
+
+	if (clientNum_NotUse >= 0) {
+		if (count[clientNum_NotUse] > 50) return;
+		for (int i = 0; i < MAX_CLIENTS; i++) {
+			if (clientNum_NotUse == i || !g_entities[i].client || g_entities[i].client->pers.connected != CON_CONNECTED || count[i] > 50) {
+				continue;
+			}
+			count[i]++;
+			syscall(G_SEND_SERVER_COMMAND, i, text);
+		}
+	}
+	else {
+			for (int i = 0; i < MAX_CLIENTS; i++) {
+				if (!g_entities[i].client || g_entities[i].client->pers.connected != CON_CONNECTED || count[i] > 50) {
+					continue;
+				}
+				count[i]++;
+				syscall(G_SEND_SERVER_COMMAND, i, text);
+			}
+		
+		
+	}
+}
+
 void trap_SetConfigstring( int num, const char *string ) {
 #ifdef DEBUG_SYSCALLS
 	Com_Printf("Called "__FUNCTION__"\n");

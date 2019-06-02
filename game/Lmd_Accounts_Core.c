@@ -585,7 +585,7 @@ int Accounts_GetLevel_jedi(Account_t *acc) {
 }
 void Accounts_SetLevel_jedi(Account_t *acc, int value) {
 	if (!acc)return;
-	if (value < 0)value = 0;
+	if (value < 1)value = 1;
 	acc->level_jedi = value;
 	Lmd_Accounts_Modify(acc);
 }
@@ -595,7 +595,7 @@ int Accounts_GetLevel_merc(Account_t *acc) {
 }
 void Accounts_SetLevel_merc(Account_t *acc, int value) {
 	if (!acc)return;
-	if (value < 0)value = 0;
+	if (value < 1)value = 1;
 	acc->level_merc = value;
 	Lmd_Accounts_Modify(acc);
 }

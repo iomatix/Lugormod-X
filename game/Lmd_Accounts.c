@@ -1048,15 +1048,30 @@ void Cmd_Property_f(gentity_t *ent, int iArg);
 void Cmd_aliasname_f(gentity_t *ent, int iArg) {
 	char val[MAX_STRING_CHARS];
 	char arg[MAX_TOKEN_CHARS];
-	trap_Argv(1, arg, sizeof(arg));
+
+	if (trap_Argc() < 2 ) {
+		Disp(ent, "^1The alias can not be empty.");
+		return;
+	}else if(trap_Argc() > 2){
+		Disp(ent, "^1Too many arguments.");
+		return;
+	}
+
+	Account_t *thisacc;
+	thisacc = ent->client->pers.Lmd.account;
+	trap_Argv(0, arg, sizeof(arg));
+	trap_Argv(1, val, sizeof(val));
 	ClientCleanName((const char *)val, arg, sizeof(arg));
-	if (!IsValidPlayerName(arg, NULL, qfalse)) {
+	if (!IsValidPlayerName(arg, NULL, qtrue)) {
 		Disp(ent, "^1That name is invalid or already in use.");
 		return;
 	}
-	PlayerAcc_SetName(ent, arg);
-	Disp(ent, "^2Alias changed.");
-
+	Accounts_SetName(thisacc, arg);
+	Disp(ent, va("^2Your alias is %s now.",arg));
+	
+	Lmd_Accounts_Player_Logout(ent);
+	Lmd_Accounts_Player_Login(ent, thisacc);
+	
 }
 int get_random(int min, int max)
 {

@@ -61,6 +61,9 @@
 - Head damage is increased. ✔️
 - Perfect Aim mercenary skill is added. ✔️
 - Bounty system with rewards is added. ✔️
+- Profession Commands Reworked. ✔️
+- Account Commands Rework. 20% 
+- Player Commands Rework. 0%
 
 ///
 - Level 5 Jump. The player can not use it to fly but jumps higher. ??
