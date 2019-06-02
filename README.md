@@ -26,7 +26,8 @@
 - New Game Plus mode with additional skillpoints as a reward.
 - Experience as a reward for quests.
 - Title system.
-
+- The Black List.
+- New in-game mechanics.
 
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)

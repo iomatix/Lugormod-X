@@ -247,7 +247,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3Name:         ^8%s %s\n"
 		"^3Username:      ^2%s\n"
 		"^3Security code: ^2%s\n"
-		"^3Time:          ^2%i^3:^2%02i"
+		"^3Time:          ^2%i^3:^2%02i\n"
 		"^3Bounty:        ^2%iCR\n",
 		Accounts_GetId(acc),
 		the_title,

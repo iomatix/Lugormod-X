@@ -66,7 +66,7 @@
 - Account Commands Rework. ✔️
 - Player Commands Rework. ✔️
 - Highest killstreak statistic is added. ✔️
-- List bounty. ✔️
+- Bounties list called The Black List. ✔️
 
 ///
 - Level 5 Jump. The player can not use it to fly but jumps higher. ??

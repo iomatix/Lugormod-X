@@ -1041,20 +1041,33 @@ Cmd disable
 
 void Cmd_Confirm_f(gentity_t *ent, int iArg);
 void Cmd_Interact_f(gentity_t *ent, int iArg);
-void Bounty_List_disp(gentity_t *ent)
+void Bounty_List_disp(gentity_t *ent,int iArg)
 {
+	char arg[MAX_STRING_CHARS];
+	char val[MAX_STRING_CHARS];
 	//Bounties:
-	int num_accounts = Accounts_Count();
-	Account_t *acc;
-	Disp(ent, "^0====== ^8Black List^0 ======");
-	for (int i = 0; i < num_accounts; i++) {
-		acc = Accounts_Get(i);
-		if (!acc) continue;
-		if (Accounts_Prof_GetProfession(acc) == PROF_ADMIN )continue;
-		if (Accounts_GetBountyReward(acc) <= 0)continue;
-		Disp(ent,va("%s^3: ^2%i CR", Accounts_GetName(acc), Accounts_GetBountyReward(acc) ));
+	if (trap_Argc() < 2) {
+		int num_accounts = Accounts_Count();
+		Account_t *acc;
+		trap_SendServerCommand(ent->s.number, "chat \"^3This is ^8The Black List^3.\"");
+		Disp(ent, "^0====== ^8Black List^0 ======\n");
+		for (int i = 0; i < num_accounts; i++) {
+			acc = Accounts_Get(i);
+			if (!acc) continue;
+			if (Accounts_Prof_GetProfession(acc) == PROF_ADMIN)continue;
+			if (Accounts_GetBountyReward(acc) <= 0)continue;
+			Disp(ent, va("^0|%i| %s^3: ^2%i CR ^0\n", i, Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
+		}
+		Disp(ent, "^0=============================\n");
 	}
-	
+	else {
+		trap_Argv(1, arg, sizeof(arg));
+		Account_t *acc = Accounts_GetByName(arg);
+		if (!acc) {	Disp(ent, va("%s ^3not found on The Black List.",arg));  return;}
+		if(Accounts_GetBountyReward(acc) <= 0){ Disp(ent, va("%s ^3not found on The Black List.", arg));  return; }
+		Disp(ent, va("^0|-| %s^3: ^2%i CR ^0\n",  Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
+		trap_SendServerCommand(ent->s.number, "chat \"^3The name is on the list...\"");
+	}
 }
 void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	if (!ent->client->pers.Lmd.account) {
@@ -1065,13 +1078,12 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 
 	Account_t *acc;
 	char arg[MAX_STRING_CHARS];
-	char val[MAX_STRING_CHARS];
+	char val[MAX_STRING_CHARS]; 
 	char *who_target;
 	char *who_principal;
 	if (trap_Argc() < 2) {
-		trap_SendServerCommand(ent->s.number, "chat \"^3Offer a reward for someone's life or check out the ^8Black List^3.\"");
+		trap_SendServerCommand(ent->s.number, "chat \"^3Offer a reward for someone's life.\"");
 		Disp(ent, "^1Usage: bounty <name> <credits_amount>\n^3Name must be an account alias not the username or an id.");
-		Bounty_List_disp(ent);
 		return;
 	}
 	trap_Argv(1, arg, sizeof(arg));
@@ -1123,13 +1135,14 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_2));
 	trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_3));
 	
-
+	
 }
 cmdEntry_t playerCommandEntries[] = {
 	//{"testline", "\n", Cmd_TestLine_f, 0, 1, 0, 0, 0},
 	{"actions", "List and use your current pending actions.", Cmd_Action_f, 0, qfalse, 0, 0, 0, 0},
 	{"admins", "List currently logged in admins and their level.", Cmd_AdminInfo_f, 0, qfalse, 0, 0, 0, 0},
-    {"bounty", "Check bounties list or set a reward for killing the player.", Cmd_SetBounty_f, 0, qfalse, 0, 0, 0, 0 },
+	{"bounty", "Check bounties list or set a reward for killing the player.", Cmd_SetBounty_f, 0, qfalse, 0, 0, 0, 0 },
+	{"blacklist", "Check out bounties list called ^0The Black List.", Bounty_List_disp, 0, qfalse, 0, 0, 0, 0 },
 	{"buddy", "Make the player your buddy.", Cmd_BuddyClient_f, 0, qfalse, 0, 0, 0, 0},
 	{"challenge", "Challenge someone to a 'special' duel. For example '\\^5challenge power' ^3will challenge someone to a duel where both players have unlimited force power.", Cmd_Challenge_f, 0, qfalse, 0, 2, ~(1 << GT_FFA), 0},
 	{"chatmode", "Switches your team chat mode.  If no mode is set, the next mode in the sequence is selected.", Cmd_ChatMode_f, 0, qfalse, 0, 0, 0, 0},
