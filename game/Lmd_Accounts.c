@@ -680,20 +680,22 @@ qboolean Lmd_Accounts_Player_Register(gentity_t *ent, char *username, char *pass
 	}
 
 	if (!IsValidPlayerName(username, ent, qtrue, &failReason)) {
-		trap_SendServerCommand(ent->s.number, "chat \"^1Invalid player name.\"");
+		//trap_SendServerCommand(ent->s.number, "chat \"^1Invalid player name.\"");
 		Disp(ent, va("^1You cannot register this player name.\n^3%s", failReason));
+		trap_SendServerCommand(ent->s.number, va("chat \"^1%s\"", failReason));
 		return qfalse;
 	}
 
 	if (!IsValidUsername(username, &failReason)) {
-		trap_SendServerCommand(ent->s.number, "chat \"^1Invalid user name.\"");
+		//trap_SendServerCommand(ent->s.number, "chat \"^1Invalid user name.\"");
 		Disp(ent, va("^1You cannot register this username.\n^3%s", failReason));
+		trap_SendServerCommand(ent->s.number, va("chat \"^1%s\"", failReason));
 		return qfalse;
 	}
 
 
 	if (Accounts_GetByName(username)) {
-		trap_SendServerCommand(ent->s.number, "chat \"^1That name is already taken.\"");
+		trap_SendServerCommand(ent->s.number, "chat \"^1The name is already taken.\"");
 		return qfalse;
 	}
 
@@ -978,7 +980,7 @@ void Cmd_Register_f(gentity_t *ent, int iArg) {
 	char username[MAX_STRING_CHARS]; //size checked in registerAccount()
 	char *passwd;
 	if (trap_Argc() < 3) {
-		trap_SendServerCommand(ent->s.number, "chat \"^3Register a new account.\"");
+		if(trap_Argc() < 2)trap_SendServerCommand(ent->s.number, "chat \"^3Register a new account.\"");		
 		Disp(ent, "^3You have to choose a username and password.\n\\^2register <username> <password>\n^3Your username will become your in-game character name.");
 		return;
 	}
