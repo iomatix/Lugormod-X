@@ -21,13 +21,23 @@ If the server uses a security code system by default, your 4-digit security code
 You can **not** change your **username** but instead it is possible to change your in-game name called nickname, netname, alias.
 - To change the nickname use **alias |new_name|** command.
 
-### Professions, Skills, Statistics:
+### Professions, Statistics, Skills:
 **Before evolving character, upgrading skills and gaining levels, the player must choose his profession.**
 
 - To check the professions list type **profession**.  To choose a new profession use **profession |name|**. You can change your profession whenever you'd like to.
 
-- Force User: One who has learned the powers of the force. May specialize in light or dark powers. Draws a lightsaber. 
-- Mercenary: Trained in weapons. Excels at attacking from distance and avoids direct confrontations.
+Force User: One who has learned the powers of the force. May specialize in light or dark powers. Draws a lightsaber. 
+Mercenary: Trained in weapons. Excels at attacking from distance and avoids direct confrontations.
+
+The player gains levels through gaining experience points or buying level with **buylevel** command.
+Increasing profession level gives access to more skill points which are useful for upgrading skills.
+
+- To check account information, progress information, statistics, and more type **stats**.
+- To check available skill points or skills themselves type **skill** to move through the trees and check more detailed information use **skill |skill_name|** or **skill |tree| |skill_name|**
+E.g. **skill sith** shows skills inside sith tree. **skill sith grip** shows more detailed information about Grip skill.
+- To upgrade the skill type full path to the skill and **up** E.g **skill sith grip up**. 
+The profession doesn't have to has got a skill tree. E.g. Mercenary ammo skill isn't inside any tree so upgrade path is just a **skill ammo up**.
+
 
 
 
@@ -38,6 +48,7 @@ You can **not** change your **username** but instead it is possible to change yo
 - **seccode** to check account's security code.
 - **chpasswd |new_password|** to change the account's password.
 - **alias |new_name|** to change in-game name. The user name will not change so your login data remains the same.
+- **stats** to check detailed account's information.
 - **profession** and **profession |name|** to change the profession.
 
 ### [The Commands List](Commands.md)
