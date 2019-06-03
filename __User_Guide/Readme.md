@@ -1,12 +1,12 @@
 # The User Guide
 
 ### Important Note: Do not use commands on the chat but instead press '~' button on the keyboard to open the console window. Follow the directing inside the window.
-### Small Note: There is not need to use full commands, it is possible to short most of them, E.g. profession -> prof, register -> reg, skill jedi heal -> sk j h etc.
+### Small Note: There is no need to use full commands, it is possible to short most of them, E.g. profession -> prof, register -> reg, skill jedi heal -> sk j h, etc.
 
 ## How to start:
 
 ### Registration, Login, Passwords, Nicknames:
-**To get access to most features on the server with Lugormod-X installed, player must log in to his account first.**
+**To get access to most features on the server with Lugormod-X installed, the player must log in to his account first.**
 
 - To create a new account, use '~' button to open the console window and then type the command **'register |username| |password|'**.
 
@@ -18,7 +18,7 @@ If the server uses a security code system by default, your 4-digit security code
 
 - To change the account's password use **'chpasswd |new_password|'** command.
 
-You can **not** change your **username** but instead it is possible to change your in-game name called nickname, netname, alias.
+You can **not** change your **username** but instead, it is possible to change your in-game name called nickname, netname, alias.
 - To change the nickname use **'alias |new_name|'** command.
 
 ### Professions, Statistics, Skills:
@@ -42,7 +42,7 @@ E.g. **'skill sith'** shows skills inside the sith tree, **'skill sith grip'** s
 - To upgrade the skill type full path to the skill and **'up'** E.g **'skill sith grip up'**. 
 The profession doesn't have to has got a skill tree. E.g. Mercenary ammo skill isn't inside any tree so upgrade path is just a **'skill ammo up'**.
 
-**Note: If skill has a spacing in the name do not type full skill name, just a first word of the syntax.**
+**Note: If the skill has spacing in the name do not type full skill name, just a first word of the syntax.**
 
 - To check the skill reset cost type *'resetskill'**.
 - To reset all skills use **'resetskill confirm'** command.
