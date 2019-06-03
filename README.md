@@ -1,7 +1,7 @@
 # Lugormod X 
 **X version aims to change the core of the Lugormod to bring out its potential and making it compatible with the KotF modification and making it official [KotF Multiplayer](https://www.moddb.com/mods/knights-of-the-force-21/downloads) server core.**
 
-### [The User Guide](__User_Guide)
+## [The User Guide](__User_Guide)
 
 # Main features and changes:
 
