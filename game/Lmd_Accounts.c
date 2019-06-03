@@ -244,14 +244,13 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 	Disp(ent, va(
 		"^8===== Account Information =====\n"
 		"^3Id:            ^2%i\n"
-		"^3Name:          ^8%s^7 %s\n"
+		"^3Name:          ^7%s^8 the %s\n"
 		"^3Username:      ^2%s\n"
 		"^3Security code: ^2%s\n"
 		"^3Time:          ^2%i^3:^2%02i\n"
 		"%s",
 		Accounts_GetId(acc),
-		the_title,
-		Accounts_GetName(acc),
+		Accounts_GetName(acc), the_title,
 		Accounts_GetUsername(acc),
 		(secCode != NULL) ? secCode : "^1<none>",
 		time / 3600, (time / 60) % 60, (Accounts_GetBountyReward(acc) > 0) ? va("^1Black List:    ^3%i CR", Accounts_GetBountyReward(acc)) : "^3You are not listed on ^1The Black List^3." ));
@@ -264,7 +263,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3Mercenary Level:     ^2%i\n"
 		"^3Credits Boxes:       ^2%i\n"
 		"^3New Game Plus Level: ^2%i\n"
-		"^3New Game Plus skill points: ^2%i\n"
+		"^3New Game Plus Skill Points: ^2%i\n"
 		"^3Score:         ^2%i",
 		lvl, Accounts_GetCredits(acc), Accounts_GetExperience(acc), Professions_LevelCost_EXP(PlayerAcc_Prof_GetProfession(ent),PlayerAcc_Prof_GetLevel(ent)), Accounts_GetLevel_jedi(acc),Accounts_GetLevel_merc(acc),Accounts_GetLootboxes(acc),Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)

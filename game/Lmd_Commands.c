@@ -1071,7 +1071,10 @@ void Bounty_List_disp(gentity_t *ent,int iArg)
 	else {
 		trap_Argv(1, arg, sizeof(arg));
 		Account_t *acc = Accounts_GetByName(arg);
-		if (!acc) {	Disp(ent, va("%s ^3not found on The Black List.",arg));  return;}
+		if (!acc) {
+			acc = Accounts_GetByUsername(arg); //try by username
+			if (!acc) { Disp(ent, va("%s ^3not found on The Black List.", arg));  return; }
+		}
 		if(Accounts_GetBountyReward(acc) <= 0){ Disp(ent, va("%s ^3not found on The Black List.", arg));  return; }
 		Disp(ent, va("^0|^8-^0| ^1%s^8: ^3%i ^8CR",  Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
 		trap_SendServerCommand(ent->s.number, "chat \"^3The name is on the list...\"");
@@ -1098,9 +1101,12 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	trap_Argv(2, val, sizeof(val));
 	acc = Accounts_GetByName(arg);
 	if (!acc) {
-		//Disp(ent, "^1The player dosen't exist or is unregistered.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1The player dosen't exist or is unregistered.\"");
-		return;
+		acc = Accounts_GetByUsername(arg); //try by username
+		if (!acc) {
+			//Disp(ent, "^1The player dosen't exist or is unregistered.");
+			trap_SendServerCommand(ent->s.number, "chat \"^1The player dosen't exist or is unregistered.\"");
+			return;
+		}
 	}
 	int v = atoi(val); //take cost.
 	if (v == 0 && !(val[0] == '0' && val[1] == 0)) {

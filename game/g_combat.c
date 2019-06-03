@@ -2715,6 +2715,14 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				//Attacker gains killing streak
 				attacker->client->pers.Lmd.killstreak += 1; //increase
 				attacker->client->pers.Lmd.killstreak_bounty += 1;
+				//Black List automation:
+				if (attacker->client->pers.Lmd.account && attacker->client->pers.Lmd.killstreak_bounty > attacker->client->pers.Lmd.killstreak_bounty / lmd_bounty_streaks_by.integer)
+				{
+						if (PlayerAcc_GetBountyReward(attacker) < 35)PlayerAcc_SetBountyReward(attacker, 35);
+						PlayerAcc_SetBountyReward(attacker, PlayerAcc_GetBountyReward(attacker) + attacker->client->pers.Lmd.killstreak_bounty * 3);
+					
+				}
+				//
 				if (attacker->client->pers.Lmd.account && PlayerAcc_GetMaxKillstreak(attacker) < attacker->client->pers.Lmd.killstreak)PlayerAcc_SetMaxKillstreak(attacker, attacker->client->pers.Lmd.killstreak_bounty); //save statistics
 				if(attacker->client->pers.Lmd.killstreak%lmd_bounty_streaks_by.integer == 0)GiveLootboxes(attacker, 1, va("for ^1x%i ^3kill streak", attacker->client->pers.Lmd.killstreak));
 				if (attacker->client->pers.Lmd.killstreak_bounty%lmd_bounty_streaks_by.integer == 0)
