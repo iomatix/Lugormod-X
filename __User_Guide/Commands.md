@@ -1,5 +1,9 @@
-# Commands list
+# The Commands List
 
-## User Commands
+## Player Commands
+
+## Account Commands
+
+## Profession Commands
 
 ## Admin Commands
