@@ -559,14 +559,32 @@ void TossClientWeapon(gentity_t *self, vec3_t direction, float speed)
 		return;
 	}
 
-	if (weapon <= WP_BRYAR_PISTOL
-		//Lugormod
-		&& (weapon != WP_STUN_BATON
-		|| (g_gametype.integer != GT_FFA
-		&& g_gametype.integer != GT_TEAM)))
-	{ //can't have this
-		return;
+	if (lmd_jedi_pickup_weapons.integer != 0) //jedi is able to pickup weapons so is able to drop his lightsaber.
+	{
+		if (weapon < WP_SABER //iomatix
+			//Lugormod
+			&& (weapon != WP_STUN_BATON
+				|| (g_gametype.integer != GT_FFA
+					&& g_gametype.integer != GT_TEAM)))
+		{ //can't have this
+			return;
+		}
 	}
+	else {
+
+		if (weapon < WP_BRYAR_PISTOL //iomatix
+							  //Lugormod
+			&& (weapon != WP_STUN_BATON
+				|| (g_gametype.integer != GT_FFA
+					&& g_gametype.integer != GT_TEAM)))
+		{ //can't have this
+			return;
+		}
+	}
+
+	//iomatix: saber deal
+	if (weapon == WP_SABER && self->client->ps.stats[STAT_WEAPONS] != (1 << WP_MELEE)) self->client->ps.stats[STAT_WEAPONS] |= (1 << WP_MELEE);
+	if (weapon == WP_BRYAR_PISTOL && self->client->ps.stats[STAT_WEAPONS] != (1 << WP_MELEE)) self->client->ps.stats[STAT_WEAPONS] |= (1 << WP_MELEE);
 
 	if (weapon == WP_EMPLACED_GUN ||
 		weapon == WP_TURRET)
@@ -664,6 +682,23 @@ Toss the weapon and powerups for the killed player
 =================
 */
 void dropMoneyStash (gentity_t *ent); //Lugormod
+//iomatix:
+void DropLightSaber(gentity_t *self)
+{
+	//iomatix: if has saber, drop it.
+	if (lmd_jedi_pickup_weapons.integer != 0) {
+		if (self->client->ps.stats[STAT_WEAPONS] &= (1 << WP_SABER)) {
+			gentity_t *te;
+			gitem_t *item = BG_FindItemForWeapon(WP_SABER);
+			te = G_TempEntity(vec3_origin, EV_DESTROY_WEAPON_MODEL);
+			te->r.svFlags |= SVF_BROADCAST;
+			te->s.eventParm = self->s.number;
+			Drop_Item(self, item, 0); //be sure to drop the lightsaber 
+		}
+	}
+	//
+	
+}
 
 void TossClientItems( gentity_t *self ) {
 	gitem_t		*item;
@@ -689,7 +724,7 @@ void TossClientItems( gentity_t *self ) {
 	// weapon that isn't the mg or gauntlet.  Without this, a client
 	// can pick up a weapon, be killed, and not drop the weapon because
 	// their weapon change hasn't completed yet and they are still holding the MG.
-	if ( weapon == WP_BRYAR_PISTOL) {
+	if ( weapon == WP_BRYAR_PISTOL) { 
 		if ( self->client->ps.weaponstate == WEAPON_DROPPING ) {
 			weapon = self->client->pers.cmd.weapon;
 		}
@@ -702,7 +737,7 @@ void TossClientItems( gentity_t *self ) {
 	//RoboPhred: mercs no longer drop weapons
 	if(!(PlayerAcc_Prof_GetProfession(self) == PROF_MERC)
 		&& !(gameMode(GM_ANY)) &&
-		weapon > WP_BRYAR_PISTOL && 
+		weapon >= WP_SABER && //iomatix: Saber update
 		weapon != WP_EMPLACED_GUN &&
 		weapon != WP_TURRET &&
 		self->client->ps.ammo[ weaponData[weapon].ammoIndex ] ) {
@@ -719,6 +754,22 @@ void TossClientItems( gentity_t *self ) {
 			// spawn the item
 			Drop_Item( self, item, 0 );
 	}
+	//iomatix:
+	else if (weapon == WP_BRYAR_PISTOL) {
+		gentity_t *te;
+
+		// find the item type for this weapon
+		item = BG_FindItemForWeapon(weapon);
+
+		// tell all clients to remove the weapon model on this guy until he respawns
+		te = G_TempEntity(vec3_origin, EV_DESTROY_WEAPON_MODEL);
+		te->r.svFlags |= SVF_BROADCAST;
+		te->s.eventParm = self->s.number;
+		Drop_Item(self, item, 0); //be sure to always drop saber and bryar
+
+	}
+	//always drop lightsaber if has one.
+	DropLightSaber(self);
 
 	// drop all the powerups if not in teamplay
 	if ( g_gametype.integer != GT_TEAM && g_gametype.integer != GT_SIEGE 
@@ -2742,6 +2793,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			}
 		}
 	}
+
+	
 
 	if(self->client && self->s.eType == ET_PLAYER) {
 		PlayerAcc_Stats_SetDeaths(self, PlayerAcc_Stats_GetDeaths(self) + 1);
@@ -5228,7 +5281,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	if ( (g_jediVmerc.integer || g_gametype.integer == GT_SIEGE ||
 		g_gametype.integer == GT_BATTLE_GROUND || gameMode(GM_ALLWEAPONS))
 		&& targ->client )
-	{//less explosive damage for jedi, more saber damage for non-jedi
+	{//less explosive damage for jedi with saber, more saber damage for non-jedi
 		if ( targ->client->ps.trueJedi 
 			|| ((g_gametype.integer == GT_SIEGE 
 			|| g_gametype.integer == GT_BATTLE_GROUND

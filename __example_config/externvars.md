@@ -2,9 +2,9 @@
 **They are usable inside server.cfg file.**
 
 List of all Extern Variables added by iomatix:
-- **lmd_jedi_pickup_weapons** 0 is default. 
+- **lmd_jedi_pickup_weapons** 1 is default. 
   
-  1 allows Force User to pick up weapons and ammo from the map. 
+  1 allows Force User to pick up weapons and ammo from the map. Also adds light saber drop mechanic. Change to 0 to set old lugor-style.
 - **lmd_jedi_add_hp_level** 1 is default. 
   
   Allows Force User to extend HP capacity per level, 0 is blocking that feature.  

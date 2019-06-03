@@ -2461,7 +2461,7 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 				//Ufo: allow medpaks
 				&& item->giType != IT_HEALTH
 				&& item->giType != IT_ARMOR//not shields
-				&& (item->giType != IT_WEAPON || item->giTag != WP_SABER)//not a saber
+				&& (item->giType != IT_WEAPON || item->giTag != WP_SABER )//not a saber WP_SABER
 				//Ufo: forbid jetpack only
 				//&& (item->giType != IT_HOLDABLE || item->giTag != HI_SEEKER)//not a seeker
 				&& (item->giType != IT_HOLDABLE || item->giTag == HI_JETPACK)
@@ -2479,7 +2479,8 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 		{//can't pick up force powerups
 			if ( (item->giType == IT_POWERUP && item->giTag != PW_YSALAMIRI) //if a powerup, can only can pick up ysalamiri
 				|| (item->giType == IT_HOLDABLE && item->giTag == HI_SEEKER)//if holdable, cannot pick up seeker 
-				|| (item->giType == IT_WEAPON && item->giTag == WP_SABER ) )//or if it's a saber
+				|| (item->giType == IT_WEAPON && item->giTag == WP_SABER && lmd_jedi_pickup_weapons.integer == 0 ) //iomatix: force/mercenary update weapons or if it's a saber
+				)
 			{
 				return qfalse;
 			}
@@ -2532,7 +2533,7 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 		{ //weaponstay stuff.. if this isn't dropped, and you already have it, you don't get it.
 			return qfalse;
 		}
-		if (item->giTag == WP_THERMAL || item->giTag == WP_TRIP_MINE || item->giTag == WP_DET_PACK)
+		if (item->giTag == WP_THERMAL || item->giTag == WP_TRIP_MINE || item->giTag == WP_DET_PACK) 
 		{ //check to see if full on ammo for this, if so, then..
 			int ammoIndex = weaponData[item->giTag].ammoIndex;
 			if (ps->ammo[ammoIndex] >= ammoData[ammoIndex].max)
@@ -2540,6 +2541,15 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 				return qfalse;
 			}
 		}
+		if (item->giTag == WP_SABER) //saber deal //iomatix:
+		{
+			if (ps->stats[STAT_WEAPONS] & (1 << WP_SABER)) return qfalse; //if have a saber don't grab a new one.
+		}
+		
+		if (item->giTag == WP_BRYAR_PISTOL) //pistol deal //iomatix:
+		{
+			if (ps->stats[STAT_WEAPONS] & (1 << WP_BRYAR_PISTOL)) return qfalse; //if have a pistol don't grab a new one.
+		} 
 		return qtrue;	// weapons are always picked up
 	case IT_AMMO:
 		if (item->giTag == -1)

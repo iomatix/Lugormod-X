@@ -1158,7 +1158,7 @@ cmdEntry_t adminCommandEntries[] = {
 { "npccmd", "Set NPC behavior actions and other settings.", Cmd_NPCCmd_f, 0, qtrue, 1, 0, 0 },
 #endif
 { "passvote", "If a vote is in progress, it will pass.", Cmd_PassVote_f, 0, qtrue, 2, 0, 0 },
-{ "penalize", "Mark this player as misbehaving.  After so many penalties, the player may be jailed or temporaraly banned.\nThis can only be used once on a player within a certain time period, and the player's penalties drop with time.", Cmd_Penalize_f, 0, qtrue, 2, 0, 0 },
+{ "penalize", "Mark this player as misbehaving.  After so many penalties, the player may be jailed or temporaraly banned. This can only be used once on a player within a certain time period, and the player's penalties drop with time.", Cmd_Penalize_f, 0, qtrue, 2, 0, 0 },
 { "playerlist", "Get info on the specified player, or all players.", Cmd_Playerlist_f, 0, qtrue, 4, 0, 0 },
 { "propadmin", "Grant and remove player access to properties.", Cmd_Property_f, 1, qtrue, 1, 0, 0 },
 { "renameplayer", "Change a player's name.", Cmd_RenamePlayer_f, 0, qtrue, 3, 0, 0 },

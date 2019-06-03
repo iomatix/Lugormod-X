@@ -314,8 +314,22 @@ qboolean Force_Throw_IsThrowable (gentity_t *ent, qboolean pull){
 		}
 		return qtrue;
 	}
-	if(ent->client)
+	if(ent->client)return qtrue;
+	//iomatix:
+	if ( ent->s.eType == ET_ITEM && ent->item->giType == IT_WEAPON && ent->item->giTag == WP_SABER) {
+
+		ent->s.pos.trType = TR_GRAVITY;
+		ent->s.pos.trTime = level.time;
+		ent->physicsObject = qtrue;
+		ent->bounceCount = 8;
+		ent->flags = FL_DROPPED_ITEM | FL_BOUNCE;
+		ent->timestamp = level.time + 60000; 
+		trap_LinkEntity(ent);
+		
 		return qtrue;
+
+	}
+
 	return qfalse;
 }
 

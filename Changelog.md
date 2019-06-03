@@ -67,6 +67,9 @@
 - Player Commands Rework. ✔️
 - Highest killstreak statistic is added. ✔️
 - Bounties list called The Black List. ✔️
+- Bryar pistol added to weapon skill. Mercenary starts without a weapon. ✔️
+- Player is able to drop saber or pistol on the ground if lmd_jedi_pickup_weapons is 1. ✔️
+- Force is able to control sabers on the ground. ✔️
 
 ///
 - Level 5 Jump. The player can not use it to fly but jumps higher. ??

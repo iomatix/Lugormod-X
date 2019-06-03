@@ -881,7 +881,7 @@ static cvarTable_t		gameCvarTable[] = {
 { &g_powerDuelStartHealth, "g_powerDuelStartHealth", "150", CVAR_ARCHIVE, 0, qtrue },
 { &g_powerDuelEndHealth, "g_powerDuelEndHealth", "90", CVAR_ARCHIVE, 0, qtrue },
 //iomatix: 
-{ &lmd_jedi_pickup_weapons, "lmd_jedi_pickup_weapons", "0", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_jedi_pickup_weapons, "lmd_jedi_pickup_weapons", "1", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_jedi_add_hp_level, "lmd_jedi_add_hp_level", "1", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_profession_fee, "lmd_profession_fee", "1350", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_bounty_streaks_by, "lmd_bounty_streaks_by", "5", CVAR_ARCHIVE, 0, qfalse },

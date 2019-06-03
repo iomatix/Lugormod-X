@@ -692,6 +692,7 @@ const mercItemTable_t mercWeaponTable[] = {
 #ifndef LMD_NEW_JETPACK
 { "Stun baton", 1, WP_STUN_BATON },
 #endif
+{ "Pistol", 1, WP_BRYAR_PISTOL},
 { "Blaster", 2, WP_BLASTER },
 { "Bowcaster", 4, WP_BOWCASTER },
 { "Thermal Detonators", 5, WP_THERMAL },
@@ -718,28 +719,28 @@ const int mercWeaponTableMax[] = {
 };
 #else
 const int mercWeaponTableMax[] = {
-	0,
-	2,
-	6,
-	8,
+	1,
+	3,
+	7,
 	9,
 	10,
-	10,
-	12,
-	12,
+	11,
+	11,
+	13,
+	13,
 };
 #endif
 
 int mercWeaponPoints[] = {
-	0,
-	4,
-	11,
-	17,
-	20,
-	24,
-	30,
-	33,
-	36
+	1,
+	5,
+	12,
+	18,
+	21,
+	25,
+	31,
+	34,
+	37
 };
 
 
@@ -1742,7 +1743,7 @@ void Merc_Spawn(gentity_t *ent)
 	ent->client->ps.trueNonJedi = qtrue;
 	ent->client->ps.trueJedi = qfalse;       
 
-	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_MELEE) | (1 << WP_BRYAR_PISTOL);
+	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_MELEE);
 #ifdef LMD_NEW_JETPACK
 	ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_STUN_BATON);
 #endif
