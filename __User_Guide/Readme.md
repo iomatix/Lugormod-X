@@ -6,9 +6,9 @@
 ## How to start:
 
 ### Registration, Login, Passwords, Nicknames:
-- To get access to most features on the server with Lugormod-X installed, player must log in to his account first.
+**To get access to most features on the server with Lugormod-X installed, player must log in to his account first.**
 
-To create a new account, use '~' button to open the console window and then type the command **register |username| |password|**.
+- To create a new account, use '~' button to open the console window and then type the command **register |username| |password|**.
 
 If the authentication process is successful keep your username and password from now because you will need them to log in to the account.
 If the server uses a security code system by default, your 4-digit security code will be generated. Keep it save too because you can recover it only through contact with server's administration.
@@ -18,14 +18,13 @@ If the server uses a security code system by default, your 4-digit security code
 
 - To change the account's password use **chpasswd |new_password|** command.
 
-You can not change your username but instead it is possible to change your in-game name called nickname, netname, alias.
+You can **not** change your **username** but instead it is possible to change your in-game name called nickname, netname, alias.
 - To change the nickname use **alias |new_name|** command.
 
 ### Professions, Skills, Statistics:
-- Before evolving character, upgrading skills and gaining levels, the player must choose his profession. 
+**Before evolving character, upgrading skills and gaining levels, the player must choose his profession.**
 
-To check the professions list type **profession**. 
-To choose a new profession use **profession |name|**. You can change your profession whenever you'd like to.
+- To check the professions list type **profession**.  To choose a new profession use **profession |name|**. You can change your profession whenever you'd like to.
 
 - Force User: One who has learned the powers of the force. May specialize in light or dark powers. Draws a lightsaber. 
 - Mercenary: Trained in weapons. Excels at attacking from distance and avoids direct confrontations.
