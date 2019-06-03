@@ -79,7 +79,7 @@ Automated orders cannot be controlled. They give temporary chance for the Credit
 - **newgame start** resets current profession's progress. Above the Mastery Level in return increases New Game Plus Level which gives New Game Plus Skill Points. **newgame reset** resets the New Game Plus Level.
 - **creditbox open** to open the Credit-Box.
 - **bounty |name| |credits|** to place an order to the Black List.
-- **blacklist** and **blacklist |name| to check the Black List.
+- **blacklist** and **blacklist |name|** to check the Black List.
 
 ### [The Commands List](Commands.md)
 
