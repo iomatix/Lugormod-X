@@ -2648,6 +2648,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			//iomatix:
 			if (attacker->s.number < MAX_CLIENTS && attacker != self)
 			{
+				if (attacker->client->pers.Lmd.account) {
 				//optymalization added
 				int dead_pers_level = PlayerAcc_Prof_GetLevel(self);
 				int cr_exp_multiplier = dead_pers_level - PlayerAcc_Prof_GetLevel(attacker); //difference
@@ -2657,15 +2658,16 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				if (lmd_is_differences_formula.integer == 1)cr_exp_multiplier = (120 + cr_exp_multiplier) / 22; //quick math, first 120 is Max Level second is ratio
 				else cr_exp_multiplier = dead_pers_level / 11; 	//normal
 				
-				if (lmd_rewardcr_kill.integer != 0) {
-					cr_exp_output = 1 + lmd_rewardcr_kill.integer*cr_exp_multiplier;
-					GiveCredits(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
+				
+					if (lmd_rewardcr_kill.integer != 0) {
+						cr_exp_output = 1 + lmd_rewardcr_kill.integer*cr_exp_multiplier;
+						GiveCredits(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
+					}
+					if (lmd_rewardexp_kill.integer != 0) {
+						cr_exp_output = 1 + lmd_rewardexp_kill.integer*cr_exp_multiplier;
+						GiveExperience(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
+					}
 				}
-				if (lmd_rewardexp_kill.integer != 0) {
-					cr_exp_output = 1 + lmd_rewardexp_kill.integer*cr_exp_multiplier;
-					GiveExperience(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
-				}
-
 
 				//Player's bounty
 				if (attacker->client->pers.Lmd.account && self->client->pers.Lmd.account)

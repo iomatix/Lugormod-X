@@ -10,6 +10,9 @@ void Spawn_NoProf(gentity_t *ent){
 	//
 	ent->client->ps.weapon = WP_SABER;
 	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_SABER);
+	trap_SendServerCommand(ent->s.number, "chat \"^3You haven't chosen a profession yet.\"");
+	Disp(ent, "^3Use '^2profession^3' command for available professions list.\n^3Use '^2profession <profession_name>^3' command to choose the profession.");
+
 }
 
 profession_t noProf = {

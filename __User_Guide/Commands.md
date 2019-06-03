@@ -1,4 +1,4 @@
-# TODO Commands list
+# Commands list
 
 ## User Commands
 

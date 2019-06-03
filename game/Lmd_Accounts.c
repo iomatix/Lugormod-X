@@ -254,7 +254,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		Accounts_GetName(acc),
 		Accounts_GetUsername(acc),
 		(secCode != NULL) ? secCode : "^1<none>",
-		time / 3600, (time / 60) % 60, (Accounts_GetBountyReward(acc) > 0) ? va("^1Black List:     ^1%i CR", Accounts_GetBountyReward(acc)) : "^3You are not listed on ^1The Black List^3." ));
+		time / 3600, (time / 60) % 60, (Accounts_GetBountyReward(acc) > 0) ? va("^1Black List:    ^3%i CR", Accounts_GetBountyReward(acc)) : "^3You are not listed on ^1The Black List^3." ));
 	  Disp(ent, va(
 		"^8===== Progress Information =====\n"
 		"^3Main Level:    ^2%i\n"
@@ -292,20 +292,20 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 	}
 	else if (prof == PROF_MERC)
 		c = "^3Merc";
-	if (prof == PROF_NONE) Disp(ent, va("^3Next level up: ^2%i^3 points and ^2%i^3 hours", (lvl * (lvl+1) * LEVEL_SCORE), (lvl * lvl * 2)));
+	//if (prof == PROF_NONE) Disp(ent, va("^3Next level up: ^2%i^3 points and ^2%i^3 hours", (lvl * (lvl+1) * LEVEL_SCORE), (lvl * lvl * 2)));
 	Disp(ent, va(
 		"^8===== Statistics =====\n"
 		"^3Highest Streak: ^2x%i\n"
-		"^3Logins:        ^2%i\n"
-		"^3Last login:    ^2%s\n"
-		"^3Kills:         ^2%i\n"
-		"^3Deaths:        ^2%i\n"
-		"^3Stashes:       ^2%i\n"
-		"^3Total duels    ^2%i\n"
-		"^3Duels won:     ^2%i\n"
-		"^3Total shots:   ^2%i\n"
-		"^3Shots hit:     ^2%i\n"
-		"^3Profession:    ^2%s",
+		"^3Logins:         ^2%i\n"
+		"^3Last login:     ^2%s\n"
+		"^3Kills:          ^2%i\n"
+		"^3Deaths:         ^2%i\n"
+		"^3Stashes:        ^2%i\n"
+		"^3Total duels     ^2%i\n"
+		"^3Duels won:      ^2%i\n"
+		"^3Total shots:    ^2%i\n"
+		"^3Shots hit:      ^2%i\n"
+		"^3Profession:     ^2%s",
 		Accounts_GetMaxKillstreak(acc),
 		Accounts_GetLogins(acc),
 		lastLogin,
@@ -421,6 +421,7 @@ void Lmd_Accounts_Player_Logout(gentity_t *ent) {
 		return;
 	}
 
+
 	recallDroppedCredits(ent);
 	Inventory_Player_Logout(ent);
 	updatePlayer(ent);
@@ -431,10 +432,11 @@ void Lmd_Accounts_Player_Logout(gentity_t *ent) {
 	Lmd_Accounts_LogAction(ent, acc, "logged out");
 
 	RenamePlayer(ent, "Padawan");
-
-	SetTeam(ent, "s");
 	//Disp(ent, "^3You have logged out.");
 	trap_SendServerCommand(ent->s.number, "chat \"^3You have ^2logged out^3.\"");
+
+	SetTeam(ent, "s");
+
 }
 
 extern vmCvar_t lmd_startingcr;
@@ -1188,8 +1190,8 @@ cmdEntry_t accountCommandEntries[] = {
 { "creditbox", "Open the Credit Box.", Cmd_Creditbox_f, 0, qfalse, 1, 128, 0, 0 },
 { "dropcr", "Drop credits.", Cmd_Credits_f, 3, qfalse, 1, 128, ~(1 << GT_FFA), 0 },
 { "inventory","View and use items in your inventory.", Cmd_Inventory_f, 0, qfalse, 1, 1, ~(1 << GT_FFA), 0 },
-{ "login"," Login to use the name you registered with \\register.", Cmd_Login_f, 0, qfalse, 0, 1, 0, 0, qtrue },
-{ "logout", "Logs out of your account.  If you are not in an account but have admin, you will loose admin status.", Cmd_Logout_f, 0, qfalse, 1, 0, 0, 0 },
+{ "login","Login to use the name you registered with ^2register^3.", Cmd_Login_f, 0, qfalse, 0, 1, 0, 0, qtrue },
+{ "logout", "Logs out of your account. If you are not in an account but have admin, you will loose admin status.", Cmd_Logout_f, 0, qfalse, 1, 0, 0, 0 },
 { "pay", "Give the player you are looking at CR <amount>.", Cmd_Credits_f, 1, qfalse, 1, 128, ~(1 << GT_FFA), 0 },
 { "property", "View your owned properties.  If you have the right rank, you can modify your property access here.", Cmd_Property_f, 0, qfalse, 1, 0, 0, 0 },
 { "register", "Register your account. ^5Your username will become your player name.", Cmd_Register_f, 0, qfalse, 0, 1, 0, 0, qtrue },

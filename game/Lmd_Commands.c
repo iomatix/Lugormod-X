@@ -1058,19 +1058,22 @@ void Bounty_List_disp(gentity_t *ent,int iArg)
 			if (Accounts_Prof_GetProfession(acc) == PROF_ADMIN)continue;
 			if (Accounts_GetBountyReward(acc) <= 0)continue;
 			count++;
-			Disp(ent, va("^0|^8%i^0| ^1%s^8: ^3%i ^8CR", count, Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
+			Disp(ent, va("^0|^8%i^0| ^1%s^8: ^3%i CR", count, Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
 			
 		}
+		if(count < 1)Disp(ent, va("^0|^8-^0| ^1The Black List^8 is empty.", count, Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
 		Disp(ent, "\n^0====================================");
-		Disp(ent, va("^0============= ^1Prey: %i^0 =============",count));
-		Disp(ent, "^0====================================");
+		if (count > 1) {
+			Disp(ent, va("^0    ====      ^1%i ^3Preys^0      ====", count));
+			Disp(ent, "^0====================================");
+		}
 	}
 	else {
 		trap_Argv(1, arg, sizeof(arg));
 		Account_t *acc = Accounts_GetByName(arg);
 		if (!acc) {	Disp(ent, va("%s ^3not found on The Black List.",arg));  return;}
 		if(Accounts_GetBountyReward(acc) <= 0){ Disp(ent, va("%s ^3not found on The Black List.", arg));  return; }
-		Disp(ent, va("^0|^8-^0| ^1%s^8: ^3%i ^8CR\n",  Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
+		Disp(ent, va("^0|^8-^0| ^1%s^8: ^3%i ^8CR",  Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
 		trap_SendServerCommand(ent->s.number, "chat \"^3The name is on the list...\"");
 	}
 }
@@ -1149,7 +1152,7 @@ cmdEntry_t playerCommandEntries[] = {
 	{"bounty", "Check bounties list or set a reward for killing the player.", Cmd_SetBounty_f, 0, qfalse, 0, 0, 0, 0 },
 	{"blacklist", "Check out bounties list called ^0The Black List.", Bounty_List_disp, 0, qfalse, 0, 0, 0, 0 },
 	{"buddy", "Make the player your buddy.", Cmd_BuddyClient_f, 0, qfalse, 0, 0, 0, 0},
-	{"challenge", "Challenge someone to a 'special' duel. For example '\\^5challenge power' ^3will challenge someone to a duel where both players have unlimited force power.", Cmd_Challenge_f, 0, qfalse, 0, 2, ~(1 << GT_FFA), 0},
+	{"challenge", "Challenge someone to a '^5special^3' duel. For example '^5challenge power^3' will challenge someone to a duel where both players have unlimited force power.", Cmd_Challenge_f, 0, qfalse, 0, 2, ~(1 << GT_FFA), 0},
 	{"chatmode", "Switches your team chat mode.  If no mode is set, the next mode in the sequence is selected.", Cmd_ChatMode_f, 0, qfalse, 0, 0, 0, 0},
 	{"class", "Pick your Battle Ground class. With no argument it will display how many of each class there are on your team.", Cmd_SiegeClass_f, 0, qfalse, 0, 0, ~(1 << GT_BATTLE_GROUND), 0},
 	{"confirm", "Confirm an action, or toggle the confirmation requirement.", Cmd_Confirm_f, 0, 0, 0, 0, 0},

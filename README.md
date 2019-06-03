@@ -1,6 +1,8 @@
 # Lugormod X 
 **X version aims to change the core of the Lugormod to bring out its potential and making it compatible with the KotF modification and making it official [KotF Multiplayer](https://www.moddb.com/mods/knights-of-the-force-21/downloads) server core.**
 
+# [The User Guide](__User_Guide)
+
 # Main features and changes:
 
 ## New features:
@@ -28,16 +30,17 @@
 - Title system.
 - The Black List.
 - New in-game mechanics.
+- A Guide designed for new users.
 
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 
 ### I'm working on:
-- Bounty for killing streaks.
-- Messages time control.
-- Adding extern variable for profession credits fee.
 - Bug fixes.
-- Experience system supports stashes system now.
+- Experience system supports stashes system.
+- Skills adjustements.
+- Trading system.
+- New Light Saber styles.
 - A lot of more...
 
 ### Main long-terms Goals:

@@ -4286,6 +4286,12 @@ void ClientSpawn(gentity_t *ent) {
 	//try to login bot if he is not logged in! iomatix:
 	if (!ent->client->pers.Lmd.account) {
 		if (ent->r.svFlags & SVF_BOT) Lmd_Accounts_Bot_Login(ent);
+		//send information to player, he is not logged-in/registered user.
+		else if(client->sess.sessionTeam != TEAM_SPECTATOR){ //else if cuz don't want to send the information for bots.
+			trap_SendServerCommand(ent->s.number, "chat \"^1You are not logged-in.\"");
+			Disp(ent, "^3Use '^2register <username> <password>^3' command to register a new account.\n^3Use '^2login <username> <password> [SecCode]^3' command to log in to an existing account.\n^3Remember! ^1Do not use commands on the chat. ^3Open the ^2command window ^3instead by pressing ^2tilde^3 button on the keyboard.");
+		}
+
 	}
 	//RoboPhred: why index var?  I kinda remember there being an issue where ent->s.number was invalid...  Well, fix it!
 
