@@ -48,7 +48,7 @@
 - **`hitime`** to Display Top 10 players with the most time spend on the server.
 - **`ignore |player|`** to ignore messages. **`ignore -1`** to ignore all the messages.
 - **`interact`** to interact with terminals and objects.
-- **`ionlyduel`** to set onlyduel flag. Can not receive or deal damage except duels. Removable after **kill** command or engagion a duel.
+- **`ionlyduel`** to set onlyduel flag. Can not receive or deal damage except duels. Removable after **`kill`** command or engagion a duel.
 - **`king`** to get information about present Duel King on the server.
 - **`motd`** to display server's MOTD.
 - **`ragequit`** to quit from server without saving.
@@ -72,7 +72,7 @@
 - **`ysalamiri`** to use ysalamiri. It has the same bind as the challenge to duel button - setable in the control settings. (Exclusive command for the Ysalamiri Skill owners only.) 
 
 ### Force User Commands
-- **`ionlysaber`** to set onlysaber flag. Can not receive or deal damage thorugh the force. Removable after **kill** command. (Exclusive command for Force Users only.)
+- **`ionlysaber`** to set onlysaber flag. Can not receive or deal damage thorugh the force. Removable after **`kill`** command. (Exclusive command for Force Users only.)
 
 
 ## Admin Commands
