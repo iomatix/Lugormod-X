@@ -53,4 +53,4 @@ Starting credits value for new registered account. Default 1350.
 **They are usable in the game**
 
 - **`target_experience`** and **`count_exp`**. It stores experience data.
-New target entity target_experience with count_exp variable. EXAMPLE: place `**target_experience** 0 targetname,experience,**count_exp**,200`
+New target entity target_experience with count_exp variable. EXAMPLE: place `target_experience |0| |targetname|,|experience|,count_exp,|200|`
