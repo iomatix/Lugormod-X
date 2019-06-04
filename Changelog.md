@@ -72,18 +72,21 @@
 - Force is able to control sabers on the ground. ✔️
 - Added simple AI to watch the Black List and manage it. ✔️
 - Mercenary bots start with weapons depending on their weapons skill level. ✔️
+- Rage life-steal re-worked. When active, up to 35% lifesteal when is no-active up to 16%. ✔️
 
 ///
-- jedi is able to pick up medpacks
+- jedi is able to pick up medpacks ???
 - lmd_old_commands_disp
 - duel rewards
 - deflecting and parring with saber costs power.
-- Search for new ways for spending credits.
-- experience boosters/ packs for CR?
+- Search a new ways for spending credits.
+- experience boosters/ packs for CR? lmd_exp_boosters
 - Level 5 Jump. The player can not use it to fly but jumps higher. ??
 - lmd_stashexp added. Stash system supports new experience system now. 50%
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
 - Longer Grip which depends on the skill level. 80% Search for limiter function... whereveri it is hidden.
+- Longer Drain/Heal cooldowns or heal rework to work overtime not an instan.
+- Cooldowns system, when cooldown force drains more force. 
 
 
 

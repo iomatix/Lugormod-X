@@ -5558,14 +5558,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 				
 			}else if (PlayerAcc_Prof_GetProfession(attacker) == PROF_JEDI && mod == MOD_SABER) { //jedi class check and is he using the saber?
 
-					 //rage regens hp on hit with saber
-				
-				int vampiric_rage_level = PlayerProf_Jedi_GetRageSkill(attacker);
-				if (vampiric_rage_level > 0 && (mod == MOD_SABER || mod == MOD_FORCE_DARK))
-				{
-					if (attacker->health + vampiric_rage_level * damage / 20 > attacker->client->pers.maxHealth) attacker->health = attacker->client->pers.maxHealth;
-					else attacker->health += vampiric_rage_level * damage / 20;  //max is 25% life steal
-				}
+					
 						
 				
 
@@ -5579,7 +5572,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 					if (additional_damage_multiplier > 4)
 					{
 						additional_damage_multiplier = 4; //1,2,3,4 for additional damage
-						                                      //5,6,7 or 8
+															  //5,6,7 or 8
 						lethality_multiplier = PlayerProf_Jedi_GetThousandCutsSkill(attacker) - 4; //1,2,3,4 again
 
 
@@ -5587,9 +5580,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 
 
 					//converts base damage to the lethality
-					lethalityoutput = (lethality_multiplier * 5) / 100; 
-					damage -= lethalityoutput; 
-					
+					lethalityoutput = (lethality_multiplier * 5) / 100;
+					damage -= lethalityoutput;
+
 					//additional damage
 					if (lmd_is_thousandcuts_lethality.integer == 1) //want to use thousandcuts additional damage as a lethality skill from the beginning?
 					{
@@ -5597,18 +5590,32 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 						lethalityoutput += (additional_damage_multiplier * 5) / 100; //gets the percent of damage value
 						damage -= (additional_damage_multiplier * 5) / 100; //no option for additional damage cuz too op sorry.
 					}
-					else{ //standard formula for increased output
+					else { //standard formula for increased output
 
 						damage += (damage * additional_damage_multiplier * 5) / 100;
 
 					}
-
-
-
-
-
-
 				}
+
+					//rage regens hp on hit with saber
+
+					int vampiric_rage_level = PlayerProf_Jedi_GetRageSkill(attacker);
+					if (vampiric_rage_level > 0 && (mod == MOD_SABER || mod == MOD_FORCE_DARK))
+					{
+						if (attacker->client->ps.fd.forcePowersActive & (1 << FP_RAGE))
+						{
+							if (attacker->health + vampiric_rage_level * damage / 14 > attacker->client->pers.maxHealth) attacker->health = attacker->client->pers.maxHealth;
+							else attacker->health += vampiric_rage_level * damage / 14;  //max is 35% life steal
+						}
+						else {
+							if (attacker->health + vampiric_rage_level * damage / 30 > attacker->client->pers.maxHealth) attacker->health = attacker->client->pers.maxHealth;
+							else attacker->health += vampiric_rage_level * damage / 30;  //max is 16% life steal
+						}
+					}
+
+
+
+				
 
 
 			}
