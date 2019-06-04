@@ -74,7 +74,11 @@
 - Mercenary bots start with weapons depending on their weapons skill level. ✔️
 
 ///
-
+- jedi is able to pick up medpacks
+- lmd_old_commands_disp
+- duel rewards
+- deflecting and parring with saber costs power.
+- Search for new ways for spending credits.
 - experience boosters/ packs for CR?
 - Level 5 Jump. The player can not use it to fly but jumps higher. ??
 - lmd_stashexp added. Stash system supports new experience system now. 50%
@@ -84,11 +88,7 @@
 
 
 ## TODO
-- jedi is able to pick up medpacks
-- lmd_old_commands_disp
-- duel rewards
-- deflecting and parring with saber costs power.
-- Search for new ways for spending credits.
+
 - grip longer
 
 - Try repair crosschair hud for force.  (CG_PLAYER_ARMOR_VALUE  CG_PLAYER_AMMO_VALUE   CG_PLAYER_FORCE_VALUE)
