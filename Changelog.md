@@ -84,6 +84,7 @@
 
 
 ## TODO
+- jedi is able to pick up medpacks
 - lmd_old_commands_disp
 - duel rewards
 - deflecting and parring with saber costs power.
