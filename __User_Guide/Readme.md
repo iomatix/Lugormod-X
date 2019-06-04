@@ -69,7 +69,7 @@ Automated orders cannot be controlled. They give temporary chance for the Credit
 - **`help`** and **`help |command|`** to show more detailed information about commands available.
 - **`register |username| |password|`** to register a new account.
 - **`login |username| |password|`**, **`login |username| |password| |seccode|`** to log in to an existing account.
-- **`seccode** to check account's security code.
+- **`seccode`** to check account's security code.
 - **`chpasswd |new_password|`** to change the account's password.
 - **`alias |new_name|`** to change in-game name. The user name will not change so your login data remains the same.
 - **`stats`** to check detailed account's information.
