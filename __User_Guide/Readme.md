@@ -66,20 +66,20 @@ Automated orders cannot be controlled. They give temporary chance for the Credit
 - Use **`blacklist`** to check the Black List or **`blacklist |name|`** to search |name| on the list.
 
 ## Most important commands you need to know:
-- **help** and **help |command|** to show more detailed information about commands available.
-- **register |username| |password|** to register a new account.
-- **login |username| |password|**, **login |username| |password| |seccode|** to log in to an existing account.
-- **seccode** to check account's security code.
-- **chpasswd |new_password|** to change the account's password.
-- **alias |new_name|** to change in-game name. The user name will not change so your login data remains the same.
-- **stats** to check detailed account's information.
-- **profession** and **profession |name|** to change the profession.
-- **skill**, **skill |name|** and **skill |name| up** to check detailed information concerning profession's skills. **up** to upgrade the skill.
-- **resetskill**, **resetskill confirm** to reset all active skills.
-- **newgame start** resets current profession's progress. Above the Mastery Level in return increases New Game Plus Level which gives New Game Plus Skill Points. **newgame reset** resets the New Game Plus Level.
-- **creditbox open** to open the Credit-Box.
-- **bounty |name| |credits|** to place an order to the Black List.
-- **blacklist** and **blacklist |name|** to check the Black List.
+- **`help`** and **`help |command|`** to show more detailed information about commands available.
+- **`register |username| |password|`** to register a new account.
+- **`login |username| |password|`**, **`login |username| |password| |seccode|`** to log in to an existing account.
+- **`seccode** to check account's security code.
+- **`chpasswd |new_password|`** to change the account's password.
+- **`alias |new_name|`** to change in-game name. The user name will not change so your login data remains the same.
+- **`stats`** to check detailed account's information.
+- **`profession`** and **`profession |name|`** to change the profession.
+- **`skill`**, **`skill |name|`** and **`skill |name| up`** to check detailed information concerning profession's skills. **up** to upgrade the skill.
+- **`resetskill`**, **`resetskill confirm`** to reset all active skills.
+- **`newgame start`** resets current profession's progress. Above the Mastery Level in return increases New Game Plus Level which gives New Game Plus Skill Points. **`newgame reset`** resets the New Game Plus Level.
+- **`creditbox open`** to open the Credit-Box.
+- **`bounty |name| |credits|`** to place an order to the Black List.
+- **`blacklist`** and **`blacklist |name|`** to check the Black List.
 
 ### [The Full Commands List](Commands.md)
 
