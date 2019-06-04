@@ -70,8 +70,12 @@
 - Bryar pistol added to weapon skill. Mercenary starts without a weapon. ✔️
 - Player is able to drop saber or pistol on the ground if lmd_jedi_pickup_weapons is 1. ✔️
 - Force is able to control sabers on the ground. ✔️
+- Added simple AI to watch the Black List and manage it. ✔️
+- Mercenary bots start with weapons depending on their weapons skill level. ✔️
 
 ///
+
+- experience boosters/ packs for CR?
 - Level 5 Jump. The player can not use it to fly but jumps higher. ??
 - lmd_stashexp added. Stash system supports new experience system now. 50%
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!

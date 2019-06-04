@@ -79,7 +79,7 @@
 - **help admin** to print all commands
 - **propadmin setrank |username| |auth_rank|** to register an existing user as an admin. 1 is the most privileged rank. (Server's console only.)
 
-
+###Addon: [External Variables List](https://github.com/iomatix/Lugormod-X/blob/master/__example_config/externvars.md)
 ###Addon: [External Entities List](http://adamo.uw.hu/entities.html) + target_experience with count_exp
 
 

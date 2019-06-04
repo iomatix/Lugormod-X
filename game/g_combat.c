@@ -9,7 +9,7 @@
 #include "Lmd_Accounts_Stats.h"
 #include "Lmd_Accounts_Core.h"
 #include "Lmd_Professions.h"
-
+extern int get_random(int min, int max);
 extern int G_ShipSurfaceForSurfName( const char *surfaceName );
 extern qboolean G_FlyVehicleDestroySurface( gentity_t *veh, int surface );
 extern void G_VehicleSetDamageLocFlags( gentity_t *veh, int impactDir, int deathPoint );
@@ -2720,7 +2720,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 					}
 				}
 
-				//Player's bounty
+				//Player's bounty (message priority)
+				qboolean Is_players_bounty_message = qfalse;
 				if (attacker->client->pers.Lmd.account && self->client->pers.Lmd.account)
 				{
 					int thebounty_reward_player_cmd = PlayerAcc_GetBountyReward(self);
@@ -2736,6 +2737,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 						char *msg_bd_self = va("^2You've ^3got a reward for ^1%s's^3 head.", self->client->pers.netname);
 						trap_SendServerCommand(attacker->s.number, va("cp \"%s\"", msg_bd_self));
 						trap_SendServerCommand(attacker->s.number, va("chat \"%s\"", msg_bd_self));
+
+						Is_players_bounty_message = qtrue;
 					}
 				}
 
@@ -2754,12 +2757,15 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 					GiveCredits(attacker, bounty_bonus*4, "as a bounty bonus");
 					GiveExperience(attacker, bounty_bonus*5, "as a bounty bonus");
 					GiveLootboxes(attacker, bounty_reward, "as a bounty");
-					//trap_SendServerCommand_ToAll(attacker->s.number, va("print \"\n%s\n\"", msg_bd));
-					trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_bd));
+
 		
 					char *msg_bd_self = va("^2You've ^3got a bounty for killing ^1%s.", self->client->pers.netname);
 					trap_SendServerCommand(attacker->s.number, va("cp \"%s\"", msg_bd_self));
-					trap_SendServerCommand(attacker->s.number, va("chat \"%s\"", msg_bd_self));
+					if (Is_players_bounty_message == qfalse) { //send message if it wasn't send before.
+						trap_SendServerCommand(attacker->s.number, va("chat \"%s\"", msg_bd_self));
+						trap_SendServerCommand_ToAll(attacker->s.number, va("print \"\n%s\n\"", msg_bd));
+						trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_bd));
+					}
 					self->client->pers.Lmd.killstreak_bounty = 0; //set killstreak_bounty to 0;
 				}
 
@@ -2767,10 +2773,18 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				attacker->client->pers.Lmd.killstreak += 1; //increase
 				attacker->client->pers.Lmd.killstreak_bounty += 1;
 				//Black List automation:
-				if (attacker->client->pers.Lmd.account && attacker->client->pers.Lmd.killstreak_bounty > attacker->client->pers.Lmd.killstreak_bounty / lmd_bounty_streaks_by.integer)
+				int rand = get_random(1-(lmd_bounty_streaks_by.integer/3), (lmd_bounty_streaks_by.integer/3)+1);
+				if (attacker->client->pers.Lmd.account && (attacker->client->pers.Lmd.killstreak_bounty >= lmd_bounty_streaks_by.integer-rand || PlayerAcc_GetBountyReward(attacker) > 75))
 				{
-						if (PlayerAcc_GetBountyReward(attacker) < 35)PlayerAcc_SetBountyReward(attacker, 35);
-						PlayerAcc_SetBountyReward(attacker, PlayerAcc_GetBountyReward(attacker) + attacker->client->pers.Lmd.killstreak_bounty * 3);
+					int player_getbountyReward = PlayerAcc_GetBountyReward(attacker);
+						if (player_getbountyReward < 35) PlayerAcc_SetBountyReward(attacker, 35);
+
+						if (rand == 0) rand = get_random(15,35+(player_getbountyReward/10));
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= 20 * lmd_bounty_streaks_by.integer*abs(rand)) rand = get_random(7500, 25000);
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= 10 * lmd_bounty_streaks_by.integer*abs(rand)) rand = get_random(2500, 15000);
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= 5*lmd_bounty_streaks_by.integer*abs(rand)) rand = get_random(500, 3000);
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= 3*lmd_bounty_streaks_by.integer*abs(rand)) rand = get_random(100, 1500);
+						PlayerAcc_SetBountyReward(attacker, PlayerAcc_GetBountyReward(attacker) + abs(rand) + attacker->client->pers.Lmd.killstreak_bounty * 3);
 					
 				}
 				//

@@ -4,6 +4,10 @@ int Lmd_Prof_Merc_GetMeleeSkill(Account_t *acc);
 int Lmd_Prof_Merc_GetAmmoSkill(Account_t *acc);
 #define PlayerProf_Merc_GetAmmoSkill(ent) Lmd_Prof_Merc_GetAmmoSkill(ent->client->pers.Lmd.account)
 
+int Lmd_Prof_Merc_GetWeaponsSkill(Account_t *acc);
+#define PlayerProf_Merc_GetWeaponsSkill(ent)Lmd_Prof_Merc_GetWeaponsSkill(ent->client->pers.Lmd.account);
+#define PlayerProf_Merc_GetAmmoSkill(ent) Lmd_Prof_Merc_GetAmmoSkill(ent->client->pers.Lmd.account)
+
 int Lmd_Prof_Merc_GetForceResistanceSkill(Account_t *acc);
 #define PlayerProf_Merc_GetForceResistanceSkill(ent) Lmd_Prof_Merc_GetForceResistanceSkill(ent->client->pers.Lmd.account)
 

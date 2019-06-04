@@ -417,7 +417,12 @@ int Lmd_Prof_Merc_GetAmmoSkill(Account_t *acc) {
 	return mercSkill_Ammo.getValue(acc, &mercSkill_Ammo);
 }
 
-
+int Lmd_Prof_Merc_GetWeaponsSkill(Account_t *acc) {
+	if (!acc) {
+		return 0;
+	}
+	return mercSkill_Weapons.getValue(acc, &mercSkill_Weapons);
+}
 const char *mercSkill_Shield_Descr[] = {
 	"Spawn with an extra 15 percent shield charge.",
 	"Spawn with an extra 30 percent shield charge.",
@@ -1735,41 +1740,132 @@ void Merc_FireGrapplingHook( gentity_t *ent, qboolean alt_fire ) {
 #endif
 }
 
-void Merc_Spawn(gentity_t *ent)
-{
-#ifdef LMD_NEW_JETPACK
-	//Disp(ent, "\n^3============================================\n^3Prototype jetpack in testing.  Please give feedback.\n^3============================================\n");
-#endif
-	ent->client->ps.trueNonJedi = qtrue;
-	ent->client->ps.trueJedi = qfalse;       
+void Bot_Merc_Spawn_Weapons(gentity_t *ent) {
 
-	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_MELEE);
-#ifdef LMD_NEW_JETPACK
-	ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_STUN_BATON);
-#endif
-	Merc_GiveStartingWeapons(ent);
-	ent->client->ps.stats[STAT_HOLDABLE_ITEMS] |= (1 << HI_BINOCULARS);
-	ent->client->ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(HI_BINOCULARS, IT_HOLDABLE);
+	if (!ent->client->pers.Lmd.account) return;
 
-	if (Lmd_Prof_Merc_GetSkill_fuel(ent->client->pers.Lmd.account, &mercSkill_Fuel) > 0) ent->client->ps.stats[STAT_HOLDABLE_ITEMS] |= (1 << HI_JETPACK); //iomatix: new mechanics, jetpack after upgrading the fuel.
+	if (ent->r.svFlags & SVF_BOT) {
+		int bot_WPS = PlayerProf_Merc_GetWeaponsSkill(ent);
 
-				
-	ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax = 75;
+		ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_BRYAR_PISTOL);
 
-	//iomatix:
-	ent->client->pers.Lmd.killstreak = 0; //killstreak reset
-	//HEALTH
-	ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] =  Get_Merc_hp_maxs_value(ent); //iomatix HP skill
+		if (bot_WPS >= 1) {
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_BLASTER);
+			Add_Ammo(ent, weaponData[WP_BLASTER].ammoIndex, Q3_INFINITE);
+		}
 
-	//SHIELD:
-	int armorSkill = Lmd_Prof_Merc_GetSkill_armor(ent->client->pers.Lmd.account, &mercSkill_Shield);
-	if (armorSkill > 0) {
-		//Will be capped to max on spawn finalize if needed.
-		ent->client->ps.stats[STAT_ARMOR] += armorSkill * (ent->client->pers.maxHealth * 0.15f);
+		if (bot_WPS >= 2) {
+
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_THERMAL);
+			Add_Ammo(ent, weaponData[WP_THERMAL].ammoIndex, Q3_INFINITE);
+		}
+
+		if (bot_WPS == 3) {
+
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DEMP2);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DET_PACK);
+			Add_Ammo(ent, weaponData[WP_DEMP2].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_DET_PACK].ammoIndex, Q3_INFINITE);
+		}
+		else if (bot_WPS == 4)
+		{
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DISRUPTOR);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_TRIP_MINE);
+			Add_Ammo(ent, weaponData[WP_DEMP2].ammoIndex, WP_DISRUPTOR);
+			Add_Ammo(ent, weaponData[WP_DET_PACK].ammoIndex, WP_TRIP_MINE);
+		}
+		else if (bot_WPS == 5)
+		{
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_FLECHETTE);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DEMP2);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DET_PACK);
+			Add_Ammo(ent, weaponData[WP_FLECHETTE].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_DEMP2].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_DET_PACK].ammoIndex, Q3_INFINITE);
+		}
+		else if (bot_WPS == 6) {
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_REPEATER);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_TRIP_MINE);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DET_PACK);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_BOWCASTER);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DISRUPTOR);
+			Add_Ammo(ent, weaponData[WP_REPEATER].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_TRIP_MINE].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_DET_PACK].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_BOWCASTER].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_DISRUPTOR].ammoIndex, Q3_INFINITE);
+		}
+		else if (bot_WPS == 7) {
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_ROCKET_LAUNCHER);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_FLECHETTE);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DEMP2);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DET_PACK);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DISRUPTOR);
+			Add_Ammo(ent, weaponData[WP_ROCKET_LAUNCHER].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_FLECHETTE].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_DEMP2].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_DET_PACK].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_DISRUPTOR].ammoIndex, Q3_INFINITE);
+		}
+		else if (bot_WPS >= 8) {
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_CONCUSSION);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_TRIP_MINE);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_REPEATER);
+			ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_DISRUPTOR);
+			Add_Ammo(ent, weaponData[WP_CONCUSSION].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_TRIP_MINE].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_REPEATER].ammoIndex, Q3_INFINITE);
+			Add_Ammo(ent, weaponData[WP_DISRUPTOR].ammoIndex, Q3_INFINITE);
+	
+		}
+
 	}
-	//iomatix:
-	ent->client->ps.stats[STAT_ARMOR] += Get_Merc_sd_maxs_value(ent);
 }
+void Merc_Spawn(gentity_t *ent) {
+#ifdef LMD_NEW_JETPACK
+		//Disp(ent, "\n^3============================================\n^3Prototype jetpack in testing.  Please give feedback.\n^3============================================\n");
+#endif
+		ent->client->ps.trueNonJedi = qtrue;
+		ent->client->ps.trueJedi = qfalse;
+
+		ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_MELEE);
+#ifdef LMD_NEW_JETPACK
+		ent->client->ps.stats[STAT_WEAPONS] |= (1 << WP_STUN_BATON);
+#endif
+		Merc_GiveStartingWeapons(ent);
+		ent->client->ps.stats[STAT_HOLDABLE_ITEMS] |= (1 << HI_BINOCULARS);
+		ent->client->ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(HI_BINOCULARS, IT_HOLDABLE);
+
+		//bots weapons:
+		Bot_Merc_Spawn_Weapons(ent);
+
+		if (Lmd_Prof_Merc_GetSkill_fuel(ent->client->pers.Lmd.account, &mercSkill_Fuel) > 0) ent->client->ps.stats[STAT_HOLDABLE_ITEMS] |= (1 << HI_JETPACK); //iomatix: new mechanics, jetpack after upgrading the fuel.
+
+
+		ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax = 35; //nerf
+
+		//iomatix:
+		ent->client->pers.Lmd.killstreak = 0; //killstreak reset
+		//HEALTH
+		ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = Get_Merc_hp_maxs_value(ent); //iomatix HP skill
+
+		//SHIELD:
+		int armorSkill = Lmd_Prof_Merc_GetSkill_armor(ent->client->pers.Lmd.account, &mercSkill_Shield);
+		if (armorSkill > 0) {
+			//Will be capped to max on spawn finalize if needed.
+			ent->client->ps.stats[STAT_ARMOR] += armorSkill * (ent->client->pers.maxHealth * 0.15f);
+		}
+		//iomatix:
+		ent->client->ps.stats[STAT_ARMOR] += Get_Merc_sd_maxs_value(ent);
+
+
+
+
+
+
+
+	}
+
 
 const char *mercProf_Descr[] = {
 	NULL
