@@ -75,7 +75,7 @@
 - Rage life-steal re-worked. When active, up to 35% lifesteal when is no-active up to 16%. ✔️
 
 ///
-- jedi is able to pick up medpacks ???
+
 - lmd_old_commands_disp
 - duel rewards
 - deflecting and parring with saber costs power.
@@ -85,9 +85,9 @@
 - lmd_stashexp added. Stash system supports new experience system now. 50%
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
 - Longer Grip which depends on the skill level. 80% Search for limiter function... whereveri it is hidden.
-- Longer Drain/Heal cooldowns or heal rework to work overtime not an instan.
+- Longer Drain/Heal cooldowns or heal rework to work overtime not an instant.
 - Cooldowns system, when cooldown force drains more force. 
-
+- jedi is able to pick up medpacks ???
 
 
 ## TODO
