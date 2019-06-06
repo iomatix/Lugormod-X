@@ -2700,6 +2700,9 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			if (attacker->s.number < MAX_CLIENTS && attacker != self)
 			{
 				if (attacker->client->pers.Lmd.account) {
+		
+
+
 				//optymalization added
 				int dead_pers_level = PlayerAcc_Prof_GetLevel(self);
 				int cr_exp_multiplier = dead_pers_level - PlayerAcc_Prof_GetLevel(attacker); //difference

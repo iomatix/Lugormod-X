@@ -12,21 +12,21 @@
 #include "Lmd_Arrays.h"
 #include "Lmd_Time.h"
 
-gentity_t *G_GetJediMaster (void);
-char	  *ConcatArgs      (int        start );
-gentity_t *G_PlayEffect    (int fxID, vec3_t org, vec3_t ang);
-int        ClientNumberFromString (gentity_t *to, char *s );
-void       PM_SetPMViewAngle (playerState_t *ps, vec3_t angle, usercmd_t *ucmd);
-void       SP_info_player_start (gentity_t *ent);
-qboolean   saberKnockOutOfHand (gentity_t *saberent, gentity_t *saberOwner, vec3_t velocity);
-void       StandardSetBodyAnim (gentity_t *self, int anim, int flags);
-void       G_Say           (gentity_t *ent, gentity_t *target, int mode, const char *chatText );
-void       Cmd_ForceChanged_f( gentity_t *ent );
-void       TossClientWeapon (gentity_t *self, vec3_t direction, float speed);
-void       BG_CycleInven   (playerState_t *ps, int direction); //bg_misc.c
-void       Jedi_Decloak    (gentity_t *self );
-void       HiScore         (gentity_t *ent, int field);
-void       Cmd_Say_f       (gentity_t *ent, int mode, qboolean arg0 );
+gentity_t *G_GetJediMaster(void);
+char	  *ConcatArgs(int        start);
+gentity_t *G_PlayEffect(int fxID, vec3_t org, vec3_t ang);
+int        ClientNumberFromString(gentity_t *to, char *s);
+void       PM_SetPMViewAngle(playerState_t *ps, vec3_t angle, usercmd_t *ucmd);
+void       SP_info_player_start(gentity_t *ent);
+qboolean   saberKnockOutOfHand(gentity_t *saberent, gentity_t *saberOwner, vec3_t velocity);
+void       StandardSetBodyAnim(gentity_t *self, int anim, int flags);
+void       G_Say(gentity_t *ent, gentity_t *target, int mode, const char *chatText);
+void       Cmd_ForceChanged_f(gentity_t *ent);
+void       TossClientWeapon(gentity_t *self, vec3_t direction, float speed);
+void       BG_CycleInven(playerState_t *ps, int direction); //bg_misc.c
+void       Jedi_Decloak(gentity_t *self);
+void       HiScore(gentity_t *ent, int field);
+void       Cmd_Say_f(gentity_t *ent, int mode, qboolean arg0);
 
 extern gentity_t  *g_bestKing;
 extern int         g_bestKingScore;
@@ -39,7 +39,7 @@ Builds a copy of the string, without translating \n to real linefeeds
 Lugormod
 =============
 */
-char *G_NewString2( const char *string ) {
+char *G_NewString2(const char *string) {
 	char	*newb, *new_p;
 	int		i, len;
 
@@ -49,7 +49,7 @@ char *G_NewString2( const char *string ) {
 
 	len = strlen(string) + 1;
 
-	newb = (char *) G_Alloc( len );
+	newb = (char *)G_Alloc(len);
 
 	new_p = newb;
 	for (i = 0; i < len; i++) {
@@ -65,17 +65,17 @@ Cmd_AdminInfo_f
 Lugormod
 ==================
 */
-void Cmd_AdminInfo_f ( gentity_t *ent, int iArg ) {
+void Cmd_AdminInfo_f(gentity_t *ent, int iArg) {
 	int i;
 	gentity_t *targ;
 
-	for(i = 0; i < MAX_CLIENTS; i++) {
+	for (i = 0; i < MAX_CLIENTS; i++) {
 		targ = &g_entities[i];
-		if(!targ->inuse || !targ->client || targ->client->pers.connected != CON_CONNECTED)
+		if (!targ->inuse || !targ->client || targ->client->pers.connected != CON_CONNECTED)
 			continue;
-		if(!Auths_PlayerHasAdmin(targ))
+		if (!Auths_PlayerHasAdmin(targ))
 			continue;
-		if(targ->client->pers.Lmd.persistantFlags & SPF_HIDEADMIN && ent && Auths_Inferior(ent, targ))
+		if (targ->client->pers.Lmd.persistantFlags & SPF_HIDEADMIN && ent && Auths_Inferior(ent, targ))
 			continue;
 		Disp(ent, va("%s:\t^2%i\t%s", targ->client->pers.netname, Auths_GetPlayerRank(targ), Auths_QuickPlayerAuthList(targ)));
 	}
@@ -87,19 +87,19 @@ AimAnyTarget
 
 ==================
 */
-gentity_t* AimAnyTarget (gentity_t *ent, int length){
+gentity_t* AimAnyTarget(gentity_t *ent, int length) {
 	trace_t tr;
-	vec3_t fPos,maxs,mins;
+	vec3_t fPos, maxs, mins;
 
 	AngleVectors(ent->client->ps.viewangles, fPos, 0, 0);
-	VectorSet( mins, -8, -8, -8 );
-	VectorSet( maxs, 8, 8, 8 );
+	VectorSet(mins, -8, -8, -8);
+	VectorSet(maxs, 8, 8, 8);
 
-	fPos[0] = ent->client->renderInfo.eyePoint[0] + fPos[0]*length;
-	fPos[1] = ent->client->renderInfo.eyePoint[1] + fPos[1]*length;
-	fPos[2] = ent->client->renderInfo.eyePoint[2] + fPos[2]*length;
+	fPos[0] = ent->client->renderInfo.eyePoint[0] + fPos[0] * length;
+	fPos[1] = ent->client->renderInfo.eyePoint[1] + fPos[1] * length;
+	fPos[2] = ent->client->renderInfo.eyePoint[2] + fPos[2] * length;
 
-	trap_Trace(&tr,ent->client->renderInfo.eyePoint, mins, maxs, fPos, ent->s.number, ent->clipmask);
+	trap_Trace(&tr, ent->client->renderInfo.eyePoint, mins, maxs, fPos, ent->s.number, ent->clipmask);
 	if (tr.entityNum >= ENTITYNUM_MAX_NORMAL) {
 		return NULL;
 	}
@@ -113,14 +113,14 @@ AimTarget
 
 ==================
 */
-gentity_t* AimTarget (gentity_t *ent, int length)
+gentity_t* AimTarget(gentity_t *ent, int length)
 {
 	gentity_t *tEnt;
 
 	tEnt = AimAnyTarget(ent, length);
 	if (tEnt
 		&& tEnt->inuse
-		&& tEnt->client 
+		&& tEnt->client
 		&& tEnt->client->pers.connected == CON_CONNECTED)
 	{
 		return tEnt;
@@ -135,7 +135,7 @@ ClientFromArg
 Lugormod
 ==================
 */
-gentity_t *ClientFromArg (gentity_t *to, int argNum) 
+gentity_t *ClientFromArg(gentity_t *to, int argNum)
 {
 
 	if (trap_Argc() > argNum)
@@ -143,9 +143,9 @@ gentity_t *ClientFromArg (gentity_t *to, int argNum)
 		int clNum;
 		char Arg[MAX_STRING_CHARS];
 
-		trap_Argv( argNum, Arg, sizeof( Arg ) );
+		trap_Argv(argNum, Arg, sizeof(Arg));
 
-		clNum = ClientNumberFromString(to,Arg);
+		clNum = ClientNumberFromString(to, Arg);
 		if (clNum >= 0 && clNum < MAX_GENTITIES)
 		{
 			return &g_entities[clNum];
@@ -160,7 +160,7 @@ Cmd_IgnoreClient_f
 Lugormod
 ==================
 */
-void Cmd_IgnoreClient_f (gentity_t *ent, int iArg) 
+void Cmd_IgnoreClient_f(gentity_t *ent, int iArg)
 {
 	gentity_t *iEnt;
 	int clientNum = ent->s.number;
@@ -170,19 +170,19 @@ void Cmd_IgnoreClient_f (gentity_t *ent, int iArg)
 	char arg[MAX_STRING_CHARS];
 	trap_Argv(1, arg, sizeof(arg));
 	k = atoi(arg);
-	if(k == -1){
+	if (k == -1) {
 		qboolean allIgnored = qtrue;
 		for (k = 0; k < MAX_CLIENTS; k++) {
 			iEnt = &g_entities[k];
 			if (!iEnt->inuse || !iEnt->client) {
 				continue;
 			}
-			if(!(iEnt->client->pers.Lmd.ignoredindex[i] & (1 << j))){
+			if (!(iEnt->client->pers.Lmd.ignoredindex[i] & (1 << j))) {
 				allIgnored = qfalse;
 				break;
 			}
 		}
-		if(allIgnored){
+		if (allIgnored) {
 			for (k = 0; k < MAX_CLIENTS; k++) {
 				iEnt = &g_entities[k];
 				if (!iEnt->inuse || !iEnt->client) {
@@ -191,7 +191,7 @@ void Cmd_IgnoreClient_f (gentity_t *ent, int iArg)
 				iEnt->client->pers.Lmd.ignoredindex[i] &= ~(1 << j);
 			}
 		}
-		else{
+		else {
 			for (k = 0; k < MAX_CLIENTS; k++) {
 				iEnt = &g_entities[k];
 				if (!iEnt->inuse || !iEnt->client) {
@@ -201,7 +201,7 @@ void Cmd_IgnoreClient_f (gentity_t *ent, int iArg)
 			}
 		}
 	}
-	else{
+	else {
 		iEnt = ClientFromArg(ent, 1);
 		if (iEnt && iEnt->inuse && iEnt->client) {
 			//Ufo: no reason to restrict usage on ourselves
@@ -222,7 +222,7 @@ void Cmd_IgnoreClient_f (gentity_t *ent, int iArg)
 		if (!iEnt->inuse || !iEnt->client) {
 			continue;
 		}
-		if (iEnt->client->pers.Lmd.ignoredindex[i] & (1 << j)){
+		if (iEnt->client->pers.Lmd.ignoredindex[i] & (1 << j)) {
 			Disp(ent, iEnt->client->pers.netname);
 		}
 	}
@@ -235,16 +235,16 @@ Lugormod
 ==================
 */
 
-qboolean isBuddy(gentity_t *ent, gentity_t *other){
+qboolean isBuddy(gentity_t *ent, gentity_t *other) {
 	int i;
 	int j;
-	
-	if(!ent || !ent->client){
+
+	if (!ent || !ent->client) {
 		return qfalse;
 	}
 
-	if(!other){
-		if(ent->client->pers.Lmd.buddyindex[0] > 0 || ent->client->pers.Lmd.buddyindex[1] > 0)
+	if (!other) {
+		if (ent->client->pers.Lmd.buddyindex[0] > 0 || ent->client->pers.Lmd.buddyindex[1] > 0)
 			return qtrue;
 		return qfalse;
 	}
@@ -252,19 +252,19 @@ qboolean isBuddy(gentity_t *ent, gentity_t *other){
 	j = other->s.number % 16;
 	i = (int)floor((float)other->s.number / 16);
 
-	if((ent->client->pers.Lmd.buddyindex[i] & (1 << j)) != 0)
+	if ((ent->client->pers.Lmd.buddyindex[i] & (1 << j)) != 0)
 		return qtrue;
 
 	return qfalse;
 }
 
 
-void Cmd_BuddyClient_f (gentity_t *ent, int iArg) 
+void Cmd_BuddyClient_f(gentity_t *ent, int iArg)
 {
 	gentity_t *iEnt;
 	iEnt = ClientFromArg(ent, 1);
 
-	int k,i ,j,clientNum;
+	int k, i, j, clientNum;
 	if (iEnt && iEnt->inuse && iEnt->client) {
 		if (iEnt == ent) {
 			return;
@@ -286,7 +286,7 @@ void Cmd_BuddyClient_f (gentity_t *ent, int iArg)
 		i = (int)floor((float)k / 16);
 		j = k % 16;
 
-		if (ent->client->pers.Lmd.buddyindex[i] & (1 << j)){
+		if (ent->client->pers.Lmd.buddyindex[i] & (1 << j)) {
 			Disp(ent, iEnt->client->pers.netname);
 		}
 	}
@@ -298,7 +298,7 @@ Cmd_Scale_f
 Lugormod
 ==================
 */
-void scaleEntity(gentity_t *scaleEnt, int scale){
+void scaleEntity(gentity_t *scaleEnt, int scale) {
 	if (!scaleEnt || !scaleEnt->client) {
 		return;
 	}
@@ -307,8 +307,9 @@ void scaleEntity(gentity_t *scaleEnt, int scale){
 	//float os;
 	if (!scale) {
 		fs = 1.0f;
-	} else {
-		fs = scale/100.0000f;
+	}
+	else {
+		fs = scale / 100.0000f;
 	}
 
 	//if (scaleEnt->client->ps.weapon == WP_SABER && !scaleEnt->client->ps.saberHolstered){
@@ -335,7 +336,8 @@ void scaleEntity(gentity_t *scaleEnt, int scale){
 		}
 		//scale NPC:s here ?
 
-	} else if (scaleEnt->client) {
+	}
+	else if (scaleEnt->client) {
 		scaleEnt->client->ps.crouchheight = (int)((CROUCH_MAXS_2 + 24) * fs - 24);
 		scaleEnt->client->ps.standheight = (int)((DEFAULT_MAXS_2 + 24) * fs - 24);
 		if (scaleEnt->client->ps.saberEntityNum > MAX_CLIENTS) {
@@ -350,7 +352,7 @@ Cmd_Challenge_f
 Lugormod
 ==================
 */
-void Cmd_Challenge_f(gentity_t *ent, int iArg){
+void Cmd_Challenge_f(gentity_t *ent, int iArg) {
 
 	char *dt;
 	char *p;
@@ -360,7 +362,10 @@ void Cmd_Challenge_f(gentity_t *ent, int iArg){
 	}
 
 	if (trap_Argc() < 2) {
-		trap_SendServerCommand(ent->s.number, "chat \"^3Challenge your opponent for special duel.\"");
+		if (lmd_old_commands_disp.integer == 1) Disp(ent, "^3Challenge your opponent for special duel."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^3Challenge your opponent for special duel.\"");
+		
+	
 		Disp(ent, "^3Usage: /challenge ^2<types ...>\n"
 			"Valid types are: power, force, fullforce, training, tiny, titan, bet, hibet");
 		return;
@@ -396,38 +401,41 @@ void Cmd_Challenge_f(gentity_t *ent, int iArg){
 	}
 	if (Q_wordsInLine("hibet ", dt, &p)) {
 		ent->client->Lmd.duel.duelType |= DT_BET;
-		if(ent->client->Lmd.duel.duelBet == 10)
+		if (ent->client->Lmd.duel.duelBet == 10)
 			ent->client->Lmd.duel.duelBet = 500;
 		else
 			ent->client->Lmd.duel.duelBet = 100;
 
 	}
 	if (ent->client->Lmd.duel.duelType == 0) {
+		if (lmd_old_commands_disp.integer == 1) Disp(ent, "^1Wrong duel type."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1Wrong duel type.\"");
 		return;
 	}
 	//trap_SendServerCommand(ent->s.number, 
 	//                       va("print \"userint3: %i\n\"",
 	//                          ent->client->Lmd.duel.duelType));
 
-
+	if (lmd_old_commands_disp.integer == 1) Disp(ent, "^2Engaging the duel."); else
+		trap_SendServerCommand(ent->s.number, "chat \"^2Engaging the duel .\"");
 	Cmd_EngageDuel_f(ent);
 }
 
 
 //RoboPhred
-qboolean PlayerItem_CanSpawnItem(gentity_t *player){
+qboolean PlayerItem_CanSpawnItem(gentity_t *player) {
 	unsigned int i;
-	for(i = 0;i<sizeof(player->client->Lmd.spawnedEnts) / sizeof(player->client->Lmd.spawnedEnts[0]);i++){
-		if(player->client->Lmd.spawnedEnts[i] == NULL)
+	for (i = 0; i < sizeof(player->client->Lmd.spawnedEnts) / sizeof(player->client->Lmd.spawnedEnts[0]); i++) {
+		if (player->client->Lmd.spawnedEnts[i] == NULL)
 			return qtrue;
 	}
 	return qfalse;
 }
 
-qboolean PlayerItem_Spawn(gentity_t *player, gentity_t *item){
+qboolean PlayerItem_Spawn(gentity_t *player, gentity_t *item) {
 	unsigned int i;
-	for(i = 0;i<sizeof(player->client->Lmd.spawnedEnts) / sizeof(player->client->Lmd.spawnedEnts[0]);i++){
-		if(player->client->Lmd.spawnedEnts[i] == NULL){
+	for (i = 0; i < sizeof(player->client->Lmd.spawnedEnts) / sizeof(player->client->Lmd.spawnedEnts[0]); i++) {
+		if (player->client->Lmd.spawnedEnts[i] == NULL) {
 			item->flags |= FL_PLAYERSPAWNED;
 			player->client->Lmd.spawnedEnts[i] = item;
 			return qtrue;
@@ -436,30 +444,30 @@ qboolean PlayerItem_Spawn(gentity_t *player, gentity_t *item){
 	return qfalse;
 }
 
-void PlayerItem_Scan(gentity_t *player){
+void PlayerItem_Scan(gentity_t *player) {
 	//Ufo:
 	if (!player || !player->client || player->client->pers.connected != CON_CONNECTED)
 		return;
 	unsigned int i;
-	for(i = 0;i<sizeof(player->client->Lmd.spawnedEnts) / sizeof(player->client->Lmd.spawnedEnts[0]);i++){
-		if(player->client->Lmd.spawnedEnts[i] && !(player->client->Lmd.spawnedEnts[i]->inuse &&
-			player->client->Lmd.spawnedEnts[i]->flags & FL_PLAYERSPAWNED)){
-				player->client->Lmd.spawnedEnts[i] = NULL;
+	for (i = 0; i < sizeof(player->client->Lmd.spawnedEnts) / sizeof(player->client->Lmd.spawnedEnts[0]); i++) {
+		if (player->client->Lmd.spawnedEnts[i] && !(player->client->Lmd.spawnedEnts[i]->inuse &&
+			player->client->Lmd.spawnedEnts[i]->flags & FL_PLAYERSPAWNED)) {
+			player->client->Lmd.spawnedEnts[i] = NULL;
 		}
-		
+
 	}
 }
 
-void hurl (gentity_t *ent, gentity_t *dropped){
+void hurl(gentity_t *ent, gentity_t *dropped) {
 	if (!ent || !dropped || !ent->client || !dropped->inuse) {
 		return;
 	}
 	vec3_t dir, origin;
-	AngleVectors(ent->client->ps.viewangles, dir,NULL,NULL);
+	AngleVectors(ent->client->ps.viewangles, dir, NULL, NULL);
 	dir[2] = 0;
 	VectorNormalize(dir);
 	VectorMA(ent->client->ps.origin, ent->r.maxs[0] + 30, dir, origin);
-	G_SetOrigin(dropped, origin); 
+	G_SetOrigin(dropped, origin);
 	VectorMA(ent->client->ps.velocity, 30, dir, dropped->s.pos.trDelta);
 
 	dropped->s.pos.trDelta[2] += 50;
@@ -474,17 +482,17 @@ void hurl (gentity_t *ent, gentity_t *dropped){
 	dropped->genericValue10 = level.time + 1500;
 	//dropped->genericValue10 = level.time + 500;
 	dropped->genericValue11 = ent->s.number;
-	dropped->flags = FL_DROPPED_ITEM|FL_BOUNCE;
+	dropped->flags = FL_DROPPED_ITEM | FL_BOUNCE;
 	//dropped->clipmask = MASK_PLAYERSOLID;
 	//dropped->r.contents = CONTENTS_SOLID;
 	//dropped->r.ownerNum = ent->s.number;
 	trap_LinkEntity(dropped);
 }
 
-gentity_t* HurlItem (gentity_t *ent, const char *name){
+gentity_t* HurlItem(gentity_t *ent, const char *name) {
 	gitem_t		*it;
 	gentity_t		*dropped;
-	it = BG_FindItem (name);
+	it = BG_FindItem(name);
 	if (!it) {
 		return NULL;
 	}
@@ -492,10 +500,10 @@ gentity_t* HurlItem (gentity_t *ent, const char *name){
 
 	dropped = G_Spawn();
 
-	if(!dropped)
+	if (!dropped)
 		return NULL;
 
-	G_ModelIndex(it->world_model[0]); 
+	G_ModelIndex(it->world_model[0]);
 	dropped->s.eType = ET_ITEM;
 	dropped->s.modelindex = it - bg_itemlist;//don't get that // store item number in modelindex
 
@@ -511,7 +519,7 @@ gentity_t* HurlItem (gentity_t *ent, const char *name){
 	dropped->classname = it->classname;
 	dropped->item = it;
 
-	dropped->r.contents = CONTENTS_TRIGGER|CONTENTS_SOLID;
+	dropped->r.contents = CONTENTS_TRIGGER | CONTENTS_SOLID;
 
 	dropped->touch = Touch_Item;
 
@@ -527,7 +535,7 @@ gentity_t* HurlItem (gentity_t *ent, const char *name){
 		dropped->s.eFlags |= EF_DROPPEDWEAPON;
 	}
 
-	if (it->giType == IT_HOLDABLE && it->giTag == HI_EWEB){
+	if (it->giType == IT_HOLDABLE && it->giTag == HI_EWEB) {
 		dropped->r.mins[2] = -24;
 	}
 
@@ -557,7 +565,7 @@ gentity_t* HurlItem (gentity_t *ent, const char *name){
 	return dropped;
 }
 
-void Cmd_Resize_f (gentity_t *ent, int iArg){
+void Cmd_Resize_f(gentity_t *ent, int iArg) {
 	if (g_gametype.integer != GT_FFA) {
 		return;
 	}
@@ -565,42 +573,42 @@ void Cmd_Resize_f (gentity_t *ent, int iArg){
 		return;
 	}
 
-	if (duelInProgress(&ent->client->ps)){
-		//Disp(ent, "^3You cannot do this while in a duel.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while in a duel.\"");
+	if (duelInProgress(&ent->client->ps)) {
+		if (lmd_old_commands_disp.integer == 1) Disp(ent, "^3You cannot do this while in a duel."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while in a duel.\"");
 		return;
 	}
 
 
 	//RoboPhred
-	if(ent->client->sess.spectatorState != SPECTATOR_NOT){
-		//Disp(ent, "^3You cannot do this while spectating.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while spectating.\"");
+	if (ent->client->sess.spectatorState != SPECTATOR_NOT) {
+		if (lmd_old_commands_disp.integer == 1) Disp(ent, "^3You cannot do this while spectating."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while spectating.\"");
 		return;
 	}
 
 	int was = ent->client->ps.iModelScale;
-	if(ent->client->ps.iModelScale && ((ent->client->ps.iModelScale < 100) ^ (iArg  < 100))){
-		if (!Auths_PlayerHasAdmin(ent)){
+	if (ent->client->ps.iModelScale && ((ent->client->ps.iModelScale < 100) ^ (iArg < 100))) {
+		if (!Auths_PlayerHasAdmin(ent)) {
 			return;
 		}
 		scaleEntity(ent, 0);
 	}
 	else
 		scaleEntity(ent, iArg);
-	if(was == ent->client->ps.iModelScale){
+	if (was == ent->client->ps.iModelScale) {
 		return;
 	}
 
 	vec3_t dAng;
-	VectorSet(dAng, -90,0,0);
+	VectorSet(dAng, -90, 0, 0);
 
 	G_PlayEffectID(G_EffectIndex("scepter/invincibility"), ent->r.currentOrigin, dAng);
-	G_Sound(ent,CHAN_AUTO,G_SoundIndex("sound/weapons/scepter/slam_warmup"));
+	G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/weapons/scepter/slam_warmup"));
 	ent->client->ps.forceDodgeAnim = BOTH_FORCE_PROTECT;
 	ent->client->ps.forceHandExtendTime = level.time + 3000;
 
-	G_SetAnim(ent, SETANIM_BOTH, BOTH_FORCE_PROTECT, SETANIM_FLAG_OVERRIDE|SETANIM_FLAG_HOLD, 0);
+	G_SetAnim(ent, SETANIM_BOTH, BOTH_FORCE_PROTECT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 }
 
 
@@ -644,7 +652,7 @@ G_SetAnim(ent, NULL, SETANIM_TORSO, iArg, SETANIM_FLAG_OVERRIDE|SETANIM_FLAG_HOL
 */
 
 void
-listEmotes (gentity_t *ent) 
+listEmotes(gentity_t *ent)
 {
 	int i = 0;
 	char dstr[MAX_STRING_CHARS] = "";
@@ -652,9 +660,9 @@ listEmotes (gentity_t *ent)
 	while (emotes[i].name) {
 		//trap_SendServerCommand(ent-g_entities,va("print \"%-15s\"",
 		//                       emotes[i++].name));
-		Q_strcat(dstr, sizeof(dstr), va("%-15s",emotes[i++].name));
-		if (i%4 == 0) {
-			Q_strcat(dstr, sizeof(dstr),"\n");
+		Q_strcat(dstr, sizeof(dstr), va("%-15s", emotes[i++].name));
+		if (i % 4 == 0) {
+			Q_strcat(dstr, sizeof(dstr), "\n");
 			//trap_SendServerCommand(ent-g_entities,"print \"\n\"");
 		}
 	}
@@ -662,18 +670,18 @@ listEmotes (gentity_t *ent)
 	Disp(ent, dstr);
 }
 
-emote_t* emoteAnim (int anim);
-qboolean endAnim (int anim);
+emote_t* emoteAnim(int anim);
+qboolean endAnim(int anim);
 
 /*
 emote_t noEmote = { NULL, -1, -1, -1};
 
 emote_t*
-holdAnim (int anim) 
+holdAnim (int anim)
 {
 int i;
 for (i = 0; emotes[i].name && emotes[i].animStart != anim; i++);
-if (emotes[i].name 
+if (emotes[i].name
 && (emotes[i].setanim & HOLD)) {
 return &emotes[i];
 } else {
@@ -681,8 +689,8 @@ return &noEmote;
 }
 }
 */
-void Cmd_emote_f (gentity_t *ent, int iArg) {
-	if (ent->s.m_iVehicleNum){
+void Cmd_emote_f(gentity_t *ent, int iArg) {
+	if (ent->s.m_iVehicleNum) {
 		return;
 	}
 
@@ -693,10 +701,10 @@ void Cmd_emote_f (gentity_t *ent, int iArg) {
 
 	if (ent->client->ps.weaponTime > 0 || ent->client->ps.forceHandExtend != HANDEXTEND_NONE ||
 		ent->client->ps.groundEntityNum == ENTITYNUM_NONE || ent->health < 1) {
-			return;
+		return;
 	}
 
-	char arg [MAX_TOKEN_CHARS];
+	char arg[MAX_TOKEN_CHARS];
 
 	trap_Argv(1, arg, sizeof(arg));
 
@@ -720,10 +728,10 @@ void Cmd_emote_f (gentity_t *ent, int iArg) {
 
 	}
 
-	if (ent->client->ps.weapon == WP_SABER && 
-		!((ent->client->ps.saberHolstered != 0) 
-		^ (emotes[i].animStart == BOTH_TAVION_SWORDPOWER))){
-			Cmd_ToggleSaber_f(ent);
+	if (ent->client->ps.weapon == WP_SABER &&
+		!((ent->client->ps.saberHolstered != 0)
+			^ (emotes[i].animStart == BOTH_TAVION_SWORDPOWER))) {
+		Cmd_ToggleSaber_f(ent);
 	}
 
 	ent->client->ps.saberMove = LS_NONE;
@@ -731,88 +739,89 @@ void Cmd_emote_f (gentity_t *ent, int iArg) {
 	ent->client->ps.saberBlocked = 0;
 	ent->client->ps.saberBlocking = 0;
 
-	G_SetAnim(ent, emotes[i].setanim, emotes[i].animStart, SETANIM_FLAG_OVERRIDE|SETANIM_FLAG_HOLD|SETANIM_FLAG_HOLDLESS, 0);
+	G_SetAnim(ent, emotes[i].setanim, emotes[i].animStart, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD | SETANIM_FLAG_HOLDLESS, 0);
 
-	if ((SETANIM_TORSO & emotes[i].setanim) 
+	if ((SETANIM_TORSO & emotes[i].setanim)
 		&& ent->client->ps.torsoTimer < 500) {
-			ent->client->ps.torsoTimer = 500;
+		ent->client->ps.torsoTimer = 500;
 	}
 
-	if ((SETANIM_LEGS & emotes[i].setanim) 
+	if ((SETANIM_LEGS & emotes[i].setanim)
 		&& ent->client->ps.legsTimer < 500) {
-			ent->client->ps.legsTimer = 500;
+		ent->client->ps.legsTimer = 500;
 	}
 
 }
 
-void Cmd_Ionlyduel_f (gentity_t *ent, int iArg) 
+void Cmd_Ionlyduel_f(gentity_t *ent, int iArg)
 {
-	if (ent->s.m_iVehicleNum){
+	if (ent->s.m_iVehicleNum) {
 		return;
 	}
 
-	if (ent->client->ps.weaponTime > 0 
+	if (ent->client->ps.weaponTime > 0
 		|| ent->client->ps.weapon != WP_SABER
 		|| ent->client->ps.m_iVehicleNum
 		|| ent->client->pers.Lmd.persistantFlags & SPF_IONLYDUEL
 		|| duelInProgress(&ent->client->ps)
 		|| ent->client->ps.forceHandExtend != HANDEXTEND_NONE
-		|| BG_HasYsalamiri(g_gametype.integer, &ent->client->ps)){
-			return;
+		|| BG_HasYsalamiri(g_gametype.integer, &ent->client->ps)) {
+		return;
 	}
-	if(ent->client->Lmd.moneyStash){
+	if (ent->client->Lmd.moneyStash) {
 		return;
 	}
 
-	if(ent->client->ps.saberHolstered != 2) {
-		Cmd_ToggleSaber_f(ent);                                
+	if (ent->client->ps.saberHolstered != 2) {
+		Cmd_ToggleSaber_f(ent);
 	}
 	//No weapons
 	//ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_MELEE);
 	//ent->client->ps.weapon = WP_MELEE;
 	ent->client->pers.Lmd.persistantFlags |= SPF_IONLYDUEL;
-	//Disp (ent, "IONLYDUEL activated (it can be deactivated by engaging in a duel)\n");
-	trap_SendServerCommand(ent->s.number, "chat \"^3IONLYDUEL ^2activated ^3(it can be deactivated by engaging in a duel)\"");
+	if (lmd_old_commands_disp.integer == 1)Disp(ent, "IONLYDUEL activated (it can be deactivated by engaging in a duel)\n"); else
+		trap_SendServerCommand(ent->s.number, "chat \"^3IONLYDUEL ^2activated ^3(it can be deactivated by engaging in a duel)\"");
 }
 
-qboolean ThereIsAKing (void);
-gentity_t* GetKing (void);
-void Cmd_King_f (gentity_t *ent, int iArg)
+qboolean ThereIsAKing(void);
+gentity_t* GetKing(void);
+void Cmd_King_f(gentity_t *ent, int iArg)
 {
 	if (g_gametype.integer == GT_JEDIMASTER || !(g_privateDuel.integer & PD_KING)) {
-		//Disp( ent, "King mode is off.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1King mode is off.\"");
+		if (lmd_old_commands_disp.integer == 1)(ent, "King mode is off."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1King mode is off.\"");
 		return;
 	}
 	gentity_t *kingent = GetKing();
 	if (!ThereIsAKing() || !kingent || !kingent->client) {
-		//Disp( ent, "There is no King.");
-		trap_SendServerCommand(ent->s.number, "chat \"^3There is no King.\"");
-	} else {
-		//Disp( ent, va("%s is the King, and has won %i duels.", kingent->client->pers.netname, kingent->client->pers.Lmd.kingScore));
-		trap_SendServerCommand(ent->s.number, va("chat \"%s ^3is the King, and has won ^2%i ^3duels.\"", kingent->client->pers.netname, kingent->client->pers.Lmd.kingScore));
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "There is no King."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^3There is no King.\"");
+	}
+	else {
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("%s is the King, and has won %i duels.", kingent->client->pers.netname, kingent->client->pers.Lmd.kingScore)); else
+			trap_SendServerCommand(ent->s.number, va("chat \"%s ^3is the King, and has won ^2%i ^3duels.\"", kingent->client->pers.netname, kingent->client->pers.Lmd.kingScore));
 	}
 	if (g_bestKing && g_bestKing->client) {
-			//Disp( ent, va("%s is the best King with %i duels won.", g_bestKing->client->pers.netname, g_bestKingScore));
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("%s is the best King with %i duels won.", g_bestKing->client->pers.netname, g_bestKingScore)); else
 			trap_SendServerCommand(ent->s.number, va("chat \"%s ^3is the best King with ^2%i ^3duels won.\"", g_bestKing->client->pers.netname, g_bestKingScore));
 	}
 }
 
-void Cmd_Say2_f (gentity_t *ent, int iArg)
+void Cmd_Say2_f(gentity_t *ent, int iArg)
 {
-	Cmd_Say_f (ent, iArg, qfalse);
+	Cmd_Say_f(ent, iArg, qfalse);
 }
 
-void Cmd_DropStuff_f (gentity_t *ent, int iArg) {
-	if(gameMode(GM_INSTGIB) || gameMode(GM_INSTDIS) || gameMode(GM_ALLWEAPONS)){
+void Cmd_DropStuff_f(gentity_t *ent, int iArg) {
+	if (gameMode(GM_INSTGIB) || gameMode(GM_INSTDIS) || gameMode(GM_ALLWEAPONS)) {
 		return;
 	}
 
 
 	//RoboPhred
-	if(ent->client->sess.spectatorState != SPECTATOR_NOT){
-		//Disp(ent, "^3You cannot do this while spectating.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while spectating.\"");
+	if (ent->client->sess.spectatorState != SPECTATOR_NOT) {
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You cannot do this while spectating."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while spectating.\"");
 		return;
 	}
 
@@ -820,58 +829,58 @@ void Cmd_DropStuff_f (gentity_t *ent, int iArg) {
 	holdable_t hi;
 	vec3_t dir;
 	switch (iArg) {
-		case 1:
-			hi = bg_itemlist[ent->client->ps.stats[STAT_HOLDABLE_ITEM]].giTag;
-			if (!hi || hi == HI_JETPACK){
-				return;
-			}
-			if (hi == HI_CLOAK) {
-				Jedi_Decloak(ent);
-			}
+	case 1:
+		hi = bg_itemlist[ent->client->ps.stats[STAT_HOLDABLE_ITEM]].giTag;
+		if (!hi || hi == HI_JETPACK) {
+			return;
+		}
+		if (hi == HI_CLOAK) {
+			Jedi_Decloak(ent);
+		}
 
-			item = BG_FindItemForHoldable( hi );
-			if(!item) {
-				return;
-			}
-			ent->client->ps.stats[STAT_HOLDABLE_ITEMS]
+		item = BG_FindItemForHoldable(hi);
+		if (!item) {
+			return;
+		}
+		ent->client->ps.stats[STAT_HOLDABLE_ITEMS]
 			&= ~(1 << hi);
-			HurlItem(ent, item->classname);
+		HurlItem(ent, item->classname);
+		ent->client->ps.stats[STAT_HOLDABLE_ITEM] = 0;
+		BG_CycleInven(&ent->client->ps, 1);
+		break;
+	case 2:
+		AngleVectors(ent->client->ps.viewangles, dir, 0, 0);
+		dir[2] = 1;
+		VectorNormalize(dir);
+		TossClientWeapon(ent, dir, 300);
+		break;
+	case 3:
+		if (gameMode(GMF_WITH_JP)) {
+			return;
+		}
+		if (PlayerAcc_Prof_GetProfession(ent) == PROF_BOT) {
+			return;
+		}
+
+		if (ent->client->ps.stats[STAT_HOLDABLE_ITEMS]
+			& (1 << HI_JETPACK)) {
+			//Turn jetpack off first.
+			ent->client->jetPackOn = qfalse;
+			ent->client->ps.stats[STAT_HOLDABLE_ITEMS] &= ~(1 << HI_JETPACK);
+			HurlItem(ent, "item_jetpack");
 			ent->client->ps.stats[STAT_HOLDABLE_ITEM] = 0;
 			BG_CycleInven(&ent->client->ps, 1);
-			break;
-		case 2:
-			AngleVectors(ent->client->ps.viewangles, dir, 0, 0);
-			dir[2] = 1;
-			VectorNormalize(dir);
-			TossClientWeapon(ent, dir, 300);
-			break;
-		case 3:
-			if (gameMode(GMF_WITH_JP)) {
-				return;
-			}
-			if (PlayerAcc_Prof_GetProfession(ent) == PROF_BOT) {
-				return;
-			}
-
-			if (ent->client->ps.stats[STAT_HOLDABLE_ITEMS] 
-			& (1 << HI_JETPACK)) {
-				//Turn jetpack off first.
-				ent->client->jetPackOn = qfalse;
-				ent->client->ps.stats[STAT_HOLDABLE_ITEMS] &= ~(1 << HI_JETPACK);
-				HurlItem(ent, "item_jetpack");
-				ent->client->ps.stats[STAT_HOLDABLE_ITEM] = 0;
-				BG_CycleInven(&ent->client->ps, 1);
-			}
-			break;
-		default:
-			break;
+		}
+		break;
+	default:
+		break;
 	}
 }
 
-void Cmd_SiegeClass_f (gentity_t *ent, int iArg);
+void Cmd_SiegeClass_f(gentity_t *ent, int iArg);
 
 void Cmd_RageQuit_f(gentity_t *ent, int iArg) {
-	trap_SendServerCommand( -1, va("chat \"%s^7\x19: ^1RAAAGE!!!\"", ent->client->pers.netname));	
+	trap_SendServerCommand(-1, va("chat \"%s^7\x19: ^1RAAAGE!!!\"", ent->client->pers.netname));
 	trap_DropClient(ent->s.number, "is Pissed Off! RAGEQUIT!");
 }
 
@@ -879,17 +888,17 @@ char *getChatModeName(int mode);
 qboolean canUseChatMode(gentity_t *ent, int mode);
 qboolean PrivateChat_PlayerCanHear(gentity_t *ent, int player);
 //qboolean isBuddy(gentity_t *ent, gentity_t *other);
-void Cmd_ChatMode_f(gentity_t *ent, int iArg){
+void Cmd_ChatMode_f(gentity_t *ent, int iArg) {
 	char arg[MAX_STRING_CHARS];
 	int set;
 	int argc = trap_Argc();
-	if(argc < 2){
+	if (argc < 2) {
 		char *str;
 		Disp(ent, "^3Usage: ^2/chatmode <say | team> [chat mode]\n"
 			"^3Chat mode can be:");
 		set = 0;
-		while((str = getChatModeName(set))) {
-			if(!canUseChatMode(ent, set++))
+		while ((str = getChatModeName(set))) {
+			if (!canUseChatMode(ent, set++))
 				continue;
 			Disp(ent, va("^5%s", str));
 		}
@@ -897,114 +906,114 @@ void Cmd_ChatMode_f(gentity_t *ent, int iArg){
 	}
 	trap_Argv(1, arg, sizeof(arg));
 	int len = strlen(arg);
-	if(Q_stricmpn(arg, "say", len) == 0)
+	if (Q_stricmpn(arg, "say", len) == 0)
 		set = 0;
-	else if(Q_stricmpn(arg, "team", len) == 0)
+	else if (Q_stricmpn(arg, "team", len) == 0)
 		set = 1;
-	else{
+	else {
 		Disp(ent, "^3The first arg must be \'^2team^3\' or \'^2say^3\'.");
 		return;
 	}
-	if(argc >= 3){
+	if (argc >= 3) {
 		unsigned int i;
 		trap_Argv(2, arg, sizeof(arg));
 		len = strlen(arg);
 		char *name;
-		for(i = 0; (name = getChatModeName(i)) != NULL; i++){
-			if(i == SAY_ADMINS && !Auths_PlayerHasAuthFlag(ent, AUTH_ADMINCHAT))
+		for (i = 0; (name = getChatModeName(i)) != NULL; i++) {
+			if (i == SAY_ADMINS && !Auths_PlayerHasAuthFlag(ent, AUTH_ADMINCHAT))
 				continue;
-			if(Q_stricmpn(arg, name, len) == 0){
+			if (Q_stricmpn(arg, name, len) == 0) {
 				ent->client->pers.Lmd.chatMode[set] = i;
-				//Disp(ent, va("^3Chat mode set to: ^2%s", name));
-				trap_SendServerCommand(ent->s.number, va("chat \"^3Chat mode set to: ^2%s.\"", name));
+				if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3Chat mode set to: ^2%s", name)); else
+					trap_SendServerCommand(ent->s.number, va("chat \"^3Chat mode set to: ^2%s.\"", name));
 				return;
 			}
 		}
-		//Disp(ent, "^3Invalid chat mode.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1Invalid chat mode.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3Invalid chat mode."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1Invalid chat mode.\"");
 	}
-	else{
+	else {
 		ent->client->pers.Lmd.chatMode[set]++;
-		while(!canUseChatMode(ent, ent->client->pers.Lmd.chatMode[set])) {
+		while (!canUseChatMode(ent, ent->client->pers.Lmd.chatMode[set])) {
 			ent->client->pers.Lmd.chatMode[set]++;
-			if(!getChatModeName(ent->client->pers.Lmd.chatMode[set])) {
+			if (!getChatModeName(ent->client->pers.Lmd.chatMode[set])) {
 				ent->client->pers.Lmd.chatMode[set] = 0;
 				break;
 			}
 		}
-		//Disp(ent, va("^3Chat mode for ^2%s^3 is ^2%s", set ? "say" : "team", getChatModeName(ent->client->pers.Lmd.chatMode[set])));
-		trap_SendServerCommand(ent->s.number, va("chat \"^3Chat mode for ^2%s^3 is ^2%s.\"", set ? "say" : "team", getChatModeName(ent->client->pers.Lmd.chatMode[set])));
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3Chat mode for ^2%s^3 is ^2%s", set ? "say" : "team", getChatModeName(ent->client->pers.Lmd.chatMode[set]))); else
+			trap_SendServerCommand(ent->s.number, va("chat \"^3Chat mode for ^2%s^3 is ^2%s.\"", set ? "say" : "team", getChatModeName(ent->client->pers.Lmd.chatMode[set])));
 	}
 }
 
 extern char* enterMotd;
-void Cmd_dispMotd_f(gentity_t *ent, int iArg){
+void Cmd_dispMotd_f(gentity_t *ent, int iArg) {
 	Disp(ent, enterMotd);
 }
 
 int StashHolder(void);
-void Cmd_Stash_f(gentity_t *ent, int iArg){
+void Cmd_Stash_f(gentity_t *ent, int iArg) {
 	int check = StashHolder();
-	if(check == -3)//trap_SendServerCommand(ent->s.number, "chat \"^3The stash is doing highly improbable things...\"");
+	if (check == -3)//trap_SendServerCommand(ent->s.number, "chat \"^3The stash is doing highly improbable things...\"");
 		Disp(ent, "^3The stash is doing highly improbable things...");
-	else if(check == -2)//trap_SendServerCommand(ent->s.number, "chat \"^3There is no money stash spawned."\"");
+	else if (check == -2)//trap_SendServerCommand(ent->s.number, "chat \"^3There is no money stash spawned."\"");
 		Disp(ent, "^3There is no money stash spawned");
-	else if(check == -1)//trap_SendServerCommand(ent->s.number, "chat \"^3There is currently a money stash spawned."\"");
+	else if (check == -1)//trap_SendServerCommand(ent->s.number, "chat \"^3There is currently a money stash spawned."\"");
 		Disp(ent, "^3There is currently a money stash spawned");
-	else{
-		//Disp(ent, va("%s^7 ^3is holding onto the money stash", g_entities[check].client->pers.netname));
-		trap_SendServerCommand(ent->s.number, va("chat \"%s^7 ^3is holding onto the money stash.\"", g_entities[check].client->pers.netname));
+	else {
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("%s^7 ^3is holding onto the money stash", g_entities[check].client->pers.netname)); else
+			trap_SendServerCommand(ent->s.number, va("chat \"%s^7 ^3is holding onto the money stash.\"", g_entities[check].client->pers.netname));
 	}
 }
 
 void dropMoneyStash(gentity_t *ent);
-void Cmd_DropStash_f(gentity_t *ent, int iArg){
-	if(!ent->client->Lmd.moneyStash)
-		//Disp(ent, "^3You do not have a stash.");
-	trap_SendServerCommand(ent->s.number, "chat \"^1You do not have a stash.\"");
-	else{
-		//Disp(ent, "^3Stash dropped.");
-		trap_SendServerCommand(ent->s.number, "chat \"^3Stash dropped.\"");
+void Cmd_DropStash_f(gentity_t *ent, int iArg) {
+	if (!ent->client->Lmd.moneyStash)
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You do not have a stash."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You do not have a stash.\"");
+	else {
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3Stash dropped."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^3Stash dropped.\"");
 		dropMoneyStash(ent);
 	}
 }
 
-void Cmd_Examine_f (gentity_t *ent, int iArg)
+void Cmd_Examine_f(gentity_t *ent, int iArg)
 {
 	gentity_t *targ = AimAnyTarget(ent, 64);
 	char msg[MAX_STRING_CHARS] = "";
-	if(ent->client->sess.spectatorState != SPECTATOR_NOT)
+	if (ent->client->sess.spectatorState != SPECTATOR_NOT)
 	{
-	//	Disp(ent, "^3You cannot use this command while spectating.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot use this command while spectating.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You cannot use this command while spectating."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You cannot use this command while spectating.\"");
 		return;
 	}
-	if(!targ || !targ->inuse)
+	if (!targ || !targ->inuse)
 	{
-		//Disp(ent, "^3Nothing to examine.");
-		trap_SendServerCommand(ent->s.number, "chat \"^3Nothing to examine.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3Nothing to examine."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^3Nothing to examine.\"");
 		return;
 	}
-	if(targ->client && targ->s.number < MAX_CLIENTS)
+	if (targ->client && targ->s.number < MAX_CLIENTS)
 	{
 		Q_strcat(msg, sizeof(msg), va("^3Player\n^3Name: ^7%s\n", targ->client->pers.netname));
 	}
 	else
 	{
-		if(targ->examineStr)
+		if (targ->examineStr)
 			Q_strcat(msg, sizeof(msg), va("^3%s\n", targ->examineStr));
-		if(targ->examine)
+		if (targ->examine)
 		{
 			targ->examine(targ, ent);
 		}
-		if(targ->r.svFlags & SVF_PLAYER_USABLE)
+		if (targ->r.svFlags & SVF_PLAYER_USABLE)
 			Q_strcat(msg, sizeof(msg), "^3Entity is: ^2Usable\n");
-		if(targ->interact)
+		if (targ->interact)
 			Q_strcat(msg, sizeof(msg), "^3Entity is: ^6Interactable\n");
-		if(targ->flags & FL_PAY || targ->pay)
+		if (targ->flags & FL_PAY || targ->pay)
 			Q_strcat(msg, sizeof(msg), "^3Entity is: ^5Payable\n");
 	}
-	if(msg[0])
+	if (msg[0])
 	{
 		msg[strlen(msg) - 1] = 0; //remove ending linefeed.
 		Disp(ent, msg);
@@ -1018,7 +1027,7 @@ void Cmd_Action_f(gentity_t *ent, int iArg);
 
 void Cmd_Friends_f(gentity_t *ent, int iArg);
 
-void Cmd_None_f (gentity_t *ent, int iArg)
+void Cmd_None_f(gentity_t *ent, int iArg)
 {
 
 }
@@ -1041,7 +1050,7 @@ Cmd disable
 
 void Cmd_Confirm_f(gentity_t *ent, int iArg);
 void Cmd_Interact_f(gentity_t *ent, int iArg);
-void Bounty_List_disp(gentity_t *ent,int iArg)
+void Bounty_List_disp(gentity_t *ent, int iArg)
 {
 	char arg[MAX_STRING_CHARS];
 	char val[MAX_STRING_CHARS];
@@ -1050,7 +1059,7 @@ void Bounty_List_disp(gentity_t *ent,int iArg)
 		int num_accounts = Accounts_Count();
 		Account_t *acc;
 		int count = 0;
-		trap_SendServerCommand(ent->s.number, "chat \"^3This is ^8The Black List^3.\"");
+		if (lmd_old_commands_disp.integer != 1)trap_SendServerCommand(ent->s.number, "chat \"^3This is ^8The Black List^3.\"");
 		Disp(ent, "\n^0============ ^1Black List^0 ============\n");
 		for (int i = 0; i < num_accounts; i++) {
 			acc = Accounts_Get(i);
@@ -1059,9 +1068,9 @@ void Bounty_List_disp(gentity_t *ent,int iArg)
 			if (Accounts_GetBountyReward(acc) <= 0)continue;
 			count++;
 			Disp(ent, va("^0|^8%i^0| ^1%s^8: ^3%i CR", count, Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
-			
+
 		}
-		if(count < 1)Disp(ent, va("^0|^8-^0| ^1The Black List^8 is empty.", count, Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
+		if (count < 1)Disp(ent, va("^0|^8-^0| ^1The Black List^8 is empty.", count, Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
 		Disp(ent, "\n^0====================================");
 		if (count > 1) {
 			Disp(ent, va("^0    ====      ^1%i ^3Preys^0      ====", count));
@@ -1075,25 +1084,25 @@ void Bounty_List_disp(gentity_t *ent,int iArg)
 			acc = Accounts_GetByUsername(arg); //try by username
 			if (!acc) { Disp(ent, va("%s ^3not found on The Black List.", arg));  return; }
 		}
-		if(Accounts_GetBountyReward(acc) <= 0){ Disp(ent, va("%s ^3not found on The Black List.", arg));  return; }
-		Disp(ent, va("^0|^8-^0| ^1%s^8: ^3%i ^8CR",  Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
-		trap_SendServerCommand(ent->s.number, "chat \"^3The name is on the list...\"");
+		if (Accounts_GetBountyReward(acc) <= 0) { Disp(ent, va("%s ^3not found on The Black List.", arg));  return; }
+		Disp(ent, va("^0|^8-^0| ^1%s^8: ^3%i ^8CR", Accounts_GetName(acc), Accounts_GetBountyReward(acc)));
+		if (lmd_old_commands_disp.integer != 1)trap_SendServerCommand(ent->s.number, "chat \"^3The name is on the list...\"");
 	}
 }
 void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	if (!ent->client->pers.Lmd.account) {
-		//Disp(ent, "^1You must be logged in to use the command.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You must be logged in to use this command.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1You must be logged in to use the command."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You must be logged in to use this command.\"");
 		return;
 	}
 
 	Account_t *acc;
 	char arg[MAX_STRING_CHARS];
-	char val[MAX_STRING_CHARS]; 
+	char val[MAX_STRING_CHARS];
 	char *who_target;
 	char *who_principal;
 	if (trap_Argc() < 2) {
-		trap_SendServerCommand(ent->s.number, "chat \"^3Offer a reward for someone's life.\"");
+		if (lmd_old_commands_disp.integer != 1)trap_SendServerCommand(ent->s.number, "chat \"^3Offer a reward for someone's life.\"");
 		Disp(ent, "^1Usage: bounty <name> <credits_amount>\n^3Name must be an account alias not the username or an id.");
 		return;
 	}
@@ -1103,29 +1112,29 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	if (!acc) {
 		acc = Accounts_GetByUsername(arg); //try by username
 		if (!acc) {
-			//Disp(ent, "^1The player dosen't exist or is unregistered.");
-			trap_SendServerCommand(ent->s.number, "chat \"^1The player dosen't exist or is unregistered.\"");
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1The player dosen't exist or is unregistered."); else
+				trap_SendServerCommand(ent->s.number, "chat \"^1The player dosen't exist or is unregistered.\"");
 			return;
 		}
 	}
 	int v = atoi(val); //take cost.
 	if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
-		//Disp(ent, "^3Invalid credit amount.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1Invalid credit amount.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3Invalid credit amount."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1Invalid credit amount.\"");
 		return;
 	}
 	if (v < 35) {
-		//Disp(ent, "^1Invalid amount, ^3credits ^1must be at least equal ^235 CR^3.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1Invalid amount, ^3credits ^1must be at least equal ^235 CR^3.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1Invalid amount, ^3credits ^1must be at least equal ^235 CR^3."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1Invalid amount, ^3credits ^1must be at least equal ^235 CR^3.\"");
 		return;
 	}
 	int principal_Budget = PlayerAcc_GetCredits(ent);
 	if (v > principal_Budget) {
-		//Disp(ent, va("^1You do not have that amount of credits! ^2%i CR ^3 available.", principal_Budget));
-		trap_SendServerCommand(ent->s.number, va("chat \"^1You do not have that amount of credits! ^2%i CR ^3 available.\"", principal_Budget));
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^1You do not have that amount of credits! ^2%i CR ^3 available.", principal_Budget)); else
+			trap_SendServerCommand(ent->s.number, va("chat \"^1You do not have that amount of credits! ^2%i CR ^3 available.\"", principal_Budget));
 		return;
 	}
-	
+
 	who_target = Accounts_GetName(acc); //be sure to get actual name of the target player.
 	who_principal = PlayerAcc_GetName(ent); //take a name of the employer
 	int theBounty = Accounts_GetBountyReward(acc); //It's actual bounty amount
@@ -1134,22 +1143,24 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	theBounty += v; //the value gone to increase the Bounty
 	//transaction:
 	Accounts_SetBountyReward(acc, theBounty);
-    PlayerAcc_SetCredits(ent,principal_Budget); 
+	PlayerAcc_SetCredits(ent, principal_Budget);
 	//messages:
 	char *msg_line_1 = "^3New Bounty!";
-	char *msg_line_2 = va("^3%s^3 pays ^2%i CR^3 for the %s's^3 ^3head.", who_principal,v, who_target);
+	char *msg_line_2 = va("^3%s^3 pays ^2%i CR^3 for the ^7%s's^3 ^3head.", who_principal, v, who_target);
 	char *msg_line_3 = va("^3Total Bounty is: ^2%i CR.", Accounts_GetBountyReward(acc));
 	char *msg_all = va("%s\n%s\n%s", msg_line_1, msg_line_2, msg_line_3);
 	//employer
-	trap_SendServerCommand(ent->s.number,va("chat \"^3You've paid ^2%i CR ^3for %s's^3 head.\"",v,who_target));
+	if (lmd_old_commands_disp.integer == 1) Disp(ent, va("^3You've paid ^2%i CR ^3for ^7%s's^3 head.", v, who_target)); else trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR ^3for ^7%s's^3 head.\"", v, who_target));
 
 	//send to all
 	trap_SendServerCommand_ToAll(ent->s.number, va("cp \"%s\"", msg_all));
-	trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_1));
-	trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_2));
-	trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_3));
-	
-	
+	if (lmd_old_commands_disp.integer != 1) {
+		trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_1));
+		trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_2));
+		trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_3));
+	}
+
+
 }
 cmdEntry_t playerCommandEntries[] = {
 	//{"testline", "\n", Cmd_TestLine_f, 0, 1, 0, 0, 0},
@@ -1168,10 +1179,10 @@ cmdEntry_t playerCommandEntries[] = {
 	{"dropjp", "Drop your jetpack.", Cmd_DropStuff_f, 3, qfalse, 0, 8, ~(1 << GT_FFA), 0},
 	{"dropstash", "If you are holding it, drop the money stash.", Cmd_DropStash_f, 0, qfalse, 0, 128, ~(1 << GT_FFA), 0},
 	{"dropwp", "Drop your weapon.", Cmd_DropStuff_f, 2, qfalse, 0, 8, ~(1 << GT_FFA), 0},
-	{"eatme", "Let's see how deep the rabbit hole goes. ^1WARNING!^7 Consumed upon use." , Cmd_Resize_f, 135, qfalse, 0, 4, ~(1 << GT_FFA), 0}, 
-	{"emote", "Do an emote. If no argument is provided all available emotes will be listed." , Cmd_emote_f, 0, qfalse, 0, 32, 0, 0}, 
+	{"eatme", "Let's see how deep the rabbit hole goes. ^1WARNING!^7 Consumed upon use." , Cmd_Resize_f, 135, qfalse, 0, 4, ~(1 << GT_FFA), 0},
+	{"emote", "Do an emote. If no argument is provided all available emotes will be listed." , Cmd_emote_f, 0, qfalse, 0, 32, 0, 0},
 	{"examine", "Examine the object in front of you.", Cmd_Examine_f, 0, qfalse, 0, 0, 0, 0},
-	{"factions", "View and interact with player factions." , Cmd_Factions_f, 0, qfalse, 0, 0, 0, 0}, 
+	{"factions", "View and interact with player factions." , Cmd_Factions_f, 0, qfalse, 0, 0, 0, 0},
 	//{"fnord","\nIf you don't have anything to say, but you want to say it anyway, this is the command for you.\nThe Fnorder Program was originally written by Steve Jackson and Creede Lambard.\nIt is used in the Lugormod with permission from Steve Jackson.", Cmd_Fnord_f, 0, 0, 16, 0, 0},
 	{"friends", "Players added to your friends list can send you messages and hear your friend chat.", Cmd_Friends_f, 0, qfalse, 0, 0, 0, 0},
 	{"hilevel","Display top ten players with the highest level.", HiScore, 3, qfalse, 0, 1, 0, 0},

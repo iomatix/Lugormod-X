@@ -8,6 +8,7 @@
 #include "Lmd_Professions.h"
 #include "Lmd_Prof_Merc.h"
 
+#define BLOCK_FORCE_COST 7
 #define SABER_BOX_SIZE 16.0f
 extern bot_state_t *botstates[MAX_CLIENTS];
 extern qboolean InFront( vec3_t spot, vec3_t from, vec3_t fromAngles, float threshHold );
@@ -3902,6 +3903,8 @@ static float saberHitFraction = 1.0f;
 qboolean BG_SuperBreakWinAnim( int anim );
 #include "../namespace_end.h"
 
+
+
 static GAME_INLINE qboolean CheckSaberDamage(gentity_t *self, int rSaberNum, int rBladeNum, vec3_t saberStart, vec3_t saberEnd, qboolean doInterpolate, int trMask, qboolean extrapolate )
 {
 	static trace_t tr;
@@ -4667,11 +4670,9 @@ static GAME_INLINE qboolean CheckSaberDamage(gentity_t *self, int rSaberNum, int
 		self->client->ps.saberIdleWound = level.time + g_saberDmgDelay_Idle.integer;
 
 		didHit = qtrue;
-
-		if ( !d_saberSPStyleDamage.integer//let's trying making blocks have to be blocked by a saber
+		if (WP_SaberCanBlock(&g_entities[tr.entityNum], tr.endpos, 0, MOD_SABER, qfalse, attackStr) && !d_saberSPStyleDamage.integer//let's trying making blocks have to be blocked by a saber
 			&& g_entities[tr.entityNum].client 
-			&& !unblockable 
-			&& WP_SaberCanBlock(&g_entities[tr.entityNum], tr.endpos, 0, MOD_SABER, qfalse, attackStr))
+			&& !unblockable  )
 		{//hit a client who blocked the attack (fake: didn't actually hit their saber)
 			if (dmg <= SABER_NONATTACK_DAMAGE)
 			{
@@ -5326,6 +5327,8 @@ blockStuff:
 				if (crushTheParry && PM_SaberInParry(G_GetParryForBlock(otherOwner->client->ps.saberBlocked)))
 				{ //This means that the attack actually hit our saber, and we went to block it.
 					//But, one of the above cases says we actually can't. So we will be smashed into a broken parry instead.
+
+
 					otherOwner->client->ps.saberMove = BG_BrokenParryForParry( G_GetParryForBlock(otherOwner->client->ps.saberBlocked) );
 					otherOwner->client->ps.saberBlocked = BLOCKED_PARRY_BROKEN;
 
@@ -5639,7 +5642,7 @@ void WP_SaberStartMissileBlockCheck( gentity_t *self, usercmd_t *ucmd  )
 	{//can't block when knocked down
 		return;
 	}
-
+	
 	if ( BG_SabersOff( &self->client->ps ) && self->client->NPC_class != CLASS_BOBAFETT )
 	{
 		if ( self->s.eType != ET_NPC )
@@ -6017,15 +6020,16 @@ static GAME_INLINE qboolean CheckThrownSaberDamaged(gentity_t *saberent, gentity
 
 		if (veclen < dist)
 		{ //within range
+			
 			trace_t tr;
 
 			trap_Trace(&tr, saberent->r.currentOrigin, NULL, NULL, ent->client->ps.origin, saberent->s.number, MASK_SHOT);
-
+			
 			if (tr.fraction == 1 || tr.entityNum == ent->s.number)
 			{ //Slice them
-				if (!(g_gametype.integer == GT_JEDIMASTER 
-					&& saberOwner->client->ps.isJediMaster) 
-					&& WP_SaberCanBlock(ent, tr.endpos, 0, MOD_SABER, qfalse, 999))
+				if (WP_SaberCanBlock(ent, tr.endpos, 0, MOD_SABER, qfalse, 999) && 
+					!(g_gametype.integer == GT_JEDIMASTER
+					&& saberOwner->client->ps.isJediMaster))
 				{ //they blocked it
 					WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
 
@@ -9397,6 +9401,9 @@ void WP_SaberBlockNonRandom( gentity_t *self, vec3_t hitloc, qboolean missileBlo
 
 void WP_SaberBlock( gentity_t *playerent, vec3_t hitloc, qboolean missileBlock )
 {
+
+
+
 	vec3_t diff, fwdangles={0,0,0}, right;
 	float rightdot;
 	float zdiff;
@@ -9471,6 +9478,21 @@ void WP_SaberBlock( gentity_t *playerent, vec3_t hitloc, qboolean missileBlock )
 	}
 }
 
+qboolean WP_SaberBlockForceCost(gentity_t *self)
+{
+	int FORCECOST_sab_def = self->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE];
+	if (FORCECOST_sab_def < 1) FORCECOST_sab_def = 3;
+	if (self->client->ps.fd.forcePower < BLOCK_FORCE_COST*FORCECOST_sab_def)
+	{
+		return qfalse;
+	}
+	
+		self->client->ps.fd.forcePower -= BLOCK_FORCE_COST * FORCECOST_sab_def;
+		return qtrue;
+	
+
+}
+
 int WP_SaberCanBlock(gentity_t *self, vec3_t point, int dflags, int mod, qboolean projectile, int attackStr)
 {
 	qboolean thrownSaber = qfalse;
@@ -9486,6 +9508,8 @@ int WP_SaberCanBlock(gentity_t *self, vec3_t point, int dflags, int mod, qboolea
 		attackStr = 0;
 		thrownSaber = qtrue;
 	}
+
+
 
 	if (BG_SaberInAttack(self->client->ps.saberMove))
 	{
@@ -9586,6 +9610,9 @@ int WP_SaberCanBlock(gentity_t *self, vec3_t point, int dflags, int mod, qboolea
 		return 0;
 	}
 
+	//iomatix: blocks needs force now
+	if (!WP_SaberBlockForceCost(self)) return 0;
+
 	if (self->client->ps.saberMove != LS_READY &&
 		!self->client->ps.saberBlocking)
 	{
@@ -9601,6 +9628,9 @@ int WP_SaberCanBlock(gentity_t *self, vec3_t point, int dflags, int mod, qboolea
 	{
 		return 0;
 	}
+
+
+
 	if (self->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] > FORCE_LEVEL_3)
 	{//Lugormod
 		if (d_saberGhoul2Collision.integer)
@@ -9636,6 +9666,11 @@ int WP_SaberCanBlock(gentity_t *self, vec3_t point, int dflags, int mod, qboolea
 	{ //for now we just don't get to autoblock with no def
 		return 0;
 	}
+
+
+
+	//
+
 
 	if (thrownSaber)
 	{

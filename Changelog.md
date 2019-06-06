@@ -73,11 +73,13 @@
 - Added simple AI to watch the Black List and manage it. ✔️
 - Mercenary bots start with weapons depending on their weapons skill level. ✔️
 - Rage life-steal re-worked. When active, up to 35% lifesteal when is no-active up to 16%. ✔️
-
+- Rewards for higher levels of the New Game Plus are increased. (120 -> 6, 115+ -> 5, 100+ -> 4, 85+ -> 3, 66+ -> 2, 40+ -> 1) ✔️ 
+- Extern variable lmd_old_commands_disp is added. ✔️ 
+- New rewards for becoming a Duel King. ✔️
+//
+- Blocking costs force now. The cost is 7->14->21 force power per block. 50/50 should work at each block but it works random???
 ///
 
-- lmd_old_commands_disp
-- duel rewards
 - deflecting and parring with saber costs power.
 - Search a new ways for spending credits.
 - experience boosters/ packs for CR? lmd_exp_boosters

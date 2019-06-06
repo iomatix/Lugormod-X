@@ -1087,6 +1087,7 @@ qboolean WP_ForcePowerAvailable( gentity_t *self, forcePowers_t forcePower, int 
 		return qtrue;
 	}
 
+
 	//Ufo:
 	if (self->client->pers.Lmd.persistantFlags & SPF_IONLYDUEL) {
 		return qfalse;
@@ -1121,6 +1122,7 @@ qboolean WP_ForcePowerAvailable( gentity_t *self, forcePowers_t forcePower, int 
 	{
 		return qfalse;
 	}
+
 	return qtrue;
 }
 
@@ -6756,6 +6758,8 @@ qboolean Jedi_DodgeEvasion( gentity_t *self, gentity_t *shooter, trace_t *tr, in
 		{
 			G_Sound( self, CHAN_BODY, G_SoundIndex("sound/weapons/force/speed.wav") );
 		}
+		
+
 		return qtrue;
 	}
 	return qfalse;

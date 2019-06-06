@@ -562,6 +562,7 @@ void Force_Throw_Entity(gentity_t *self, vec3_t forward, gentity_t *target, unsi
 	{
 		if(!pull)
 			G_ReflectMissile( self, target, forward );
+
 	}
 	else if ( !Q_stricmp( "func_static", target->classname)) {
 		if ( !pull && (target->spawnflags & 1/*F_PUSH*/) )

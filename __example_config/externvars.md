@@ -49,6 +49,9 @@ Allow to setup amount experience and credits inside stash.
 - **`lmd_startingCr`**
 
 Starting credits value for new registered account. Default 1350.
+- **`lmd_old_commands_disp`**
+
+Hides new commands from the chat, turn them back to the console log only if 1. Defalut 0. (1 is Old lugor-style)
 
 **They are usable in the game**
 

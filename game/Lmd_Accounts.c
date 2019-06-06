@@ -30,7 +30,7 @@ void RenamePlayer(gentity_t *ent, char *Name) {
 	trap_GetUserinfo(clientNum, userinfo, sizeof(userinfo));
 	Info_SetValueForKey(userinfo, "name", Name);
 	trap_SetUserinfo(clientNum, userinfo);
-	ent->client->pers.netnameTime = 0;//
+	ent->client->pers.netnameTime = 0;
 	ClientUserinfoChanged(clientNum);
 }
 
@@ -40,7 +40,7 @@ void checkLevelUp(gentity_t *ent) {
 	int levelUp = 0;
 	if (myLevel && PlayerAcc_Prof_GetProfession(ent) != PROF_ADMIN) {
 		qboolean lvlup = qfalse;
-		while (myLevel * (myLevel+1) * LEVEL_SCORE <= PlayerAcc_GetExperience(ent) && myLevel * (myLevel + 1) * LEVEL_SCORE <= PlayerAcc_GetScore(ent) && myLevel * myLevel * 3600 * 2 <= myTime && myLevel < MAX_LEVEL) {
+		while (myLevel * (myLevel + 1) * LEVEL_SCORE <= PlayerAcc_GetExperience(ent) && myLevel * (myLevel + 1) * LEVEL_SCORE <= PlayerAcc_GetScore(ent) && myLevel * myLevel * 3600 * 2 <= myTime && myLevel < MAX_LEVEL) {
 			levelUp++;
 			myLevel++;
 		}
@@ -48,11 +48,11 @@ void checkLevelUp(gentity_t *ent) {
 			int flags = PlayerAcc_GetFlags(ent);
 			if (flags & ACCFLAGS_NOPROFCRLOSS) {
 				PlayerAcc_AddFlags(ent, -ACCFLAGS_NOPROFCRLOSS);
-				//Disp(ent, "^1Your free profession change has been canceled.");
-				trap_SendServerCommand(ent->s.number, "chat \"^1Your free profession change has been canceled.\"");
+				if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1Your free profession change has been canceled."); else
+					trap_SendServerCommand(ent->s.number, "chat \"^1Your free profession change has been canceled.\"");
 			}
-			//Disp(ent, va("You have gained %i level%s, you are now level %i.", levelUp, (levelUp>1) ? "s" : "", myLevel));
-			trap_SendServerCommand(ent->s.number, va("chat \"^3You have gained ^5%i level%s, ^3you are now ^2level %i.\"", levelUp, (levelUp>1) ? "s" : "", myLevel));
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("You have gained %i level%s, you are now level %i.", levelUp, (levelUp > 1) ? "s" : "", myLevel)); else
+				trap_SendServerCommand(ent->s.number, va("chat \"^3You have gained ^5%i level%s, ^3you are now ^2level %i.\"", levelUp, (levelUp > 1) ? "s" : "", myLevel));
 			PlayerAcc_Prof_SetLevel(ent, myLevel);
 			WP_InitForcePowers(ent);
 		}
@@ -64,7 +64,7 @@ void updatePlayer(gentity_t *ent) {
 	if (ent->client->pers.Lmd.account) {
 		int prof = PlayerAcc_Prof_GetProfession(ent);
 		if (prof == PROF_NONE || prof == PROF_BOT) checkLevelUp(ent);
-		
+
 	}
 
 	//Ufo: admins often perform their tasks while spectating
@@ -102,7 +102,7 @@ void HiScore(gentity_t *ent, int field) {
 	int valNew;
 	int shiftIndex;
 	Account_t *acc;
-	for (i = 0; i<10; i++) {
+	for (i = 0; i < 10; i++) {
 		list[i].val = -Q3_INFINITE;
 	}
 	for (i = 0; i < num_accounts; i++) {
@@ -150,7 +150,7 @@ void HiScore(gentity_t *ent, int field) {
 	char name[MAX_NAME_LENGTH];
 	char *ptr;
 
-	for (i = 0; i<10; i++) {
+	for (i = 0; i < 10; i++) {
 		if (!list[i].acc)
 			break;
 		ptr = Accounts_GetName(list[i].acc);
@@ -178,42 +178,42 @@ void HiScore(gentity_t *ent, int field) {
 //Titles system 
 char * GetTitle_system(gentity_t *ent)
 {
-	 int level = PlayerAcc_Prof_GetLevel(ent)+ PlayerAcc_GetNewGamePlus_count(ent); 
-	 if (PlayerAcc_Prof_GetProfession(ent) == PROF_JEDI) {
-		 //jedi titles
-		 if (level < 10)return "Apprentice";
-		 else if (level < 20)return "Disciple";
-		 else if (level < 30)return "Adept";
-		 else if (level < 40)
-		 {
-			 if(Jedi_GetSide(ent) == FORCE_DARKSIDE) return "Darth";
-			 else if (Jedi_GetSide(ent) == FORCE_LIGHTSIDE) return "Knight";
-			 else return "Nomad";
+	int level = PlayerAcc_Prof_GetLevel(ent) + PlayerAcc_GetNewGamePlus_count(ent);
+	if (PlayerAcc_Prof_GetProfession(ent) == PROF_JEDI) {
+		//jedi titles
+		if (level < 10)return "Apprentice";
+		else if (level < 20)return "Disciple";
+		else if (level < 30)return "Adept";
+		else if (level < 40)
+		{
+			if (Jedi_GetSide(ent) == FORCE_DARKSIDE) return "Darth";
+			else if (Jedi_GetSide(ent) == FORCE_LIGHTSIDE) return "Knight";
+			else return "Nomad";
 
-		 }
-		 else if (level < 80)return "Lord";
-		 else if (level < 100)return "Count";
-		 else if (level < 130)return "Sage";
-		 else if (level < 170)return "Master";
-		 else if (level < 200)return "Luminary"; 
-		 else return "Legend";
-	 }
-	 else if (PlayerAcc_Prof_GetProfession(ent) == PROF_MERC)
-	 {//merc titles
-		 if (level < 10)return "Freshmeat";
-		 else if (level < 20)return "Rifleman";
-		 else if (level < 30)return "Mercenary";
-		 else if (level < 40)return "Specialist";
-		 else if (level < 100)return "Bounty Hunter";
-		 else if (level < 150)return "Assassin";
-		 else if (level < 180)return "Commander";
-		 else if (level < 230)return "Master of Hunt";
-		 else return "Legend";
+		}
+		else if (level < 80)return "Lord";
+		else if (level < 100)return "Count";
+		else if (level < 130)return "Sage";
+		else if (level < 170)return "Master";
+		else if (level < 200)return "Luminary";
+		else return "Legend";
+	}
+	else if (PlayerAcc_Prof_GetProfession(ent) == PROF_MERC)
+	{//merc titles
+		if (level < 10)return "Freshmeat";
+		else if (level < 20)return "Rifleman";
+		else if (level < 30)return "Mercenary";
+		else if (level < 40)return "Specialist";
+		else if (level < 100)return "Bounty Hunter";
+		else if (level < 150)return "Assassin";
+		else if (level < 180)return "Commander";
+		else if (level < 230)return "Master of Hunt";
+		else return "Legend";
 
 
-	 }
-	 else return "Stranger";
-	
+	}
+	else return "Stranger";
+
 
 }
 
@@ -253,8 +253,8 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		Accounts_GetName(acc), the_title,
 		Accounts_GetUsername(acc),
 		(secCode != NULL) ? secCode : "^1<none>",
-		time / 3600, (time / 60) % 60, (Accounts_GetBountyReward(acc) > 0) ? va("^1Black List:    ^3%i CR", Accounts_GetBountyReward(acc)) : "^3You are not listed on ^1The Black List^3." ));
-	  Disp(ent, va(
+		time / 3600, (time / 60) % 60, (Accounts_GetBountyReward(acc) > 0) ? va("^1Black List:    ^3%i CR", Accounts_GetBountyReward(acc)) : "^3You are not listed on ^1The Black List^3."));
+	Disp(ent, va(
 		"^8===== Progress Information =====\n"
 		"^3Main Level:    ^2%i\n"
 		"^3Credits:       ^2%i\n"
@@ -265,7 +265,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3New Game Plus Level: ^2%i\n"
 		"^3New Game Plus Skill Points: ^2%i\n"
 		"^3Score:         ^2%i",
-		lvl, Accounts_GetCredits(acc), Accounts_GetExperience(acc), Professions_LevelCost_EXP(PlayerAcc_Prof_GetProfession(ent),PlayerAcc_Prof_GetLevel(ent)), Accounts_GetLevel_jedi(acc),Accounts_GetLevel_merc(acc),Accounts_GetLootboxes(acc),Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
+		lvl, Accounts_GetCredits(acc), Accounts_GetExperience(acc), Professions_LevelCost_EXP(PlayerAcc_Prof_GetProfession(ent), PlayerAcc_Prof_GetLevel(ent)), Accounts_GetLevel_jedi(acc), Accounts_GetLevel_merc(acc), Accounts_GetLootboxes(acc), Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)
 		c = "^2None";
 	else if (prof == PROF_ADMIN)
@@ -414,8 +414,8 @@ void Lmd_Accounts_Player_Logout(gentity_t *ent) {
 	if (!acc) {
 		if (Auths_PlayerHasTempAdmin(ent)) {
 			Auths_RemoveTempAdmin(ent, NULL);
-			//Disp(ent, "^3You have logged out of admin.");
-			trap_SendServerCommand(ent->s.number, "chat \"^3You have logged out of admin.\"");
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You have logged out of admin."); else
+				trap_SendServerCommand(ent->s.number, "chat \"^3You have logged out of admin.\"");
 		}
 		return;
 	}
@@ -431,8 +431,8 @@ void Lmd_Accounts_Player_Logout(gentity_t *ent) {
 	Lmd_Accounts_LogAction(ent, acc, "logged out");
 
 	RenamePlayer(ent, "Padawan");
-	//Disp(ent, "^3You have logged out.");
-	trap_SendServerCommand(ent->s.number, "chat \"^3You have ^2logged out^3.\"");
+	if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You have logged out."); else
+		trap_SendServerCommand(ent->s.number, "chat \"^3You have ^2logged out^3.\"");
 
 	SetTeam(ent, "s");
 
@@ -542,7 +542,7 @@ void Lmd_Accounts_Player_CreateSecurityCode(gentity_t *ent, Account_t *acc) {
 		"^3More information has been written to the console."
 		"\"", code));
 
-	trap_SendServerCommand(ent->s.number, va("chat \"^3Your new security code is: ^2%s\"",code));
+	if (lmd_old_commands_disp.integer != 1)trap_SendServerCommand(ent->s.number, va("chat \"^3Your new security code is: ^2%s\"", code));
 }
 
 qboolean Lmd_Accounts_Player_TryLogin(gentity_t *ent, char *username, char *pass, char *secCode) {
@@ -554,27 +554,27 @@ qboolean Lmd_Accounts_Player_TryLogin(gentity_t *ent, char *username, char *pass
 	int flags;
 
 	if (!ent || !ent->client || !pass || duelInProgress(&ent->client->ps)) {
-		//Disp(ent, "^3You cannot login at this time.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot login at this time.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You cannot login at this time."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You cannot login at this time.\"");
 		return qfalse;
 	}
 
 	if (ent->client->pers.Lmd.account) {
-		//Disp(ent, "^3You are currently logged in.");
-		trap_SendServerCommand(ent->s.number, "chat \"^3You are currently logged in.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You are currently logged in."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^3You are currently logged in.\"");
 		return qfalse;
 	}
 
 	acc = Accounts_GetByUsername(username);
 	if (!acc) {
-		//Disp(ent, "^1This username doesn't exist.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1This username doesn't exist.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1This username doesn't exist."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1This username doesn't exist.\"");
 		return qfalse;
 	}
 
 	if (Accounts_GetPassword(acc) != chk) {
-		//Disp(ent, "^1Invalid username or password.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1Invalid username or password.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1Invalid username or password."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1Invalid username or password.\"");
 		return qfalse;
 	}
 
@@ -590,8 +590,8 @@ qboolean Lmd_Accounts_Player_TryLogin(gentity_t *ent, char *username, char *pass
 				return qfalse;
 			}
 			else if (stricmp(accSec, secCode) != 0) {
-				//Disp(ent, "^1Invalid security code.");
-				trap_SendServerCommand(ent->s.number, "chat \"^1Invalid security code.\"");
+				if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1Invalid security code."); else
+					trap_SendServerCommand(ent->s.number, "chat \"^1Invalid security code.\"");
 				return qfalse;
 			}
 		}
@@ -618,8 +618,8 @@ qboolean Lmd_Accounts_Player_TryLogin(gentity_t *ent, char *username, char *pass
 		}
 	}
 	else {
-		//Disp(ent, "^1Could not log in.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1Could not log in.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1Could not log in."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1Could not log in.\"");
 	}
 
 	if (lmd_loginsecurity.integer == 1 || (lmd_loginsecurity.integer == 2 && Auths_GetRank(acc) > 0)) {
@@ -676,28 +676,28 @@ qboolean Lmd_Accounts_Player_Register(gentity_t *ent, char *username, char *pass
 	Account_t *account;
 
 	if (ent->client->pers.Lmd.account) {
-		//Disp(ent, "^3You are already registered.");
-		trap_SendServerCommand(ent->s.number, "chat \"^3You are already registered.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You are already registered."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^3You are already registered.\"");
 		return qfalse;
 	}
 
 	if (!IsValidPlayerName(username, ent, qtrue, &failReason)) {
 		//trap_SendServerCommand(ent->s.number, "chat \"^1Invalid player name.\"");
 		Disp(ent, va("^1You cannot register this player name.\n^3%s", failReason));
-		trap_SendServerCommand(ent->s.number, va("chat \"^1%s\"", failReason));
+		if (lmd_old_commands_disp.integer != 1)trap_SendServerCommand(ent->s.number, va("chat \"^1%s\"", failReason));
 		return qfalse;
 	}
 
 	if (!IsValidUsername(username, &failReason)) {
 		//trap_SendServerCommand(ent->s.number, "chat \"^1Invalid user name.\"");
 		Disp(ent, va("^1You cannot register this username.\n^3%s", failReason));
-		trap_SendServerCommand(ent->s.number, va("chat \"^1%s\"", failReason));
+		if (lmd_old_commands_disp.integer != 1)trap_SendServerCommand(ent->s.number, va("chat \"^1%s\"", failReason));
 		return qfalse;
 	}
 
 
 	if (Accounts_GetByName(username)) {
-		trap_SendServerCommand(ent->s.number, "chat \"^1The name is already taken.\"");
+		if (lmd_old_commands_disp.integer == 1) Disp(ent, "^1The name is already taken."); else trap_SendServerCommand(ent->s.number, "chat \"^1The name is already taken.\"");
 		return qfalse;
 	}
 
@@ -709,7 +709,7 @@ qboolean Lmd_Accounts_Player_Register(gentity_t *ent, char *username, char *pass
 	}
 
 	RenamePlayer(ent, username); //setting new name up
-	trap_SendServerCommand(ent->s.number, va("chat \"^2Account %s^2 is registered.\"",username));
+	if (lmd_old_commands_disp.integer != 1)trap_SendServerCommand(ent->s.number, va("chat \"^2Account %s^2 is registered.\"", username));
 	Disp(ent, va(
 		"%s^2 is now registered. Now known as ^2%s\n"
 		"^3From now on, type '^2\\login %s [password]^3' to use your account.\n"
@@ -860,8 +860,8 @@ void Cmd_ChPasswd_f(gentity_t *ent, int iArg) {
 	}
 	char *passwd = ConcatArgs(1);
 	PlayerAcc_SetPassword(ent, passwd);
-	//Disp(ent, "Password changed.");
-	trap_SendServerCommand(ent->s.number, "chat \"^2Password changed.\"");
+	if (lmd_old_commands_disp.integer == 1)Disp(ent, "Password changed."); else
+		trap_SendServerCommand(ent->s.number, "chat \"^2Password changed.\"");
 }
 
 void GetStats(gentity_t *ent, Account_t *acc);
@@ -876,80 +876,78 @@ void Cmd_Credits_f(gentity_t *ent, int iArg) {
 	char sArg[MAX_TOKEN_CHARS];
 
 	if (!ent->client->pers.Lmd.account) {
-		//Disp(ent, "^3You must be logged in to use this.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You must be logged in to use this command.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You must be logged in to use this."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You must be logged in to use this command.\"");
 		return;
 	}
 
 	if (iArg == 0) {
-		//Disp(ent, va("^3You have ^2CR %i^3.", ownCreds));
-		trap_SendServerCommand(ent->s.number, va("chat \"^3You have ^2CR %i^3.\"",ownCreds));
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You have ^2CR %i^3.", ownCreds)); else
+			trap_SendServerCommand(ent->s.number, va("chat \"^3You have ^2CR %i^3.\"", ownCreds));
 		return;
 	}
 
 	if (trap_Argc() < 2) {
-		//iomatix
-		trap_SendServerCommand(ent->s.number, "chat \"^1Not enough arguments.\"");
-		//Disp(ent, "^3Not enough arguments.");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3Not enough arguments."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1Not enough arguments.\"");
 		return;
 	}
 
-	//RoboPhred
 	if (ent->client->sess.spectatorState != SPECTATOR_NOT) {
-		//Disp(ent, "^3You cannot do this while spectating.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while spectating.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You cannot do this while spectating."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You cannot do this while spectating.\"");
 		return;
 	}
 
 	if (ent->health <= 0) {
-		//Disp(ent, "^3You must be alive to use this command.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You must be alive to use this command.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You must be alive to use this command."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You must be alive to use this command.\"");
 		return;
 	}
 
 	trap_Argv(1, sArg, sizeof(sArg));
 	numCreds = atoi(sArg);
 	if (numCreds < 1) {
-		//Disp(ent, "^3Invalid value, credits must be >= 0");
-		trap_SendServerCommand(ent->s.number, "chat \"^1Invalid value, must be at least 1.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3Invalid value, credits must be >= 0"); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1Invalid value, must be at least 1.\"");
 		return;
 	}
 
 	if (numCreds > ownCreds) {
-		//Disp(ent, va("^3You cannot afford ^1CR %i^3.", numCreds));
-		trap_SendServerCommand(ent->s.number, va("chat \"^1You cannot afford ^1CR %i^3.\"",numCreds));
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You cannot afford ^1CR %i^3.", numCreds)); else
+			trap_SendServerCommand(ent->s.number, va("chat \"^1You cannot afford ^1CR %i^3.\"", numCreds));
 		return;
 	}
 	if (iArg == 1) {
 		gentity_t *payEnt = AimAnyTarget(ent, 64);
 		if (!payEnt) {
-			//Disp(ent, "^3Nothing targeted");
-			trap_SendServerCommand(ent->s.number, "chat \"^1Nothing targeted.\"");
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3Nothing targeted"); else
+				trap_SendServerCommand(ent->s.number, "chat \"^1Nothing targeted.\"");
 			return;
 		}
 		if (!payEnt->client) {
 			if (!(payEnt->flags&FL_PAY) && !payEnt->pay) {
-				//Disp(ent, "^3This is not a payable entity");
-				trap_SendServerCommand(ent->s.number, "chat \"^1This is not a payable entity.\"");
+				if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3This is not a payable entity"); else
+					trap_SendServerCommand(ent->s.number, "chat \"^1This is not a payable entity.\"");
 				return;
 			}
 			else if (payEnt->flags & FL_INACTIVE || !payEnt->use) {
-				//Disp(ent, "^3This entity is inactive");
-				trap_SendServerCommand(ent->s.number, "chat \"^1This entity is inactive.\"");
+				if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3This entity is inactive"); else
+					trap_SendServerCommand(ent->s.number, "chat \"^1This entity is inactive.\"");
 				return;
 			}
 		}
 
 		if (payEnt->client) {
 			if (!payEnt->client->pers.Lmd.account) {
-				//Disp(ent, "^3This player is not logged in.");
-				trap_SendServerCommand(ent->s.number, "chat \"^1This player is not logged in.\"");
+				if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3This player is not logged in."); else
+					trap_SendServerCommand(ent->s.number, "chat \"^1This player is not logged in.\"");
 				return;
 			}
 			PlayerAcc_SetCredits(ent, ownCreds - numCreds);
 
-			//Disp(ent, va("^3You paid ^2CR %i^3 to ^7%s.", numCreds, payEnt->client->pers.netname));
-			trap_SendServerCommand(ent->s.number, va("chat \"^3You paid ^2CR %i^3 to ^7%s.\"", numCreds, payEnt->client->pers.netname));
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You paid ^2CR %i^3 to ^7%s.", numCreds, payEnt->client->pers.netname)); else
+				trap_SendServerCommand(ent->s.number, va("chat \"^3You paid ^2CR %i^3 to ^7%s.\"", numCreds, payEnt->client->pers.netname));
 			GiveCredits(payEnt, numCreds, va("from ^7%s", ent->client->pers.netname));
 		}
 		else {
@@ -971,7 +969,7 @@ void Cmd_Credits_f(gentity_t *ent, int iArg) {
 	else if (iArg == 3) {
 		if (ent->s.m_iVehicleNum || ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
 			ent->client->pers.Lmd.jailTime > level.time) {
-			return; 
+			return;
 		}
 		DropCredits(ent, numCreds);
 	}
@@ -982,7 +980,7 @@ void Cmd_Register_f(gentity_t *ent, int iArg) {
 	char username[MAX_STRING_CHARS]; //size checked in registerAccount()
 	char *passwd;
 	if (trap_Argc() < 3) {
-		if(trap_Argc() < 2)trap_SendServerCommand(ent->s.number, "chat \"^3Register a new account.\"");		
+		if (trap_Argc() < 2 && lmd_old_commands_disp.integer != 1)trap_SendServerCommand(ent->s.number, "chat \"^3Register a new account.\"");
 		Disp(ent, "^3You have to choose a username and password.\n\\^2register <username> <password>\n^3Your username will become your in-game character name.");
 		return;
 	}
@@ -995,8 +993,8 @@ void Cmd_Seccode_f(gentity_t *ent, int iArg) {
 	int argc = trap_Argc();
 
 	if (!ent->client->pers.Lmd.account) {
-		//Disp(ent, "^3You must be logged in to use this.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You must be logged in to use this.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You must be logged in to use this."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You must be logged in to use this.\"");
 		return;
 	}
 
@@ -1010,7 +1008,7 @@ void Cmd_Seccode_f(gentity_t *ent, int iArg) {
 			code,
 			codeEnabled ? "^2Enabled" : "^1Disabled",
 			codeEnabled ? "disable" : "enable"));
-		trap_SendServerCommand(ent->s.number, va("chat \"^3Your security code: ^2%s.\"",code));
+		if (lmd_old_commands_disp.integer != 1)trap_SendServerCommand(ent->s.number, va("chat \"^3Your security code: ^2%s.\"", code));
 		return;
 	}
 
@@ -1024,23 +1022,23 @@ void Cmd_Seccode_f(gentity_t *ent, int iArg) {
 	else if (Q_stricmp(cmd, "toggle") == 0) {
 		if (codeEnabled) {
 			if (lmd_loginsecurity.integer == 1) {
-				//Disp(ent, "^3You cannot disable your security code. This server requires security codes for all users.");
-				trap_SendServerCommand(ent->s.number, "chat \"^1You cannot disable your security code. This server requires the security code for each user.\"");
+				if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You cannot disable your security code. This server requires security codes for all users."); else
+					trap_SendServerCommand(ent->s.number, "chat \"^1You cannot disable your security code. This server requires the security code for each user.\"");
 				return;
 			}
 			else if (Auths_GetRank(ent->client->pers.Lmd.account) > 0 && lmd_loginsecurity.integer >= 2) {
-				//Disp(ent, "^3You cannot disable your security code.  This server requires security codes for all admins.");
-				trap_SendServerCommand(ent->s.number, "chat \"^1You cannot disable your security code. This server requires the security code for all admins.\"");
+				if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You cannot disable your security code.  This server requires security codes for all admins."); else
+					trap_SendServerCommand(ent->s.number, "chat \"^1You cannot disable your security code. This server requires the security code for all admins.\"");
 				return;
 			}
 
-			//Disp(ent, "^3Your security code is now ^1disabled^3.");
-			trap_SendServerCommand(ent->s.number, "chat \"^3Your security code is now ^1disabled^3.\"");
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3Your security code is now ^1disabled^3."); else
+				trap_SendServerCommand(ent->s.number, "chat \"^3Your security code is now ^1disabled^3.\"");
 			PlayerAcc_AddFlags(ent, ACCFLAGS_NOSECCODE);
 		}
 		else {
-			//Disp(ent, "^3Your security code is now ^2enabled^3.");		
-			trap_SendServerCommand(ent->s.number, "chat \"^3Your security code is now ^2enabled^3.\"");			
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3Your security code is now ^2enabled^3."); else
+				trap_SendServerCommand(ent->s.number, "chat \"^3Your security code is now ^2enabled^3.\"");
 			PlayerAcc_AddFlags(ent, -ACCFLAGS_NOSECCODE);
 		}
 	}
@@ -1056,7 +1054,7 @@ void Cmd_Login_f(gentity_t *ent, int iArg)
 	char passwd[MAX_STRING_CHARS];
 	char secCode[MAX_STRING_CHARS];
 	if (trap_Argc() < 2) {
-		trap_SendServerCommand(ent->s.number, "chat \"^3Login to your account.\"");
+		if (lmd_old_commands_disp.integer != 1)trap_SendServerCommand(ent->s.number, "chat \"^3Login to your account.\"");
 		Disp(ent, "^3Usage: login ^2<username> <password> [seccode]");
 		return;
 	}
@@ -1071,8 +1069,8 @@ void Lmd_Accounts_Player_Logout(gentity_t *ent);
 void Cmd_Logout_f(gentity_t *ent, int iArg) {
 	//Ufo: forbid logging out while dueling or frozen
 	if (!ent || !ent->client || duelInProgress(&ent->client->ps) || ent->client->Lmd.flags & SNF_FREEZE) {
-		//Disp(ent, "^3You cannot logout at this time.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You cannot logout at this time.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You cannot logout at this time."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1You cannot logout at this time.\"");
 		return;
 	}
 	Lmd_Accounts_Player_Logout(ent);
@@ -1091,13 +1089,14 @@ void Cmd_aliasname_f(gentity_t *ent, int iArg) {
 	char val[MAX_STRING_CHARS];
 	char arg[MAX_TOKEN_CHARS];
 
-	if (trap_Argc() < 2 ) {
-		//Disp(ent, "^1The alias can not be empty.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1The alias can not be empty.\"");
+	if (trap_Argc() < 2) {
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1The alias can not be empty."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1The alias can not be empty.\"");
 		return;
-	}else if(trap_Argc() > 2){
-		//Disp(ent, "^1Too many arguments.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1Too many arguments.\"");
+	}
+	else if (trap_Argc() > 2) {
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1Too many arguments."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1Too many arguments.\"");
 		return;
 	}
 
@@ -1107,16 +1106,16 @@ void Cmd_aliasname_f(gentity_t *ent, int iArg) {
 	trap_Argv(1, val, sizeof(val));
 	ClientCleanName((const char *)val, arg, sizeof(arg));
 	if (!IsValidPlayerName(arg, NULL, qtrue)) {
-		//Disp(ent, "^1That name is invalid or already in use.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1That name is invalid or already in use.\"");
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1That name is invalid or already in use."); else
+			trap_SendServerCommand(ent->s.number, "chat \"^1That name is invalid or already in use.\"");
 		return;
 	}
 	Accounts_SetName(thisacc, arg);
-	//Disp(ent, va("^2Your alias is %s now.",arg));
-	trap_SendServerCommand(ent->s.number, va("chat \"^2Your alias is %s now.\"",arg));
+	if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^2Your alias is %s now.", arg)); else
+		trap_SendServerCommand(ent->s.number, va("chat \"^2Your alias is %s now.\"", arg));
 	Lmd_Accounts_Player_Logout(ent);
 	Lmd_Accounts_Player_Login(ent, thisacc);
-	
+
 }
 int get_random(int min, int max)
 {
@@ -1171,10 +1170,12 @@ void Cmd_Creditbox_f(gentity_t *ent, int iArg) {
 			PlayerAcc_SetLootboxes(ent, chests);
 			credits_amount = Open_Creditbox(ent);
 			GiveCredits(ent, credits_amount, "from the Credit Box.");
-			//Disp(ent, va("^2Recived ^3%i ^2Credits!", credits_amount));
-			trap_SendServerCommand(ent->s.number, va("chat \"^2Recived ^3%i ^2Credits!\"", credits_amount));
-		}else  //Disp(ent, "^1You have no Credit Boxes right now.");
-		trap_SendServerCommand(ent->s.number, "chat \"^1You have no Credit Boxes right now.\"");
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^2Recived ^3%i ^2Credits!", credits_amount)); else
+				trap_SendServerCommand(ent->s.number, va("chat \"^2Recived ^3%i ^2Credits!\"", credits_amount));
+		}
+		else
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1You have no Credit Boxes right now."); else
+				trap_SendServerCommand(ent->s.number, "chat \"^1You have no Credit Boxes right now.\"");
 
 	}
 	else {

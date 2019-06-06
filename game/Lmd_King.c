@@ -11,7 +11,8 @@ int g_bestKingScore = 0;
 gentity_t *g_bestKing = NULL;
 
 #define MAX_SCORING 5
-
+extern vmCvar_t lmd_rewardcr_kill;
+extern vmCvar_t lmd_rewardexp_kill;
 
 int scoring(int loser, int winner) {
 	float tmpscore;
@@ -114,6 +115,9 @@ void BecomeKing(gentity_t *ent){
 
 	trap_SendServerCommand(-1, va("cp \"%s\n^3is now the King.\n\"", ent->client->pers.netname));
 	trap_SendServerCommand(-1, va("print \"%s ^3is now the King.\n\"", ent->client->pers.netname));
+
+
+
 
 	ent->client->pers.Lmd.persistantFlags |= SPF_ISKING;
 	ent->client->pers.Lmd.kingScore = 0;
@@ -307,6 +311,11 @@ void CalcScore(gentity_t *winner, gentity_t *loser){
 		}
 
 		BecomeKing(winner);
+		//iomatix: Duel King rewards:
+		if (lmd_rewardcr_kill.integer != 0) GiveCredits(winner, lmd_rewardcr_kill.integer * 2, "for becoming the Duel King");
+		if (lmd_rewardexp_kill.integer != 0) GiveExperience(winner, lmd_rewardexp_kill.integer * 3, "for becoming the Duel King");
+		GiveLootboxes(winner, 1, "for becoming the Duel King");
+
 
 		winner->client->ps.forceDodgeAnim = BOTH_FORCE_RAGE;
 		winner->client->ps.forceHandExtendTime = level.time + 3000;

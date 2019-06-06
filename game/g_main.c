@@ -342,6 +342,7 @@ vmCvar_t	lmd_damage_level_scale;
 vmCvar_t	lmd_is_lethality_add_damage;
 vmCvar_t    lmd_is_thousandcuts_lethality;
 vmCvar_t	lmd_is_buy_level;
+vmCvar_t	lmd_old_commands_disp;
 
 								 
 //RoboPhred:
@@ -893,6 +894,8 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_is_lethality_add_damage, "lmd_is_lethality_add_damage", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_is_thousandcuts_lethality, "lmd_is_thousandcuts_lethality", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_is_buy_level, "lmd_is_buy_level", "0", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_old_commands_disp, "lmd_old_commands_disp", "0",CVAR_ARCHIVE,0,qfalse },
+
 
 // Lugormod cvars:
 { &g_noVoteTime, "g_noVoteTime", "5", CVAR_ARCHIVE,0, qfalse, qfalse,
