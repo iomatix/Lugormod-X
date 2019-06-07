@@ -749,12 +749,12 @@ void Cmd_SkillSelect_List(gentity_t *ent, int prof, profSkill_t *parent) {
 		s = "";
 
 	if (points > 0) {
-		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You have ^2%i^3 skill point%s available%s.", points, (points != 1) ? "s" : "", s)); else
+		if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3You have ^2%i^3 skill point%s available%s.", points, (points != 1) ? "s" : "", s)); else
 			trap_SendServerCommand(ent->s.number, va("chat \"^3You have ^2%i^3 skill point%s available%s.\"", points, (points != 1) ? "s" : "", s));
 	}
 	else
 	{
-		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You have no skill points available%s.", s)); else
+		if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3You have no skill points available%s.", s)); else
 			trap_SendServerCommand(ent->s.number, va("chat \"^3You have no skill points available%s.\"", s));
 	}
 }
@@ -769,17 +769,17 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 	}
 
 	if (!skill->getValue || !skill->setValue || skill->levels.max <= skill->levels.min) {
-		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3This skill cannot be leveled."); else
+		if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, "^3This skill cannot be leveled."); else
 			trap_SendServerCommand(ent->s.number, "chat \"^3This skill cannot be leveled.\"");
 		return;
 	}
 
 	profSkill_t *blocker;
 	if (Lmd_Prof_SkillIsAchieveable(acc, prof, skill, &blocker) == qfalse) {
-		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You cannot level this skill while ^2%s^3 is leveled.", blocker->name)); else
+		if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3You cannot level this skill while ^2%s^3 is leveled.", blocker->name)); else
 			trap_SendServerCommand(ent->s.number, va("chat \"^1You cannot level this skill while ^2%s^1 is leveled.\"", blocker->name));
 		if (blocker->name == "Sith" || blocker->name == "Jedi") {
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3Unlocked at ^2%i^3 profession level.", MASTER_LEVEL)); else
+			if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3Unlocked at ^2%i^3 profession level.", MASTER_LEVEL)); else
 				trap_SendServerCommand(ent->s.number, va("chat \"^3Unlocked at ^2%i^3 profession level.\"", MASTER_LEVEL));
 		}
 		return;
@@ -788,12 +788,12 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 	int level = skill->getValue(acc, skill);
 	if (down) {
 		if (!skill->levels.canRemove) {
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3This skill cannot be leveled down."); else
+			if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, "^3This skill cannot be leveled down."); else
 				trap_SendServerCommand(ent->s.number, "chat \"^1This skill cannot be leveled down.\"");
 			return;
 		}
 		if (level <= skill->levels.min) {
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3This skill is already at its lowest level."); else
+			if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, "^3This skill is already at its lowest level."); else
 				trap_SendServerCommand(ent->s.number, "chat \"^3This skill is already at its lowest level.\"");
 			return;
 		}
@@ -809,7 +809,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 	}
 	else {
 		if (level >= skill->levels.max) {
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3This skill is already at its highest level."); else
+			if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, "^3This skill is already at its highest level."); else
 				trap_SendServerCommand(ent->s.number, "chat \"^3This skill is already at its highest level.\"");
 			return;
 		}
@@ -822,7 +822,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 		{
 			if (nextLevel > lmd_mastery_level_skills_level.integer && profession_level < MASTER_LEVEL)
 			{
-				if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^1Unlocked at ^2%i^3 profession level. You need to reach mastery level before increasing this skill.", MASTER_LEVEL)); else
+				if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^1Unlocked at ^2%i^3 profession level. You need to reach mastery level before increasing this skill.", MASTER_LEVEL)); else
 					trap_SendServerCommand(ent->s.number, va("chat \"^1Unlocked at ^2%i^1 profession level. ^3You need to reach ^6Mastery Level ^3before increasing this skill.\"", MASTER_LEVEL));
 				return;
 			}
@@ -834,13 +834,13 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 
 		int Cr_cost = Accounts_GetCredits(acc) - lmd_skillpoint_cost.integer*cost; //the value is ready to set
 		if (points < cost) {
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^1Not enough Points.\n^3You need ^2%i^3 Point%s more to level up this skill.", cost - points, (cost - points == 1) ? "" : "s")); else
+			if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^1Not enough Points.\n^3You need ^2%i^3 Point%s more to level up this skill.", cost - points, (cost - points == 1) ? "" : "s")); else
 				trap_SendServerCommand(ent->s.number, va("chat \"^1Not enough Points. ^3You need ^2%i^3 Point%s more to level up this skill.\"", cost - points, (cost - points == 1) ? "" : "s"));
 			return;
 		}
 		if (Cr_cost < 0)
 		{
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^1Not enough Credits.\n^3You need ^3%i^3 Credits more to level up this skill.", -Cr_cost)); else
+			if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^1Not enough Credits.\n^3You need ^3%i^3 Credits more to level up this skill.", -Cr_cost)); else
 				trap_SendServerCommand(ent->s.number, va("chat \"^1Not enough Credits. ^3You need ^3%i^3 Credits more to level up this skill.\"", lmd_skillpoint_cost.integer*cost, Cr_cost));
 			return;
 		}
@@ -853,7 +853,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 		Disp(ent, va("^3You've paid ^2%i CR^3. ^2%i CR ^3has left.", lmd_skillpoint_cost.integer*cost, Cr_cost));
 		//trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR^3. ^2%i CR ^3has left.\"", lmd_skillpoint_cost.integer*cost, Cr_cost));
 		if (level >= skill->levels.max) {
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3This skill is now at its highest level."); else
+			if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, "^3This skill is now at its highest level."); else
 				trap_SendServerCommand(ent->s.number, "chat \"^3This skill is now at its highest level.\"");
 		}
 		else {
@@ -878,7 +878,7 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 
 	//check 
 	if (skill->setValue(acc, skill, level)) {
-		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3The ^2%s^3 skill is now at level ^2%i^3.", skill->name, level)); else
+		if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3The ^2%s^3 skill is now at level ^2%i^3.", skill->name, level)); else
 			trap_SendServerCommand(ent->s.number, va("chat \"^3The ^2%s^3 skill is now at level ^2%i^3.\"", skill->name, level));
 		const char **descr_now = skill->levelDescriptions; //desc
 		for (int i = 0; i < level - 1; i++) {
@@ -926,11 +926,11 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 				}
 			}
 			if (index == -1) {
-				if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3\'^2%s^3\' does not match any skills.", arg)); else
+				if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2 )Disp(ent, va("^3\'^2%s^3\' does not match any skills.", arg)); else
 					trap_SendServerCommand(ent->s.number, va("chat \"^3\'^2%s^3\' does not match any skills.\"", arg));
 			}
 			else if (index == -2) {
-				if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3Multiple skills match \'^2%s^3\'.", arg)); else
+				if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3Multiple skills match \'^2%s^3\'.", arg)); else
 					trap_SendServerCommand(ent->s.number, va("chat \"^3Multiple skills match \'^2%s^3\'.\"", arg));
 			}
 			else
@@ -960,10 +960,10 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 		}
 		else {
 			if (Lmd_Prof_SkillIsAchieveable(acc, prof, skill, &blocker) == qfalse) {
-				if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You cannot level this skill while ^2%s^3 is leveled.", blocker->name)); else
+				if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3You cannot level this skill while ^2%s^3 is leveled.", blocker->name)); else
 					trap_SendServerCommand(ent->s.number, va("chat \"^1You cannot level this skill while ^2%s^1 is leveled.\"", blocker->name));
 				if (blocker->name == "Sith" || blocker->name == "Jedi") {
-					if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3Unlocked at ^2%i^3 profession level.", MASTER_LEVEL)); else
+					if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3Unlocked at ^2%i^3 profession level.", MASTER_LEVEL)); else
 						trap_SendServerCommand(ent->s.number, va("chat \"^3Unlocked at ^6%i^3 profession level.\"", MASTER_LEVEL));
 				}
 			}
@@ -996,18 +996,18 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 			if (level < skill->levels.max) {
 				if (points >= level + 1 && cost_cr <= cr_player) {
 					Disp(ent, va("^3Use ^2/%s up^3 to increase the ^2%s^3 skill.", cmd, skill->name));
-					if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3The cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.", cost_cr, cr_player - cost_cr)); else
+					if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3The cost is: ^2%i^3CR. Leaving you with ^2%i^3CR.", cost_cr, cr_player - cost_cr)); else
 						trap_SendServerCommand(ent->s.number, va("chat \"^3The Cost is ^2%i^3 point%s and ^2%i CR^3.\"", cost, (cost == 1) ? "" : "s", cost_cr));
 
 				}
 				else {
-					if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.", skill->name)); else
+					if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.", skill->name)); else
 						trap_SendServerCommand(ent->s.number, va("chat \"^1You do not have enough points or credits to increase the ^2%s^1 skill.\"", skill->name));
 				}
 			}
 			else
 			{
-				if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3The ^2%s^3 skill is at its maximum level", skill->name)); else
+				if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3The ^2%s^3 skill is at its maximum level", skill->name)); else
 					trap_SendServerCommand(ent->s.number, va("chat \"^3The ^2%s^3 skill is at its maximum level.\"", skill->name));
 			}
 			if (skill->levels.canRemove) {
@@ -1018,7 +1018,7 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 
 				else
 				{
-					if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3The ^2%s^3 skill is at its minimum level.", skill->name)); else
+					if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3The ^2%s^3 skill is at its minimum level.", skill->name)); else
 						trap_SendServerCommand(ent->s.number, va("chat \"^3The ^2%s^3 skill is at its minimum level.\"", skill->name));
 				}
 			}
@@ -1086,8 +1086,8 @@ void Cmd_ResetSkills_f(gentity_t *ent, int iArg) {
 		int cost = used * lmd_skillpoint_cost.integer / 10;
 
 		if (myCredits < cost) {
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3The cost to reset your skills is ^2CR %i^3.", cost)); else
-				trap_SendServerCommand(ent->s.number, va("chat \"^3The cost to reset your skills is ^2CR %i^3.\"", cost));
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^1The cost to reset your skills is ^2CR %i^3.", cost)); else
+				trap_SendServerCommand(ent->s.number, va("chat \"^1The cost to reset your skills is ^2CR %i^3.\"", cost));
 			return;
 		}
 		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3Paid ^2%i CR ^3to reset your skills.", cost)); else
@@ -1254,7 +1254,7 @@ void Experience_Level_Up(gentity_t *ent)
 
 
 	G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
-	trap_SendServerCommand(ent->s.number, va("cp \"%s\"", msg));
+	//trap_SendServerCommand(ent->s.number, va("cp \"%s\"", msg));
 	if (lmd_old_commands_disp.integer == 1)Disp(ent, msg); else {
 		trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_1));
 		trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_2));

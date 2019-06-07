@@ -1153,7 +1153,7 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	if (lmd_old_commands_disp.integer == 1) Disp(ent, va("^3You've paid ^2%i CR ^3for ^7%s's^3 head.", v, who_target)); else trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR ^3for ^7%s's^3 head.\"", v, who_target));
 
 	//send to all
-	trap_SendServerCommand_ToAll(ent->s.number, va("cp \"%s\"", msg_all));
+	//trap_SendServerCommand_ToAll(ent->s.number, va("cp \"%s\"", msg_all));
 	if (lmd_old_commands_disp.integer != 1) {
 		trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_1));
 		trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_line_2));

@@ -2715,11 +2715,11 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				
 					if (lmd_rewardcr_kill.integer != 0) {
 						cr_exp_output = 1 + lmd_rewardcr_kill.integer*cr_exp_multiplier;
-						GiveCredits(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
+						GiveCredits(attacker, cr_exp_output, va("for killing ^7%s ^3(^5%i Level^3)", self->client->pers.netname, dead_pers_level));
 					}
 					if (lmd_rewardexp_kill.integer != 0) {
 						cr_exp_output = 1 + lmd_rewardexp_kill.integer*cr_exp_multiplier;
-						GiveExperience(attacker, cr_exp_output, va("for killing ^7%s (^5%i Level^7)", self->client->pers.netname, dead_pers_level));
+						GiveExperience(attacker, cr_exp_output, va("for killing ^7%s ^3(^5%i Level^3)", self->client->pers.netname, dead_pers_level));
 					}
 				}
 
@@ -2738,7 +2738,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 						trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_bd));
 
 						char *msg_bd_self = va("^2You've ^3got a reward for ^1%s's^3 head.", self->client->pers.netname);
-						trap_SendServerCommand(attacker->s.number, va("cp \"%s\"", msg_bd_self));
+						//trap_SendServerCommand(attacker->s.number, va("cp \"%s\"", msg_bd_self));
 						trap_SendServerCommand(attacker->s.number, va("chat \"%s\"", msg_bd_self));
 
 						Is_players_bounty_message = qtrue;
@@ -2763,7 +2763,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 		
 					char *msg_bd_self = va("^2You've ^3got a bounty for killing ^1%s.", self->client->pers.netname);
-					trap_SendServerCommand(attacker->s.number, va("cp \"%s\"", msg_bd_self));
+					//trap_SendServerCommand(attacker->s.number, va("cp \"%s\"", msg_bd_self));
 					if (Is_players_bounty_message == qfalse) { //send message if it wasn't send before.
 						trap_SendServerCommand(attacker->s.number, va("chat \"%s\"", msg_bd_self));
 						trap_SendServerCommand_ToAll(attacker->s.number, va("print \"\n%s\n\"", msg_bd));
@@ -2800,7 +2800,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 					char *msg_b_line2 = va("^3Kill ^1%s ^3to get ^2x%i ^3Credit-Box.", attacker->client->pers.netname, attacker->client->pers.Lmd.killstreak_bounty/lmd_bounty_streaks_by.integer);
 					char *msg_b = va("%s\n%s", msg_b_line1, msg_b_line2);
 					//trap_SendServerCommand_ToAll(attacker->s.number, va("print \"\n%s\n\"", msg_b));
-					trap_SendServerCommand_ToAll(attacker->s.number, va("cp \"%s\"", msg_b));
+					//trap_SendServerCommand_ToAll(attacker->s.number, va("cp \"%s\"", msg_b));
 					trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_b_line1));
 					trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_b_line2));
 				}
