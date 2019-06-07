@@ -81,6 +81,7 @@
 - lmd_old_commands_disp added option "2". ✔️
 - Blocking costs force now. The cost is 7->14->21 force power per block. ✔️ 
 - Evasion costs force now. The cost is 8 force power per evasion. ✔️  
+- Level up checking function is improved. ✔️
 
 //
 

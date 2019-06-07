@@ -1185,6 +1185,8 @@ void Experience_Level_Up(gentity_t *ent)
 		return;
 	}
 
+	
+
 	//checks are completed
 
 	PlayerAcc_SetExperience(ent, resEXP);
@@ -1233,34 +1235,39 @@ void Experience_Level_Up(gentity_t *ent)
 
 
 
-
+	//messages:
 	cost = Professions_LevelCost_EXP(prof, playerLevel);
-	Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));
-	char *playername = PlayerAcc_GetName(ent);
-	char *msg_other = va("^1%s ^3becomes more powerful. One's level is ^1%i^3 now.", playername, playerLevel);
-	G_LogPrintf("Level up: %s is %i now.\n", playername, playerLevel);
-	char *msg_line_1 = "^5Congratulation! Level Increased!";
-	char *msg_line_2 = va("^3Your level is ^2%i^3.", playerLevel);
-	char *msg_line_3 = va("^2%i ^3skill points recived.", NewSkillPoints_value);
-
-
-
-	char *msg = va("%s\n%s\n%s", msg_line_1, msg_line_2, msg_line_3);
-
-	trap_SendServerCommand(-1, va("print \"\n%s\n\"", msg_other));
-	if (lmd_old_commands_disp.integer != 1) trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_other));
-
-	WP_InitForcePowers(ent);
-
-
-	G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
-	//trap_SendServerCommand(ent->s.number, va("cp \"%s\"", msg));
-	if (lmd_old_commands_disp.integer == 1)Disp(ent, msg); else {
-		trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_1));
-		trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_2));
-		trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_3));
+	//iomatix addon:
+	if (resEXP >= cost){//next level-up is available then make everything once again for the new level:
+		Experience_Level_Up(ent);
 	}
-	return;
+	else { //Show only most important message (higher level reached)
+		Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", resEXP, cost));
+		char *playername = PlayerAcc_GetName(ent);
+		char *msg_other = va("^1%s ^3becomes more powerful. One's level is ^1%i^3 now.", playername, playerLevel);
+		G_LogPrintf("Level up: %s is %i now.\n", playername, playerLevel);
+		char *msg_line_1 = "^5Congratulation! Level Increased!";
+		char *msg_line_2 = va("^3Your level is ^2%i^3.", playerLevel);
+		char *msg_line_3 = va("^2%i ^3skill points recived.", NewSkillPoints_value);
+
+
+
+		char *msg = va("%s\n%s\n%s", msg_line_1, msg_line_2, msg_line_3);
+
+		trap_SendServerCommand(-1, va("print \"\n%s\n\"", msg_other));
+		if (lmd_old_commands_disp.integer != 1) trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s\"", msg_other));
+
+		WP_InitForcePowers(ent);
+
+
+		G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
+		//trap_SendServerCommand(ent->s.number, va("cp \"%s\"", msg));
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, msg); else {
+			trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_1));
+			trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_2));
+			trap_SendServerCommand(ent->s.number, va("chat \"%s\"", msg_line_3));
+		}
+	}
 
 }
 
