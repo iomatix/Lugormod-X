@@ -82,11 +82,12 @@
 - Blocking costs force now. The cost is 7->14->21 force power per block. ✔️ 
 - Evasion costs force now. The cost is 8 force power per evasion. ✔️  
 - Level up checking function is improved. ✔️
+- Item models on the ground are fixed. 50%
 
 //
 
 ///
-- Add jetpack model on the ground.
+
 - Search a new ways for spending credits.
 - experience boosters/ packs for CR? lmd_exp_boosters
 - Level 5 Jump. The player can not use it to fly but jumps higher. ??

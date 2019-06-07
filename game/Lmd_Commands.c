@@ -556,7 +556,7 @@ gentity_t* HurlItem(gentity_t *ent, const char *name) {
 	dropped->flags |= FL_BOUNCE_HALF;
 
 	//RoboPhred: not sure why this was disabled, but it prevents the item from being picked up imidiately upon drop
-	dropped->genericValue10 = level.time + 500;
+	dropped->genericValue10 = level.time + 400;
 	dropped->genericValue11 = ent->s.number;
 
 	//RegisterItem(it);

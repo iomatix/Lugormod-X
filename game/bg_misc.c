@@ -1224,8 +1224,8 @@ Do not place.
 	{
 		"item_jetpack", 
 		"sound/weapons/w_pkup.wav",
-		{ "models/items/psgun.glm", //FIXME: no model
-                  //"models/weapons2/jetpack/model.glm",
+		{ //"models/items/psgun.glm", //FIXME: no model
+          "models/weapons2/jetpack/model.glm",
 		0, 0, 0} ,
 /* view */		NULL,			
 /* icon */		"gfx/hud/i_icon_jetpack",
@@ -1234,7 +1234,7 @@ Do not place.
 		IT_HOLDABLE,
 		HI_JETPACK,
 /* precache */ "effects/boba/jet.efx",
-/* sounds */ "sound/chars/boba/jeton.wav sound/chars/boba/jethover.wav sound/effects/flamejet_lp.wav models/items/psgun.glm",
+/* sounds */ "sound/chars/boba/jeton.wav sound/chars/boba/jethover.wav sound/effects/flamejet_lp.wav",
 		"@MENUS_JETPACK_DESC"					// description
 	},
 

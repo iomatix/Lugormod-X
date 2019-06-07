@@ -28,6 +28,7 @@
 - Profession level saving.
 - New Game Plus mode with additional skillpoints as a reward.
 - Experience as a reward for quests.
+- Blocking with Lightsaber and Evasions use the force power.
 - Title system.
 - The Black List.
 - New in-game mechanics.
