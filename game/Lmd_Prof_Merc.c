@@ -236,7 +236,7 @@ const char *mercSkill_rifle_master_Descr[] = {
 STD_SKILLS_FUNCS(rifle_master)
 
 profSkill_t mercSkill_rifle_master = {
-	"Master of the Rifles",
+	"MasterOfTheRifles",
 	"Increases your damage dealt with non-explosive weapons.",
 	mercSkill_rifle_master_Descr,
 
@@ -263,7 +263,7 @@ const char *mercSkill_perfect_aim_Descr[] = {
 STD_SKILLS_FUNCS(perfect_aim)
 
 profSkill_t mercSkill_perfect_aim = {
-	"Perfect Aim",
+	"PerfectAim",
 	"Get chance for additional critical damage dealt with non-explosive weapons.",
 	mercSkill_perfect_aim_Descr,
 
@@ -358,13 +358,13 @@ int Lmd_Prof_Merc_GetMeleeSkill(Account_t *acc) {
 }
 
 const char *mercSkill_Weapons_Descr[] = {
-	"Gain 4 weapon credits.  Gain access to the E11 Blaster and Stun Baton.",
-	"Gain 11 weapon credits.  Gain access to Gadgets and the Bowcaster.",
-	"Gain 17 weapon credits.  Gain access to the Disruptor.",
-	"Gain 20 weapon credits.  Gain access to the Flechette.",
-	"Gain 24 weapon credits.  Gain access to the Repeater.",
+	"Gain 4 weapon credits. Gain access to the E11 Blaster and Stun Baton.",
+	"Gain 11 weapon credits. Gain access to Gadgets and the Bowcaster.",
+	"Gain 17 weapon credits. Gain access to the Disruptor and Laser Trip Mines.",
+	"Gain 20 weapon credits. Gain access to the Flechette.",
+	"Gain 24 weapon credits. Gain access to the Repeater.",
 	"Gain 30 weapon credits.",
-	"Gain 33 weapon credits.  Gain access to the Heavy Weapons.",
+	"Gain 33 weapon credits. Gain access to the Heavy Weapons.",
 	"Gain 36 weapon credits.",
 	NULL
 };
@@ -702,9 +702,9 @@ const mercItemTable_t mercWeaponTable[] = {
 { "Bowcaster", 4, WP_BOWCASTER },
 { "Thermal Detonators", 5, WP_THERMAL },
 { "Detonation Packs",10,WP_DET_PACK },
-{ "Laser Trip Mines", 12, WP_TRIP_MINE },
 { "Destructive EMP-2", 10, WP_DEMP2 },
-{ "Disruptor", 10, WP_DISRUPTOR },
+{ "Disruptor", 11, WP_DISRUPTOR },
+{ "Laser Trip Mines", 12, WP_TRIP_MINE },
 { "Flechette", 14, WP_FLECHETTE },
 { "Repeater", 15, WP_REPEATER },
 { "Rocket Launcher",23,WP_ROCKET_LAUNCHER },

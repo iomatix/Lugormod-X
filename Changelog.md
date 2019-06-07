@@ -76,8 +76,12 @@
 - Rewards for higher levels of the New Game Plus are increased. (120 -> 6, 115+ -> 5, 100+ -> 4, 85+ -> 3, 66+ -> 2, 40+ -> 1) ✔️ 
 - Extern variable lmd_old_commands_disp is added. ✔️ 
 - New rewards for becoming a Duel King. ✔️
+- Mercenary "Weapon" skill update. ✔️
+- Removed spacing in the skill names. ✔️
+
+
 //
-- Blocking costs force now. The cost is 7->14->21 force power per block. 50/50 should work at each block but it works random???
+- Blocking costs force now. The cost is 7->14->21 force power per block. 50/50 Works for saber1, don't work for 2h and dual swords at all.
 ///
 
 - deflecting and parring with saber costs power.

@@ -1426,6 +1426,10 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 			}
 
 			PlayerAcc_SetNewGamePlus_count(ent, PlayerAcc_GetNewGamePlus_count(ent) + ng_points);
+			Accounts_Prof_ClearData(ent->client->pers.Lmd.account);
+			
+			Professions_SetDefaultSkills(ent->client->pers.Lmd.account, PlayerAcc_Prof_GetProfession(ent));
+			Profession_UpdateSkillEffects(ent, PlayerAcc_Prof_GetProfession(ent));
 			WP_InitForcePowers(ent);
 
 		}
@@ -1449,8 +1453,8 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 	}
 	else {
 
-		Disp(ent, "^3WARNING: ^1The command will reset your progress for the active profession!\n ^1You can reset the newgameplus progress by ^3newgame reset ^1command, it's irreversible!");
-		if (lmd_old_commands_disp.integer == 1) Disp(ent, "^3Type ^5newgame start ^3to start New Game Plus mode.\n To gain benefits from NGP your current profession must be at least at ^640 level^3.");
+		Disp(ent, "^3WARNING: ^1The command will reset your progress for the active profession!\n^1You can reset the newgameplus progress by ^3newgame reset ^1command, it's irreversible!");
+		if (lmd_old_commands_disp.integer == 1) Disp(ent, "^3Type ^5newgame start ^3to start New Game Plus mode.\nTo gain benefits from NGP your current profession must be at least at ^640 level^3.");
 		else trap_SendServerCommand(ent->s.number, "chat \"^3Type ^5newgame start ^3to start New Game Plus mode. To gain benefits from NGP your current profession must be at least at ^640 level^3.\"");
 	}
 

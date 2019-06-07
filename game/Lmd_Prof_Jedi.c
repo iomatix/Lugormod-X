@@ -262,7 +262,7 @@ const char *jediSkill_Passive_thousandcuts_Descr[] = {
 STD_FORCEPOWER_FUNCS(thousandcuts, FP_PASSIVE_thousandcuts)
 
 profSkill_t jediSkill_Passive_thousandcuts = {
-	"The Thousand Cuts",
+	"TheThousandCuts",
 	"Your saber attacks will become more deadly.",
 	jediSkill_Passive_thousandcuts_Descr,
 
