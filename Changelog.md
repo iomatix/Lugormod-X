@@ -79,12 +79,13 @@
 - Mercenary "Weapon" skill update. ✔️
 - Removed spacing in the skill names. ✔️
 - lmd_old_commands_disp added option "2". ✔️
-
+- Blocking costs force now. The cost is 7->14->21 force power per block. ✔️ 
+- Evasion costs force now. The cost is 8 force power per evasion. ✔️  
 
 //
-- Blocking costs force now. The cost is 7->14->21 force power per block. 50/50 Works for saber1, don't work for 2h and dual swords at all.
-///
 
+///
+- Add jetpack model on the ground.
 - Search a new ways for spending credits.
 - experience boosters/ packs for CR? lmd_exp_boosters
 - Level 5 Jump. The player can not use it to fly but jumps higher. ??

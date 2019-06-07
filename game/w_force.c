@@ -6665,6 +6665,7 @@ qboolean Jedi_DodgeEvasion( gentity_t *self, gentity_t *shooter, trace_t *tr, in
 		return qfalse;
 	}
 
+
 	if (g_forceDodge.integer == 2)
 	{
 		if (self->client->ps.fd.forcePowersActive)
@@ -6740,6 +6741,15 @@ qboolean Jedi_DodgeEvasion( gentity_t *self, gentity_t *shooter, trace_t *tr, in
 	default:
 		return qfalse;
 	}
+
+	//iomatix:
+	//evasion cost:
+	if (self->client->ps.fd.forcePower < 8)
+	{
+		return qfalse;
+	}
+	self->client->ps.fd.forcePower -= 8;
+
 
 	if ( dodgeAnim != -1 )
 	{
