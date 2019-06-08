@@ -244,10 +244,10 @@ float forceJumpStrength[NUM_FORCE_POWER_LEVELS + 2] =
 {
 	JUMP_VELOCITY,//normal jump
 	420,
-	590,
-	840,
-	940,
-	960
+	600,
+	700,
+	800,
+	900
 };
 
 //rww - Get a pointer to the bgEntity by the index
@@ -1446,7 +1446,7 @@ qboolean PM_ForceJumpingUp(void)
 		//RoboPhred
 #ifndef LMD_NEW_JUMP
 		&& (pm->ps->velocity[2] > 0 
-		|| pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5)
+		|| (pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5 && lmd_force_is_double_jump.integer != 0)) //iomatix turn of flying ??
 #endif
 		)//going up
 	{
@@ -3315,7 +3315,7 @@ static qboolean PM_CheckJump( void )
 
 					//need to scale this down, start with height velocity (based on max force jump height) and scale down to regular jump vel
 					//Lugormod
-					if (pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5
+					if (pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5  && lmd_force_is_double_jump.integer != 0
 						&& pm->ps->groundEntityNum == ENTITYNUM_NONE) {
 							vec_t velocity = (forceJumpHeight[pm->ps->fd.forcePowerLevel[FP_LEVITATION]]-curHeight)/forceJumpHeight[pm->ps->fd.forcePowerLevel[FP_LEVITATION]]*forceJumpStrength[pm->ps->fd.forcePowerLevel[FP_LEVITATION]];//JUMP_VELOCITY;
 							velocity /= 10;
@@ -4092,11 +4092,11 @@ static qboolean PM_CheckJump( void )
 	}
 	}
 	*/
-	if ( pm->ps->groundEntityNum == ENTITYNUM_NONE )
+	if (pm->ps->groundEntityNum == ENTITYNUM_NONE )
 	{
-		if (pm->cmd.upmove > 0 &&
-			pm->ps->fd.forcePowerLevel[FP_LEVITATION] 
-		== FORCE_LEVEL_5)
+		//iomatix rework
+		if (pm->cmd.upmove > 0 && PM_GroundDistance() <= 2000 &&
+			pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5 && lmd_force_is_double_jump.integer != 0) //turn it off for level 5
 		{ //Lugormod Jump in air
 
 			if (!(pm->ps->pm_flags & PMF_JUMP_HELD)) {
@@ -4104,19 +4104,33 @@ static qboolean PM_CheckJump( void )
 				{
 					return qfalse;
 				}
+
+				//PM_SetForceJumpZStart(pm->ps->origin[2]);//so we don't take damage if we land at same height
 				pm->ps->fd.forcePower -= 5;
-				pm->ps->pm_flags |= PMF_JUMP_HELD;
 				pm->ps->fd.forcePowersActive |= (1 << FP_LEVITATION);
+
+				//Jumping
+				pml.groundPlane = qfalse;
+				pml.walking = qfalse;
+				pm->ps->pm_flags |= PMF_JUMP_HELD;
+				PM_SetForceJumpZStart(pm->ps->origin[2]);
+				PM_AddEvent(EV_JUMP);
+				//iomatix:
+				//Set the animations
+				if (pm->ps->gravity > 0 && !BG_InSpecialJump(pm->ps->legsAnim))
+				{
+					PM_JumpForDir();
+				}
+
+				return qtrue;
+
+
 			}
 
-			//Set the animations
-			if ( pm->ps->gravity > 0 && !BG_InSpecialJump( pm->ps->legsAnim ) )
-			{
-				PM_JumpForDir();
-			}
-			//PM_SetForceJumpZStart(pm->ps->origin[2]);//so we don't take damage if we land at same height
 
-			return qtrue;
+		
+
+
 		}
 
 		return qfalse;

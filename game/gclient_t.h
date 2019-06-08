@@ -117,6 +117,8 @@ typedef struct {
 		int killstreak;
 		int killstreak_bounty; //bounty for killstreaks (to save it after death)
 
+							   //iomatix
+		int force_cooldown[NUM_FORCE_POWERS]; //cooldown for forces
 		//RoboPhred:
 		//void            *nickPointer;
 		Account_t *account;

@@ -52,6 +52,12 @@ Starting credits value for new registered account. Default 1350.
 - **`lmd_old_commands_disp`**
 
 Hides new commands from the chat, turn them back to the console log only if 1. If 2 most messages will appear on the chat. Defalut 0. (1 is Old lugor-style)
+- **`lmd_is_forcecooldown`**
+
+Adds cooldown for Force User's force powers if 1. Avoid spamming forces. Default 1. (0 to turn off the cooldown feature)
+- **`lmd_force_is_double_jump`**
+
+Allows to turn off the double jump if 0. Default 1.
 
 **They are usable in the game**
 

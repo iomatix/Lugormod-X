@@ -14,6 +14,7 @@ int WP_AbsorbConversion(gentity_t *attacked, int atdAbsLevel, gentity_t *attacke
 void BotForceNotification (gclient_t *bot, gentity_t *attacker);
 
 qboolean Force_Grip_Available(gentity_t *self, const void* vData) {
+	if (isForce_Cooldown(self, FP_GRIP))return qfalse;
 	if (self->client->ps.fd.forceGripUseTime > level.time) return qfalse;
 	//TODO: move into generic usability code?
 	if (self->client->ps.forceHandExtend != HANDEXTEND_NONE)	return qfalse;
@@ -76,7 +77,7 @@ qboolean Force_Grip_Start(gentity_t *self, const void* vData) {
 		self->client->ps.forceHandExtend = HANDEXTEND_FORCE_HOLD;
 		self->client->ps.forceHandExtendTime = level.time + 5000;
 
-		BG_ForcePowerDrain( &self->client->ps, FP_GRIP, 30 );
+		BG_ForcePowerDrain( &self->client->ps, FP_GRIP, data->forcedrain );
 	}
 	else {
 		self->client->ps.fd.forceGripEntityNum = ENTITYNUM_NONE;
@@ -261,8 +262,10 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 
 void Force_Grip_Stop(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceGrip_t);
+	//iomatix: 
+	Force_Cooldown(self, 1700, FP_GRIP);
 	//Ufo:
-	self->client->ps.fd.forceGripUseTime = level.time + 3000; //cooldown
+	self->client->ps.fd.forceGripUseTime = level.time + 300; //cooldown
 	if (data->throatcrush && g_entities[self->client->ps.fd.forceGripEntityNum].client &&
 		g_entities[self->client->ps.fd.forceGripEntityNum].health > 0 &&
 		g_entities[self->client->ps.fd.forceGripEntityNum].inuse &&
@@ -287,12 +290,11 @@ void Force_Grip_Stop(gentity_t *self, const void *vData) {
 }
 
 forceGrip_t Force_Grip_Levels[5] = {
-	//Ufo: fixed omni of level 3
-	{MAX_GRIP_DISTANCE,	2, 0,	25000, 0, GRIP_DRAIN_AMOUNT, 1, qfalse,	qfalse},
-	{MAX_GRIP_DISTANCE,	2, 20,	20000, 1, GRIP_DRAIN_AMOUNT, 1, qtrue,	qfalse},
-	{MAX_GRIP_DISTANCE,	2, 40,	15000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
-	{MAX_GRIP_DISTANCE * 2,	2, 40,	10000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
-	{MAX_GRIP_DISTANCE * 4,	2, 40,	5000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE,	    1, 15,	6000, 0, GRIP_DRAIN_AMOUNT*2, 1, qfalse,	qfalse},
+	{MAX_GRIP_DISTANCE,	    2, 25,	9000, 1, GRIP_DRAIN_AMOUNT*2, 1, qtrue,	    qfalse},
+	{MAX_GRIP_DISTANCE*2,	3, 45,	12000, 2, GRIP_DRAIN_AMOUNT*3, 1, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE*3,	4, 65,	20000, 2, GRIP_DRAIN_AMOUNT*4, 2, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE*4,	5, 85,	30000, 2, GRIP_DRAIN_AMOUNT*5, 1, qtrue,	qtrue},
 };
 
 forcePower_t Force_Grip = {
@@ -307,6 +309,7 @@ forcePower_t Force_Grip = {
 
 
 qboolean Force_Lightning_Available(gentity_t *self, const void *vData) {
+	if (isForce_Cooldown(self, FP_LIGHTNING))return qfalse;
 	//TODO: move these to generic usability
 	if (self->client->ps.forceHandExtend != HANDEXTEND_NONE)
 		return qfalse;
@@ -370,7 +373,7 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 		if (target->client->noLightningTime >= level.time) {
 			//give them power and don't hurt them.
 			target->client->ps.fd.forcePower++;
-			if (target->client->ps.fd.forcePower > 100) target->client->ps.fd.forcePower = 100;
+			if (target->client->ps.fd.forcePower > target->client->ps.fd.forcePowerMax) target->client->ps.fd.forcePower = target->client->ps.fd.forcePowerMax;
 			return;
 		}
 	
@@ -542,6 +545,7 @@ qboolean Force_Lightning_Run(gentity_t *self, const void* vData) {
 
 void Force_Lightning_Stop(gentity_t *self, const void* vData) {
 	GETFORCEDATA(forceLightning_t);
+	Force_Cooldown(self, 1300, FP_LIGHTNING);
 	if ( data->debounce )
 		self->client->ps.fd.forcePowerDebounce[FP_LIGHTNING] = level.time + data->debounce; //3000;
 
@@ -553,11 +557,11 @@ void Force_Lightning_Stop(gentity_t *self, const void* vData) {
 
 forceLightning_t Force_Lightning_Levels[5] = {
 	//Ufo: fixed radius of level 2
-	{2048,				0, 0,		3000, 1, qfalse},
-	{2048,				0, Q3_INFINITE,	1500, 1, qfalse},
-	{FORCE_LIGHTNING_RADIUS,	1, Q3_INFINITE,	1500, 1, qtrue},
-	{FORCE_LIGHTNING_RADIUS * 1.5,	1, Q3_INFINITE,	1500, 1, qtrue},
-	{FORCE_LIGHTNING_RADIUS * 2,	1, Q3_INFINITE,	1500, 1, qtrue}
+	{2048,				         0, Q3_INFINITE,    1400, 2, qfalse},
+	{2048,	                     0, Q3_INFINITE,	1500, 1, qfalse},
+	{FORCE_LIGHTNING_RADIUS,	 1, Q3_INFINITE,	1600, 1, qtrue},
+	{FORCE_LIGHTNING_RADIUS*1.5, 1, Q3_INFINITE,	1700, 2, qtrue},
+	{FORCE_LIGHTNING_RADIUS*2, 	 1, Q3_INFINITE,	1800, 1, qtrue}
 };
 
 forcePower_t Force_Lightning = {
@@ -636,11 +640,11 @@ void Force_Rage_Stop(gentity_t *self, const void *vData) {
 }
 
 forceRage_t Force_Rage_Levels[5] = {
-	{2, 8000,	150,	10000, 50},
-	{2, 14000,	300, 	10000, 50},
-	{2, 20000,	450,	10000, 50},
-	{1, 20000,	600,	10000, 50},
-	{1, 20000,	750,	10000, 50},
+	{2, 8000,	150,	5000, 30},
+	{2, 14000,	300, 	7000, 35},
+	{2, 20000,	450,	9000, 40},
+	{1, 25000,	600,	11000, 50},
+	{1, 30000,	750,	13000, 60},
 };
 
 forcePower_t Force_Rage = {
@@ -749,11 +753,11 @@ qboolean Force_TeamReplenish_Start(gentity_t *self, const void *vData) {
 
 forceTeamReplenish_t Force_TeamReplenish_Levels[5] = {
 	//Ufo: fixed forcepower of level 5
-	{256,		50,	33, 25, 2000, 50},
-	{256 * 1.5,	50,	33, 25, 2000, 33},
-	{256 * 2,	50,	33, 25, 2000, 25},
-	{256 * 3,	50,	33, 25, 2000, 25},
-	{256 * 3,	100,	66, 50, 2000, 50},
+	{256,		25,	11, 15, 2000, 20},
+	{256 * 1.5,	30,	15, 20, 2000, 25},
+	{256 * 2,	50,	33, 25, 2000, 30},
+	{256 * 3,	55,	35, 30, 2000, 35},
+	{256 * 3,	100,70, 60, 2000, 75},
 };
 
 forcePower_t Force_TeamReplenish = {
@@ -768,6 +772,7 @@ forcePower_t Force_TeamReplenish = {
 
 
 qboolean Force_Drain_Available(gentity_t *self, const void *vData) {
+	if (isForce_Cooldown(self, FP_DRAIN)) return qfalse;
 	if(self->client->ps.forceHandExtend != HANDEXTEND_NONE)
 		return qfalse;
 	if(self->client->ps.weaponTime > 0)
@@ -963,6 +968,7 @@ qboolean Force_Drain_Run(gentity_t *self, const void *vData) {
 
 void Force_Drain_Stop(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceDrain_t);
+	Force_Cooldown(self, 2700, FP_DRAIN);
 	self->client->ps.fd.forcePowerDebounce[FP_DRAIN] = level.time + data->debounce;
 
 	if (self->client->ps.forceHandExtend == HANDEXTEND_FORCE_HOLD)
@@ -972,12 +978,12 @@ void Force_Drain_Stop(gentity_t *self, const void *vData) {
 }
 
 forceDrain_t Force_Drain_Levels[5] = {
-	//Ufo: drainlocking no longer possible
-	{2, 800, MAX_DRAIN_DISTANCE, 0, 0,		3000, 5},
-	{3, 800, MAX_DRAIN_DISTANCE, 0, Q3_INFINITE,	3000, 5},
-	{4, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1500, 5},
-	{6, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1500, 7},
-	{9, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1500, 10},
+	
+	{1, 800, MAX_DRAIN_DISTANCE, 0, Q3_INFINITE,	1500, 2},
+	{2, 800, MAX_DRAIN_DISTANCE, 0, Q3_INFINITE,	1600, 3},
+	{3, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1700, 4},
+	{4, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1800, 5},
+	{4, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1900, 4},
 };
 
 forcePower_t Force_Drain = {

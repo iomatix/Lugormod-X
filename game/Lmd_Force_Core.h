@@ -20,3 +20,7 @@ void* Force_GetPlayerForceData(gentity_t *ent, int power);
 
 #define GETFORCEDATA(type_t) type_t *data = (type_t *)vData
 #define FORCELEVELDATA(data, type) {sizeof(type), (void **)data}
+
+//iomatix cooldown:
+extern void Force_Cooldown(gentity_t *self, int cd_ms, int FP_FORCEPOWER);
+extern qboolean isForce_Cooldown(gentity_t *self, int FP_FORCEPOWER);

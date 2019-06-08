@@ -1119,6 +1119,8 @@ extern	vmCvar_t	lmd_is_lethality_add_damage;
 extern	vmCvar_t	lmd_is_thousandcuts_lethality;
 extern	vmCvar_t	lmd_is_buy_level;
 extern  vmCvar_t	lmd_old_commands_disp;
+extern vmCvar_t lmd_is_forcecooldown;
+extern vmCvar_t lmd_force_is_double_jump;
 #include "../namespace_begin.h"
 
 // RoboPhred

@@ -913,7 +913,7 @@ enum
 
 #define	FORCE_LEVEL_4 (FORCE_LEVEL_3+1)
 #define	FORCE_LEVEL_5 (FORCE_LEVEL_4+1)
-
+#define	FORCE_LEVEL_6 (FORCE_LEVEL_5+1)
 //rww - a C-ified structure version of the class which fires off callbacks and gives arguments to update ragdoll status.
 enum sharedERagPhase
 {

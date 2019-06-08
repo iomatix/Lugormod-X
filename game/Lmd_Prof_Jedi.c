@@ -303,7 +303,7 @@ int Get_Jedi_hp_maxs_value(gentity_t *ent) //Will (Health points)
 	int value = 40; //starting health
 	
 		
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.1); //scale health
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 3.4); //scale health
 	
 
 	int skillHP = Lmd_Prof_Jedi_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_hp_maxs);
@@ -1072,7 +1072,7 @@ void Jedi_Spawn(gentity_t *ent) {
 	else
 	{
 		ent->client->ps.trueJedi = qtrue;
-		//not sure is it bug-free way but seems to be the only one as far as I looked for something more related with this for about 8 hours... ._.
+		//not sure is it bug-free way but seems to be the only one not as bugged as the other was far as I looked for something more related with this for about 8 hours... ._.
 	}
 	//make sure they only use the saber
 	ent->client->ps.weapon = WP_SABER;

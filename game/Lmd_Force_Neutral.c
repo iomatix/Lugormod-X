@@ -77,8 +77,13 @@ qboolean Force_Levitation_Available(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceLevitate_t);
 	if ( self->s.groundEntityNum == ENTITYNUM_NONE && 
 		(!(data->airjump) || self->client->ps.fd.forcePower < 1)) {
+
+		Com_Printf("Levi Avaialbe false");
+
 			return qfalse;
 	}
+	Com_Printf("Levi Avaialbe true");
+
 	return qtrue;
 }
 
@@ -86,6 +91,7 @@ qboolean Force_Levitation_Start(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceLevitate_t);
 	float forceJumpChargeInterval;
 	vec3_t	jumpVel;
+
 
 	self->client->fjDidJump = qtrue;
 
@@ -101,27 +107,33 @@ qboolean Force_Levitation_Start(gentity_t *self, const void *vData) {
 
 	Force_DrainForceEnergy( self, FP_LEVITATION, 
 		//Is this right?  forceJumpChargeInterval was already divided by charge and frame, yet its done again here.
-		(int)(self->client->ps.fd.forceJumpCharge/forceJumpChargeInterval/(FORCE_JUMP_CHARGE_TIME/FRAMETIME)*data->forcepower));
+		(int)(self->client->ps.fd.forceJumpCharge/forceJumpChargeInterval/(FORCE_JUMP_CHARGE_TIME)*data->forcepower));
 	//self->client->ps.fd.forcePowerDuration[FP_LEVITATION] = level.time + self->client->ps.weaponTime;
 	self->client->ps.fd.forceJumpCharge = 0;
 	self->client->ps.forceJumpFlip = qtrue;
+
+	
 	return qtrue;
 }
 
 qboolean Force_Levitation_Run(gentity_t *self, const void *vData) {
-	if ( self->client->ps.groundEntityNum != ENTITYNUM_NONE && !self->client->ps.fd.forceJumpZStart )
+	if ((self->client->ps.groundEntityNum != ENTITYNUM_NONE && !self->client->ps.fd.forceJumpZStart)) {
+	
+
 		return qfalse;
+	}
+	
 	return qtrue;
 }
 
 extern float forceJumpStrength[NUM_FORCE_POWER_LEVELS + 2];
 
 forceLevitate_t Force_Levitation_Levels[5] = {
-	{forceJumpStrength[1], 10, qfalse},
-	{forceJumpStrength[2], 10, qfalse},
+	{forceJumpStrength[1], 5, qfalse},
+	{forceJumpStrength[2], 8, qfalse},
 	{forceJumpStrength[3], 10, qfalse},
-	{forceJumpStrength[4], 10, qfalse},
-	{forceJumpStrength[5], 10, qfalse}, //iomatix no double jump qtrue->qfalse
+	{forceJumpStrength[4], 12, qfalse},
+	{forceJumpStrength[5], 14, qfalse},
 };
 forcePower_t Force_Levitation = {
 	Force_Levitation_Available,
@@ -137,6 +149,7 @@ forcePower_t Force_Levitation = {
 extern int speedLoopSound;
 qboolean Force_Speed_Start( gentity_t *self, const void *vData ){
 	GETFORCEDATA(forceSpeed_t);
+	if(isForce_Cooldown(self, FP_SPEED))return qfalse;
 	self->client->ps.fd.forcePowerDuration[FP_SPEED] = level.time + data->duration;
 	G_Sound( self, CHAN_BODY, G_SoundIndex("sound/weapons/force/speed.wav") );
 	G_Sound( self, TRACK_CHANNEL_2, speedLoopSound );
@@ -145,6 +158,7 @@ qboolean Force_Speed_Start( gentity_t *self, const void *vData ){
 }
 
 void Force_Speed_Stop(gentity_t *self, const void *data) {
+	Force_Cooldown(self, 600, FP_SPEED);
 	G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_2-50], CHAN_VOICE);
 }
 
@@ -936,7 +950,7 @@ forcePower_t Force_Pull = {
 extern int seeLoopSound;
 qboolean Force_See_Start(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceSee_t);
-
+	if(isForce_Cooldown(self,FP_SEE))return qfalse;
 	self->client->ps.forceAllowDeactivateTime = level.time + 1500;
 
 	G_Sound(self, CHAN_AUTO, G_SoundIndex("sound/weapons/force/see.wav"));
@@ -949,6 +963,7 @@ qboolean Force_See_Start(gentity_t *self, const void *vData) {
 }
 
 void Force_See_Stop(gentity_t *self, const void *vData) {
+	Force_Cooldown(self, 850, FP_SEE);
 	G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_5-50], CHAN_VOICE);
 }
 

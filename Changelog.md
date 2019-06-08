@@ -84,11 +84,18 @@
 - Level up checking function is improved. ✔️
 - Passives add stats before first death. ✔️
 - Thousand Cuts and overload skills bug fix. ✔️
+- Heal adjusted. ✔️
+- Force cooldowns added. ✔️
+- lmd_is_forcecooldown added.  ✔️
+- All forces are reworked. ✔️
+- Account live-time reworked. ✔️
+- Flying with Jump Level 5 depends on lmd_force_is_double_jump value now.  ✔️
+- Flying with Jump Level 5 is reworked. ✔️
 
 //
 
 ///
-
+- accountedit passwd.
 - Search a new ways for spending credits.
 - experience boosters/ packs for CR? lmd_exp_boosters
 - Level 5 Jump. The player can not use it to fly but jumps higher. ??

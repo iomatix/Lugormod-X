@@ -610,7 +610,7 @@ qboolean Lmd_Accounts_Player_TryLogin(gentity_t *ent, char *username, char *pass
 	if (Lmd_Accounts_Player_Login(ent, acc)) {
 		if (!Auths_AccHasAdmin(acc)) {
 			trap_SendServerCommand(ent->s.number, "chat \"^2Login successful.\"");
-			Disp(ent, va("^3The account will expire in ^2%i^3 days if you do not login before that.", accountLiveTime(Accounts_Prof_GetLevel(acc))));
+			Disp(ent, va("^3The account will expire in ^2%i^3 days if you do not login before that.", accountLiveTime(Accounts_GetLevel_merc(acc)+Accounts_GetLevel_jedi(acc)+(Accounts_GetNewGamePlus_count(acc)*10))));
 		}
 		else {
 			trap_SendServerCommand(ent->s.number, "chat \"^2Login successful.\"");

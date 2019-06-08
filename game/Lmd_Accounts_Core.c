@@ -411,9 +411,8 @@ int accountLiveTime(int level) {
 
 qboolean accountLiveTimeCheck(Account_t *acc) {
 	int now = Time_Days(Time_Now());
-	int keep = accountLiveTime(Accounts_Prof_GetLevel(acc));
-	if(now - Time_Days(acc->lastLogin) > keep)
-		return qfalse;
+	int keep = accountLiveTime(Accounts_GetLevel_merc(acc) + Accounts_GetLevel_jedi(acc) + (Accounts_GetNewGamePlus_count(acc)*10));
+	if(now - Time_Days(acc->lastLogin) > keep) return qfalse;
 	return qtrue;
 }
 

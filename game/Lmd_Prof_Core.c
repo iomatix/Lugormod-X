@@ -1051,7 +1051,7 @@ void Cmd_SkillSelect_f(gentity_t *ent, int iArg) {
 
 	if (!Professions[prof]->primarySkill.subSkills.count) {
 		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3This profession has no skills."); else
-			trap_SendServerCommand(ent->s.number, "chat \"3This profession has no skills.\"");
+			trap_SendServerCommand(ent->s.number, "chat \"^3This profession has no skills.\"");
 		return;
 	}
 	Disp(ent, "^4===========================================");

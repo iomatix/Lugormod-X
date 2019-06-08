@@ -1361,7 +1361,7 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 	if (g_meditateExtraForce.integer && g_gametype.integer == GT_FFA && self->client->ps.legsAnim == BOTH_MEDITATE && self->client->ps.torsoAnim == BOTH_MEDITATE && PlayerAcc_Prof_GetProfession(self) <= PROF_JEDI) {
 		
 		fpmax += extraForce;
-		if(!overrideAmt || overrideAmt <= 0) overrideAmt = fpmax / 10;  //iomatix: 10% additional regen while meditating
+		if(!overrideAmt || overrideAmt <= 0) overrideAmt = 20;  //iomatix: x->20% additional regen while meditating
 	}
 	if (self->client->ps.fd.forcePower >= fpmax)
 	{
@@ -1373,7 +1373,7 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 
     if ( overrideAmt )
 	{ //custom regen amount
-		self->client->ps.fd.forcePower += overrideAmt + passive_regen + overload;
+		self->client->ps.fd.forcePower += passive_regen + overload+( passive_regen + overload)*overrideAmt/100;// (x% faster)
 	}
 	else
 	{ //otherwise, just 1

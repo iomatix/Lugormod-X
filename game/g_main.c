@@ -343,8 +343,8 @@ vmCvar_t	lmd_is_lethality_add_damage;
 vmCvar_t    lmd_is_thousandcuts_lethality;
 vmCvar_t	lmd_is_buy_level;
 vmCvar_t	lmd_old_commands_disp;
-
-								 
+vmCvar_t    lmd_is_forcecooldown;
+vmCvar_t lmd_force_is_double_jump;
 //RoboPhred:
 vmCvar_t lmd_DataPath;
 vmCvar_t lmd_stashrate;
@@ -535,7 +535,7 @@ static cvarTable_t		gameCvarTable[] = {
 "Number of days to keep an account between user logins."
 },
 
-{ &lmd_accLevelDays, "lmd_accLevelDays", "7", CVAR_ARCHIVE, 0, qfalse, qfalse,
+{ &lmd_accLevelDays, "lmd_accLevelDays", "3", CVAR_ARCHIVE, 0, qfalse, qfalse,
 "Level modifier for days to keep an account between user logins.\n"
 "Days added is account level multiplied by this value."
 },
@@ -620,7 +620,7 @@ static cvarTable_t		gameCvarTable[] = {
 },
 */
 
-{ &lmd_enableCorpseDrag, "lmd_enableCorpseDrag", "0", CVAR_ARCHIVE, 0, qtrue, qfalse,
+{ &lmd_enableCorpseDrag, "lmd_enableCorpseDrag", "1", CVAR_ARCHIVE, 0, qtrue, qfalse,
 "Experimental.  Enable dragging corpses with the use key.",
 },
 
@@ -724,7 +724,7 @@ static cvarTable_t		gameCvarTable[] = {
 
 { &g_svfps, "sv_fps", "20", 0, 0, qtrue },
 
-{ &g_forceRegenTime, "g_forceRegenTime", "100", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue },
+{ &g_forceRegenTime, "g_forceRegenTime", "150", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue },
 
 { &g_spawnInvulnerability, "g_spawnInvulnerability", "3000", CVAR_ARCHIVE, 0, qtrue },
 
@@ -895,7 +895,8 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_is_thousandcuts_lethality, "lmd_is_thousandcuts_lethality", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_is_buy_level, "lmd_is_buy_level", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_old_commands_disp, "lmd_old_commands_disp", "0",CVAR_ARCHIVE,0,qfalse },
-
+{ &lmd_is_forcecooldown, "lmd_is_forcecooldown", "1",CVAR_ARCHIVE,0,qfalse},
+{ &lmd_force_is_double_jump, "lmd_force_is_double_jump", "1",CVAR_ARCHIVE,0,qfalse },
 
 // Lugormod cvars:
 { &g_noVoteTime, "g_noVoteTime", "5", CVAR_ARCHIVE,0, qfalse, qfalse,

@@ -341,6 +341,8 @@ struct gentity_s {
 
 	gitem_t		*item;			// for bonus items
 
+
+
 	//        qboolean         saveit;             //Lugormod is saved with saveit
 	//char            *spawnString;         //Lugormod spawn string
 	//qboolean        placed;               //Lugormod dynamically placed

@@ -6,20 +6,21 @@
 #include "w_saber.h"
 #include "Lmd_Accounts_Friends.h"
 
+
 qboolean isBuddy(gentity_t *ent,gentity_t *other);
 void WP_AddToClientBitflags(gentity_t *ent, int entNum);
 
 qboolean Force_Heal_Available(gentity_t *self, const void *vData) {
-	if (self->health >= self->client->ps.stats[STAT_MAX_HEALTH])
-		return qfalse;
+	if (self->health >= self->client->ps.stats[STAT_MAX_HEALTH]) return qfalse;
+	if (isForce_Cooldown(self,FP_HEAL)) return qfalse; //if is on cooldown
 	return qtrue;
 }
 
 qboolean Force_Heal_Start(gentity_t *self, const void* vData) {
 	GETFORCEDATA(forceHeal_t);
-
-
-
+    //cooldown
+	Force_Cooldown(self, 1500,FP_HEAL); //1.5s
+	
 	self->health += data->health;
 	if (self->health > self->client->ps.stats[STAT_MAX_HEALTH]){
 		self->health = self->client->ps.stats[STAT_MAX_HEALTH];
@@ -76,12 +77,12 @@ void Force_Heal_Stop(gentity_t *self) {
 #endif
 
 forceHeal_t Force_Heal_Levels[5] = {
-	//Ufo: nerfed
-	{10, 50},
-	{15, 50},
-	{25, 50},
+	//iomatix: adjusted for cooldown feature
+	{10, 25},
+	{20, 40},
 	{30, 50},
-	{35, 50},
+	{50, 75},
+	{75, 100},
 };
 
 forcePower_t Force_Heal = {
@@ -269,6 +270,8 @@ qboolean ForceTelepathyCheckDirectNPCTarget( gentity_t *self, trace_t *tr, qbool
 }
 
 qboolean Force_Telepathy_Available(gentity_t *self, const void *data) {
+	//iomatix:
+	if(isForce_Cooldown(self, FP_TELEPATHY))return qfalse;
 	//Ufo:
 	if (g_gametype.integer != GT_FFA && (self->client->ps.powerups[PW_REDFLAG] || self->client->ps.powerups[PW_BLUEFLAG]))
 	{ //can't mindtrick while carrying the flag
@@ -378,6 +381,9 @@ qboolean Force_Telepathy_Start(gentity_t *self, const void *vData) {
 void Force_Telepathy_Stop(gentity_t *self, const void *data) {
 	//Ufo:
 	//G_Sound( self, CHAN_AUTO, G_SoundIndex("sound/weapons/force/distractstop.wav") );
+
+	Force_Cooldown(self, 1000, FP_TELEPATHY); //iomatix cooldown 1 sec
+
 	self->client->ps.fd.forcePowerDuration[FP_TELEPATHY] = level.time + 0;
 	self->client->ps.fd.forceMindtrickTargetIndex = 0;
 	self->client->ps.fd.forceMindtrickTargetIndex2 = 0;
@@ -409,6 +415,7 @@ extern int protectLoopSound;
 qboolean Force_Protect_Start(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceProtect_t);
 	forceAbsorb_t *absorbData = (forceAbsorb_t *)Force_GetPlayerForceData(self, FP_ABSORB);
+	if (isForce_Cooldown(self, FP_PROTECT))return qfalse;
 	// Make sure to turn off Force Rage and Force Absorb.
 	if (self->client->ps.fd.forcePowersActive & (1 << FP_RAGE) )
 		Force_StopPower( self, FP_RAGE );
@@ -436,6 +443,7 @@ qboolean Force_Protect_Run(gentity_t *self, const void *vData) {
 			return qfalse;
 		self->client->ps.fd.forcePowerDebounce[FP_PROTECT] = level.time + data->draintime;
 	}
+	
 	return qtrue;
 }
 
@@ -479,6 +487,7 @@ int Force_Protect_ModifyDamage(gentity_t *targ, int take) {
 }
 
 void Force_Protect_Stop(gentity_t *self, const void *vData) {
+	Force_Cooldown(self, 1000, FP_PROTECT);
 	G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_3-50], CHAN_VOICE);
 }
 
@@ -505,6 +514,7 @@ forcePower_t Force_Protect = {
 extern int absorbLoopSound;
 qboolean Force_Absorb_Start(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceAbsorb_t);
+	if (isForce_Cooldown(self, FP_ABSORB))return qfalse;
 	// Make sure to turn off Force Rage and Force Protection.
 	if (self->client->ps.fd.forcePowersActive & (1 << FP_RAGE) )
 		Force_StopPower( self, FP_RAGE );
@@ -537,6 +547,7 @@ qboolean Force_Absorb_Run(gentity_t *self, const void *vData) {
 }
 
 void Force_Absorb_Stop(gentity_t *self, const void *vData) {
+	Force_Cooldown(self, 1000, FP_ABSORB);
 	G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_3-50], CHAN_VOICE);
 }
 
@@ -656,12 +667,12 @@ qboolean Force_TeamHeal_Start(gentity_t *self, const void *vData) {
 }
 
 forceTeamHeal_t Force_TeamHeal_Levels[5] = {
-	//Ufo: fixed forcepower of level 5
-	{256,		50,		33, 25, 2000, 50},
-	{256 * 1.5,	50,		33,	25, 2000, 33},
-	{256 * 2,	50,		33,	25, 2000, 25},
-	{256 * 3,	50,		33,	25, 2000, 25},
-	{256 * 3,	100,	66, 50, 2000, 50},
+	//iomatix: re-adjusted
+	{256,		25,		11, 15, 2000, 20},
+	{256 * 1.5,	30,		15,	20, 2000, 25},
+	{256 * 2,	50,		33,	25, 2000, 30},
+	{256 * 3,	55,		35,	30, 2000, 35},
+	{256 * 3,	100,	70, 60, 2000, 75},
 };
 
 forcePower_t Force_TeamHeal = {

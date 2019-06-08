@@ -858,3 +858,15 @@ cmdEntry_t forceDebugCommands[] = {
 
 #endif
 #endif
+
+//iomatix cooldown:
+void Force_Cooldown(gentity_t *self, int cd_ms, int FP_FORCEPOWER)
+{
+	self->client->pers.Lmd.force_cooldown[FP_FORCEPOWER] = level.time + cd_ms;
+}
+qboolean isForce_Cooldown(gentity_t *self, int FP_FORCEPOWER)
+{
+	if (lmd_is_forcecooldown.integer != 0 && level.time < self->client->pers.Lmd.force_cooldown[FP_FORCEPOWER])return qtrue;
+	return qfalse;
+}
+//

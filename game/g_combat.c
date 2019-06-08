@@ -4793,7 +4793,7 @@ void G_Knockdown( gentity_t *victim, int duration)
 	}
 
 	if(duration == 0)
-		duration = 1100;
+		duration = 1300;
 	/*
 	//Lugormod meditate and godmode protect 
 	if ( g_meditateProtect.integer &&
@@ -5333,13 +5333,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			targ->client->ps.saberInFlight))
 		{//if the target is a trueNonJedi, take more saber damage... combined with the 1.5 in the w_saber stuff, this is 6 times damage!
 			//iomatix remake
-			if ( damage < 100 ) damage *= 4;
-			else if (damage < 200) damage *= 3;
-			else damage *= 2; //saber x2 damage when no saber in hand of the target
-			
-				
-				
-
+			//if ( damage < 35 ) damage *= 4;
+			//else if (damage < 75) damage *= 3;
+			damage *= 2; //saber x2 damage when no saber in hand of the target
+			//iomatix: nerfed now.
 			
 		}
 
@@ -5529,14 +5526,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		if (attacker->client->pers.Lmd.account) { //is logged in?
 			if (PlayerAcc_Prof_GetProfession(attacker) == PROF_MERC) { //mercenary class check 
 
-
-
-				if (PlayerProf_Merc_GetLethalitySkill(attacker) > 0) {  //is lethality upgraded?
-					//4->8->12->16->20 check the lethality descr   //update -> 5 10 15 20 25 
-					lethalityoutput = (damage * PlayerProf_Merc_GetLethalitySkill(attacker)*5)/100; //gets the percent of damage value
-					if (lmd_is_lethality_add_damage.integer == 0) damage -= lethalityoutput; //default add_damage = 0. It converts the damage instead of adding the damage.
-				}
-
 				
 				//MASTER OF THE RIFLES:
 				//5->10->15->20%
@@ -5559,11 +5548,15 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 
 				}
 				
-			}else if (PlayerAcc_Prof_GetProfession(attacker) == PROF_JEDI && mod == MOD_SABER) { //jedi class check and is he using the saber?
+				if (PlayerProf_Merc_GetLethalitySkill(attacker) > 0) {  //is lethality upgraded?
+																		//4->8->12->16->20 check the lethality descr   //update -> 5 10 15 20 25 
+					lethalityoutput = (damage * PlayerProf_Merc_GetLethalitySkill(attacker) * 5) / 100; //gets the percent of damage value
+					if (lmd_is_lethality_add_damage.integer == 0) damage -= lethalityoutput; //default add_damage = 0. It converts the damage instead of adding the damage.
+				} //Lethality changed to compute after bonuses.
 
-					
-						
-				
+
+
+			}else if (PlayerAcc_Prof_GetProfession(attacker) == PROF_JEDI && mod == MOD_SABER) { //jedi class check and is he using the saber?
 
 
 				if (PlayerProf_Jedi_GetThousandCutsSkill(attacker) > 0) { //is thousandcuts upgraded?
@@ -5582,9 +5575,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 					}
 
 
-					//converts base damage to the lethality
-					lethalityoutput = (lethality_multiplier * 5) / 100;
-					damage -= lethalityoutput;
+
 
 					//additional damage
 					if (lmd_is_thousandcuts_lethality.integer == 1) //want to use thousandcuts additional damage as a lethality skill from the beginning?
@@ -5598,7 +5589,14 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 						damage += (damage * additional_damage_multiplier * 5) / 100;
 
 					}
+					//converts base damage to the lethality
+					lethalityoutput += (lethality_multiplier * 5) / 100;
+					damage -= lethalityoutput;
+					//compute after all bonuses
 				}
+
+			
+
 
 					//rage regens hp on hit with saber
 

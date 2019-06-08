@@ -3626,20 +3626,20 @@ void Cmd_EngageDuel_f(gentity_t *ent){
 			//Holster their sabers now, until the duel starts (then they'll get auto-turned on to look cool)
 			//Lugormod Replenish health and armor
 			if (g_privateDuel.integer & PD_START_POWER) {
-				ent->client->ps.fd.forcePower = 100;
-				challenged->client->ps.fd.forcePower = 100;
+				ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax;
+				challenged->client->ps.fd.forcePower = challenged->client->ps.fd.forcePowerMax;
 			}
 			if (g_privateDuel.integer & PD_START_ARMOR) {
 				ent->client->bdArmor = ent->client->ps.stats[STAT_ARMOR];
 				challenged->client->bdArmor = challenged->client->ps.stats[STAT_ARMOR];
-				ent->client->ps.stats[STAT_ARMOR] = 100;
-				challenged->client->ps.stats[STAT_ARMOR] = 100;
+				ent->client->ps.stats[STAT_ARMOR] = 250;
+				challenged->client->ps.stats[STAT_ARMOR] = 250;
 			}
 			if (g_privateDuel.integer & PD_START_HEALTH) {
 				ent->client->bdHealth =	ent->health;
 				challenged->client->bdHealth = challenged->health;
-				ent->client->ps.stats[STAT_HEALTH] = ent->health = 100;
-				challenged->client->ps.stats[STAT_HEALTH] = challenged->health = 100;
+				ent->client->ps.stats[STAT_HEALTH] = ent->health = ent->client->ps.stats[STAT_MAX_HEALTH];
+				challenged->client->ps.stats[STAT_HEALTH] = challenged->health = challenged->client->ps.stats[STAT_MAX_HEALTH];
 			}
 
 			ent->client->pers.Lmd.persistantFlags &= ~(SPF_IONLYDUEL | SPF_IONLYSABER);
