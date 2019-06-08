@@ -1,6 +1,6 @@
  jampgamex86
 
- Timestamp is 5cfc434e (Sun Jun 09 01:22:54 2019)
+ Timestamp is 5cfc450d (Sun Jun 09 01:30:21 2019)
 
  Preferred load address is 20000000
 
@@ -44,8 +44,8 @@
   Address         Publics by Value              Rva+Base       Lib:Object
 
  0000:00000000       ___guard_flags             00000000     <absolute>
- 0000:00000000       ___guard_fids_count        00000000     <absolute>
  0000:00000000       ___guard_fids_table        00000000     <absolute>
+ 0000:00000000       ___guard_fids_count        00000000     <absolute>
  0000:00000000       __except_list              00000000     <absolute>
  0000:0000000c       ___safe_se_handler_count   0000000c     <absolute>
  0000:00000000       ___ImageBase               20000000     <linker-defined>
@@ -4980,8 +4980,8 @@
  0001:002e7480       ??4exception@std@@QAEAAV01@ABV01@@Z 202e8480 f   LIBCMTD:stdexcpt.obj
  0001:002e74d0       ??_G__non_rtti_object@std@@UAEPAXI@Z 202e84d0 f i LIBCMTD:stdexcpt.obj
  0001:002e74d0       ??_E__non_rtti_object@std@@UAEPAXI@Z 202e84d0 f i LIBCMTD:stdexcpt.obj
- 0001:002e7500       ??_Ebad_cast@std@@UAEPAXI@Z 202e8500 f i LIBCMTD:stdexcpt.obj
  0001:002e7500       ??_Gbad_cast@std@@UAEPAXI@Z 202e8500 f i LIBCMTD:stdexcpt.obj
+ 0001:002e7500       ??_Ebad_cast@std@@UAEPAXI@Z 202e8500 f i LIBCMTD:stdexcpt.obj
  0001:002e7530       ??_Ebad_typeid@std@@UAEPAXI@Z 202e8530 f i LIBCMTD:stdexcpt.obj
  0001:002e7530       ??_Gbad_typeid@std@@UAEPAXI@Z 202e8530 f i LIBCMTD:stdexcpt.obj
  0001:002e7560       ??_Gexception@std@@UAEPAXI@Z 202e8560 f i LIBCMTD:stdexcpt.obj
@@ -5027,8 +5027,8 @@
  0001:002ea040       _wcstod                    202eb040 f   LIBCMTD:wcstod.obj
  0001:002ea060       __mbschr                   202eb060 f   LIBCMTD:mbschr.obj
  0001:002ea080       __mbschr_l                 202eb080 f   LIBCMTD:mbschr.obj
- 0001:002ea220       __strnicmp                 202eb220 f   LIBCMTD:strnicmp.obj
  0001:002ea220       _strnicmp                  202eb220 f   LIBCMTD:strnicmp.obj
+ 0001:002ea220       __strnicmp                 202eb220 f   LIBCMTD:strnicmp.obj
  0001:002ea3f0       __strnicmp_l               202eb3f0 f   LIBCMTD:strnicmp.obj
  0001:002ea680       ??0Block@_HeapManager@@QAE@XZ 202eb680 f i LIBCMTD:undname.obj
  0001:002ea6a0       ??0DName@@QAE@AAPBDD@Z     202eb6a0 f   LIBCMTD:undname.obj
@@ -5278,8 +5278,8 @@
  0001:002f5a4e       _ReadConsoleW@20           202f6a4e f   kernel32:KERNEL32.dll
  0001:002f5a54       _CreateFileW@28            202f6a54 f   kernel32:KERNEL32.dll
  0001:002f5a5a       _SetEnvironmentVariableA@8 202f6a5a f   kernel32:KERNEL32.dll
- 0001:002f5ee0       __strupr                   202f6ee0 f   LIBCMTD:strupr.obj
  0001:002f5ee0       _strupr                    202f6ee0 f   LIBCMTD:strupr.obj
+ 0001:002f5ee0       __strupr                   202f6ee0 f   LIBCMTD:strupr.obj
  0001:002f5fd0       __strupr_l                 202f6fd0 f   LIBCMTD:strupr.obj
  0001:002f5ff0       __strupr_s                 202f6ff0 f   LIBCMTD:strupr.obj
  0001:002f6010       __strupr_s_l               202f7010 f   LIBCMTD:strupr.obj
@@ -5293,8 +5293,8 @@
  0001:002f6960       __strlwr_s                 202f7960 f   LIBCMTD:strlwr.obj
  0001:002f6980       __strlwr_s_l               202f7980 f   LIBCMTD:strlwr.obj
  0001:002f69c0       ___ascii_stricmp           202f79c0 f   LIBCMTD:stricmp.obj
- 0001:002f6a40       _stricmp                   202f7a40 f   LIBCMTD:stricmp.obj
  0001:002f6a40       __stricmp                  202f7a40 f   LIBCMTD:stricmp.obj
+ 0001:002f6a40       _stricmp                   202f7a40 f   LIBCMTD:stricmp.obj
  0001:002f6b70       __stricmp_l                202f7b70 f   LIBCMTD:stricmp.obj
  0001:002f6d50       ___ascii_memicmp           202f7d50 f   LIBCMTD:_memicmp.obj
  0002:00000000       ___xc_a                    20315000     LIBCMTD:crt0init.obj
@@ -12037,7 +12037,7 @@
  0002:0002cd44       ??_C@_0BC@LOKOIJIH@JKA?5Galaxies?5v0?41?$AA@ 20341d44     gls_crashreport.obj
  0002:0002cd5c       ??_C@_0BH@KHGNMAMA@Version?3?5?$CFs?5?$CIWindows?$CJ?6?$AA@ 20341d5c     gls_crashreport.obj
  0002:0002cd78       ??_C@_0BD@PEHKIMLP@Side?3?5Server?9side?6?$AA@ 20341d78     gls_crashreport.obj
- 0002:0002cd90       ??_C@_08PKKICELB@01?322?325?$AA@ 20341d90     gls_crashreport.obj
+ 0002:0002cd90       ??_C@_08IJPFGJBC@01?329?345?$AA@ 20341d90     gls_crashreport.obj
  0002:0002cd9c       ??_C@_0BI@BNEPMDPF@Build?5Date?1Time?3?5?$CFs?5?$CFs?6?$AA@ 20341d9c     gls_crashreport.obj
  0002:0002cdb8       ??_C@_0IK@MOIFLKOC@Crash?5type?3?5Exception?6?6?9?9?9?9?9?9?9?9?9@ 20341db8     gls_crashreport.obj
  0002:0002ce60       ??_C@_0HA@HGKPACMJ@?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9@ 20341e60     gls_crashreport.obj

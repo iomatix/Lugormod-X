@@ -157,8 +157,8 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 	if (tr.fraction != 1.0f && tr.entityNum != gripEnt->s.number) return qfalse;
 
 	if (level.time - gripEnt->client->ps.fd.forceGripStarted > 750 && self->client->ps.fd.forcePowerDebounce[FP_GRIP] < level.time){
-		//2 damage per 1/2 second while choking, resulting in 20 damage total (not including The Squeeze<tm>)
-		self->client->ps.fd.forcePowerDebounce[FP_GRIP] = level.time + 500;
+		//x damage per 3/4 second while choking, resulting in x*3/4 * 2.5 sec damage total (not including The Squeeze<tm>)
+		self->client->ps.fd.forcePowerDebounce[FP_GRIP] = level.time + 750;
 		G_Damage(gripEnt, self, self, NULL, NULL, data->damage, DAMAGE_NO_ARMOR, MOD_FORCE_DARK);
 	}
 
@@ -300,7 +300,7 @@ forceGrip_t Force_Grip_Levels[5] = {
 	{MAX_GRIP_DISTANCE,	    2, 40,	15000, 1, GRIP_DRAIN_AMOUNT*2, 1, qtrue,	qfalse},
 	{MAX_GRIP_DISTANCE*2,	3, 60,	20000, 2, GRIP_DRAIN_AMOUNT*3, 1, qtrue,	qtrue},
 	{MAX_GRIP_DISTANCE*3,	4, 75,	25000, 2, GRIP_DRAIN_AMOUNT*4, 2, qtrue,	qtrue},
-	{MAX_GRIP_DISTANCE*4,	5, 100,	30000, 2, GRIP_DRAIN_AMOUNT*5, 1, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE*4,	5, 95,	30000, 2, GRIP_DRAIN_AMOUNT*5, 1, qtrue,	qtrue},
 };
 
 forcePower_t Force_Grip = {
