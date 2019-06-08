@@ -1,12 +1,12 @@
  jampgamex86
 
- Timestamp is 5cfc2100 (Sat Jun 08 22:56:32 2019)
+ Timestamp is 5cfc262b (Sat Jun 08 23:18:35 2019)
 
  Preferred load address is 20000000
 
  Start         Length     Name                   Class
  0001:00000000 0000b71dH .text$di                CODE
- 0001:0000b720 00306b93H .text$mn                CODE
+ 0001:0000b720 00306b92H .text$mn                CODE
  0001:003122c0 00001187H .text$x                 CODE
  0002:00000000 00000104H .CRT$XCA                DATA
  0002:00000104 000001f2H .CRT$XCU                DATA
@@ -12037,7 +12037,7 @@
  0002:0002cd4c       ??_C@_0BC@LOKOIJIH@JKA?5Galaxies?5v0?41?$AA@ 20341d4c     gls_crashreport.obj
  0002:0002cd64       ??_C@_0BH@KHGNMAMA@Version?3?5?$CFs?5?$CIWindows?$CJ?6?$AA@ 20341d64     gls_crashreport.obj
  0002:0002cd80       ??_C@_0BD@PEHKIMLP@Side?3?5Server?9side?6?$AA@ 20341d80     gls_crashreport.obj
- 0002:0002cd98       ??_C@_08FMAOLOPF@22?355?359?$AA@ 20341d98     gls_crashreport.obj
+ 0002:0002cd98       ??_C@_08FJNLLFCL@23?318?305?$AA@ 20341d98     gls_crashreport.obj
  0002:0002cda4       ??_C@_0BI@BNEPMDPF@Build?5Date?1Time?3?5?$CFs?5?$CFs?6?$AA@ 20341da4     gls_crashreport.obj
  0002:0002cdc0       ??_C@_0IK@MOIFLKOC@Crash?5type?3?5Exception?6?6?9?9?9?9?9?9?9?9?9@ 20341dc0     gls_crashreport.obj
  0002:0002ce68       ??_C@_0HA@HGKPACMJ@?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9@ 20341e68     gls_crashreport.obj

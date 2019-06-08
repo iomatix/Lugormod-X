@@ -91,6 +91,7 @@
 - Account live-time reworked. ✔️
 - Flying with Jump Level 5 depends on lmd_force_is_double_jump value now.  ✔️
 - Flying with Jump Level 5 is reworked. ✔️
+- Health points per level increased. ✔️ 
 
 //
 
