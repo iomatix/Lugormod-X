@@ -6111,8 +6111,8 @@ void WP_ForcePowersUpdate( gentity_t *self, usercmd_t *ucmd ){
 			}
 			else
 			{ //hmm.. ok.. no more getting up on your own, you've gotta push something, unless..
-				if ((level.time-self->client->ps.forceHandExtendTime) > 4000)
-				{ //4 seconds elapsed, I guess they're too dumb to push something to get up!
+				if ((level.time-self->client->ps.forceHandExtendTime) > 60000)
+				{ //1 minute elapsed, I guess they're too dumb to push something to get up!
 					if (self->client->pers.cmd.upmove &&
 						self->client->ps.fd.forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_1)
 					{ //force getup

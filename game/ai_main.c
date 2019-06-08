@@ -2662,7 +2662,7 @@ gentity_t *GetNearestBadThing(bot_state_t *bs)
 	float glen;
 	vec3_t hold;
 	int bestindex = 0;
-	float bestdist = 800; //if not within a radius of 800, it's no threat anyway
+	float bestdist = 900; //if not within a radius of 900, it's no threat anyway
 	int foundindex = 0;
 	float factor = 0;
 	gentity_t *ent;

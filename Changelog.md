@@ -92,6 +92,8 @@
 - Flying with Jump Level 5 depends on lmd_force_is_double_jump value now.  ✔️
 - Flying with Jump Level 5 is reworked. ✔️
 - Health points per level increased. ✔️ 
+- No more auto getting up.  ✔️ 
+- Grip skill is reworked.  ✔️  
 
 //
 
@@ -99,18 +101,12 @@
 - accountedit passwd.
 - Search a new ways for spending credits.
 - experience boosters/ packs for CR? lmd_exp_boosters
-- Level 5 Jump. The player can not use it to fly but jumps higher. ??
 - lmd_stashexp added. Stash system supports new experience system now. 50%
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
-- Longer Grip which depends on the skill level. 80% Search for limiter function... whereveri it is hidden.
-- Longer Drain/Heal cooldowns or heal rework to work overtime not an instant.
-- Cooldowns system, when cooldown force drains more force. 
 - jedi is able to pick up medpacks ???
 
 
 ## TODO
-
-- grip longer
 
 - Try repair crosschair hud for force.  (CG_PLAYER_ARMOR_VALUE  CG_PLAYER_AMMO_VALUE   CG_PLAYER_FORCE_VALUE)
 - flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"

@@ -75,7 +75,7 @@ qboolean Force_Grip_Start(gentity_t *self, const void* vData) {
 		self->client->ps.fd.forceGripDamageDebounceTime = 0;
 
 		self->client->ps.forceHandExtend = HANDEXTEND_FORCE_HOLD;
-		self->client->ps.forceHandExtendTime = level.time + 5000;
+		self->client->ps.forceHandExtendTime = level.time + 60000; //60sec
 
 		BG_ForcePowerDrain( &self->client->ps, FP_GRIP, data->forcedrain );
 	}
@@ -233,10 +233,10 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 		}
 
 		if (data->choke && 
-			(level.time - gripEnt->client->ps.fd.forceGripStarted) > 3000 &&
+			(level.time - gripEnt->client->ps.fd.forceGripStarted) > 2500 &&
 			!self->client->ps.fd.forceGripDamageDebounceTime)
-		{ //if we managed to lift him into the air for 2 seconds, give him a crack
-			self->client->ps.fd.forceGripDamageDebounceTime = 1;
+		{ //if we managed to lift him into the air every 2.5 seconds, give him a crack
+			//self->client->ps.fd.forceGripDamageDebounceTime = 1;
 			G_Damage(gripEnt, self, self, NULL, NULL, data->choke, DAMAGE_NO_ARMOR, MOD_FORCE_DARK);
 
 			//Must play custom sounds on the actual entity. Don't use G_Sound (it creates a temp entity for the sound)
@@ -246,15 +246,21 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 			gripEnt->client->ps.saberHolstered = 2;
 
 			gripEnt->client->ps.forceHandExtend = HANDEXTEND_CHOKE;
-			gripEnt->client->ps.forceHandExtendTime = level.time + 2000;
+			gripEnt->client->ps.forceHandExtendTime = level.time + 2300;
 
-			if (gripEnt->client->ps.fd.forcePowersActive & (1 << FP_GRIP)){ 
-				//choking, so don't let him keep gripping himself
+			if ((level.time - gripEnt->client->ps.fd.forceGripStarted) > 3000 && (gripEnt->client->ps.fd.forcePowersActive & (1 << FP_GRIP))){
+				//choking, so don't let him keep gripping himself if the duration is over
 
 				Force_StopPower(gripEnt, FP_GRIP);
 			}
+
+			//restart grip iomatix:
+			self->client->ps.forceHandExtend = HANDEXTEND_FORCE_HOLD;
+			self->client->ps.forceHandExtendTime += 2500;
+			gripEnt->client->ps.fd.forceGripStarted = level.time;
+
 		}
-		else if ( ((level.time - gripEnt->client->ps.fd.forceGripStarted) > data->duration))  //iomatix test data->duration
+		else if ( ((level.time - gripEnt->client->ps.fd.forceGripStarted) > 3000))  //iomatix 
 			return qfalse;
 	}
 	return qtrue;
@@ -290,11 +296,11 @@ void Force_Grip_Stop(gentity_t *self, const void *vData) {
 }
 
 forceGrip_t Force_Grip_Levels[5] = {
-	{MAX_GRIP_DISTANCE,	    1, 15,	6000, 0, GRIP_DRAIN_AMOUNT*2, 1, qfalse,	qfalse},
-	{MAX_GRIP_DISTANCE,	    2, 25,	9000, 1, GRIP_DRAIN_AMOUNT*2, 1, qtrue,	    qfalse},
-	{MAX_GRIP_DISTANCE*2,	3, 45,	12000, 2, GRIP_DRAIN_AMOUNT*3, 1, qtrue,	qtrue},
-	{MAX_GRIP_DISTANCE*3,	4, 65,	20000, 2, GRIP_DRAIN_AMOUNT*4, 2, qtrue,	qtrue},
-	{MAX_GRIP_DISTANCE*4,	5, 85,	30000, 2, GRIP_DRAIN_AMOUNT*5, 1, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE,	    1, 20,	10000, 0, GRIP_DRAIN_AMOUNT*2, 1, qfalse,	qfalse},
+	{MAX_GRIP_DISTANCE,	    2, 35,	15000, 1, GRIP_DRAIN_AMOUNT*2, 1, qtrue,	qfalse},
+	{MAX_GRIP_DISTANCE*2,	2, 65,	20000, 2, GRIP_DRAIN_AMOUNT*3, 1, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE*3,	2, 75,	25000, 2, GRIP_DRAIN_AMOUNT*4, 2, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE*4,	3, 85,	30000, 2, GRIP_DRAIN_AMOUNT*5, 1, qtrue,	qtrue},
 };
 
 forcePower_t Force_Grip = {
@@ -979,11 +985,11 @@ void Force_Drain_Stop(gentity_t *self, const void *vData) {
 
 forceDrain_t Force_Drain_Levels[5] = {
 	
-	{1, 800, MAX_DRAIN_DISTANCE, 0, Q3_INFINITE,	1500, 2},
-	{2, 800, MAX_DRAIN_DISTANCE, 0, Q3_INFINITE,	1600, 3},
-	{3, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1700, 4},
-	{4, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1800, 5},
-	{4, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1900, 4},
+	{3, 800, MAX_DRAIN_DISTANCE, 0, Q3_INFINITE,	1500, 2},
+	{5, 800, MAX_DRAIN_DISTANCE, 0, Q3_INFINITE,	1600, 3},
+	{6, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1700, 4},
+	{7, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1800, 5},
+	{9, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1900, 4},
 };
 
 forcePower_t Force_Drain = {

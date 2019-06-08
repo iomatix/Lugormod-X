@@ -583,6 +583,9 @@ void TossClientWeapon(gentity_t *self, vec3_t direction, float speed)
 	}
 
 	//iomatix: saber deal
+	if (weapon == WP_SABER && BG_SaberInSpecial(self->client->ps.saberMove)) return; //do not drop saber if is in special move (to not bug animations)
+
+
 	if (weapon == WP_SABER && self->client->ps.stats[STAT_WEAPONS] != (1 << WP_MELEE)) self->client->ps.stats[STAT_WEAPONS] |= (1 << WP_MELEE);
 	if (weapon == WP_BRYAR_PISTOL && self->client->ps.stats[STAT_WEAPONS] != (1 << WP_MELEE)) self->client->ps.stats[STAT_WEAPONS] |= (1 << WP_MELEE);
 
