@@ -239,7 +239,7 @@ profSkill_t jediSkill_Passive_overload = {
 	jediSkill_Passive_overload_Descr,
 
 	0,
-	SkillLevels_8,
+	SkillLevels_4,
 	SkillPoints_Linear_12,
 
 	Lmd_Prof_Jedi_GetSkill_overload,
@@ -267,7 +267,7 @@ profSkill_t jediSkill_Passive_thousandcuts = {
 	jediSkill_Passive_thousandcuts_Descr,
 
 	0,
-	SkillLevels_4,
+	SkillLevels_8,
 	SkillPoints_Linear_12,
 
 	Lmd_Prof_Jedi_GetSkill_thousandcuts,
@@ -345,7 +345,7 @@ int Get_Jedi_mp_maxs_value(gentity_t *ent)
 	int skillMP = Lmd_Prof_Jedi_GetSkill_mp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_mp_maxs);
 	if (skillMP > 0)
 	{
-		value += 10 * skillMP;
+		value += 12 * skillMP;
 		if (skillMP == jediSkill_Passive_mp_maxs.levels.max) value += 13; //bonus for maxed (12+13=25)
 	}
 

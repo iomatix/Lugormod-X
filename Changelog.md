@@ -82,7 +82,8 @@
 - Blocking costs force now. The cost is 7->14->21 force power per block. ✔️ 
 - Evasion costs force now. The cost is 8 force power per evasion. ✔️  
 - Level up checking function is improved. ✔️
-- Passives add stats before first death. ✔️ 
+- Passives add stats before first death. ✔️
+- Thousand Cuts and overload skills bug fix. ✔️
 
 //
 

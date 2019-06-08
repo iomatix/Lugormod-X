@@ -1,6 +1,6 @@
  jampgamex86
 
- Timestamp is 5cfb760b (Sat Jun 08 10:47:07 2019)
+ Timestamp is 5cfb7cbd (Sat Jun 08 11:15:41 2019)
 
  Preferred load address is 20000000
 
@@ -4941,8 +4941,8 @@
  0001:002e69c9       __abnormal_termination     202e79c9 f   LIBCMTD:exsup.obj
  0001:002e69ec       __NLG_Notify1              202e79ec f   LIBCMTD:exsup.obj
  0001:002e69f5       __NLG_Notify               202e79f5 f   LIBCMTD:exsup.obj
- 0001:002e6a0c       __NLG_Dispatch2            202e7a0c     LIBCMTD:exsup.obj
  0001:002e6a0c       __NLG_Dispatch             202e7a0c     LIBCMTD:exsup.obj
+ 0001:002e6a0c       __NLG_Dispatch2            202e7a0c     LIBCMTD:exsup.obj
  0001:002e6a14       __NLG_Call                 202e7a14 f   LIBCMTD:exsup.obj
  0001:002e6a16       __NLG_Return2              202e7a16     LIBCMTD:exsup.obj
  0001:002e6a20       ??3@YAXPAX@Z               202e7a20 f   LIBCMTD:dbgdel.obj
@@ -4954,8 +4954,8 @@
  0001:002e6bb0       ??4type_info@@AAEAAV0@ABV0@@Z 202e7bb0 f   LIBCMTD:typinfo.obj
  0001:002e6bc0       ??8type_info@@QBE_NABV0@@Z 202e7bc0 f   LIBCMTD:typinfo.obj
  0001:002e6c00       ??9type_info@@QBE_NABV0@@Z 202e7c00 f   LIBCMTD:typinfo.obj
- 0001:002e6c40       ??_Etype_info@@UAEPAXI@Z   202e7c40 f i LIBCMTD:typinfo.obj
  0001:002e6c40       ??_Gtype_info@@UAEPAXI@Z   202e7c40 f i LIBCMTD:typinfo.obj
+ 0001:002e6c40       ??_Etype_info@@UAEPAXI@Z   202e7c40 f i LIBCMTD:typinfo.obj
  0001:002e6c70       ?_name_internal_method@type_info@@QBEPBDPAU__type_info_node@@@Z 202e7c70 f   LIBCMTD:typinfo.obj
  0001:002e6c90       ?_type_info_dtor_internal_method@type_info@@QAEXXZ 202e7c90 f   LIBCMTD:typinfo.obj
  0001:002e6cb0       ?before@type_info@@QBE_NABV1@@Z 202e7cb0 f   LIBCMTD:typinfo.obj
@@ -4978,8 +4978,8 @@
  0001:002e6fb0       ??4exception@std@@QAEAAV01@ABV01@@Z 202e7fb0 f   LIBCMTD:stdexcpt.obj
  0001:002e7000       ??_E__non_rtti_object@std@@UAEPAXI@Z 202e8000 f i LIBCMTD:stdexcpt.obj
  0001:002e7000       ??_G__non_rtti_object@std@@UAEPAXI@Z 202e8000 f i LIBCMTD:stdexcpt.obj
- 0001:002e7030       ??_Gbad_cast@std@@UAEPAXI@Z 202e8030 f i LIBCMTD:stdexcpt.obj
  0001:002e7030       ??_Ebad_cast@std@@UAEPAXI@Z 202e8030 f i LIBCMTD:stdexcpt.obj
+ 0001:002e7030       ??_Gbad_cast@std@@UAEPAXI@Z 202e8030 f i LIBCMTD:stdexcpt.obj
  0001:002e7060       ??_Ebad_typeid@std@@UAEPAXI@Z 202e8060 f i LIBCMTD:stdexcpt.obj
  0001:002e7060       ??_Gbad_typeid@std@@UAEPAXI@Z 202e8060 f i LIBCMTD:stdexcpt.obj
  0001:002e7090       ??_Eexception@std@@UAEPAXI@Z 202e8090 f i LIBCMTD:stdexcpt.obj
@@ -5025,8 +5025,8 @@
  0001:002e9b70       _wcstod                    202eab70 f   LIBCMTD:wcstod.obj
  0001:002e9b90       __mbschr                   202eab90 f   LIBCMTD:mbschr.obj
  0001:002e9bb0       __mbschr_l                 202eabb0 f   LIBCMTD:mbschr.obj
- 0001:002e9d50       _strnicmp                  202ead50 f   LIBCMTD:strnicmp.obj
  0001:002e9d50       __strnicmp                 202ead50 f   LIBCMTD:strnicmp.obj
+ 0001:002e9d50       _strnicmp                  202ead50 f   LIBCMTD:strnicmp.obj
  0001:002e9f20       __strnicmp_l               202eaf20 f   LIBCMTD:strnicmp.obj
  0001:002ea1b0       ??0Block@_HeapManager@@QAE@XZ 202eb1b0 f i LIBCMTD:undname.obj
  0001:002ea1d0       ??0DName@@QAE@AAPBDD@Z     202eb1d0 f   LIBCMTD:undname.obj
@@ -5285,14 +5285,14 @@
  0001:002f5b80       _memicmp                   202f6b80 f   LIBCMTD:memicmp.obj
  0001:002f5cd0       __memicmp_l                202f6cd0 f   LIBCMTD:memicmp.obj
  0001:002f5ef0       ?_strlwr_s_l_stat@@YAHPADIPAUlocaleinfo_struct@@@Z 202f6ef0 f   LIBCMTD:strlwr.obj
- 0001:002f6380       _strlwr                    202f7380 f   LIBCMTD:strlwr.obj
  0001:002f6380       __strlwr                   202f7380 f   LIBCMTD:strlwr.obj
+ 0001:002f6380       _strlwr                    202f7380 f   LIBCMTD:strlwr.obj
  0001:002f6470       __strlwr_l                 202f7470 f   LIBCMTD:strlwr.obj
  0001:002f6490       __strlwr_s                 202f7490 f   LIBCMTD:strlwr.obj
  0001:002f64b0       __strlwr_s_l               202f74b0 f   LIBCMTD:strlwr.obj
  0001:002f64f0       ___ascii_stricmp           202f74f0 f   LIBCMTD:stricmp.obj
- 0001:002f6570       __stricmp                  202f7570 f   LIBCMTD:stricmp.obj
  0001:002f6570       _stricmp                   202f7570 f   LIBCMTD:stricmp.obj
+ 0001:002f6570       __stricmp                  202f7570 f   LIBCMTD:stricmp.obj
  0001:002f66a0       __stricmp_l                202f76a0 f   LIBCMTD:stricmp.obj
  0001:002f6880       ___ascii_memicmp           202f7880 f   LIBCMTD:_memicmp.obj
  0002:00000000       ___xc_a                    20314000     LIBCMTD:crt0init.obj
@@ -12034,7 +12034,7 @@
  0002:0002cd0c       ??_C@_0BC@LOKOIJIH@JKA?5Galaxies?5v0?41?$AA@ 20340d0c     gls_crashreport.obj
  0002:0002cd24       ??_C@_0BH@KHGNMAMA@Version?3?5?$CFs?5?$CIWindows?$CJ?6?$AA@ 20340d24     gls_crashreport.obj
  0002:0002cd40       ??_C@_0BD@PEHKIMLP@Side?3?5Server?9side?6?$AA@ 20340d40     gls_crashreport.obj
- 0002:0002cd58       ??_C@_08GHAONKIC@10?346?331?$AA@ 20340d58     gls_crashreport.obj
+ 0002:0002cd58       ??_C@_08GPENDEGP@11?315?308?$AA@ 20340d58     gls_crashreport.obj
  0002:0002cd64       ??_C@_0BI@BNEPMDPF@Build?5Date?1Time?3?5?$CFs?5?$CFs?6?$AA@ 20340d64     gls_crashreport.obj
  0002:0002cd80       ??_C@_0IK@MOIFLKOC@Crash?5type?3?5Exception?6?6?9?9?9?9?9?9?9?9?9@ 20340d80     gls_crashreport.obj
  0002:0002ce28       ??_C@_0HA@HGKPACMJ@?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9@ 20340e28     gls_crashreport.obj
@@ -15479,8 +15479,8 @@
  0002:00052e38       ??_C@_0CM@FGMNMBFG@f?3?2dd?2vctools?2crt?2crtw32?2startup@ 20366e38     LIBCMTD:threadex.obj
  0002:00052e64       ??_C@_1BK@FHMHFMNL@?$AA_?$AAv?$AAs?$AAn?$AAp?$AAr?$AAi?$AAn?$AAt?$AAf?$AA_?$AAl?$AA?$AA@ 20366e64     LIBCMTD:vsnprint.obj
  0002:00052e80       ??_C@_1EC@FABAOFFO@?$AA?$CI?$AAc?$AAo?$AAu?$AAn?$AAt?$AA?5?$AA?$DN?$AA?$DN?$AA?5?$AA0?$AA?$CJ?$AA?5?$AA?$HM?$AA?$HM?$AA?5?$AA?$CI?$AAs?$AAt?$AAr?$AAi?$AAn?$AAg?$AA?5?$AA?$CB?$AA?$DN?$AA?5?$AAN?$AAU?$AAL?$AAL?$AA?$CJ@ 20366e80     LIBCMTD:vsnprint.obj
- 0002:00052ec4       __pRawDllMain              20366ec4     LIBCMTD:dllcrt0.obj
  0002:00052ec4       __pDefaultRawDllMain       20366ec4     LIBCMTD:dllcrt0.obj
+ 0002:00052ec4       __pRawDllMain              20366ec4     LIBCMTD:dllcrt0.obj
  0002:00052ec8       ??_C@_0CL@OOIKPIHN@f?3?2dd?2vctools?2crt?2crtw32?2startup@ 20366ec8     LIBCMTD:dllcrt0.obj
  0002:00052ef4       ??_C@_03JGHBODFD@pow?$AA@  20366ef4     LIBCMTD:fpexcept.obj
  0002:00052ef8       ??_C@_05HGHHAHAP@log10?$AA@ 20366ef8     LIBCMTD:fpexcept.obj
