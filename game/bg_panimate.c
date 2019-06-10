@@ -319,9 +319,9 @@ qboolean BG_InKataAnim(int anim)
 	return qfalse;
 }
 
-qboolean BG_SaberInSpecial( int move )
+qboolean BG_SaberInSpecial(int move)
 {
-	switch( move )
+	switch (move)
 	{
 	case LS_A_BACK:
 	case LS_A_BACK_CR:
@@ -374,6 +374,55 @@ qboolean BG_SaberInSpecial( int move )
 	case LS_DUAL_FB:
 	case LS_DUAL_LR:
 	case LS_HILT_BASH:
+		//Deflected attacks
+	case LS_D1_BR:
+	case	LS_D1__R:
+	case	LS_D1_TR:
+	case	LS_D1_T_:
+	case	LS_D1_TL:
+	case	LS_D1__L:
+	case	LS_D1_BL:
+	case	LS_D1_B_:
+
+
+		return qtrue;
+	}
+	return qfalse;
+}
+
+qboolean BG_SaberInDefense(int move)
+{
+	switch (move)
+	{
+
+		//Reflected attacks
+	case	LS_V1_BR:
+	case	LS_V1__R:
+	case	LS_V1_TR:
+	case	LS_V1_T_:
+	case	LS_V1_TL:
+	case	LS_V1__L:
+	case	LS_V1_BL:
+	case	LS_V1_B_:
+
+		// Parries
+	case	LS_PARRY_UP:
+	case	LS_PARRY_UR:
+	case	LS_PARRY_UL:
+	case	LS_PARRY_LR:
+	case	LS_PARRY_LL:
+	case	LS_H1_T_:
+	case	LS_H1_TR:
+	case	LS_H1_TL:
+	case	LS_H1_BR:
+	case	LS_H1_B_:
+	case	LS_H1_BL:
+		// Projectile Reflections
+	case	LS_REFLECT_UP:
+	case	LS_REFLECT_UR:
+	case	LS_REFLECT_UL:
+	case	LS_REFLECT_LR:
+	case	LS_REFLECT_LL:
 		return qtrue;
 	}
 	return qfalse;

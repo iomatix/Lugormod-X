@@ -2,6 +2,9 @@
 **They are usable inside server.cfg file.**
 
 List of all Extern Variables added by iomatix:
+
+### LMD:
+
 - **`lmd_jedi_pickup_weapons`** 1 is default. 
   
   1 allows Force User to pick up weapons and ammo from the map. Also adds light saber drop mechanic. Change to 0 to set old lugor-style.
@@ -58,6 +61,13 @@ Adds cooldown for Force User's force powers if 1. Avoid spamming forces. Default
 - **`lmd_force_is_double_jump`**
 
 Allows to turn off the double jump if 0. Default 1.
+### G:
+
+- **`g_scaleAllDamag`**
+
+Allows to change total damage scaling.
+
+### Targets:
 
 **They are usable in the game**
 

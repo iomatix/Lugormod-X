@@ -8,7 +8,9 @@
 #include "Lmd_Professions.h"
 #include "Lmd_Prof_Merc.h"
 
-#define BLOCK_FORCE_COST 3
+
+#define BLOCK_FORCE_COST 5
+
 #define SABER_BOX_SIZE 16.0f
 extern bot_state_t *botstates[MAX_CLIENTS];
 extern qboolean InFront( vec3_t spot, vec3_t from, vec3_t fromAngles, float threshHold );

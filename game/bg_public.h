@@ -1621,6 +1621,7 @@ qboolean BG_InBackFlip( int anim );
 qboolean BG_DirectFlippingAnim( int anim );
 qboolean BG_SaberInAttack( int move );
 qboolean BG_SaberInSpecial( int move );
+qboolean BG_SaberInDefense(int move);
 qboolean BG_KickMove( int move );
 qboolean BG_SaberInIdle( int move );
 qboolean BG_FlippingAnim( int anim );

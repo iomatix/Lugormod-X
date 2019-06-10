@@ -5507,19 +5507,27 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	}
 
 	//iomatix damage_modifiers :
+	//g_scale
+	if (g_scaleAllDamage.value != 1.0) {
+		if (g_scaleAllDamage.value < 0.01) g_scaleAllDamage.value = 0.01;
+		else if (g_scaleAllDamage.value > 100)g_scaleAllDamage.value = 100;
+		damage *= g_scaleAllDamage.value;
+	}
+	//
 	//integer to not stack all of multipliers belowed.
 	int damage_modifier = 0; // Stack damage inside this variable. Remember to set it to 0 after each stack to do not multiply damage output.
 
 	//level bonus: BALANCE: Stack or not to stack? damage -> damage_modifier to fast nerf everything by +- 50%
+	//note: do not go over + ~400% (after ~400% time to kill rate will increase, before ~400% will decrease per level (depends on hp scaling))
 	if (attacker->client && attacker->client->pers.Lmd.account && attacker->s.eType != ET_NPC) {
-	if(mod == MOD_SABER)damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.01); //1% per level + 120% with 120 level
-	else if (mod == MOD_FORCE_DARK)damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.005); //0.5%  old: //0.3% per level + 36% 120 level
+	if(mod == MOD_SABER)damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.015); //1.5% per level + 180% with 120 level
+	else if (mod == MOD_FORCE_DARK)damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.008); //0.8% +96% with 120 level  old: //0.3% per level + 36% 120 level
 								//non-explosive v v v
 	else if (mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET
 		&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
 		&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH)
-		damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.006); //0.6% old: //0.5% per level + 60% 120 level
-	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.005); //0.5% old: //0.4% per level + 48% 120 level
+		damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.007); //0.7% +84% 120 level old: //0.5% per level + 60% 120 level
+	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.006); //0.6% +72% 120 level old: //0.4% per level + 48% 120 level
 		//explosives
 	}
 		
@@ -5537,8 +5545,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		if (targ->client->pers.Lmd.account)level_targ = PlayerAcc_Prof_GetLevel(targ);
 		if (level_attacker > 120) level_attacker = 120;
 		if (level_targ > 120)level_targ = 120;
-		//nerfed to 75% damage with 120 levels difference
-		damage_modifier += damage * ((level_targ-level_attacker)/160); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
+		//88% damage with 120 levels difference
+		damage_modifier += damage * ((level_targ-level_attacker)/135); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
         //do not stack it and make passive skills great again.                    //when target_lvl < att_lvl then subracts	
 	}
 

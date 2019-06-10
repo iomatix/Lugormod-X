@@ -9,6 +9,10 @@
 #include "Lmd_Prof_Merc.h"
 #include "Lmd_Commands_Auths.h"
 
+#define EVASION_FORCE_COST 4
+
+
+
 extern void G_Knockdown( gentity_t *victim, int duration );
 
 int Jedi_GetForceRegenDebounce(gentity_t *ent);
@@ -6504,8 +6508,11 @@ void WP_ForcePowersUpdate( gentity_t *self, usercmd_t *ucmd ){
 	}
 
 	//RoboPhred: dont regen force power while in a special saber move.
-	if(self->client->ps.weapon == WP_SABER && BG_SaberInSpecial(self->client->ps.saberMove))
-		usingForce = qtrue;
+	if(self->client->ps.weapon == WP_SABER && BG_SaberInSpecial(self->client->ps.saberMove))usingForce = qtrue;
+
+	//iomatix defensive stances
+	if (self->client->ps.weapon == WP_SABER && BG_SaberInDefense(self->client->ps.saberMove))usingForce = qtrue;
+
 
 	//RoboPhred: actually use usingForce, previously it just checked forcePowersActive.
 	//Also, check debounce time here.
@@ -6744,11 +6751,11 @@ qboolean Jedi_DodgeEvasion( gentity_t *self, gentity_t *shooter, trace_t *tr, in
 
 	//iomatix:
 	//evasion cost:
-	if (self->client->ps.fd.forcePower < 8)
+	if (self->client->ps.fd.forcePower < EVASION_FORCE_COST)
 	{
 		return qfalse;
 	}
-	self->client->ps.fd.forcePower -= 8;
+	self->client->ps.fd.forcePower -= EVASION_FORCE_COST;
 
 
 	if ( dodgeAnim != -1 )

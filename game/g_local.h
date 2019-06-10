@@ -1003,6 +1003,7 @@ extern	vmCvar_t	g_logClientInfo;
 extern	vmCvar_t	g_slowmoDuelEnd;
 
 extern	vmCvar_t	g_saberDamageScale;
+extern vmCvar_t		g_scaleAllDamage;
 
 extern	vmCvar_t	g_useWhileThrowing;
 

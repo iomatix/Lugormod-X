@@ -303,7 +303,7 @@ int Get_Jedi_hp_maxs_value(gentity_t *ent) //Will (Health points)
 	int value = 40; //starting health
 	
 		
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 3.4); //scale health
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 3.5); //scale health 420+40 
 	
 
 	int skillHP = Lmd_Prof_Jedi_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_hp_maxs);
@@ -338,7 +338,7 @@ int Get_Jedi_overload_value_cap(gentity_t *ent, int Amount) //returns % of total
 int Get_Jedi_mp_maxs_value(gentity_t *ent)
 {
 	int value = 55; //starting force
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.1); //Level bonus
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.35); //Level bonus
 	if (Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload)) value += Get_Jedi_overload_value_cap(ent, value); //be sure it adds only base Force Power //iomatix
 
 																																					   //Passive skill bonus:

@@ -98,6 +98,8 @@
 - Drain skill is reworked. ✔️
 - Reworked damage formula. ✔️
 - lmd_damage_level_scale formula reworked to work as anti-grief mechanic. ✔️
+- g_scaleAllDamage is added. ✔️ 
+- Blocking stops force regen. ✔️ 
 
 //
 

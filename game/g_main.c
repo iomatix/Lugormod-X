@@ -195,6 +195,7 @@ vmCvar_t	g_logClientInfo;
 vmCvar_t	g_slowmoDuelEnd;
 
 vmCvar_t	g_saberDamageScale;
+vmCvar_t    g_scaleAllDamage;
 
 vmCvar_t	g_useWhileThrowing;
 
@@ -717,7 +718,7 @@ static cvarTable_t		gameCvarTable[] = {
 { &g_slowmoDuelEnd, "g_slowmoDuelEnd", "0", CVAR_ARCHIVE, 0, qtrue },
 
 { &g_saberDamageScale, "g_saberDamageScale", "1", CVAR_ARCHIVE, 0, qtrue },
-
+{ &g_scaleAllDamage, "g_scaleAllDamage", "1", CVAR_ARCHIVE, 0, qtrue },
 { &g_useWhileThrowing, "g_useWhileThrowing", "1", 0, 0, qtrue },
 
 { &g_RMG, "RMG", "0", 0, 0, qtrue },
