@@ -94,6 +94,10 @@
 - Health points per level increased. ✔️ 
 - No more auto getting up.  ✔️ 
 - Grip skill is reworked.  ✔️  
+- Lightning skill is reworked. ✔️
+- Drain skill is reworked. ✔️
+- Reworked damage formula. ✔️
+- lmd_damage_level_scale formula reworked to work as anti-grief mechanic. ✔️
 
 //
 

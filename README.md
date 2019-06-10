@@ -33,14 +33,14 @@
 - The Black List.
 - New in-game mechanics.
 - A Guide designed for new users.
-
+- Optional anti-grief system setable with lmd extern commands inside the server.cfg file.
+- Combat system, skills and powers are reworked.
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 
 ### I'm working on:
 - Bug fixes.
 - Experience system supports stashes system.
-- Skills adjustements.
 - Trading system.
 - New Light Saber styles.
 - A lot of more...

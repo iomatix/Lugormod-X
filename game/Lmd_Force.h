@@ -84,6 +84,7 @@ typedef struct forceGrip_s{
 }forceGrip_t;
 
 typedef struct forceLightning_s{
+	unsigned int max_damage;
 	unsigned int range;
 	unsigned int arc;
 	unsigned int duration;

@@ -27,7 +27,7 @@ List of all Extern Variables added by iomatix:
   
   That value determines max level of the skills before reaching Mastery Level. 3 is default. 
 - **`lmd_damage_level_scale`** 
-When is set to 1 the damage output will be scaled with level difference between attacker and target. 0 to turn off, 1 is default.
+When is set to 1 the damage output will be scaled with level difference between attacker and target (Anti-grief way). 0 to turn off, 1 is default.
 
 - **`lmd_is_lethality_add_damage`** 
 When is set to 1 the damage output based on lethality skill will increase, with 0 the damage will be converted instead. default 0, 1 to turn it on.

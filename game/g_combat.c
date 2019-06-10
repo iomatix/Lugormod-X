@@ -4733,7 +4733,7 @@ void G_LocationBasedDamageModifier(gentity_t *ent, vec3_t point, int mod, int df
 	{
 	case HL_FOOT_RT:
 	case HL_FOOT_LT:
-		*damage *= 0.5;
+		*damage *= 0.45;
 		break;
 	case HL_LEG_RT:
 	case HL_LEG_LT:
@@ -4753,7 +4753,7 @@ void G_LocationBasedDamageModifier(gentity_t *ent, vec3_t point, int mod, int df
 		break;
 	case HL_HAND_RT:
 	case HL_HAND_LT:
-		*damage *= 0.6;
+		*damage *= 0.5;
 		break;
 	case HL_HEAD:
 		*damage *= 4; //iomatix: 4x damage for head hits
@@ -5338,7 +5338,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			//iomatix remake
 			//if ( damage < 35 ) damage *= 4;
 			//else if (damage < 75) damage *= 3;
-			damage *= 2; //saber x2 damage when no saber in hand of the target
+			if (targ->client->ps.weapon == WP_MELEE) damage *= 3; //anihilate meele soliders with light sabers
+			else damage *= 2.2; //saber x2.2 damage when no saber in hand of the target
 			//iomatix: nerfed now.
 			
 		}
@@ -5506,21 +5507,41 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	}
 
 	//iomatix damage_modifiers :
+	//integer to not stack all of multipliers belowed.
+	int damage_modifier = 0; // Stack damage inside this variable. Remember to set it to 0 after each stack to do not multiply damage output.
+
+	//level bonus: BALANCE: Stack or not to stack? damage -> damage_modifier to fast nerf everything by +- 50%
+	if (attacker->client && attacker->client->pers.Lmd.account && attacker->s.eType != ET_NPC) {
+	if(mod == MOD_SABER)damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.01); //1% per level + 120% with 120 level
+	else if (mod == MOD_FORCE_DARK)damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.005); //0.5%  old: //0.3% per level + 36% 120 level
+								//non-explosive v v v
+	else if (mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET
+		&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
+		&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH)
+		damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.006); //0.6% old: //0.5% per level + 60% 120 level
+	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.005); //0.5% old: //0.4% per level + 48% 120 level
+		//explosives
+	}
+		
 	
 
 	//Lethality & Thousand Cuts skills + level damage scale depending on level differences between players
-																												//deal with NPC?
+																									//deal with NPC?
+	//reworked to work as Anti-grief 
 	if (lmd_damage_level_scale.integer == 1 && mod && attacker->client && targ->client && targ->s.eType != ET_NPC && attacker->s.eType != ET_NPC) {
-		int level_attacker = 1;
-		int level_targ = 1;
+		int level_attacker = 40;
+		int level_targ = 40;
 		//1% per 1 level difference!
 		//check is logged in
 		if (attacker->client->pers.Lmd.account)level_attacker = PlayerAcc_Prof_GetLevel(attacker);
 		if (targ->client->pers.Lmd.account)level_targ = PlayerAcc_Prof_GetLevel(targ);
-		
-		//nerfed to 0.45% per level, 54% damage with 120 levels difference
-		damage += damage * ((level_attacker - level_targ)/200); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
+		if (level_attacker > 120) level_attacker = 120;
+		if (level_targ > 120)level_targ = 120;
+		//nerfed to 75% damage with 120 levels difference
+		damage_modifier += damage * ((level_targ-level_attacker)/160); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
+        //do not stack it and make passive skills great again.                    //when target_lvl < att_lvl then subracts	
 	}
+
 
 
 	int lethalityoutput = 0; //that value will skip the shield, and subtract from the HP instead SD-P.
@@ -5536,21 +5557,25 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 					&& mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET 
 					&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
 					&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH ){  //is MotR upgraded? and is not a explosive weapon?
-					damage += (PlayerProf_Merc_Getrifle_masterSkill(attacker)*5)/100;
+					damage_modifier += (PlayerProf_Merc_Getrifle_masterSkill(attacker)*5)/100;
 
 				}
 
+
+				//PERFECT AIM (crit skill)
 				if (PlayerProf_Merc_Getperfect_aimSkill(attacker) > 0 && mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET
 					&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
 					&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH) {
 					int perfect_aim_value = PlayerProf_Merc_Getperfect_aimSkill(attacker);
 					int perfectaim_chance = Q_irand(0,100); 
 					if (perfectaim_chance <= (4 * perfect_aim_value)) { //5->10->15->20->25->30 % //nerfed to 4->8->12->16->20->24
-						damage += damage * (perfect_aim_value*0.3f); // 30->60->90->120->150%->180 additional damage
+						damage_modifier += damage * (perfect_aim_value*0.3f); // 30->60->90->120->150%->180 additional damage
 					}
 
 				}
 				
+				damage += damage_modifier; //STACK MERCENARY
+				damage_modifier = 0;
 				if (PlayerProf_Merc_GetLethalitySkill(attacker) > 0) {  //is lethality upgraded?
 																		//4->8->12->16->20 check the lethality descr   //update -> 5 10 15 20 25 
 					lethalityoutput = (damage * PlayerProf_Merc_GetLethalitySkill(attacker) * 5) / 100; //gets the percent of damage value
@@ -5559,10 +5584,13 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 
 
 
-			}else if (PlayerAcc_Prof_GetProfession(attacker) == PROF_JEDI && mod == MOD_SABER) { //jedi class check and is he using the saber?
+			}
+			else if (PlayerAcc_Prof_GetProfession(attacker) == PROF_JEDI)
+			{ //jedi class check and is he using the saber?
 
 
-				if (PlayerProf_Jedi_GetThousandCutsSkill(attacker) > 0) { //is thousandcuts upgraded?
+				if (PlayerProf_Jedi_GetThousandCutsSkill(attacker) > 0 && mod == MOD_SABER)  //saber only
+				{ //is thousandcuts upgraded? //saber only
 
 					//5->10->15->20 check the thousandcuts descr level 1,2,3,4
 					//5->10->15->25 lethality level 5,6,7,8
@@ -5570,41 +5598,36 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 					int additional_damage_multiplier = PlayerProf_Jedi_GetThousandCutsSkill(attacker);
 					if (additional_damage_multiplier > 4)
 					{
-						additional_damage_multiplier = 4; //1,2,3,4 for additional damage
+																//1,2,3,4 for additional damage
 															  //5,6,7 or 8
-						lethality_multiplier = PlayerProf_Jedi_GetThousandCutsSkill(attacker) - 4; //1,2,3,4 again
-
+						lethality_multiplier = additional_damage_multiplier - 4; //1,2,3,4 again
+						additional_damage_multiplier = 4;
 
 					}
-
-
-
 
 					//additional damage
 					if (lmd_is_thousandcuts_lethality.integer == 1) //want to use thousandcuts additional damage as a lethality skill from the beginning?
 					{
-
-						lethalityoutput += (additional_damage_multiplier * 5) / 100; //gets the percent of damage value
-						damage -= (additional_damage_multiplier * 5) / 100; //no option for additional damage cuz too op sorry.
+						lethalityoutput += (damage * additional_damage_multiplier * 5) / 100; //gets the percent of damage value
 					}
 					else { //standard formula for increased output
 
-						damage += (damage * additional_damage_multiplier * 5) / 100;
+						damage_modifier += (damage * additional_damage_multiplier * 5) / 100;
 
 					}
+					damage += damage_modifier; //Stack for jedi
+					damage_modifier = 0;
 					//converts base damage to the lethality
-					lethalityoutput += (lethality_multiplier * 5) / 100;
-					damage -= lethalityoutput;
+					lethalityoutput += (damage * lethality_multiplier * 5) / 100;
+					damage -= lethalityoutput; // no option for that sorry
 					//compute after all bonuses
 				}
 
-			
 
-
-					//rage regens hp on hit with saber
+					//rage regens hp on hit with saber or dark force
 
 					int vampiric_rage_level = PlayerProf_Jedi_GetRageSkill(attacker);
-					if (vampiric_rage_level > 0 && (mod == MOD_SABER || mod == MOD_FORCE_DARK))
+					if (vampiric_rage_level > 0 && (mod == MOD_SABER || mod == MOD_FORCE_DARK)) //saber and power
 					{
 						if (attacker->client->ps.fd.forcePowersActive & (1 << FP_RAGE))
 						{
@@ -5618,11 +5641,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 					}
 
 
-
-				
-
-
 			}
+				damage += damage_modifier; //stacks bonuses for other class / more bonuses in the future??
+		
 
 
 		}
@@ -5667,6 +5688,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	if (asave)shieldAbsorbed = asave;
 
 	take -= asave;
+
 	take += lethalityoutput;              //iomatix lethality.
 	if ( targ->client )
 	{//update vehicle shields and armor, check for explode 

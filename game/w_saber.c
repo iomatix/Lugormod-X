@@ -8,7 +8,7 @@
 #include "Lmd_Professions.h"
 #include "Lmd_Prof_Merc.h"
 
-#define BLOCK_FORCE_COST 7
+#define BLOCK_FORCE_COST 3
 #define SABER_BOX_SIZE 16.0f
 extern bot_state_t *botstates[MAX_CLIENTS];
 extern qboolean InFront( vec3_t spot, vec3_t from, vec3_t fromAngles, float threshHold );
@@ -9610,9 +9610,6 @@ int WP_SaberCanBlock(gentity_t *self, vec3_t point, int dflags, int mod, qboolea
 		return 0;
 	}
 
-	//iomatix: blocks needs force now
-	if (!WP_SaberBlockForceCost(self)) return 0;
-
 	if (self->client->ps.saberMove != LS_READY &&
 		!self->client->ps.saberBlocking)
 	{
@@ -9628,6 +9625,8 @@ int WP_SaberCanBlock(gentity_t *self, vec3_t point, int dflags, int mod, qboolea
 	{
 		return 0;
 	}
+
+
 
 
 
@@ -9667,7 +9666,8 @@ int WP_SaberCanBlock(gentity_t *self, vec3_t point, int dflags, int mod, qboolea
 		return 0;
 	}
 
-
+	//iomatix: blocks needs force now
+	if (!WP_SaberBlockForceCost(self)) return 0;
 
 	//
 
