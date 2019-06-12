@@ -261,8 +261,11 @@ qboolean Force_Throw_CanCounter(gentity_t *self, gentity_t *thrower, qboolean pu
 		return qfalse;
 
 	//cooldown for countering
-	if (isForce_Cooldown(self, powerUse)) return qfalse;
-	Force_Cooldown(self, 850, powerUse);
+	if (isForce_Cooldown(self, FP_PULL)) return qfalse;
+	else Force_Cooldown(self, 850, FP_PULL);
+	if (isForce_Cooldown(self, FP_PUSH)) return qfalse;
+	else Force_Cooldown(self, 850, FP_PUSH);
+
 	return qtrue;
 }
 
