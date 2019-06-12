@@ -2414,6 +2414,7 @@ typedef struct playerState_s {
 
 	int			forceRageDrainTime;
 
+
 	int			forceDodgeAnim;
 	qboolean	quickerGetup;
 

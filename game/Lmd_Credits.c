@@ -8,7 +8,9 @@
 qboolean PlayerItem_CanSpawnItem(gentity_t *player);
 qboolean PlayerItem_Spawn(gentity_t *player, gentity_t *item);
 extern void Experience_Level_Up(gentity_t *ent);
+
 void GiveExperience(gentity_t *ent, int exper, char *reason) {
+	if (lmd_bots_gain_experience.integer == 0 && (ent->r.svFlags & SVF_BOT)) return; //do not give experience to bots.
 	if (PlayerAcc_Prof_GetLevel(ent) >= 120) { PlayerAcc_SetExperience(ent, 0); return; } //if max level don't give exp
 	int cur = PlayerAcc_GetExperience(ent);
 	if (exper < 0 && exper - exper < 0) exper = 0;

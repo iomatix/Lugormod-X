@@ -116,7 +116,7 @@ typedef struct {
 		int kingScore;
 		int killstreak;
 		int killstreak_bounty; //bounty for killstreaks (to save it after death)
-
+		int TimeInCombat; //iomatix: merc skill hp regen
 							   //iomatix
 		int force_cooldown[NUM_FORCE_POWERS]; //cooldown for forces
 		//RoboPhred:
@@ -266,6 +266,8 @@ struct gclient_s {
 	int			bodyGrabIndex;
 
 	int			pushEffectTime;
+
+	
 
 	int			invulnerableTimer;
 

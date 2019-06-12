@@ -346,6 +346,7 @@ vmCvar_t	lmd_is_buy_level;
 vmCvar_t	lmd_old_commands_disp;
 vmCvar_t    lmd_is_forcecooldown;
 vmCvar_t lmd_force_is_double_jump;
+vmCvar_t lmd_bots_gain_experience;
 //RoboPhred:
 vmCvar_t lmd_DataPath;
 vmCvar_t lmd_stashrate;
@@ -898,7 +899,7 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_old_commands_disp, "lmd_old_commands_disp", "0",CVAR_ARCHIVE,0,qfalse },
 { &lmd_is_forcecooldown, "lmd_is_forcecooldown", "1",CVAR_ARCHIVE,0,qfalse},
 { &lmd_force_is_double_jump, "lmd_force_is_double_jump", "1",CVAR_ARCHIVE,0,qfalse },
-
+{ &lmd_bots_gain_experience, "lmd_bots_gain_experience", "0",CVAR_ARCHIVE,0,qfalse },
 // Lugormod cvars:
 { &g_noVoteTime, "g_noVoteTime", "5", CVAR_ARCHIVE,0, qfalse, qfalse,
 "Number of minutes to wait after a map change before votes are allowed again.  This does not apply to admins level 3 or lower."

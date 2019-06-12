@@ -1122,6 +1122,7 @@ extern	vmCvar_t	lmd_is_buy_level;
 extern  vmCvar_t	lmd_old_commands_disp;
 extern vmCvar_t lmd_is_forcecooldown;
 extern vmCvar_t lmd_force_is_double_jump;
+extern vmCvar_t lmd_bots_gain_experience;
 #include "../namespace_begin.h"
 
 // RoboPhred

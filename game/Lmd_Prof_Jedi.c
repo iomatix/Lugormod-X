@@ -300,10 +300,10 @@ int Get_Jedi_hp_maxs_value(gentity_t *ent) //Will (Health points)
 {
 	if (lmd_jedi_add_hp_level.integer == 0) { return 100; } //old lugor option
 
-	int value = 40; //starting health
+	int value = 46; //starting health
 	
 		
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 3.5); //scale health 420+40 
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 3.7); //scale health 444+46 
 	
 
 	int skillHP = Lmd_Prof_Jedi_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_hp_maxs);
@@ -1010,7 +1010,7 @@ int Jedi_GetForceRegenDebounce(gentity_t *ent) {
 	//(level * (g_forceRegenTime.integer * (2. / 3.))) = x * 20
 	//((level * (g_forceRegenTime.integer * (2. / 3.))) / 20) = x
 	//iomatix new regen formula
-	return g_forceRegenTime.integer - floor((level * (g_forceRegenTime.integer / 8.)) / 120.); //120 is max level -> -13% regen cooldown on level 120
+	return g_forceRegenTime.integer - floor((level * (g_forceRegenTime.integer / 5.)) / 120.); //120 is max level -> -20% regen cooldown on level 120
 }
 
 unsigned int Jedi_Count() {

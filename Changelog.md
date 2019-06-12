@@ -100,7 +100,24 @@
 - lmd_damage_level_scale formula reworked to work as anti-grief mechanic. ✔️
 - g_scaleAllDamage is added. ✔️ 
 - Blocking stops force regen. ✔️ 
-- Push and Pull forces rework. 50%
+- Additional 50% damage for hit in the back. ✔️
+- Bots won't gain experience or Black List Rewards. ✔️
+- lmd_bots_gain_experience is added. Default: 0, 1 to allow bots gain experience and bounty rewards. ✔️
+- Added in Combat stance. ✔️
+- Added a passive regeneration for Mercenary, slowly regens HP if not in combat stance. ✔️ 
+- New Mercenary skill "Regeneration" which increases the passive regeneartion. ✔️
+- Lava damage ticks reworked to suit better to the RPG style.  ✔️
+- Force user: More HP per level. ✔️
+- Running backward results with slower speed than forward.  ✔️
+- Merc Skills: MotR buff, PA nerf but making it less random.  ✔️  
+- Push and Pull forces rework. ✔️ 
+
+- Limited visible force amount to 255 (To cover up client's bug with overclocking the HUD above this value). ???
+
+
+
+
+
 
 //
 

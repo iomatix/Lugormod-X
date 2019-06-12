@@ -1,4 +1,3 @@
-
 // Copyright (C) 1999-2000 Id Software, Inc.
 //
 
@@ -174,12 +173,15 @@ void P_DamageFeedback( gentity_t *player ) {
 
 
 
+
 /*
 =============
 P_WorldEffects
 
 Check for lava / slime contents and drowning
 =============
+
+
 */
 void P_WorldEffects( gentity_t *ent ) {
 	qboolean	envirosuit;
@@ -210,8 +212,8 @@ void P_WorldEffects( gentity_t *ent ) {
 			if ( ent->health > 0 ) {
 				// take more damage the longer underwater
 				ent->damage += 2;
-				if (ent->damage > 15)
-					ent->damage = 15;
+				if (ent->damage > 20)
+					ent->damage = 20;
 
 				// play a gurp sound instead of a normal pain sound
 				if (ent->health <= ent->damage) {
@@ -242,20 +244,29 @@ void P_WorldEffects( gentity_t *ent ) {
 				if(level.lavaDamage > 0) {
 					if ( envirosuit )
 						G_AddEvent( ent, EV_POWERUP_BATTLESUIT, 0 );
-					else
-						G_Damage (ent, NULL, NULL, NULL, NULL, level.lavaDamage*waterlevel, 0, MOD_LAVA);
+					else {
+						G_Damage(ent, NULL, NULL, NULL, NULL, level.lavaDamage*waterlevel+ent->damage_lava_ticks, 0, MOD_LAVA);	
+						if (ent->damage_lava_ticks > 750) ent->damage_lava_ticks = 900;
+						else ent->damage_lava_ticks += 45;
+					}
 				}
 			}
-
-			if (ent->watertype & CONTENTS_SLIME) {
+			else if (ent->watertype & CONTENTS_SLIME) {
 				if(level.lavaDamage > 0) {
 					if ( envirosuit )
 						G_AddEvent( ent, EV_POWERUP_BATTLESUIT, 0 );
 					else
-						G_Damage (ent, NULL, NULL, NULL, NULL, level.slimeDamage*waterlevel, 0, MOD_LAVA);
+						G_Damage (ent, NULL, NULL, NULL, NULL, level.slimeDamage*waterlevel + ent->damage_lava_ticks, 0, MOD_LAVA);
+					if (ent->damage_lava_ticks > 300) ent->damage_lava_ticks = 300;
+					else ent->damage_lava_ticks += 6;
 				}
 			}
+
 		}
+	}
+	else {
+		ent->damage_lava_ticks = 5;
+
 	}
 }
 
@@ -2811,9 +2822,9 @@ void ClientThink_real( gentity_t *ent ) {
 			{
 				ucmd->forwardmove = 64;	
 			}
-			else if (ucmd->forwardmove < -64)
+			else if (ucmd->forwardmove < -48) //iomatix -64 -> -48
 			{
-				ucmd->forwardmove = -64;
+				ucmd->forwardmove = -48;
 			}
 
 			if (ucmd->rightmove > 64)
@@ -2831,6 +2842,12 @@ void ClientThink_real( gentity_t *ent ) {
 		if(client->Lmd.customSpeed.time >= level.time){
 			client->ps.speed = client->Lmd.customSpeed.value;
 		}
+		//iomatix:
+		if (ucmd->forwardmove < 0) client->ps.speed *= 0.55; //nerf backward moving by 45%
+		
+
+
+
 		//Lugormod
 		// set speed
 		if (ent->client->ps.iModelScale) {

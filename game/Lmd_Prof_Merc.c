@@ -78,6 +78,7 @@ typedef struct mercFields_s{
 		int lethality;
 		int rifle_master;
 		int perfect_aim;
+		int regeneration;
 	} skills;
 	int weaponselect;
 }mercFields_t;
@@ -104,6 +105,7 @@ typedef struct mercFields_s{
 	_m##_AUTO(lethality, MERCFIELDOFS(skills.lethality), F_INT) \
 	_m##_AUTO(rifle_master, MERCFIELDOFS(skills.rifle_master), F_INT) \
 	_m##_AUTO(perfect_aim, MERCFIELDOFS(skills.perfect_aim), F_INT) \
+	_m##_AUTO(regeneration, MERCFIELDOFS(skills.regeneration), F_INT) \
 	_m##_AUTO(weaponselect, MERCFIELDOFS(weaponselect), F_INT)
 
 MercFields_Base(DEFINE_FIELD_PRE)
@@ -159,6 +161,34 @@ profSkill_t mercSkill_hp_maxs = {
 	Lmd_Prof_Merc_CanSetSkill_hp_maxs,
 	Lmd_Prof_Merc_SetSkill_hp_maxs,
 };
+//regeneration:
+const char *mercSkill_regeneration_Descr[] = {
+	"1.5 percent of health regeneration.",
+	"3 percent of health regeneration.",
+	"4.5 percent of health regeneration.",
+	"6 percent of health regeneration.",
+	"7.5 percent of health regeneration.",
+	NULL
+};
+//+272 HP
+
+
+STD_SKILLS_FUNCS(regeneration)
+
+profSkill_t mercSkill_regeneration = {
+	"Regeneration",
+	"Slowly regenerates your health.",
+	mercSkill_regeneration_Descr,
+
+	0,
+	SkillLevels_Default,
+	SkillPoints_Default,
+
+	Lmd_Prof_Merc_GetSkill_regeneration,
+	Lmd_Prof_Merc_CanSetSkill_regeneration,
+	Lmd_Prof_Merc_SetSkill_regeneration,
+};
+
 ////////////
 const char *mercSkill_sd_maxs_Descr[] = {
 	"+5 Shield",
@@ -226,10 +256,10 @@ profSkill_t mercSkill_Lethality = {
 };
 //////////
 const char *mercSkill_rifle_master_Descr[] = {
-	"5 percent of the additional damage using rifles.",
-	"10 percent of the additional damage using rifles.",
-	"15 percent of the additional damage using rifles.",
-	"20 percent of the additional damage using rifles.",
+	"9 percent of the additional damage using rifles.",
+	"18 percent of the additional damage using rifles.",
+	"27 percent of the additional damage using rifles.",
+	"36 percent of the additional damage using rifles.",
 	NULL
 };
 
@@ -251,12 +281,12 @@ profSkill_t mercSkill_rifle_master = {
 
 /////// too op? 4,8,12,16,20,24%? nerf?
 const char *mercSkill_perfect_aim_Descr[] = {
-	"4 percent chance for additional 30 percent critical damage.",
-	"8 percent chance for additional 60 percent of critical damage.",
-	"12 percent chance for additional 90 percent of critical damage.",
-	"16 percent chance for additional 120 percent of critical damage.",
-	"20 percent chance for additional 150 percent of critical damage.",
-	"24 percent chance for additional 180 percent of critical damage.",
+	"8 percent chance for additional 12 percent critical damage.",
+	"16 percent chance for additional 24 percent of critical damage.",
+	"24 percent chance for additional 36 percent of critical damage.",
+	"32 percent chance for additional 48 percent of critical damage.",
+	"40 percent chance for additional 60 percent of critical damage.",
+	"48 percent chance for additional 72 percent of critical damage.",
 	NULL
 };
 
@@ -278,6 +308,13 @@ profSkill_t mercSkill_perfect_aim = {
 
 //functions for passive skills:
 //GetSkill
+int Lmd_Prof_Merc_GetregenerationSkill(Account_t *acc) {
+	if (!acc) {
+		return 0;
+	}
+	return mercSkill_regeneration.getValue(acc, &mercSkill_regeneration);
+}
+
 int Lmd_Prof_Merc_Getperfect_aimSkill(Account_t *acc) {
 	if (!acc) {
 		return 0;
@@ -299,9 +336,9 @@ int Lmd_Prof_Merc_GetLethalitySkill(Account_t *acc) {
 /////Functions:
 int Get_Merc_hp_maxs_value(gentity_t *ent)
 {
-	int value = 55; //starting health
+	int value = 58; //starting health
 
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 3.9); //scale health 468+55
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 4.1); //scale health 492+55
 	int skillHP = Lmd_Prof_Merc_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &mercSkill_hp_maxs);
 	if (skillHP > 0){
 		value += 13 * skillHP;
@@ -621,6 +658,7 @@ profSkill_t mercSkills[] = {
 	mercSkill_Lethality,
 	mercSkill_rifle_master,
 	mercSkill_perfect_aim,
+	mercSkill_regeneration,
 };
 const unsigned int mercSkillCount = sizeof(mercSkills) / sizeof(profSkill_t);
 
@@ -767,7 +805,7 @@ int Merc_UsedWeaponPoints(gentity_t *ent){
 
 float Merc_SpeedFactor(gentity_t *ent) {
 	//Ufo: slow down only in certain conditions
-	return (ent->client->ps.weapon > WP_BOWCASTER || ent->client->jetPackOn) ? 0.8 : 1.0;
+	return (ent->client->ps.weapon > WP_BOWCASTER || ent->client->jetPackOn) ? 0.75 : 1.0;
 }
 
 int MaxAmmo(gentity_t *ent, int ammo);

@@ -61,6 +61,9 @@ Adds cooldown for Force User's force powers if 1. Avoid spamming forces. Default
 - **`lmd_force_is_double_jump`**
 
 Allows to turn off the double jump if 0. Default 1.
+- **`lmd_bots_gain_experience`**
+
+Allows to gain experience and The Black List rewards for AI players if 1. Default 0.
 ### G:
 
 - **`g_scaleAllDamag`**

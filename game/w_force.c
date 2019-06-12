@@ -1350,10 +1350,28 @@ int Get_Jedi_overload_value_reg(gentity_t *ent, int value);
 //Iomatix:
 void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 { //called on a regular interval to regenerate force power.
+
+
+
 	if ( !self->client )
 	{
 		return;
 	}
+
+	//iomatix: hp regen
+
+	if (PlayerAcc_Prof_GetProfession(self) == PROF_MERC && (level.time >= self->client->pers.Lmd.TimeInCombat)){
+		
+		int maxhp = self->client->ps.stats[STAT_MAX_HEALTH];
+		int hp = self->client->ps.stats[STAT_HEALTH];
+		if (maxhp > hp) hp += 1+(PlayerProf_Merc_GetregenerationSkill(self)*maxhp*0.015);
+		if (maxhp < hp) hp = maxhp;
+
+		self->health = self->client->ps.stats[STAT_HEALTH] = hp;
+		self->client->pers.Lmd.TimeInCombat = level.time + 2350;
+	}
+	//
+
 	int extraForce = g_meditateExtraForce.integer;
 
 	if(extraForce < 0) extraForce = 0;
@@ -1389,6 +1407,8 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 		self->client->ps.fd.forcePower = fpmax;
 		return;
 	}
+
+
 
 }
 

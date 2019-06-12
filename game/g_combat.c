@@ -19,7 +19,7 @@ extern void BG_ClearRocketLock( playerState_t *ps );
 //rww - pd
 void BotDamageNotification(gclient_t *bot, gentity_t *attacker);
 //end rww
-
+#define TimeInCombatCD 7500 //in ms iomatix
 void ThrowSaberToAttacker(gentity_t *self, gentity_t *attacker);
 //Lugormod
 qboolean meditateProtect (gentity_t *ent){
@@ -2728,7 +2728,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 				//Player's bounty (message priority)
 				qboolean Is_players_bounty_message = qfalse;
-				if (attacker->client->pers.Lmd.account && self->client->pers.Lmd.account)
+				if (attacker->client->pers.Lmd.account && self->client->pers.Lmd.account && (!(attacker->r.svFlags & SVF_BOT) || (lmd_bots_gain_experience.integer != 0 && (attacker->r.svFlags & SVF_BOT)) ))
 				{
 					int thebounty_reward_player_cmd = PlayerAcc_GetBountyReward(self);
 					if (thebounty_reward_player_cmd > 0)
@@ -4737,12 +4737,16 @@ void G_LocationBasedDamageModifier(gentity_t *ent, vec3_t point, int mod, int df
 		break;
 	case HL_LEG_RT:
 	case HL_LEG_LT:
-		*damage *= 0.7;
+		*damage *= 0.75;
 		break;
 	case HL_WAIST:
+		*damage *= 1.25;
+		break;
 	case HL_BACK_RT:
 	case HL_BACK_LT:
 	case HL_BACK:
+		*damage *= 1.5;
+		break;
 	case HL_CHEST_RT:
 	case HL_CHEST_LT:
 	case HL_CHEST:
@@ -4753,7 +4757,7 @@ void G_LocationBasedDamageModifier(gentity_t *ent, vec3_t point, int mod, int df
 		break;
 	case HL_HAND_RT:
 	case HL_HAND_LT:
-		*damage *= 0.5;
+		*damage *= 0.45;
 		break;
 	case HL_HEAD:
 		*damage *= 3; //iomatix: 3x damage for head hits (nerfed x4->x3)
@@ -5526,9 +5530,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	else if (mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET
 		&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
 		&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH)
-		damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.007); //0.7% +84% 120 level old: //0.5% per level + 60% 120 level
-	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.006); //0.6% +72% 120 level old: //0.4% per level + 48% 120 level
-		//explosives
+	damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.006); //0.6% +72% 120 level old: //0.7% per level + 84% 120 level
+//explosives v v v
+	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.003); //0.3% +36% 120 level old: //0.6% per level + 72% 120 level
+
 	}
 		
 	
@@ -5563,12 +5568,12 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 
 				
 				//MASTER OF THE RIFLES:
-				//5->10->15->20%
+				//9->18->27->36%
 				if (PlayerProf_Merc_Getrifle_masterSkill(attacker) > 0
 					&& mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET 
 					&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
 					&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH ){  //is MotR upgraded? and is not a explosive weapon?
-					damage_modifier += (PlayerProf_Merc_Getrifle_masterSkill(attacker)*5)/100;
+					damage_modifier += (PlayerProf_Merc_Getrifle_masterSkill(attacker)*9)/100;
 
 				}
 
@@ -5579,8 +5584,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 					&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH) {
 					int perfect_aim_value = PlayerProf_Merc_Getperfect_aimSkill(attacker);
 					int perfectaim_chance = Q_irand(0,100); 
-					if (perfectaim_chance <= (4 * perfect_aim_value)) { //5->10->15->20->25->30 % //nerfed to 4->8->12->16->20->24
-						damage_modifier += damage * (perfect_aim_value*0.3f); // 30->60->90->120->150%->180 additional damage
+					if (perfectaim_chance <= (8 * perfect_aim_value)) { //8->16->24->32->40->48 % //nerfed to 4->8->12->16->20->24
+						damage_modifier += damage * (perfect_aim_value*0.12f); // 12->24->36->48->60->72 % additional damage
 					}
 
 				}
@@ -6150,6 +6155,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	// do the damage
 	if (take) 
 	{
+		//iomatix: in combat stance on:
+		if (targ->client && targ->s.number < MAX_CLIENTS)targ->client->pers.Lmd.TimeInCombat = level.time + 6500;
+		if (attacker->client && attacker->s.number < MAX_CLIENTS)attacker->client->pers.Lmd.TimeInCombat = level.time + 4300;
+
 		if (targ->client && targ->s.number < MAX_CLIENTS &&
 			(mod == MOD_DEMP2 || mod == MOD_DEMP2_ALT))
 		{ //uh.. shock them or something. what the hell, I don't know.

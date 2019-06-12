@@ -354,7 +354,7 @@ qboolean Force_Throw_IsThrowable (gentity_t *ent, qboolean pull){
 	return qfalse;
 }
 
-#define FORCE_PUSH_BASEPOWER 256
+#define FORCE_PUSH_BASEPOWER 296 //256 -> buff iomatix
 int Force_Throw_PushPower(gentity_t *ent, qboolean pull) {
 	//FIXME: return power from force modifications.
 	//Ufo: yes

@@ -531,6 +531,7 @@ void Pmove (pmove_t *pmove);
 // NOTE: may not have more than 16
 typedef enum {
 	STAT_HEALTH,
+	STAT_FORCE,
 	STAT_HOLDABLE_ITEM,
 	STAT_HOLDABLE_ITEMS,
 	STAT_PERSISTANT_POWERUP,

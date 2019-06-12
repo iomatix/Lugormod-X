@@ -270,6 +270,7 @@ struct gentity_s {
 	material_t	material;
 
 	int			damage;
+	int         damage_lava_ticks;
 	int			dflags;
 	int			splashDamage;	// quad will increase this without increasing radius
 	int			splashRadius;
