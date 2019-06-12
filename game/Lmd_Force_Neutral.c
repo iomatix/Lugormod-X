@@ -248,14 +248,21 @@ qboolean Force_Throw_CanCounter(gentity_t *self, gentity_t *thrower, qboolean pu
 		return qfalse;
 	}
 
-	if (pull)
+	if (pull) {
 		powerUse = FP_PULL;
-	else
+		
+	}
+	else {
 		powerUse = FP_PUSH;
+	}
 
+	
 	if ( !Force_CanUsePower( self, powerUse ) )
 		return qfalse;
 
+	//cooldown for countering
+	if (isForce_Cooldown(self, powerUse)) return qfalse;
+	Force_Cooldown(self, 850, powerUse);
 	return qtrue;
 }
 
@@ -718,6 +725,8 @@ void Force_Throw_Start(gentity_t *self, qboolean pull, const forceThrow_t *data)
 
 	unsigned int i, e;
 
+	if (isForce_Cooldown(self, power)) return;
+
 	Force_DrainForceEnergy(self, power, data->forcepower);
 
 	if (!pull && self->client->ps.saberLockTime > level.time && self->client->ps.saberLockFrame){
@@ -729,6 +738,7 @@ void Force_Throw_Start(gentity_t *self, qboolean pull, const forceThrow_t *data)
 
 	//make sure this plays and that you cannot press fire for about 1 second after this
 	if ( pull )	{
+		Force_Cooldown(self, 2650, FP_PULL);
 		G_Sound( self, CHAN_BODY, G_SoundIndex( "sound/weapons/force/pull.wav" ) );
 		if (self->client->ps.forceHandExtend == HANDEXTEND_NONE){
 			self->client->ps.forceHandExtend = HANDEXTEND_FORCEPULL;
@@ -748,6 +758,7 @@ void Force_Throw_Start(gentity_t *self, qboolean pull, const forceThrow_t *data)
 		self->client->ps.powerups[PW_PULL] = self->client->ps.powerups[PW_DISINT_4];
 	}
 	else {
+		Force_Cooldown(self, 1650, FP_PUSH);
 		G_Sound( self, CHAN_BODY, G_SoundIndex( "sound/weapons/force/push.wav" ) );
 		if (self->client->ps.forceHandExtend == HANDEXTEND_NONE){
 			self->client->ps.forceHandExtend = HANDEXTEND_FORCEPUSH;
@@ -918,11 +929,11 @@ qboolean Force_Pull_Start(gentity_t *ent, const void *data) {
 }
 
 forceThrow_t Force_Throw_Levels[5] = {
-	{256,		1024, 0,	20, qfalse, 2},
-	{256 * 2,	1024, 60,	20, qfalse,	4},
-	{256 * 3,	1024, 180,	20, qtrue,	6},
-	{256 * 4,	1024, 180,	20, qtrue,	8},
-	{256 * 5,	1024, 180,	20, qtrue,	10},
+	{FORCE_PUSH_BASEPOWER,		1024, 0,	20, qfalse, 2},
+	{ FORCE_PUSH_BASEPOWER * 2,	1024, 60,	20, qfalse,	4},
+	{ FORCE_PUSH_BASEPOWER * 3,	1024, 180,	20, qtrue,	6},
+	{ FORCE_PUSH_BASEPOWER * 4,	1024, 180,	20, qtrue,	8},
+	{ FORCE_PUSH_BASEPOWER * 5,	1024, 180,	20, qtrue,	10},
 };
 
 forcePower_t Force_Push = {

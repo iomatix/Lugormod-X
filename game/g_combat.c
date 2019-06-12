@@ -4756,7 +4756,7 @@ void G_LocationBasedDamageModifier(gentity_t *ent, vec3_t point, int mod, int df
 		*damage *= 0.5;
 		break;
 	case HL_HEAD:
-		*damage *= 4; //iomatix: 4x damage for head hits
+		*damage *= 3; //iomatix: 3x damage for head hits (nerfed x4->x3)
 		break;
 	default:
 		break; //do nothing then

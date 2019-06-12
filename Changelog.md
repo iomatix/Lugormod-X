@@ -100,6 +100,7 @@
 - lmd_damage_level_scale formula reworked to work as anti-grief mechanic. ✔️
 - g_scaleAllDamage is added. ✔️ 
 - Blocking stops force regen. ✔️ 
+- Push and Pull forces rework. 50%
 
 //
 
