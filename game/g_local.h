@@ -452,6 +452,9 @@ void	G_TouchTriggers(gentity_t *ent);
 void	G_TouchSolids(gentity_t *ent);
 void	GetAnglesForDirection(const vec3_t p1, const vec3_t p2, vec3_t out);
 
+//W_FORCE.C
+extern void WP_ForceLimiterForceSet(gentity_t *ent);
+
 //
 // g_object.c
 //

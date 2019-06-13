@@ -3628,6 +3628,7 @@ void Cmd_EngageDuel_f(gentity_t *ent){
 			if (g_privateDuel.integer & PD_START_POWER) {
 				ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax;
 				challenged->client->ps.fd.forcePower = challenged->client->ps.fd.forcePowerMax;
+				WP_ForceLimiterForceSet(challenged); WP_ForceLimiterForceSet(ent);
 			}
 			if (g_privateDuel.integer & PD_START_ARMOR) {
 				ent->client->bdArmor = ent->client->ps.stats[STAT_ARMOR];

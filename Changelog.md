@@ -110,19 +110,15 @@
 - Force user: More HP per level. ✔️
 - Running backward results with slower speed than forward.  ✔️
 - Merc Skills: MotR buff, PA nerf but making it less random.  ✔️  
-- Push and Pull forces rework. ✔️ 
-
-- Limited visible force amount to 255 (To cover up client's bug with overclocking the HUD above this value). ???
-
-
-
-
+- Push and Pull forces rework. ✔️
+- Accountedit `passwd` command is added. Admin may use it to set the new account password. ✔️
+- Force limiter created to fit the client's HUD limitations.  ✔️
 
 
 //
 
 ///
-- accountedit passwd.
+
 - Search a new ways for spending credits.
 - experience boosters/ packs for CR? lmd_exp_boosters
 - lmd_stashexp added. Stash system supports new experience system now. 50%

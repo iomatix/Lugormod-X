@@ -468,6 +468,7 @@ int Force_Protect_ModifyDamage(gentity_t *targ, int take) {
 	else
 		targ->client->ps.fd.forcePower -= maxtake * data->forcetake;
 
+	WP_ForceLimiterForceSet(targ);
 	//RoboPhred: what the hell is this...  Way too many variables going into a single value...
 	//maxtake is take capped, and maxtake is percentaged to damage take,
 	//and added to the value of take subtracted by maxtake

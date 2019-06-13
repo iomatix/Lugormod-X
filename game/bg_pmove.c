@@ -2992,6 +2992,7 @@ static qboolean PM_CheckJump( void )
 					return qfalse;
 				}
 				pm->ps->fd.forcePower -= 5;
+				//WP_ForceLimiterForceSet(pm);
 				pm->ps->pm_flags |= PMF_JUMP_HELD;
 				pm->ps->fd.forcePowersActive |= (1 << FP_LEVITATION);
 			}
@@ -4107,6 +4108,7 @@ static qboolean PM_CheckJump( void )
 
 				//PM_SetForceJumpZStart(pm->ps->origin[2]);//so we don't take damage if we land at same height
 				pm->ps->fd.forcePower -= 5;
+				//WP_ForceLimiterForceSet(pm);
 				pm->ps->fd.forcePowersActive |= (1 << FP_LEVITATION);
 
 				//Jumping

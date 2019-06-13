@@ -119,6 +119,7 @@ typedef struct {
 		int killstreak;
 		int killstreak_bounty; //bounty for killstreaks (to save it after death)
 		int TimeInCombat; //iomatix: merc skill hp regen
+		int ForceExcess; //use to keep part of the force to resolve HUD LIMITATIONS.
 							   //iomatix
 		int force_cooldown[NUM_FORCE_POWERS]; //cooldown for forces
 		//RoboPhred:

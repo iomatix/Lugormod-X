@@ -9490,6 +9490,7 @@ qboolean WP_SaberBlockForceCost(gentity_t *self)
 	}
 	
 		self->client->ps.fd.forcePower -= BLOCK_FORCE_COST * FORCECOST_sab_def;
+		WP_ForceLimiterForceSet(self);
 		return qtrue;
 	
 
