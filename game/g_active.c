@@ -3155,7 +3155,7 @@ void ClientThink_real( gentity_t *ent ) {
 				//trap_SendServerCommand( duelAgainst-g_entities, va("print \"%s %s %s\n\"", ent->client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLDUELWINNER" ), duelAgainst->client->pers.netname ) );
 				//trap_SendServerCommand( duelAgainst-g_entities, va("print \"%s %s %s \"", ent->client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLDUELWINNER" ), duelAgainst->client->pers.netname ) );
 
-				Disp( duelAgainst, va("%s had ^1%i^7/^2%i",ent->client->pers.netname, ent->health,ent->client->ps.stats[STAT_ARMOR]));
+				Disp( duelAgainst, va("^3Duel log: ^7%s^3 retains ^1%i HP^3 and ^2%i SD",ent->client->pers.netname, ent->health,ent->client->ps.stats[STAT_ARMOR]));
 				//trap_SendServerCommand( duelAgainst-g_entities, va("print \"%s had ^1%i^7/^2%i^7 \"", ent->client->pers.netname, ent->health,ent->client->ps.stats[STAT_ARMOR]) );
 
 			} else {//Private duel announcements are now made globally because we only want one duel at a time.

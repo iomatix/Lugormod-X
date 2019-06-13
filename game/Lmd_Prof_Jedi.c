@@ -208,7 +208,7 @@ STD_FORCEPOWER_FUNCS(mp_maxs, FP_PASSIVE_mp_maxs)
 
 profSkill_t jediSkill_Passive_mp_maxs = {
 	"Force",
-	"Increase the Force capacity.",
+	"Increase the Force capacity.\nIf the force is over the HUD capacity limit the force will regenerate much faster instead to recompensate the difference.",
 	jediSkill_Passive_mp_maxs_Descr,
 
 	0,
@@ -235,7 +235,7 @@ STD_FORCEPOWER_FUNCS(overload, FP_PASSIVE_overload)
 
 profSkill_t jediSkill_Passive_overload = {
 	"Overload",
-	"Regenerate more force and increase its base capacity.",
+	"Regenerate more force and increase its base capacity.\nIf the force is over the HUD capacity limit the force will regenerate much faster instead to recompensate the difference.",
 	jediSkill_Passive_overload_Descr,
 
 	0,

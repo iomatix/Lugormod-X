@@ -1357,12 +1357,12 @@ void WP_ForceLimiterForceSet(gentity_t *self)
 
 		if (self->client->pers.Lmd.ForceExcess >= FORCE_HUD_LIMIT - self->client->ps.fd.forcePower)
 		{
-			self->client->ps.fd.forcePower += FORCE_HUD_LIMIT - self->client->ps.fd.forcePower;
-			self->client->pers.Lmd.ForceExcess -= FORCE_HUD_LIMIT - self->client->ps.fd.forcePower;
+			self->client->pers.Lmd.ForceExcess -= (FORCE_HUD_LIMIT - self->client->ps.fd.forcePower)/6;
+			self->client->ps.fd.forcePower += (FORCE_HUD_LIMIT - self->client->ps.fd.forcePower)/6;
 		}
 		else {
-			self->client->ps.fd.forcePower += self->client->pers.Lmd.ForceExcess;
-			self->client->pers.Lmd.ForceExcess = 0;
+			self->client->ps.fd.forcePower += self->client->pers.Lmd.ForceExcess/6;
+			self->client->pers.Lmd.ForceExcess -= self->client->pers.Lmd.ForceExcess/6;
 		}
 	}
 
@@ -1404,9 +1404,6 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 
 
 
-	
-	//
-
 	int passive_regen = 1 + floor(fpmax*0.01f); //add 1% regen as a passive
 	if (g_meditateExtraForce.integer && g_gametype.integer == GT_FFA && self->client->ps.legsAnim == BOTH_MEDITATE && self->client->ps.torsoAnim == BOTH_MEDITATE && PlayerAcc_Prof_GetProfession(self) <= PROF_JEDI) {
 		
@@ -1415,6 +1412,8 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 	}
 
 	//force limiter part iomatix
+	//regeneration
+	WP_ForceLimiterForceSet(self);
 	if (self->client->ps.fd.forcePower == FORCE_HUD_LIMIT && self->client->ps.fd.forcePower + self->client->pers.Lmd.ForceExcess >= fpmax) return; //do not regen then
 	//
 	if (self->client->ps.fd.forcePower <= FORCE_HUD_LIMIT && self->client->ps.fd.forcePower >= fpmax)
@@ -1436,14 +1435,14 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 		self->client->ps.fd.forcePower += passive_regen + overload;
 	}
 	//iomatix limiter:
-	//regeneration
-	WP_ForceLimiterForceSet(self);
+	
+	
 
 	//
 	//the limiter
 	if (fpmax > FORCE_HUD_LIMIT)
 	{
-		if (self->client->ps.fd.forcePower > FORCE_HUD_LIMIT)
+		if (self->client->ps.fd.forcePower >= FORCE_HUD_LIMIT)
 		{
 
 			self->client->pers.Lmd.ForceExcess += self->client->ps.fd.forcePower - FORCE_HUD_LIMIT;
@@ -1458,7 +1457,7 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 			}
 		
 	}
-	else if (self->client->ps.fd.forcePower > fpmax)
+	else if (self->client->ps.fd.forcePower >= fpmax)
 	{ //cap it off at the max (default 100)
 		self->client->ps.fd.forcePower = fpmax;
 		
