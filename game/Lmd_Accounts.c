@@ -181,38 +181,38 @@ char * GetTitle_system(gentity_t *ent)
 	int level = PlayerAcc_Prof_GetLevel(ent) + PlayerAcc_GetNewGamePlus_count(ent);
 	if (PlayerAcc_Prof_GetProfession(ent) == PROF_JEDI) {
 		//jedi titles
-		if (level < 10)return "Apprentice";
-		else if (level < 20)return "Disciple";
-		else if (level < 30)return "Adept";
-		else if (level < 40)
+		if (level < 10)return "^7Apprentice";
+		else if (level < 20)return "^7Disciple";
+		else if (level < 30)return "^7Adept";
+		else if (level < 60)
 		{
-			if (Jedi_GetSide(ent) == FORCE_DARKSIDE) return "Darth";
-			else if (Jedi_GetSide(ent) == FORCE_LIGHTSIDE) return "Knight";
-			else return "Nomad";
+			if (Jedi_GetSide(ent) == FORCE_DARKSIDE) return "^1Darth";
+			else if (Jedi_GetSide(ent) == FORCE_LIGHTSIDE) return "^2Knight";
+			else return "^9Nomad";
 
 		}
-		else if (level < 80)return "Lord";
-		else if (level < 100)return "Count";
-		else if (level < 130)return "Sage";
-		else if (level < 170)return "Master";
-		else if (level < 200)return "Luminary";
-		else return "Legend";
+		else if (level < 80)return "^3Lord";
+		else if (level < 100)return "^3Count";
+		else if (level < 130)return "^8Sage";
+		else if (level < 170)return "^8Master";
+		else if (level < 200)return "^9Luminary";
+		else return "^0Legend";
 	}
 	else if (PlayerAcc_Prof_GetProfession(ent) == PROF_MERC)
 	{//merc titles
-		if (level < 10)return "Freshmeat";
-		else if (level < 20)return "Rifleman";
-		else if (level < 30)return "Mercenary";
-		else if (level < 40)return "Specialist";
-		else if (level < 100)return "Bounty Hunter";
-		else if (level < 150)return "Assassin";
-		else if (level < 180)return "Commander";
-		else if (level < 230)return "Master of Hunt";
-		else return "Legend";
+		if (level < 10)return "^7Freshmeat";
+		else if (level < 20)return "^7Rifleman";
+		else if (level < 30)return "^7Mercenary";
+		else if (level < 40)return "^2Specialist";
+		else if (level < 100)return "^1Bounty Hunter";
+		else if (level < 150)return "^1Assassin";
+		else if (level < 180)return "^8Commander";
+		else if (level < 230)return "^9Master of Hunt";
+		else return "^0Legend";
 
 
 	}
-	else return "Stranger";
+	else return "^7Stranger";
 
 
 }
