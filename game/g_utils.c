@@ -1268,7 +1268,38 @@ void G_ScaleNetHealth(gentity_t *self)
 		self->s.health = 1;
 	}
 }
+void G_ScaleNetForcePower(gentity_t *self)
+{
+	if (!(self->client))return;
+	int maxForce = self->client->pers.maxForce;
 
+	if (maxForce < 256)
+	{ //it's good then
+		self->client->ps.fd.forcePowerMax = maxForce;
+		self->client->ps.fd.forcePower = self->client->pers.force;
+
+		if (self->client->ps.fd.forcePower < 0)
+		{ //don't let it wrap around
+			self->client->ps.fd.forcePower = 0;
+		}
+		return;
+	}
+
+	//otherwise, scale it down
+	self->client->ps.fd.forcePowerMax = (maxForce / 100);
+	self->client->ps.fd.forcePower = (self->client->pers.force / 100);
+
+	if (self->client->ps.fd.forcePower < 0)
+	{ //don't let it wrap around
+		self->client->ps.fd.forcePower = 0;
+	}
+
+	if (self->client->pers.force > 0 &&
+		self->client->ps.fd.forcePower <= 0)
+	{
+		self->client->ps.fd.forcePower = 1;
+	}
+}
 
 /*
 ==============================================================================

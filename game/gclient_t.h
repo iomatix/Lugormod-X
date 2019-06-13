@@ -103,6 +103,9 @@ typedef struct {
 	int			voteCount;			// to prevent people from constantly calling votes
 	int			teamVoteCount;		// to prevent people from constantly calling votes
 	qboolean	teamInfo;			// send team overlay updates?
+	//iomatix:
+	int force;
+	int maxForce;
 	//RoboPhred:
 	struct LmdPers_s{
 		//Lugormod
