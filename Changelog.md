@@ -111,7 +111,7 @@
 - Running backward results with slower speed than forward.  ✔️
 - Merc Skills: MotR buff, PA nerf but making it less random.  ✔️  
 - Push and Pull forces rework. ✔️
-- Accountedit `passwd` command is added. Admin may use it to set the new account password. ✔️
+- Accountedit passwd command is added. Admin may use it to set the new account password. ✔️
 - Force limiter created to fit the client's HUD limitations.  ✔️
 
 
@@ -128,7 +128,6 @@
 
 ## TODO
 
-- Try repair crosschair hud for force.  (CG_PLAYER_ARMOR_VALUE  CG_PLAYER_AMMO_VALUE   CG_PLAYER_FORCE_VALUE)
 - flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
 - TODO: Add drop item from inventory.  todo: drop (+recall), sell (drop+buyoption + recall) inventory_core.c
 
