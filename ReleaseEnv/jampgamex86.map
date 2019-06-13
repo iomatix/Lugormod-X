@@ -1,6 +1,6 @@
  jampgamex86
 
- Timestamp is 5d018f2a (Thu Jun 13 01:47:54 2019)
+ Timestamp is 5d0222e9 (Thu Jun 13 12:18:17 2019)
 
  Preferred load address is 20000000
 
@@ -43,10 +43,10 @@
 
   Address         Publics by Value              Rva+Base       Lib:Object
 
- 0000:00000000       ___guard_fids_table        00000000     <absolute>
- 0000:00000000       __except_list              00000000     <absolute>
  0000:00000000       ___guard_flags             00000000     <absolute>
+ 0000:00000000       __except_list              00000000     <absolute>
  0000:00000000       ___guard_fids_count        00000000     <absolute>
+ 0000:00000000       ___guard_fids_table        00000000     <absolute>
  0000:0000000c       ___safe_se_handler_count   0000000c     <absolute>
  0000:00000000       ___ImageBase               20000000     <linker-defined>
  0001:0000b810       ?AltFiring@@YAHPAUbot_state_s@@@Z 2000c810 f   ai_main.obj
@@ -4860,8 +4860,8 @@
  0001:002e08a0       ??0bad_exception@std@@QAE@ABV01@@Z 202e18a0 f i LIBCMTD:frame.obj
  0001:002e08d0       ??0bad_exception@std@@QAE@PBD@Z 202e18d0 f i LIBCMTD:frame.obj
  0001:002e0900       ??1bad_exception@std@@UAE@XZ 202e1900 f i LIBCMTD:frame.obj
- 0001:002e0920       ??_Gbad_exception@std@@UAEPAXI@Z 202e1920 f i LIBCMTD:frame.obj
  0001:002e0920       ??_Ebad_exception@std@@UAEPAXI@Z 202e1920 f i LIBCMTD:frame.obj
+ 0001:002e0920       ??_Gbad_exception@std@@UAEPAXI@Z 202e1920 f i LIBCMTD:frame.obj
  0001:002e1510       ?__uncaught_exception@@YA_NXZ 202e2510 f   LIBCMTD:frame.obj
  0001:002e1540       ?_is_exception_typeof@@YAHABVtype_info@@PAU_EXCEPTION_POINTERS@@@Z 202e2540 f   LIBCMTD:frame.obj
  0001:002e1620       __SetWinRTOutOfMemoryExceptionCallback 202e2620 f   LIBCMTD:frame.obj
@@ -4961,8 +4961,8 @@
  0001:002e7e30       ??4type_info@@AAEAAV0@ABV0@@Z 202e8e30 f   LIBCMTD:typinfo.obj
  0001:002e7e40       ??8type_info@@QBE_NABV0@@Z 202e8e40 f   LIBCMTD:typinfo.obj
  0001:002e7e80       ??9type_info@@QBE_NABV0@@Z 202e8e80 f   LIBCMTD:typinfo.obj
- 0001:002e7ec0       ??_Etype_info@@UAEPAXI@Z   202e8ec0 f i LIBCMTD:typinfo.obj
  0001:002e7ec0       ??_Gtype_info@@UAEPAXI@Z   202e8ec0 f i LIBCMTD:typinfo.obj
+ 0001:002e7ec0       ??_Etype_info@@UAEPAXI@Z   202e8ec0 f i LIBCMTD:typinfo.obj
  0001:002e7ef0       ?_name_internal_method@type_info@@QBEPBDPAU__type_info_node@@@Z 202e8ef0 f   LIBCMTD:typinfo.obj
  0001:002e7f10       ?_type_info_dtor_internal_method@type_info@@QAEXXZ 202e8f10 f   LIBCMTD:typinfo.obj
  0001:002e7f30       ?before@type_info@@QBE_NABV1@@Z 202e8f30 f   LIBCMTD:typinfo.obj
@@ -4985,12 +4985,12 @@
  0001:002e8230       ??4exception@std@@QAEAAV01@ABV01@@Z 202e9230 f   LIBCMTD:stdexcpt.obj
  0001:002e8280       ??_E__non_rtti_object@std@@UAEPAXI@Z 202e9280 f i LIBCMTD:stdexcpt.obj
  0001:002e8280       ??_G__non_rtti_object@std@@UAEPAXI@Z 202e9280 f i LIBCMTD:stdexcpt.obj
- 0001:002e82b0       ??_Gbad_cast@std@@UAEPAXI@Z 202e92b0 f i LIBCMTD:stdexcpt.obj
  0001:002e82b0       ??_Ebad_cast@std@@UAEPAXI@Z 202e92b0 f i LIBCMTD:stdexcpt.obj
- 0001:002e82e0       ??_Gbad_typeid@std@@UAEPAXI@Z 202e92e0 f i LIBCMTD:stdexcpt.obj
+ 0001:002e82b0       ??_Gbad_cast@std@@UAEPAXI@Z 202e92b0 f i LIBCMTD:stdexcpt.obj
  0001:002e82e0       ??_Ebad_typeid@std@@UAEPAXI@Z 202e92e0 f i LIBCMTD:stdexcpt.obj
- 0001:002e8310       ??_Gexception@std@@UAEPAXI@Z 202e9310 f i LIBCMTD:stdexcpt.obj
+ 0001:002e82e0       ??_Gbad_typeid@std@@UAEPAXI@Z 202e92e0 f i LIBCMTD:stdexcpt.obj
  0001:002e8310       ??_Eexception@std@@UAEPAXI@Z 202e9310 f i LIBCMTD:stdexcpt.obj
+ 0001:002e8310       ??_Gexception@std@@UAEPAXI@Z 202e9310 f i LIBCMTD:stdexcpt.obj
  0001:002e8340       ?_Copy_str@exception@std@@AAEXPBD@Z 202e9340 f   LIBCMTD:stdexcpt.obj
  0001:002e83a0       ?_Tidy@exception@std@@AAEXXZ 202e93a0 f   LIBCMTD:stdexcpt.obj
  0001:002e83e0       ?what@exception@std@@UBEPBDXZ 202e93e0 f   LIBCMTD:stdexcpt.obj
@@ -5032,8 +5032,8 @@
  0001:002eadf0       _wcstod                    202ebdf0 f   LIBCMTD:wcstod.obj
  0001:002eae10       __mbschr                   202ebe10 f   LIBCMTD:mbschr.obj
  0001:002eae30       __mbschr_l                 202ebe30 f   LIBCMTD:mbschr.obj
- 0001:002eafd0       __strnicmp                 202ebfd0 f   LIBCMTD:strnicmp.obj
  0001:002eafd0       _strnicmp                  202ebfd0 f   LIBCMTD:strnicmp.obj
+ 0001:002eafd0       __strnicmp                 202ebfd0 f   LIBCMTD:strnicmp.obj
  0001:002eb1a0       __strnicmp_l               202ec1a0 f   LIBCMTD:strnicmp.obj
  0001:002eb430       ??0Block@_HeapManager@@QAE@XZ 202ec430 f i LIBCMTD:undname.obj
  0001:002eb450       ??0DName@@QAE@AAPBDD@Z     202ec450 f   LIBCMTD:undname.obj
@@ -12050,7 +12050,7 @@
  0002:0002cdd4       ??_C@_0BC@LOKOIJIH@JKA?5Galaxies?5v0?41?$AA@ 20342dd4     gls_crashreport.obj
  0002:0002cdec       ??_C@_0BH@KHGNMAMA@Version?3?5?$CFs?5?$CIWindows?$CJ?6?$AA@ 20342dec     gls_crashreport.obj
  0002:0002ce08       ??_C@_0BD@PEHKIMLP@Side?3?5Server?9side?6?$AA@ 20342e08     gls_crashreport.obj
- 0002:0002ce20       ??_C@_08LCELOPFK@01?347?323?$AA@ 20342e20     gls_crashreport.obj
+ 0002:0002ce20       ??_C@_08CJKFLGHN@12?317?345?$AA@ 20342e20     gls_crashreport.obj
  0002:0002ce2c       ??_C@_0BI@BNEPMDPF@Build?5Date?1Time?3?5?$CFs?5?$CFs?6?$AA@ 20342e2c     gls_crashreport.obj
  0002:0002ce48       ??_C@_0IK@MOIFLKOC@Crash?5type?3?5Exception?6?6?9?9?9?9?9?9?9?9?9@ 20342e48     gls_crashreport.obj
  0002:0002cef0       ??_C@_0HA@HGKPACMJ@?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9@ 20342ef0     gls_crashreport.obj
