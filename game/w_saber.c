@@ -9,7 +9,7 @@
 #include "Lmd_Prof_Merc.h"
 
 
-#define BLOCK_FORCE_COST 5
+#define BLOCK_FORCE_COST 4
 
 #define SABER_BOX_SIZE 16.0f
 extern bot_state_t *botstates[MAX_CLIENTS];
@@ -9490,7 +9490,7 @@ qboolean WP_SaberBlockForceCost(gentity_t *self)
 	}
 	
 		self->client->ps.fd.forcePower -= BLOCK_FORCE_COST * FORCECOST_sab_def;
-		WP_ForceLimiterForceSet(self);
+	
 		return qtrue;
 	
 

@@ -66,7 +66,7 @@ Allows to turn off the double jump if 0. Default 1.
 Allows to gain experience and The Black List rewards for AI players if 1. Default 0.
 ### G:
 
-- **`g_scaleAllDamag`**
+- **`g_scaleAllDamage`**
 
 Allows to change total damage scaling.
 

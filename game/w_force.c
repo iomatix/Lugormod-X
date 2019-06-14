@@ -9,7 +9,7 @@
 #include "Lmd_Prof_Merc.h"
 #include "Lmd_Commands_Auths.h"
 
-#define EVASION_FORCE_COST 4
+#define EVASION_FORCE_COST 3
 
 
 
@@ -1412,8 +1412,6 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 	}
 
 	//force limiter part iomatix
-	//regeneration
-	WP_ForceLimiterForceSet(self);
 	if (self->client->ps.fd.forcePower == FORCE_HUD_LIMIT && self->client->ps.fd.forcePower + self->client->pers.Lmd.ForceExcess >= fpmax) return; //do not regen then
 	//
 	if (self->client->ps.fd.forcePower <= FORCE_HUD_LIMIT && self->client->ps.fd.forcePower >= fpmax)
@@ -1435,9 +1433,8 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 		self->client->ps.fd.forcePower += passive_regen + overload;
 	}
 	//iomatix limiter:
-	
-	
-
+	//regen
+	WP_ForceLimiterForceSet(self);
 	//
 	//the limiter
 	if (fpmax > FORCE_HUD_LIMIT)
@@ -6833,7 +6830,7 @@ qboolean Jedi_DodgeEvasion( gentity_t *self, gentity_t *shooter, trace_t *tr, in
 		return qfalse;
 	}
 	self->client->ps.fd.forcePower -= EVASION_FORCE_COST;
-	WP_ForceLimiterForceSet(self);
+	
 
 	if ( dodgeAnim != -1 )
 	{

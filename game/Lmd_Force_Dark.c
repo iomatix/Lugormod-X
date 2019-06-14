@@ -380,7 +380,7 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 			//give them power and don't hurt them.
 			target->client->ps.fd.forcePower++;
 			if (target->client->ps.fd.forcePower > target->client->ps.fd.forcePowerMax) target->client->ps.fd.forcePower = target->client->ps.fd.forcePowerMax;
-			WP_ForceLimiterForceSet(target);
+			
 			return;
 		}
 	
@@ -758,7 +758,7 @@ qboolean Force_TeamReplenish_Start(gentity_t *self, const void *vData) {
 		ent->client->ps.fd.forcePower += poweradd;
 		if (ent->client->ps.fd.forcePower > ent->client->ps.fd.forcePowerMax)
 			ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax;
-			WP_ForceLimiterForceSet(ent);
+			
 
 		if (!te){
 			te = G_TempEntity(self->client->ps.origin, EV_TEAM_POWER);
@@ -848,7 +848,7 @@ void Force_Drain_Damage( gentity_t *self, gentity_t *target, vec3_t dir, vec3_t 
 			if (dmg)
 				//Ufo: drain minimum if ionlysaber
 				target->client->ps.fd.forcePower -= (self->client->pers.Lmd.persistantFlags & SPF_IONLYSABER) ? 1 : dmg;
-			WP_ForceLimiterForceSet(target);
+		
 			if (target->client->ps.fd.forcePower < 0)
 				target->client->ps.fd.forcePower = 0;
 
