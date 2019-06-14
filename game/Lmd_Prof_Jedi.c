@@ -338,7 +338,7 @@ int Get_Jedi_overload_value_cap(gentity_t *ent, int Amount) //returns % of total
 int Get_Jedi_mp_maxs_value(gentity_t *ent)
 {
 	int value = 55; //starting force
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.35); //Level bonus
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.75); //Level bonus
 	if (Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload)) value += Get_Jedi_overload_value_cap(ent, value); //be sure it adds only base Force Power //iomatix
 
 																																					   //Passive skill bonus:
