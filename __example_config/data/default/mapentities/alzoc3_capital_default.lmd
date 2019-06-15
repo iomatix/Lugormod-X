@@ -109,7 +109,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "502 -1155 298"
 }
 {
@@ -139,10 +139,10 @@
 {
 "classname" "lmd_stashzone"
 "mins" "-168120 -168120 -168120"
-"maxs" "168120 168120 1681200"
+"maxs" "168120 168120 168120"
 "spawnflags" "2"
 "targetname" "main_zone"
-"count" "4"
+"count" "7"
 "origin" "-1259 163 0"
 }
 {
@@ -392,7 +392,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-2 -121 382"
 }
 {
@@ -824,7 +824,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "103 482 64"
 }
 {
@@ -841,7 +841,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "101 -674 -398"
 }
 {
@@ -965,7 +965,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-2826 -1856 -638"
 }
 {
@@ -1041,7 +1041,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-2164 -1865 -1278"
 }
 {
@@ -1058,7 +1058,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "75 -1633 -721"
 }
 {
@@ -1075,7 +1075,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "399 -1724 -718"
 }
 {
@@ -1092,7 +1092,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-65 -1674 -1278"
 }
 {
@@ -1172,7 +1172,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1578 -910 -1278"
 }
 {
@@ -1189,7 +1189,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1446 458 -665"
 }
 {
@@ -1206,7 +1206,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1448 250 -704"
 }
 {
@@ -1449,7 +1449,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-582 1050 -1278"
 }
 {
@@ -1466,7 +1466,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-531 1287 -958"
 }
 {
@@ -1483,7 +1483,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "487 1083 -1278"
 }
 {
@@ -1656,7 +1656,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "190 933 2"
 }
 {
@@ -1673,7 +1673,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-2638 1585 3938"
 }
 {
@@ -1690,7 +1690,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-2853 -1129 4006"
 }
 {
@@ -1707,7 +1707,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-2641 914 4146"
 }
 {
@@ -1967,7 +1967,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-2636 1438 4418"
 }
 {
@@ -2034,7 +2034,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1899 1447 3970"
 }
 {
@@ -2967,7 +2967,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1006 1402 3778"
 }
 {
@@ -2984,7 +2984,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-8 480 3778"
 }
 {
@@ -3001,7 +3001,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-2662 -929 4499"
 }
 {
@@ -3018,7 +3018,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-697 2685 30"
 }
 {
@@ -3035,7 +3035,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-148 2694 58"
 }
 {
@@ -3052,7 +3052,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-449 2264 42"
 }
 {
@@ -3069,7 +3069,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-2496 254 922"
 }
 {
@@ -3086,7 +3086,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-335 -349 338"
 }
 {
@@ -3103,7 +3103,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-514 -1159 298"
 }
 {
@@ -3120,7 +3120,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-7 40 6050"
 }
 {
@@ -3137,7 +3137,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "96 503 6018"
 }
 {
@@ -3154,7 +3154,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-124 -492 6018"
 }
 {
@@ -3171,7 +3171,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1944 -1347 5826"
 }
 {
@@ -3188,7 +3188,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-888 -1429 5826"
 }
 {
@@ -3205,7 +3205,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "3 -763 6946"
 }
 {
@@ -3222,7 +3222,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "0 764 6946"
 }
 {
@@ -3239,7 +3239,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-189 -79 7090"
 }
 {
@@ -3256,7 +3256,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-11 -498 7746"
 }
 {
@@ -3273,7 +3273,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-63 515 7786"
 }
 {
@@ -3290,7 +3290,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "103 573 7802"
 }
 {
@@ -3307,7 +3307,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1792 -355 6402"
 }
 {
@@ -3324,7 +3324,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1030 -2789 5402"
 }
 {
@@ -3341,7 +3341,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1032 -2794 5122"
 }
 {
@@ -3358,7 +3358,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-528 -3490 5170"
 }
 {
@@ -3375,7 +3375,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1518 -3496 5170"
 }
 {
@@ -3392,7 +3392,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1131 -2915 5170"
 }
 {
@@ -3409,7 +3409,7 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-914 -2915 5170"
 }
 {
@@ -3426,6 +3426,6 @@
 "experienceshift" "-2"
 "basedeposittime" "6"
 "spawntime" "36000"
-"spawnrandom" "42000"
+"spawnrandom" "42"
 "origin" "-1786 1156 642"
 }
