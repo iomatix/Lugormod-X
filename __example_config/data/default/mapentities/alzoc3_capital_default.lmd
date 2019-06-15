@@ -142,7 +142,7 @@
 "maxs" "168120 168120 168120"
 "spawnflags" "2"
 "targetname" "main_zone"
-"count" "8"
+"count" "10"
 "origin" "-1259 163 0"
 }
 {
