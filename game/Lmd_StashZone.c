@@ -257,11 +257,9 @@ void lmd_stash_reset(gentity_t *self, gentity_t *spawn){
 	//Spawnflag (10) 1024: resetmessage global.
 	//Spawnflag (11) 2048: resetmessage screen print.
 	if(spawn->GenericStrings[6][0]){
-		if(spawn->GenericStrings[6][0])
-			Q_strcat(msg, sizeof(msg), va("%s\n", spawn->GenericStrings[6]));
+		if(spawn->GenericStrings[6][0]) Q_strcat(msg, sizeof(msg), va("%s\n", spawn->GenericStrings[6]));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
-		if(self->spawnflags & 4096)
-			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i ^3and ^5EXP %i", self->count, self->count_exp));
+		if(self->spawnflags & 4096) Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i ^3and ^5EXP %i", self->count, self->count_exp));
 		for(i = 0;i<MAX_CLIENTS;i++){
 			other = &g_entities[i];
 			if(!other->inuse || !other->client || other->client->pers.connected != CON_CONNECTED)
@@ -271,8 +269,7 @@ void lmd_stash_reset(gentity_t *self, gentity_t *spawn){
 			if(spawn->spawnflags & 1024 || entityInStashZone(other, spawn->GenericStrings[0])){
 				Disp(other, msg);
 				//Spawnflag (11) 2048: resetmessage screen print.
-				if(spawn->spawnflags & 2048)
-					trap_SendServerCommand(other->s.number, va("cp \"%s\"", msg));
+				if(spawn->spawnflags & 2048)trap_SendServerCommand(other->s.number, va("cp \"%s\"", msg));
 			}
 		}
 	}
