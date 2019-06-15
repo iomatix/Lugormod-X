@@ -107,8 +107,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "502 -1155 298"
 }
 {
@@ -389,8 +389,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-2 -121 382"
 }
 {
@@ -820,8 +820,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "103 482 64"
 }
 {
@@ -836,8 +836,8 @@
 "experiencerandom" "2575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "101 -674 -398"
 }
 {
@@ -959,8 +959,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-2826 -1856 -638"
 }
 {
@@ -1034,8 +1034,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-2164 -1865 -1278"
 }
 {
@@ -1050,8 +1050,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "75 -1633 -721"
 }
 {
@@ -1066,8 +1066,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "399 -1724 -718"
 }
 {
@@ -1082,8 +1082,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-65 -1674 -1278"
 }
 {
@@ -1161,8 +1161,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1578 -910 -1278"
 }
 {
@@ -1177,8 +1177,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1446 458 -665"
 }
 {
@@ -1193,8 +1193,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1448 250 -704"
 }
 {
@@ -1435,8 +1435,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-582 1050 -1278"
 }
 {
@@ -1451,8 +1451,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-531 1287 -958"
 }
 {
@@ -1467,8 +1467,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "487 1083 -1278"
 }
 {
@@ -1639,8 +1639,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "190 933 2"
 }
 {
@@ -1655,8 +1655,8 @@
 "experiencerandom" "3575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-2638 1585 3938"
 }
 {
@@ -1671,8 +1671,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-2853 -1129 4006"
 }
 {
@@ -1687,8 +1687,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-2641 914 4146"
 }
 {
@@ -1946,8 +1946,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-2636 1438 4418"
 }
 {
@@ -2012,8 +2012,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1899 1447 3970"
 }
 {
@@ -2944,8 +2944,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1006 1402 3778"
 }
 {
@@ -2960,8 +2960,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-8 480 3778"
 }
 {
@@ -2976,8 +2976,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-2662 -929 4499"
 }
 {
@@ -2992,8 +2992,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-697 2685 30"
 }
 {
@@ -3008,8 +3008,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-148 2694 58"
 }
 {
@@ -3024,8 +3024,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-449 2264 42"
 }
 {
@@ -3040,8 +3040,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-2496 254 922"
 }
 {
@@ -3056,8 +3056,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-335 -349 338"
 }
 {
@@ -3072,8 +3072,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-514 -1159 298"
 }
 {
@@ -3088,8 +3088,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-7 40 6050"
 }
 {
@@ -3104,8 +3104,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "96 503 6018"
 }
 {
@@ -3120,8 +3120,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-124 -492 6018"
 }
 {
@@ -3136,8 +3136,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1944 -1347 5826"
 }
 {
@@ -3152,8 +3152,8 @@
 "experiencerandom" "2575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-888 -1429 5826"
 }
 {
@@ -3168,8 +3168,8 @@
 "experiencerandom" "2575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "3 -763 6946"
 }
 {
@@ -3184,8 +3184,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "0 764 6946"
 }
 {
@@ -3200,8 +3200,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-189 -79 7090"
 }
 {
@@ -3216,8 +3216,8 @@
 "experiencerandom" "3575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-11 -498 7746"
 }
 {
@@ -3232,8 +3232,8 @@
 "experiencerandom" "3575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-63 515 7786"
 }
 {
@@ -3248,8 +3248,8 @@
 "experiencerandom" "3575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "103 573 7802"
 }
 {
@@ -3264,8 +3264,8 @@
 "experiencerandom" "3575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1792 -355 6402"
 }
 {
@@ -3280,8 +3280,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1030 -2789 5402"
 }
 {
@@ -3296,8 +3296,8 @@
 "experiencerandom" "3575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1032 -2794 5122"
 }
 {
@@ -3312,8 +3312,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-528 -3490 5170"
 }
 {
@@ -3328,8 +3328,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1518 -3496 5170"
 }
 {
@@ -3344,8 +3344,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1131 -2915 5170"
 }
 {
@@ -3360,8 +3360,8 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-914 -2915 5170"
 }
 {
@@ -3376,7 +3376,7 @@
 "experiencerandom" "1575"
 "experienceshift" "-2"
 "basedeposittime" "6"
-"spawntime" "12000"
-"spawnrandom" "48000"
+"spawntime" "36000"
+"spawnrandom" "72000"
 "origin" "-1786 1156 642"
 }
