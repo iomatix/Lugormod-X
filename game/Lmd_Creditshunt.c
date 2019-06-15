@@ -291,8 +291,7 @@ int thereIsAMoneyStash(void){
 		return -1;
 	}
 
-	if(current_stash->activator)
-		return current_stash->activator->s.number;
+	if(current_stash->activator) return current_stash->activator->s.number;
 
 	return current_stash->s.number;
 }

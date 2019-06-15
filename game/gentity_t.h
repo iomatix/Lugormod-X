@@ -266,6 +266,8 @@ struct gentity_s {
 
 	//Health and damage fields
 	int			health;
+	//stash exp
+	int         health_exp;
 	qboolean	takedamage;
 	material_t	material;
 

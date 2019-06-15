@@ -106,7 +106,7 @@ void lmd_stash_drop(gentity_t *self){
 			Q_strcat(msg, sizeof(msg), va("%s\n", self->GenericStrings[3]));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
 		if(self->spawnflags & 4096)
-			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i", self->count));
+			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i ^3and ^5EXP %i", self->count,self->count_exp));
 		for(i = 0;i<MAX_CLIENTS;i++){
 			other = &g_entities[i];
 			if(!other->inuse || !other->client || other->client->pers.connected != CON_CONNECTED)
@@ -144,15 +144,18 @@ void lmd_stash_destroy(gentity_t *self){
 	G_FreeEntity(self);
 }
 
-void lmd_stash_deposit(gentity_t *self, int creditsShift, char *extraMessage){
+void lmd_stash_deposit(gentity_t *self,int experienceShift, int creditsShift, char *extraMessage){
 	char msg[MAX_STRING_CHARS] = "";
 	gentity_t *other;
 	unsigned int i;
 
-	if(self->health > 0){
+	if(self->health > 0 || self->health_exp > 0){
 		int cr = PlayerAcc_GetCredits(self->activator);
+		int exp = PlayerAcc_GetExperience(self->activator);
 		PlayerAcc_Stats_SetStashes(self->activator, PlayerAcc_Stats_GetStashes(self->activator) + 1);
-		PlayerAcc_SetCredits(self->activator, cr + self->health);
+
+		if(self->health > 0)PlayerAcc_SetCredits(self->activator, cr + self->health);
+		if(self->health_exp > 0)PlayerAcc_SetExperience(self->activator, exp + self->health_exp);
 	}
 
 	//GenericString 5: deposit message
@@ -165,7 +168,7 @@ void lmd_stash_deposit(gentity_t *self, int creditsShift, char *extraMessage){
 			Q_strcat(msg, sizeof(msg), va("%s\n", extraMessage));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
 		if(self->spawnflags & 4096)
-			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i", self->count));
+			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i ^3and ^5EXP %i", self->count,self->count_exp));
 		for(i = 0;i<MAX_CLIENTS;i++){
 			other = &g_entities[i];
 			if(!other->inuse || !other->client || other->client->pers.connected != CON_CONNECTED)
@@ -202,7 +205,7 @@ void lmd_stash_startDeposit(gentity_t *self, char *extraMessage){
 			Q_strcat(msg, sizeof(msg), va("%s\n", extraMessage));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
 		if(self->spawnflags & 4096)
-			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i", self->count));
+			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i ^3and ^5EXP %i", self->count,self->count_exp));
 		for(i = 0;i<MAX_CLIENTS;i++){
 			other = &g_entities[i];
 			if(!other->inuse || !other->client || other->client->pers.connected != CON_CONNECTED)
@@ -257,7 +260,7 @@ void lmd_stash_reset(gentity_t *self, gentity_t *spawn){
 			Q_strcat(msg, sizeof(msg), va("%s\n", spawn->GenericStrings[6]));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
 		if(self->spawnflags & 4096)
-			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i", self->count));
+			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i ^3and ^5EXP %i", self->count, self->count_exp));
 		for(i = 0;i<MAX_CLIENTS;i++){
 			other = &g_entities[i];
 			if(!other->inuse || !other->client || other->client->pers.connected != CON_CONNECTED)
@@ -328,8 +331,30 @@ void lmd_stash_pickup(gentity_t *stash, gentity_t *player){
 			else
 				stash->pain_debounce_time = level.time + stash->healingrate;
 		}
+
 	}
+	if (stash->genericValue6_e == 0) {
+		//GenericValue 12: stashtime
+		//GenericValue 13: stashtimerandom
+		if (stash->genericValue12 > 0 || stash->genericValue13 > 0)
+			stash->painDebounceTime = level.time + stash->genericValue12 + Q_irand(0, stash->genericValue13);
+
+		//GenericValue 8: creditshift
+		//healingrate: creditshifttime
+		//healingDebounce: creditshiftdelay
+		//pain_debounce_time: next cr shift
+		//healingDebounce: creditshifttimedelay
+		if (stash->genericValue8_e > 0) {
+			if (stash->healingDebounce > 0)
+				stash->pain_debounce_time = level.time + stash->healingDebounce;
+			else
+				stash->pain_debounce_time = level.time + stash->healingrate;
+		}
+
+	}
+
 	stash->genericValue6++;
+	stash->genericValue6_e++;
 
 	if(lmd_stash_validParent(stash) && stash->parent->enemy == stash)
 		stash->parent->enemy = NULL;
@@ -357,7 +382,7 @@ void lmd_stash_pickup(gentity_t *stash, gentity_t *player){
 		Q_strcat(msg, sizeof(msg), va("%s\n", stash->GenericStrings[2]));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
 		if(stash->spawnflags & 4096)
-			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i", stash->count));
+			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i ^3and ^5EXP %i", stash->count,stash->count_exp));
 		for(i = 0;i<MAX_CLIENTS;i++){
 			other = &g_entities[i];
 			if(!other->inuse || !other->client || other->client->pers.connected != CON_CONNECTED)
@@ -408,6 +433,15 @@ qboolean lmd_stash_canPickup(gentity_t *stash, gentity_t *player){
 
 		//no unreged players.
 		if(!player->client->pers.Lmd.account)
+			return qfalse;
+	}
+	if (stash->count_exp > 0) {
+		//no admins
+		if (PlayerAcc_Prof_GetProfession(player) == PROF_ADMIN)
+			return qfalse;
+
+		//no unreged players.
+		if (!player->client->pers.Lmd.account)
 			return qfalse;
 	}
 
@@ -474,12 +508,14 @@ void lmd_stash_think(gentity_t *ent){
 	if(ent->activator){
 		//count: base cr
 		//genericValue8: creditsshift
-		if(ent->count > 0 && ent->genericValue8 > 0 && ent->pain_debounce_time <= level.time){
+		if( (ent->count > 0 || ent->count_exp > 0) && (ent->genericValue8 > 0 || ent->genericValue8_e > 0) && ent->pain_debounce_time <= level.time){
 			//genericValue9: creditshiftrandom
 			//pain_debounce_time: next cr shift
 			//healingrate: creditshifttime
-			ent->health -= ent->genericValue8 + Q_irand(0, ent->genericValue9);
-			if(ent->health <= 0){
+
+			if(ent->count > 0) ent->health -= ent->genericValue8 + Q_irand(0, ent->genericValue9);
+			if(ent->count_exp > 0) ent->health_exp -= ent->genericValue8_e + Q_irand(0, ent->genericValue9_e);
+			if(ent->health <= 0 && ent->health_exp <= 0){
 				//no cr 4 u
 				Disp(ent->activator, va("^3The %s has ran out.", ent->fullName));
 				lmd_stash_tryReset(ent);
@@ -487,7 +523,8 @@ void lmd_stash_think(gentity_t *ent){
 			}
 			ent->pain_debounce_time = level.time + ent->healingrate;
 		}
-		if(ent->activator->health <= 0){
+
+		if(ent->activator->health <= 0 && ent->activator->health_exp <= 0){
 			lmd_stash_drop(ent);
 			return;
 		}
@@ -495,7 +532,7 @@ void lmd_stash_think(gentity_t *ent){
 
 	//painDebounceTime: time until deleted.
 	//GenericValue 6: number of times this ent was picked up.
-	if(ent->genericValue6 > 0 && ent->painDebounceTime > 0 && ent->painDebounceTime <= level.time){
+	if( (ent->genericValue6 > 0 || ent->genericValue6_e > 0) && ent->painDebounceTime > 0 && ent->painDebounceTime <= level.time){
 		Disp(ent->activator, va("^3The %s has expired.", ent->fullName));
 		lmd_stash_tryReset(ent);
 		return;
@@ -609,6 +646,7 @@ void lmd_stash(gentity_t *ent){
 	ent->nextthink = level.time + FRAMETIME;
 
 	ent->health = ent->count;
+	ent->health_exp = ent->count_exp;
 
 	ent->classname = "lmd_stash";
 
@@ -624,7 +662,6 @@ void lmd_stash_spawn(gentity_t *ent){
 	lmd_stash(ent);
 	
 	ent->parent->health++; //assume parent is valid, we were just spawned by it.
-
 	//target1: spawntarget
 	G_UseTargets2(ent, ent, ent->target);
 }
@@ -689,8 +726,7 @@ void lmd_stashspawnpoint_spawnstash(gentity_t *ent){
 	gentity_t *stash;
 	
 	//Spawnflag 8192: stashes can spawn here even if a stash has been spawned by another spawn within the zone.
-	if(!tryStashSpawnCheck(ent, ent->spawnflags & 8192))
-		return;
+	if(!tryStashSpawnCheck(ent, ent->spawnflags & 8192)) return;
 
 	//count: number of stashes that this spawn can have spawned at once.  Defaults to 1.
 	//health: number of stashes spawned
@@ -815,16 +851,15 @@ void lmd_stashspawnpoint_spawnstash(gentity_t *ent){
 	VectorCopy(ent->modelScale, stash->modelScale);
 
 	//GenericValue 6: credits
+	//6_e: exp
 	//GenericValue 7: creditsrandom
-	if(ent->genericValue6 < 0)
-		stash->count = lmd_stashcr.integer + Q_irand(0, ent->genericValue7);
-	else
-		stash->count = ent->genericValue6 + Q_irand(0, ent->genericValue7);
+	//7_e: exprandom
+	if(ent->genericValue6 < 0)stash->count = lmd_stashcr.integer + Q_irand(0, ent->genericValue7);
+	else stash->count = ent->genericValue6 + Q_irand(0, ent->genericValue7);
 
-	if (ent->genericValue6_e < 0)//exp
-		stash->count = lmd_stashcr.integer + Q_irand(0, ent->genericValue7_e);
-	else
-		stash->count = ent->genericValue6_e + Q_irand(0, ent->genericValue7_e);
+	//exp
+	if (ent->genericValue6_e < 0) stash->count_exp = lmd_stashexp.integer + Q_irand(0, ent->genericValue7_e);
+	else stash->count_exp = ent->genericValue6_e + Q_irand(0, ent->genericValue7_e);
 
 	lmd_stash_spawn(stash);
 
@@ -833,7 +868,7 @@ void lmd_stashspawnpoint_spawnstash(gentity_t *ent){
 		Q_strncpyz(msg, ent->GenericStrings[7], sizeof(msg));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
 		if(ent->spawnflags & 4096)
-			Q_strcat(msg, sizeof(msg), va("\n^3Contains  ^2%i CR and ^5%i EXP", stash->count, stash->count_exp));
+			Q_strcat(msg, sizeof(msg), va("\n^3Contains  ^2%i CR ^3and ^5%i EXP", stash->count, stash->count_exp));
 
 		for(i = 0;i<MAX_CLIENTS;i++){
 			player = &g_entities[i];
@@ -853,14 +888,12 @@ void lmd_stashspawnpoint_spawnstash(gentity_t *ent){
 
 void lmd_stashspawnpoint_use(gentity_t *self, gentity_t *other, gentity_t *activator){
 	//spawnflag 16384: start disabled.  Needs to be used by a target_activate to start spawning.
-	if(self->flags & FL_INACTIVE)
-		return;
+	if(self->flags & FL_INACTIVE) return;
 	lmd_stashspawnpoint_spawnstash(self);
 }
 
 void lmd_stashspawnpoint_think(gentity_t *ent){
-	if(!(ent->flags & FL_INACTIVE))
-		lmd_stashspawnpoint_spawnstash(ent);
+	if(!(ent->flags & FL_INACTIVE)) lmd_stashspawnpoint_spawnstash(ent);
 	
 	//wait: spawntime
 	//random: spawnrandom
@@ -1197,7 +1230,7 @@ void lmd_stashspawnpoint(gentity_t *ent){
 
 void lmd_stashdepo_deposit(gentity_t *ent, gentity_t *player){
 	int credits = player->client->Lmd.moneyStash->health;
-	int experience = player->client->Lmd.moneyStash->health;
+	int experience = player->client->Lmd.moneyStash->health_exp;
 	//GenericValue6: bonuscredits
 	//GenericValue7: bonuscreditsrandom
 	credits += ent->genericValue6 + Q_irand(0, ent->genericValue7);
@@ -1206,7 +1239,7 @@ void lmd_stashdepo_deposit(gentity_t *ent, gentity_t *player){
 	G_UseTargets2(ent, player, ent->target2);
 
 	//GenericStrings[2]: depositmessage: message to add to the bottom of the depositmessage of the stash.
-	lmd_stash_deposit(player->client->Lmd.moneyStash, credits, ent->GenericStrings[2]);
+	lmd_stash_deposit(player->client->Lmd.moneyStash, experience, credits, ent->GenericStrings[2]);
 
 	ent->activator = NULL;
 	ent->enemy = NULL;

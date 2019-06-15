@@ -76,3 +76,7 @@ Allows to change total damage scaling.
 
 - **`target_experience`** and **`count_exp`**. It stores experience data.
 New target entity target_experience with count_exp variable. EXAMPLE: place `target_experience |0| |targetname|,|experience|,count_exp,|200|`
+
+### Stashes:
+
+EXPERIENCE: `experience` `experiencerandom`  `experienceshift` `experienceshiftrandom` uses `creditsshiftime`

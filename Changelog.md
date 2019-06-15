@@ -113,7 +113,7 @@
 - Push and Pull forces rework. ✔️
 - Accountedit passwd command is added. Admin may use it to set the new account password. ✔️
 - Force limiter created to fit the client's HUD limitations.  ✔️
-
+- Stash system supports new experience system now. ✔️ 
 
 //
 
@@ -121,7 +121,6 @@
 
 - Search a new ways for spending credits.
 - experience boosters/ packs for CR? lmd_exp_boosters
-- lmd_stashexp added. Stash system supports new experience system now. 50%
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
 - jedi is able to pick up medpacks ???
 
