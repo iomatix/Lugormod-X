@@ -284,7 +284,7 @@ void SP_money_stash (gentity_t *ent){
 	trap_LinkEntity(ent);
 }
 
-int thereIsAMoneyStash(void){
+int thereIsAMoneyStash(void) {
 	int i = 0;
 	if (!current_stash || !current_stash->inuse || Q_stricmp("money_stash", current_stash->classname)) {
 		current_stash = NULL;

@@ -649,7 +649,6 @@ void lmd_stash(gentity_t *ent){
 	ent->health_exp = ent->count_exp;
 
 	ent->classname = "lmd_stash";
-
 	trap_LinkEntity(ent);
 }
 
@@ -666,16 +665,17 @@ void lmd_stash_spawn(gentity_t *ent){
 	G_UseTargets2(ent, ent, ent->target);
 }
 
-unsigned int countZoneStashes(char *zone){
+unsigned int countZoneStashes(char *zone) {
 	unsigned int i, c = 0;
 	gentity_t *check;
-	for(i = MAX_CLIENTS;i<ENTITYNUM_MAX_NORMAL;i++){
+	for (i = MAX_CLIENTS; i<ENTITYNUM_MAX_NORMAL; i++) {
+		
 		check = &g_entities[i];
-		if(!check->inuse)
+		if (!check->inuse)
 			continue;
-		if(Q_stricmp(check->classname, "lmd_stash") != 0)
+		if (Q_stricmp(check->classname, "lmd_stash") != 0)
 			continue;
-		if(Q_stricmp(check->GenericStrings[0], zone) != 0)
+		if (Q_stricmp(check->GenericStrings[0], zone) != 0)
 			continue;
 		c++;
 	}
@@ -868,7 +868,7 @@ void lmd_stashspawnpoint_spawnstash(gentity_t *ent){
 		Q_strncpyz(msg, ent->GenericStrings[7], sizeof(msg));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
 		if(ent->spawnflags & 4096)
-			Q_strcat(msg, sizeof(msg), va("\n^3Contains  ^2%i CR ^3and ^5%i EXP", stash->count, stash->count_exp));
+			Q_strcat(msg, sizeof(msg), va("\n^3Contains ^2%i CR ^3and ^5%i EXP", stash->count, stash->count_exp));
 
 		for(i = 0;i<MAX_CLIENTS;i++){
 			player = &g_entities[i];
