@@ -113,6 +113,7 @@
 - Push and Pull forces rework. ✔️
 - Accountedit passwd command is added. Admin may use it to set the new account password. ✔️
 - Force limiter created to fit the client's HUD limitations.  ✔️
+- Stash system rework.  ✔️ 
 - Stash zone `count` property is fixed now. Default 3 and admin is able to change the max stashes value by the `count` key inside `"classname" "lmd_stashzone"`  ✔️
 - Stash system supports new experience system now. ✔️ 
 

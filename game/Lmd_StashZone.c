@@ -505,25 +505,37 @@ void lmd_stash_touch(gentity_t *self, gentity_t *other, trace_t *trace){
 
 void lmd_stash_think(gentity_t *ent){
 	gentity_t *zoneEnt;
-	if(ent->activator){
+	
 		//count: base cr
 		//genericValue8: creditsshift
 		if( (ent->count > 0 || ent->count_exp > 0) && (ent->genericValue8 > 0 || ent->genericValue8_e > 0) && ent->pain_debounce_time <= level.time){
 			//genericValue9: creditshiftrandom
 			//pain_debounce_time: next cr shift
 			//healingrate: creditshifttime
+			if (ent->count > 0)
+			{
+				ent->health -= ent->genericValue8 + Q_irand(0, ent->genericValue9);
+				ent->count = ent->health;
+				if (ent->count<0)ent->health = ent->count = 0;
+			}
+			if (ent->count_exp > 0)
+			{
+				ent->health_exp -= ent->genericValue8_e + Q_irand(0, ent->genericValue9_e);
+				ent->count_exp = ent->health_exp;
+				if (ent->count_exp < 0)ent->health_exp = ent->count_exp = 0;
+				
+			}
 
-			if(ent->count > 0) ent->health -= ent->genericValue8 + Q_irand(0, ent->genericValue9);
-			if(ent->count_exp > 0) ent->health_exp -= ent->genericValue8_e + Q_irand(0, ent->genericValue9_e);
 			if(ent->health <= 0 && ent->health_exp <= 0){
 				//no cr 4 u
-				Disp(ent->activator, va("^3The %s has ran out.", ent->fullName));
+				if (ent->activator) Disp(ent->activator, va("^3The %s has ran out.", ent->fullName));
 				lmd_stash_tryReset(ent);
 				return;
 			}
 			ent->pain_debounce_time = level.time + ent->healingrate;
 		}
 
+	if (ent->activator) {
 		if(ent->activator->health <= 0 && ent->activator->health_exp <= 0){
 			lmd_stash_drop(ent);
 			return;
