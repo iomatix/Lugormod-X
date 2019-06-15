@@ -48,7 +48,8 @@ void lmd_stashzone(gentity_t *ent){
 	if(ent->spawnflags & 1)
 		ent->flags |= FL_INACTIVE;
 	ent->r.svFlags = SVF_NOCLIENT;
-	ent->count = 0; //probably not needed
+	//ent->count = 0; //probably not needed
+	G_SpawnInt("count", "3", &ent->count); //default 3
 	trap_LinkEntity(ent);
 }
 
@@ -494,8 +495,7 @@ qboolean lmd_stash_canPickup(gentity_t *stash, gentity_t *player){
 }
 
 void lmd_stash_tryPickup(gentity_t *stash, gentity_t *player){
-	if(!lmd_stash_canPickup(stash, player))
-		return;
+	if(!lmd_stash_canPickup(stash, player)) return;
 	lmd_stash_pickup(stash, player);
 }
 
@@ -695,26 +695,24 @@ qboolean tryStashSpawnCheck(gentity_t *spawner, qboolean ignoreOtherStashes){
 			if(Q_stricmp(zone->classname, "lmd_stashzone") == 0 && !(zone->flags & FL_INACTIVE) && zone->spawnflags & 2)
 				break;
 		}
-		if(!zone)
+		if (!zone) {
 			return qtrue; //no zones exist for us, go ahead and spawn.
+		}
 	}
-
 	for(i = MAX_CLIENTS;i<ENTITYNUM_MAX_NORMAL;i++){
 		check = &g_entities[i];
 		if(Q_stricmp(check->classname, "lmd_stash") != 0)
 			continue;
 		if(Q_stricmp(check->GenericStrings[0], zone->targetname) != 0)
 			continue;
-		if(check->parent == spawner)
-			ownStashes++;
-		else
-			otherStashes++;
+		if(check->parent == spawner) ownStashes++;
+		else otherStashes++;
 	}
-	if(ignoreOtherStashes == qfalse && otherStashes > zone->count)
-		return qfalse;
-	if(spawner->count > 0 && ownStashes >= spawner->count)
-		return qfalse;
-	zone->count++;
+	if(ignoreOtherStashes == qfalse && otherStashes >= zone->count)return qfalse;
+	if(spawner->count > 0 && ownStashes >= spawner->count)return qfalse;
+
+
+	//fprintf(stderr, va("stashes inside the zone count: %i\n", otherStashes));
 	return qtrue;
 }
 
@@ -1120,6 +1118,7 @@ void lmd_stashspawnpoint(gentity_t *ent){
 
 	//spawnrandom: random ammount between 0 and this to offset the spawn time by.
 	G_SpawnFloat("spawnrandom", "0", &ent->random);
+	//in seconds:
 	ent->random = ceil(ent->random * 1000.0f);
 
 	//stashtime: after this many seconds after being picked up, make the stash dissapear.
