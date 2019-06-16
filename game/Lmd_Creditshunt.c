@@ -423,7 +423,7 @@ void money_dispenser_use(gentity_t *self, gentity_t *other, gentity_t *activator
 		activator->client->isHacking = 0;
 	}
 
-	self->nextthink = level.time + 1000;
+	self->nextthink = level.time + 1100;
 	self->genericValue1 = level.time + 2000;
 
 	depositMoneyStash(activator);
@@ -432,7 +432,7 @@ void money_dispenser_use(gentity_t *self, gentity_t *other, gentity_t *activator
 void money_dispenser_think (gentity_t *ent){
 	if(thereIsAMoneyStash() == -1 &&  G_CountHumanPlayers(-1) > 1 && !Q_irand(0,3 * moneyDisps()))
 		make_money_stash();
-	ent->nextthink = level.time + MONEY_DISP_TIME + Q_irand(0, 10) * 1000;
+	ent->nextthink = level.time + MONEY_DISP_TIME + Q_irand(1, 10) * 1000;
 }
 
 void zone_think (gentity_t *ent){
@@ -441,7 +441,7 @@ void zone_think (gentity_t *ent){
 			G_FreeEntity(ent);
 			return;
 	}
-	ent->nextthink = level.time + 5000;
+	ent->nextthink = level.time + 5100;
 }
 
 
@@ -476,7 +476,7 @@ void SP_money_dispenser (gentity_t *ent){
 
 	ent->genericValue1 = 0;
 	ent->think = money_dispenser_think;
-	ent->nextthink = level.time + 1000;
+	ent->nextthink = level.time + 1100;
 	ent->s.eFlags &= ~EF_NODRAW;
 	ent->r.contents = CONTENTS_SOLID;
 	ent->clipmask = MASK_PLAYERSOLID;
@@ -494,7 +494,7 @@ void SP_money_dispenser (gentity_t *ent){
 	zone->classname = "money_dispenser_zone";
 	zone->parent = ent;
 	zone->think = zone_think;
-	zone->nextthink = level.time + 1000;
+	zone->nextthink = level.time + 1100;
 	zone->s.eFlags = EF_NODRAW;
 	zone->r.contents = 0;
 	zone->clipmask = 0;

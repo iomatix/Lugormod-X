@@ -934,7 +934,7 @@ void lmd_stashspawnpoint_think(gentity_t *ent){
 	
 	//wait: spawntime
 	//random: spawnrandom
-	ent->nextthink = level.time + (int)ent->wait + Q_irand(0, (int)ent->random);
+	ent->nextthink = level.time + (int)ent->wait + Q_irand(0, (int)ent->random) + 350; //iomatix
 }
 
 void lmd_stashspawnpoint(gentity_t *ent){
@@ -1257,7 +1257,7 @@ void lmd_stashspawnpoint(gentity_t *ent){
 	ent->use = lmd_stashspawnpoint_use;
 	if(ent->wait > 0){
 		ent->think = lmd_stashspawnpoint_think;
-		ent->nextthink = level.time + (int)ent->wait + Q_irand(0, (int)ent->random);
+		ent->nextthink = level.time + (int)ent->wait + Q_irand(0, (int)ent->random) +350;//iomatix
 	}
 		
 	//16384: start disabled.  Needs to be used by a target_activate to start spawning.
@@ -1366,7 +1366,7 @@ void lmd_stashdepozone_think (gentity_t *ent){
 		G_FreeEntity(ent);
 		return;
 	}
-	ent->nextthink = level.time + 5000;
+	ent->nextthink = level.time + 5100;
 }
 
 qboolean lmd_stashdepo_makezone(gentity_t *ent){
