@@ -36,6 +36,7 @@
 - Optional anti-grief system setable with lmd extern commands inside the server.cfg file.
 - Combat system, skills and powers are reworked.
 - Stashes support experience system.
+- New falling system respecting jumps, jetpacks and the force jump.
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 
