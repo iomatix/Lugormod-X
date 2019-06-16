@@ -117,6 +117,10 @@
 - Stashes, less bandwidth usage. ✔️ 
 - Stash zone `count` property is fixed now. Default 3 and admin is able to change the max stashes value by the `count` key inside `"classname" "lmd_stashzone"`  ✔️
 - Stash system supports new experience system now. ✔️ 
+- Falling system reworked. ✔️   
+- Jumping level 5 is changed, if falling velocity is really long vector then the skill won't work. ✔️ 
+- Jetpacks are able to fly two times higher. ✔️ 
+- Jetpack won't protect from the falling damage. ✔️
 
 //
 

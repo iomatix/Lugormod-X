@@ -151,13 +151,10 @@ void lmd_stash_deposit(gentity_t *self,int experienceShift, int creditsShift, ch
 	unsigned int i;
 
 	if(self->health > 0 || self->health_exp > 0){
-		Disp(self->activator, va("^3Got ^2CR %i ^3and ^5EXP %i^3 from the ^2%s^3.", self->count, self->count_exp, self->fullName));
-		int cr = PlayerAcc_GetCredits(self->activator);
-		int exp = PlayerAcc_GetExperience(self->activator);
+		//Disp(self->activator, va("^3Got ^2CR %i ^3and ^5EXP %i^3 from the ^2%s^3.", self->count, self->count_exp, self->fullName));
 		PlayerAcc_Stats_SetStashes(self->activator, PlayerAcc_Stats_GetStashes(self->activator) + 1);
-
-		if(self->health > 0)PlayerAcc_SetCredits(self->activator, cr + self->health);
-		if(self->health_exp > 0)PlayerAcc_SetExperience(self->activator, exp + self->health_exp);
+		if (self->health_exp > 0)GiveExperience(self->activator, self->health_exp, va("^3from the ^2%s^3", self->fullName));
+		if (self->health > 0)GiveCredits(self->activator, self->health, va("^3from the ^2%s^3", self->fullName));
 	}
 
 	//GenericString 5: deposit message

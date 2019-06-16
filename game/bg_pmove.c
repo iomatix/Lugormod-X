@@ -4096,7 +4096,7 @@ static qboolean PM_CheckJump( void )
 	if (pm->ps->groundEntityNum == ENTITYNUM_NONE )
 	{
 		//iomatix rework
-		if (pm->cmd.upmove > 0 && PM_GroundDistance() <= 2000 &&
+		if (pm->cmd.upmove > 0 && pm->ps->velocity[2] > -2000 &&
 			pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5 && lmd_force_is_double_jump.integer != 0) //turn it off for level 5
 		{ //Lugormod Jump in air
 
@@ -5191,7 +5191,6 @@ static void PM_CrashLand( void ) {
 
 	delta = vel + t * acc;
 
-	//if (delta > 900) delta *= 4; //iomatix: increase damage for big velocity.
 
 	delta = delta*delta * 0.0001;
 	//Lugormod size fix
@@ -5368,7 +5367,7 @@ static void PM_CrashLand( void ) {
 			if ( anim )
 			{//absorb some impact
 				pm->ps->legsTimer = 0;
-				delta /= 3; // /= 2 just cancels out the above delta *= 2 when landing while crouched, the roll itself should absorb a little damage
+				delta /= 4; // /= 2 just cancels out the above delta *= 2 when landing while crouched, the roll itself should absorb a little damage
 				pm->ps->legsAnim = 0;
 				if (pm->ps->torsoAnim == BOTH_A7_SOULCAL)
 				{ //get out of it on torso
@@ -12589,13 +12588,13 @@ void PmoveSingle (pmove_t *pmove) {
 		*/
 		gDist = PM_GroundDistance();
 
-		if (gDist < JETPACK_HOVER_HEIGHT+64)
+		if (gDist < JETPACK_HOVER_HEIGHT+64)//iomatix 128?
 		{
 			pm->ps->gravity *= 0.1f;
 		}
 		else
 		{
-			pm->ps->gravity *= 0.25f;
+			pm->ps->gravity *= 0.25f; 
 		}
 		//#endif
 	}
@@ -12638,7 +12637,8 @@ void PmoveSingle (pmove_t *pmove) {
 
 #ifndef LMD_NEW_JETPACK
 		//cap upward velocity off at 256. Seems reasonable.
-		if (pm->cmd.upmove > 0 && (pm->ps->velocity[2] < 256 || pm->ps->userInt1 && pm->gametype == GT_FFA))
+		//iomatix 384:
+		if (pm->cmd.upmove > 0 && (pm->ps->velocity[2] < 384 || pm->ps->userInt1 && pm->gametype == GT_FFA))
 #else
 		//Only move up if we arent moving sideways
 		if ((pm->cmd.forwardmove == 0 && pm->cmd.rightmove == 0) && (pm->ps->velocity[2] < 512 || pm->ps->userInt1 && pm->gametype == GT_FFA))
@@ -12658,16 +12658,16 @@ void PmoveSingle (pmove_t *pmove) {
 			if (pm->ps->velocity[2] > 0){
 				//Lugormod admins fly higher
 				if (pm->ps->userInt1 && pm->gametype == GT_FFA)
-					addIn = 18.0f - (gDist / 256.0f);
+					addIn = 19.0f - (gDist / 384.0f); //18 -> 19, 256->384 iomatix
 				else
-					addIn = 12.0f - (gDist / 64.0f);
+					addIn = 13.0f - (gDist / 312.0f); //12->13, 64 -> 312
 			}
 #endif
 
 			if (addIn > 0.0f){
 				pm->ps->velocity[2] += addIn;
 			}
-
+			PM_SetForceJumpZStart(pm->ps->origin[2]);//iomatix: ground up
 			pm->ps->eFlags |= EF_JETPACK_FLAMING; //going up
 		}
 		else {
@@ -12681,8 +12681,8 @@ void PmoveSingle (pmove_t *pmove) {
 #else
 			pm->ps->eFlags &= ~EF_JETPACK_FLAMING; //idling
 			if (pm->ps->velocity[2] < 256){
-				if (pm->ps->velocity[2] < -100){
-					pm->ps->velocity[2] = -100;
+				if (pm->ps->velocity[2] < -128){
+					pm->ps->velocity[2] = -128;
 				}
 				if (gDist < JETPACK_HOVER_HEIGHT){
 					//make sure we're always hovering off the ground somewhat while jetpack is active

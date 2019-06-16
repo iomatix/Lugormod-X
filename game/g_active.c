@@ -1070,27 +1070,36 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				else if ((g_gametype.integer == GT_SIEGE ||
 					g_gametype.integer == GT_BATTLE_GROUND))//Lugormod
 				{ //longer falls hurt more
-					damage = delta*1; //good enough for now, I guess
+					damage = delta*1.1; //good enough for now, I guess
 				}
 				else
 				{
 					//Ufo: lowered a little
 					//damage = (int) (delta*0.16); //good enough for now, I guess
-					damage = (int) (delta*0.1);
+					damage = (int) (delta*0.25); //iomatix
 				}
 
-				//RoboPhred
+				//iomatix:
 				if(event == EV_FALL) {
-					/*
-					if(delta >= 200)
-						G_Knockdown(ent, 0);
-					else if(delta >= 50) {
-						ent->client->ps.weaponTime += Q_irand(750, 1000);
+					
+					if (delta >= 165) {
+						G_Knockdown(ent, 1050+delta);
+						damage += delta; //iomatix
+						//iomatix:
+						ent->client->ps.weaponTime += Q_irand(1550, 2050)+delta;
 						//Different random time for stun.
-						ent->client->Lmd.stunSpeed.time = level.time + Q_irand(300, 750);
-						ent->client->Lmd.stunSpeed.value = .2;
+						ent->client->Lmd.stunSpeed.time = level.time + Q_irand(1350, 1950)+delta;
+						ent->client->Lmd.stunSpeed.value = .45;
 					}
-					*/
+					else if(delta >= 65) {
+						damage += delta*0.25;
+
+						ent->client->ps.weaponTime += Q_irand(750, 1050);
+						//Different random time for stun.
+						ent->client->Lmd.stunSpeed.time = level.time + Q_irand(350, 1050);
+						ent->client->Lmd.stunSpeed.value = .65;
+					}
+				
 				}
 
 				//RoboPhred: moved down to here, we still want knockdown.
@@ -1106,9 +1115,11 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				if (victim && victim->client && victim->s.number < MAX_CLIENTS &&
 					!duelInProgress(&victim->client->ps) && !duelInProgress(&ent->client->ps))
 				{
-					G_Knockdown(victim, 0);
+					G_Knockdown(victim, 750+delta);
 					damage = delta*.5;
 					G_Damage(victim, ent, ent, dir, victim->client->ps.origin, damage, DAMAGE_NO_ARMOR, MOD_CRUSH);
+					damage *= .75;
+					G_Damage(ent, NULL, NULL, NULL, NULL, damage, DAMAGE_NO_ARMOR, MOD_FALLING); //iomatix: added damage also to the falling client
 					ent->client->dangerTime = level.time;
 					ent->client->ps.eFlags &= ~EF_INVULNERABLE;
 					ent->client->invulnerableTimer = 0;

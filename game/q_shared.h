@@ -2263,7 +2263,7 @@ typedef struct playerState_s {
 	int			pm_time;
 
 	vec3_t		origin;
-	vec3_t		velocity;
+	vec3_t		velocity;//x[0],y[1],z[2]
 
 	vec3_t		moveDir; //NOT sent over the net - nor should it be.
 
