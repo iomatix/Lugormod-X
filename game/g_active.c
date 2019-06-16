@@ -2592,7 +2592,7 @@ void ClientThink_real( gentity_t *ent ) {
 #ifdef LMD_NEW_JETPACK
 	else if (client->jetPackTime > level.time && (prof != PROF_ADMIN || ucmd->upmove >= 0)) {
 #else
-	else if(client->jetPackOn) {
+	else if(client->jetPackOn && client->ps.velocity[2] > -2000) { //iomatix, added velocity 
 #endif
 		client->ps.pm_type = PM_JETPACK;
 		client->ps.eFlags |= EF_JETPACK_ACTIVE;
