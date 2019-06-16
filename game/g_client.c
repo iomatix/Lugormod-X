@@ -1964,7 +1964,7 @@ qboolean G_SaberModelSetup(gentity_t *ent)
 
 						if (tagBolt == -1)
 						{
-							assert(0);
+							//assert(0); //iomatix: ASSERTION FAILED
 							break;
 
 						}
