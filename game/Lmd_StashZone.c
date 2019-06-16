@@ -612,7 +612,7 @@ void lmd_stash_think(gentity_t *ent) {
 			ent->timestamp = level.time;
 	}
 
-	ent->nextthink = level.time + FRAMETIME;
+	ent->nextthink = level.time + 450;
 }
 
 void lmd_stash(gentity_t *ent){
@@ -682,7 +682,7 @@ void lmd_stash(gentity_t *ent){
 	ent->s.constantLight = ent->genericValue14;
 
 	ent->think = lmd_stash_think;
-	ent->nextthink = level.time + FRAMETIME;
+	ent->nextthink = level.time + 450; //iomatix
 
 	ent->health = ent->count;
 	ent->health_exp = ent->count_exp;
