@@ -151,6 +151,7 @@ void lmd_stash_deposit(gentity_t *self,int experienceShift, int creditsShift, ch
 	unsigned int i;
 
 	if(self->health > 0 || self->health_exp > 0){
+		Disp(self->activator, va("^3Got ^2CR %i ^3and ^5EXP %i^3 from the Stash.", self->count, self->count_exp));
 		int cr = PlayerAcc_GetCredits(self->activator);
 		int exp = PlayerAcc_GetExperience(self->activator);
 		PlayerAcc_Stats_SetStashes(self->activator, PlayerAcc_Stats_GetStashes(self->activator) + 1);
@@ -374,6 +375,7 @@ void lmd_stash_pickup(gentity_t *stash, gentity_t *player){
 		(3) 8: pickupmessage screen print: send the pickupmessage as a screen print, as well as in the console.
 	GenericString 2: pickup message
 	*/
+	Disp(player, va("^3The stash contains ^2CR %i ^3and ^5EXP %i", stash->count, stash->count_exp));
 	if(stash->GenericStrings[2][0]){
 		Q_strcat(msg, sizeof(msg), va("%s\n", stash->GenericStrings[2]));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
