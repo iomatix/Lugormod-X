@@ -120,7 +120,7 @@ void money_stash_think (gentity_t *ent){
 	if(ent->activator && ent->activator->client)
 		ent->activator->client->ps.powerups[PW_NEUTRALFLAG] = INT_MAX;
 
-	ent->nextthink = level.time + 100;
+	ent->nextthink = level.time + 750; //iomatix: too fast, bandwidth optimalization, 750ms
 }
 
 void money_stash_touch (gentity_t *self, gentity_t *other, trace_t *trace){
