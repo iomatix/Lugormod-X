@@ -5190,10 +5190,14 @@ static void PM_CrashLand( void ) {
 	t = (-b - sqrt( den ) ) / ( 2 * a );
 
 	delta = vel + t * acc;
+
+	//if (delta > 900) delta *= 4; //iomatix: increase damage for big velocity.
+
 	delta = delta*delta * 0.0001;
 	//Lugormod size fix
 	delta /= sqrt(scaleh);
 
+	
 
 #ifdef QAGAME
 	PM_CrashLandEffect();

@@ -337,12 +337,12 @@ void SV_Heartbeat_f( void );
 //
 // sv_snapshot.c
 //
-void SV_AddServerCommand( client_t *client, const char *cmd );
+//void SV_AddServerCommand( client_t *client, const char *cmd );
 void SV_UpdateServerCommandsToClient( client_t *client, msg_t *msg ); //nope
 void SV_WriteFrameToClient (client_t *client, msg_t *msg);
 void SV_SendMessageToClient( msg_t *msg, client_t *client ); //nope
 void SV_SendClientMessages( void ); //nope
-//void SV_SendClientSnapshot( client_t *client ); //this is the cause -> SV_WriteSnapshotToClient , code/server/sv_snapshot.cpp
+void SV_SendClientSnapshot( client_t *client ); //this is the cause -> SV_WriteSnapshotToClient , code/server/sv_snapshot.cpp
 
 
 //
