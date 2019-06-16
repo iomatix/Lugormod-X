@@ -163,10 +163,8 @@ void lmd_stash_deposit(gentity_t *self,int experienceShift, int creditsShift, ch
 	//Spawnflag (8) 256: depositmessage global.
 	//Spawnflag (9) 512: depositmessage screen print.
 	if(self->GenericStrings[5][0] || extraMessage[0]){
-		if(self->GenericStrings[5][0])
-			Q_strcat(msg, sizeof(msg), va("%s\n", self->GenericStrings[5]));
-		if(extraMessage && extraMessage[0])
-			Q_strcat(msg, sizeof(msg), va("%s\n", extraMessage));
+		if(self->GenericStrings[5][0]) Q_strcat(msg, sizeof(msg), va("%s\n", self->GenericStrings[5]));
+		if(extraMessage && extraMessage[0]) Q_strcat(msg, sizeof(msg), va("%s\n", extraMessage));
 		//Spawnflag 4096: display stash amount: include the credits amount on all stash messages.
 		if(self->spawnflags & 4096)
 			Q_strcat(msg, sizeof(msg), va("^3Contains ^2CR %i ^3and ^5EXP %i", self->count,self->count_exp));
