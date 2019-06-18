@@ -1446,7 +1446,7 @@ qboolean PM_ForceJumpingUp(void)
 		//RoboPhred
 #ifndef LMD_NEW_JUMP
 		&& (pm->ps->velocity[2] > 0 
-		|| (pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5 && lmd_force_is_double_jump.integer != 0)) //iomatix turn of flying ??
+		|| (pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5 && lmd_force_is_double_jump.integer != 0)) //iomatix, admin wants to turn of flying?
 #endif
 		)//going up
 	{
@@ -4096,7 +4096,7 @@ static qboolean PM_CheckJump( void )
 	if (pm->ps->groundEntityNum == ENTITYNUM_NONE )
 	{
 		//iomatix rework
-		if (pm->cmd.upmove > 0 && pm->ps->velocity[2] > -2000 &&
+		if (pm->cmd.upmove > 0 && pm->ps->velocity[2] > -1999 && //jump velocity
 			pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5 && lmd_force_is_double_jump.integer != 0) //turn it off for level 5
 		{ //Lugormod Jump in air
 
@@ -4106,7 +4106,6 @@ static qboolean PM_CheckJump( void )
 					return qfalse;
 				}
 
-				//PM_SetForceJumpZStart(pm->ps->origin[2]);//so we don't take damage if we land at same height
 				pm->ps->fd.forcePower -= 5;
 				//WP_ForceLimiterForceSet(pm);
 				pm->ps->fd.forcePowersActive |= (1 << FP_LEVITATION);
@@ -4115,7 +4114,7 @@ static qboolean PM_CheckJump( void )
 				pml.groundPlane = qfalse;
 				pml.walking = qfalse;
 				pm->ps->pm_flags |= PMF_JUMP_HELD;
-				PM_SetForceJumpZStart(pm->ps->origin[2]);
+				PM_SetForceJumpZStart(pm->ps->origin[2]);//so we don't take damage if we land at same height
 				PM_AddEvent(EV_JUMP);
 				//iomatix:
 				//Set the animations
@@ -12654,19 +12653,26 @@ void PmoveSingle (pmove_t *pmove) {
 					addIn = 30.0f - (gDist / 64.0f);
 			}
 #else
-			float addIn = 12.0f;
+			
+
+			if (gDist > 2048)gDist = 2048; //iomatix Dist limit
+
+			float addIn = 13.0f; //starting value
+
 			if (pm->ps->velocity[2] > 0){
 				//Lugormod admins fly higher
 				if (pm->ps->userInt1 && pm->gametype == GT_FFA)
-					addIn = 19.0f - (gDist / 384.0f); //18 -> 19, 256->384 iomatix
+					addIn = 19.0f - (gDist / 324.0f); //18 -> 19, 256->384 iomatix
 				else
-					addIn = 13.0f - (gDist / 312.0f); //12->13, 64 -> 312
+					addIn = 13.0f - (gDist / 285.0f); //12->13, 64 -> 285
+			}
+			else{
+				addIn -= floor(pm->ps->velocity[2] / 3); //iomatix hard breaking
 			}
 #endif
 
-			if (addIn > 0.0f){
-				pm->ps->velocity[2] += addIn;
-			}
+			if (addIn > 0.0f)pm->ps->velocity[2] += addIn;
+			
 			PM_SetForceJumpZStart(pm->ps->origin[2]);//iomatix: ground up
 			pm->ps->eFlags |= EF_JETPACK_FLAMING; //going up
 		}
@@ -12681,10 +12687,8 @@ void PmoveSingle (pmove_t *pmove) {
 #else
 			pm->ps->eFlags &= ~EF_JETPACK_FLAMING; //idling
 			if (pm->ps->velocity[2] < 256){
-				
 				//iomatix jetpack rework
-				if (pm->ps->velocity[2] <= -(gDist/3.5 + 80)) pm->ps->velocity[2] = -(gDist/3.5 + 80);
-				
+				if (pm->ps->velocity[2] <= -(gDist/4 + 80)) pm->ps->velocity[2] = -(gDist/4 + 80);
 
 				if (gDist < JETPACK_HOVER_HEIGHT){
 					//make sure we're always hovering off the ground somewhat while jetpack is active
