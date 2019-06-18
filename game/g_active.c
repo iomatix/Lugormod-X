@@ -1083,20 +1083,24 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				if(event == EV_FALL) {
 					
 					if (delta >= 165) {
-						G_Knockdown(ent, 1050+delta);
-						damage += delta; //iomatix
 						//iomatix:
-						ent->client->ps.weaponTime += Q_irand(1550, 2050)+delta;
+						G_Knockdown(ent, 1450 + delta); //apply knockdown
+						damage += delta; 
+						
+						ent->client->ps.weaponTime += Q_irand(1850, 2250)+delta;
 						//Different random time for stun.
-						ent->client->Lmd.stunSpeed.time = level.time + Q_irand(1350, 1950)+delta;
+						ent->client->Lmd.stunSpeed.time = level.time + Q_irand(1850, 2400)+delta;
 						ent->client->Lmd.stunSpeed.value = .45;
+						
+						
+
 					}
 					else if(delta >= 65) {
 						damage += delta*0.25;
 
-						ent->client->ps.weaponTime += Q_irand(750, 1050);
+						ent->client->ps.weaponTime += Q_irand(650, 950)+delta;
 						//Different random time for stun.
-						ent->client->Lmd.stunSpeed.time = level.time + Q_irand(350, 1050);
+						ent->client->Lmd.stunSpeed.time = level.time + Q_irand(650, 1250)+delta;
 						ent->client->Lmd.stunSpeed.value = .65;
 					}
 				
@@ -1116,7 +1120,7 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 					!duelInProgress(&victim->client->ps) && !duelInProgress(&ent->client->ps))
 				{
 					G_Knockdown(victim, 750+delta);
-					damage = delta*.5;
+					damage *= .85;
 					G_Damage(victim, ent, ent, dir, victim->client->ps.origin, damage, DAMAGE_NO_ARMOR, MOD_CRUSH);
 					damage *= .75;
 					G_Damage(ent, NULL, NULL, NULL, NULL, damage, DAMAGE_NO_ARMOR, MOD_FALLING); //iomatix: added damage also to the falling client

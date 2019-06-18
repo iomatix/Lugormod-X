@@ -4799,8 +4799,7 @@ void G_Knockdown( gentity_t *victim, int duration)
 		return;
 	}
 
-	if(duration == 0)
-		duration = 1300;
+	if(duration == 0)duration = 1350;
 	/*
 	//Lugormod meditate and godmode protect 
 	if ( g_meditateProtect.integer &&
