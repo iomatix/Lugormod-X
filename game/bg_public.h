@@ -447,7 +447,6 @@ struct bgEntity_s
 typedef struct {
 	// state (in / out)
 	playerState_t	*ps;
-
 	//rww - shared ghoul2 stuff (not actually the same data, but hey)
 	void		*ghoul2;
 	int			g2Bolts_LFoot;
