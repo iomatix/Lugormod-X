@@ -12681,9 +12681,9 @@ void PmoveSingle (pmove_t *pmove) {
 #else
 			pm->ps->eFlags &= ~EF_JETPACK_FLAMING; //idling
 			if (pm->ps->velocity[2] < 256){
-				if (pm->ps->velocity[2] < -128){
-					pm->ps->velocity[2] = -128;
-				}
+				
+				if (pm->ps->velocity[2] < -ceil(gDist/3 + 100))pm->ps->velocity[2] = -ceil(gDist/3 + 100); //iomatix
+			    
 				if (gDist < JETPACK_HOVER_HEIGHT){
 					//make sure we're always hovering off the ground somewhat while jetpack is active
 					pm->ps->velocity[2] += 2;

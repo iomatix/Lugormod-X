@@ -119,9 +119,11 @@
 - Stash system supports new experience system now. ✔️ 
 - Falling system reworked. ✔️   
 - Jumping level 5: if falling velocity vector is too long the skill won't work. ✔️ 
+- Jetpack mechanics are reworked. ✔️ 
 - Jetpacks are able to fly two times higher. ✔️ 
 - Jetpack won't protect from the falling damage. ✔️
 - Jetpack won't launch if the falling velocity vector is too long. ✔️
+
 
 //
 
