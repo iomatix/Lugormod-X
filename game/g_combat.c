@@ -5556,10 +5556,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			else if (difference > -35 && difference < 35)difference = difference / 2;
 			else if (difference > -45 && difference < 45)difference = difference / 1.5;
 
-			fprintf(stderr, va("Pre-damage: Damage is %i\n", damage));//DEBUG
+			//fprintf(stderr, va("Pre-damage: Damage is %i\n", damage));//DEBUG
 			damage += ceil((damage * difference) / 140.f); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1% //140 -> 85%//130 -> 92%
 												   //damage to stack it again //damage_modifier to do not stack it and make passive skills great again.                     //when target_lvl < att_lvl then subracts	
-			fprintf(stderr, va("Difference %i: Damage is %i\n", difference, damage));//DEBUG
+			//fprintf(stderr, va("Difference %i: Damage is %i\n", difference, damage));//DEBUG
 		}
 	}
 	

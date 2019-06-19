@@ -575,10 +575,10 @@ void Force_Lightning_Stop(gentity_t *self, const void* vData) {
 
 forceLightning_t Force_Lightning_Levels[5] = {
 	//do not go over 250 cuz won't work when runing through it
-	{3,4096,		 0, Q3_INFINITE,    250, 6, qfalse}, //at least 30 dmg per 2500ms
-	{4,8192,     0, Q3_INFINITE,	240, 6, qfalse}, //at least 40dmg per 2500ms
-	{6,FORCE_LIGHTNING_RADIUS,	 1, Q3_INFINITE,	230, 10, qtrue}, //at least 65dmg for 2500ms
-	{3,FORCE_LIGHTNING_RADIUS*1.2,     1, Q3_INFINITE,	100, 5, qtrue}, //at least 75dmg for 2500ms
+	{3,4096,		 0, Q3_INFINITE,    240, 6, qfalse}, //at least 30 dmg per 2500ms
+	{4,8192,     0, Q3_INFINITE,	200, 6, qfalse}, //at least 50 dmg per 2500ms
+	{6,FORCE_LIGHTNING_RADIUS,	 1, Q3_INFINITE,	215, 10, qtrue}, //at least 70dmg for 2500ms
+	{4,FORCE_LIGHTNING_RADIUS*1.2,     1, Q3_INFINITE,	115, 5, qtrue}, //at least 85dmg for 2500ms
 	{3,FORCE_LIGHTNING_RADIUS*1.5, 	 1, Q3_INFINITE,	65, 3, qtrue} //at least 115dmg for 2500ms
 };
 
