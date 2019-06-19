@@ -176,18 +176,19 @@ void HiScore(gentity_t *ent, int field) {
 
 //iomatix:
 //Titles system 
-char * GetTitle_system(gentity_t *ent)
+char * GetTitle_system(Account_t *acc)
 {
-	int level = PlayerAcc_Prof_GetLevel(ent) + PlayerAcc_GetNewGamePlus_count(ent);
-	if (PlayerAcc_Prof_GetProfession(ent) == PROF_JEDI) {
+	
+	int level = Accounts_Prof_GetLevel(acc) + Accounts_GetNewGamePlus_count(acc);
+	if (Accounts_Prof_GetProfession(acc) == PROF_JEDI) {
 		//jedi titles
 		if (level < 10)return "^7Apprentice";
 		else if (level < 20)return "^7Disciple";
 		else if (level < 30)return "^7Adept";
 		else if (level < 60)
 		{
-			if (Jedi_GetSide(ent) == FORCE_DARKSIDE) return "^1Darth";
-			else if (Jedi_GetSide(ent) == FORCE_LIGHTSIDE) return "^2Knight";
+			if (Jedi_GetAccSide(acc) == FORCE_DARKSIDE) return "^1Darth";
+			else if (Jedi_GetAccSide(acc) == FORCE_LIGHTSIDE) return "^2Knight";
 			else return "^9Nomad";
 
 		}
@@ -198,7 +199,7 @@ char * GetTitle_system(gentity_t *ent)
 		else if (level < 200)return "^9Luminary";
 		else return "^0Legend";
 	}
-	else if (PlayerAcc_Prof_GetProfession(ent) == PROF_MERC)
+	else if (Accounts_Prof_GetProfession(acc) == PROF_MERC)
 	{//merc titles
 		if (level < 10)return "^7Freshmeat";
 		else if (level < 20)return "^7Rifleman";
@@ -224,7 +225,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 	int prof, time, lvl, authrank;
 	char *c;
 	char *authlist;
-	char *the_title = GetTitle_system(ent);
+	char *the_title = GetTitle_system(acc);
 	char lastLogin[MAX_STRING_CHARS];
 
 	char *secCode;

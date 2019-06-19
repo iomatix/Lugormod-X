@@ -123,7 +123,10 @@
 - Jetpacks are able to fly two times higher. ✔️ 
 - Jetpack won't protect from the falling damage. ✔️
 - Jetpack won't launch if the falling velocity vector is too long. ✔️
-
+- Drain and Lightning slow down the target. ✔️
+- Lightning knockdown and weapon time mechanics are added. ✔️ 
+- Lightning, Drain, Grip slow the caster. ✔️ 
+- Lightning pushes targets. ✔️ 
 
 //
 
