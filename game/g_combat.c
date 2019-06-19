@@ -5549,13 +5549,20 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		if (targ->client->pers.Lmd.account)level_targ = PlayerAcc_Prof_GetLevel(targ);
 		if (level_attacker > 120) level_attacker = 120;
 		if (level_targ > 120)level_targ = 120;
-		//88% damage with 120 levels difference
+		//x = 100*120/scale, x% damage with 120 levels difference
 		int difference = level_targ - level_attacker;
-		if (difference > -20 && difference < 20 )difference = difference/3; //20 levels of difference to count as grief.
-		else if (difference > -35 && difference < 35)difference = difference / 2;
-		damage_modifier += damage * (difference/135); //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1%
-        //do not stack it and make passive skills great again.                    //when target_lvl < att_lvl then subracts	
+		if (difference != 0) {
+			if (difference > -25 && difference < 25)difference = difference / 4; //20 levels of difference to count as grief.
+			else if (difference > -35 && difference < 35)difference = difference / 3;
+			else if (difference > -55 && difference < 55)difference = difference / 2;
+
+			//DEBUG: fprintf(stderr, va("Pre-damage: Damage is %i\n", damage));//DEBUG
+			damage += (damage * difference) / 140; //120 is max level to adjust the formula a little it's less than 1% per level = max +100% damage output with 120, 100 for 1 level = 1% //140 -> 85%//130 -> 92%
+			//damage to stack it again //damage_modifier to do not stack it and make passive skills great again.                     //when target_lvl < att_lvl then subracts	
+			//DEBUG: fprintf(stderr, va("Difference %i: Damage is %i\n", difference, damage));//DEBUG
+		}
 	}
+	
 
 
 
