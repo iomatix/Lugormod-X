@@ -10,30 +10,30 @@
 - New registration. Username is also character name now.
 - AI unlocked. AI is able to use Force user or Mercenary profession.
 - Level cap changed up to 120 and added mastery level for Force Users which starts on 40 profession level.
-- Reaching mastery level allows to use force of the opposite side and unlocks new power ups.
+- Reaching mastery level allows to use force of the opposite side and unlocks new power-ups.
 - Profession change requires a credits fee now which depends on skill points used.
 - Force, health and shield capacity grows per level depend on profession level.
 - Health, Force Power and Shield formula is re-balanced.
-- Reworked skillpoints system with clear and RPG style formula.
-- Player can spend skillpoints to upgrade new fully working passive skills.
+- Reworked skill points system with clear and RPG style formula.
+- Player can spend skill points to upgrade new fully working passive skills.
 - Improved console displays making it more clear for the user.
 - New weapons for Mercenary profession available through his skill.
 - To get access more powerful skills player must reach his Mastery Level now.
 - Added level damage scaling.
-- New and chagned skills.
+- New and changed skills.
 - A lot of new extern variables to configure the server.
 - New fully working leveling system with experience gain. Credits and experience gain depends on level difference between players by default. 
-- Simplification for Admin commands. Self commands availble without using the account name argument.
+- Simplification for Admin commands. Self commands available without using the account name argument.
 - Credit Boxes. Gain them with level up, killstreaks and bounty hunting. 
 - Profession level saving.
-- New Game Plus mode with additional skillpoints as a reward.
+- New Game Plus mode with additional skill points as a reward.
 - Experience as a reward for quests.
 - Blocking with Lightsaber and Evasions use the force power.
 - Title system.
 - The Black List.
 - New in-game mechanics.
 - A Guide designed for new users.
-- Optional anti-grief system setable with lmd extern commands inside the server.cfg file.
+- Optional anti-grief system settable with lmd extern commands inside the server.cfg file.
 - Combat system, skills and powers are reworked.
 - Stashes support experience system.
 - New falling system respecting jumps, jetpacks and the force jump.
@@ -69,10 +69,10 @@
 
 - Lugor       - for creating early versions of the mod,
 - RoboPhred   - for developing the mod for many years,
-- Ufo         - for small scale development and producing a linux build.
+- Ufo         - for small scale development and producing a Linux build.
 
 *Can be compiled using Visual Studio 2013.*
-Linux users may use the makefile inside game folder.
+Linux users may use the makefile inside the game folder.
 
 Licensed under GPL version 3 or later.
 
