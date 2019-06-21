@@ -2062,14 +2062,14 @@ THERMAL DETONATOR
 
 #define TD_DAMAGE			75 //only do 75 on a direct impact
 #define TD_SPLASH_RAD		296 //128 -> 296
-#define TD_SPLASH_DAM		85 //90 -> 85
+#define TD_SPLASH_DAM		95 //90 -> 95
 #define TD_VELOCITY			900
 #define TD_MIN_CHARGE		0.15f
 #define TD_TIME				3350 //6000 -> 3000 -> 3350
 
-#define TD_ALT_DAMAGE		55 //90
+#define TD_ALT_DAMAGE		65 //90
 #define TD_ALT_SPLASH_RAD	266 //128 -> 266
-#define TD_ALT_SPLASH_DAM	40 //90
+#define TD_ALT_SPLASH_DAM	75 //90
 #define TD_ALT_VELOCITY		600
 #define TD_ALT_MIN_CHARGE	0.15f
 #define TD_ALT_TIME			3000
@@ -2380,9 +2380,9 @@ LASER TRAP / TRIP MINE
 
 ======================================================================
 */
-#define LT_DAMAGE			80   //iomatix 100 -> 80
-#define LT_SPLASH_RAD		335.0f //iomatix 256 ->335
-#define LT_SPLASH_DAM		95 //iomatix 105 -> 95
+#define LT_DAMAGE			90   //iomatix 100 -> 90
+#define LT_SPLASH_RAD		320.0f //iomatix 256 ->320
+#define LT_SPLASH_DAM		125 //iomatix 105 -> 125
 #define LT_VELOCITY			900.0f
 #define LT_SIZE				1.5f
 #define LT_ALT_TIME			2000
@@ -2639,7 +2639,7 @@ void laserTrapStick( gentity_t *ent, vec3_t endpos, vec3_t normal )
 
 void TrapThink(gentity_t *ent)
 { //laser trap think
-	ent->nextthink = level.time + 85; //iomatix bandwidth optimalization
+	ent->nextthink = level.time + 55; //50 ->55
 	G_RunObject(ent);
 }
 
@@ -2811,7 +2811,7 @@ DET PACK
 */
 #define DT_DAMAGE			90 //100
 #define DT_SPLASH_RAD		256 //200
-#define DT_SPLASH_DAM		180 //200
+#define DT_SPLASH_DAM		185 //200
 
 void VectorNPos(vec3_t in, vec3_t out)
 {
