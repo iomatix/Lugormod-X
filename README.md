@@ -37,7 +37,9 @@
 - Combat system, skills and powers are reworked.
 - Stashes support experience system.
 - New falling system respecting jumps, jetpacks and the force jump.
-- Jetpacks rework. 
+- Interaction with liquids is adjusted.
+- Jetpacks rework.
+- Falling system rework. 
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 
