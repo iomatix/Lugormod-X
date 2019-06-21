@@ -2381,7 +2381,7 @@ LASER TRAP / TRIP MINE
 ======================================================================
 */
 #define LT_DAMAGE			80   //iomatix 100 -> 80
-#define LT_SPLASH_RAD		336.0f //iomatix 256 ->336
+#define LT_SPLASH_RAD		335.0f //iomatix 256 ->335
 #define LT_SPLASH_DAM		95 //iomatix 105 -> 95
 #define LT_VELOCITY			900.0f
 #define LT_SIZE				1.5f
@@ -2516,7 +2516,7 @@ void proxMineThink(gentity_t *ent)
 				vec3_t v;
 
 				VectorSubtract(ent->r.currentOrigin, cl->client->ps.origin, v);
-				if (VectorLength(v) < (ent->splashRadius/2.0f))
+				if (VectorLength(v) < (ent->splashRadius/4.f))
 				{
 					ent->think = laserTrapExplode;
 					return;

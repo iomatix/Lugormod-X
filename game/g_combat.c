@@ -6521,15 +6521,16 @@ qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, floa
 			{
 				G_Damage (ent, NULL, attacker, dir, origin, (int)points, DAMAGE_RADIUS, mod);
 			}
-
-			if (points > 38) {
-				//iomatix
-				if(points >= 100 || Q_irand(0, 100-points) <= 25) G_Knockdown(ent, Q_irand(750, 1050) + (points * 13)); //25% knockdown
-			}
-			else {
-				ent->client->Lmd.stunSpeed.time = level.time + Q_irand(650, 950);
-				ent->client->Lmd.stunSpeed.value = .75;
-				ent->client->ps.weaponTime += Q_irand(350, 450);
+			if (ent->client) {
+				if (points > 38) {
+					//iomatix
+					if (points >= 100 || Q_irand(0, 100 - points) <= 25) G_Knockdown(ent, Q_irand(750, 1050) + (points * 13)); //25% knockdown
+				}
+				else {
+					ent->client->Lmd.stunSpeed.time = level.time + Q_irand(650, 950);
+					ent->client->Lmd.stunSpeed.value = .75;
+					ent->client->ps.weaponTime += Q_irand(350, 450);
+				}
 			}
 
 			/* Lugormod never happens as roastPeople is always false
