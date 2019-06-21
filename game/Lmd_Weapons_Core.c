@@ -283,7 +283,7 @@ weaponEntry_t Weapon_Bryar = {
 		1,
 		NULL,
 		{0, 0, 0, 0},
-		{10, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BRYAR_PISTOL, 0},
+		{15, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BRYAR_PISTOL, 0}, //bryar damage buff 10->15
 		{0, 1600, qfalse, 10000, 8},
 		0, NULL
 	},
@@ -291,7 +291,7 @@ weaponEntry_t Weapon_Bryar = {
 		1,
 		Weapon_Bryar_AltFire,
 		{0, 0, 0, 0},
-		{10, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BRYAR_PISTOL_ALT, 0},
+		{20, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BRYAR_PISTOL_ALT, 0}, //bryar damage buff 10->20
 		{1, 1600, qfalse, 10000, 8},
 		0, NULL
 	}
@@ -309,7 +309,7 @@ weaponEntry_t Weapon_Blaster = {
 		1,
 		NULL,
 		{0, 2, 0, 0},
-		{20, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BLASTER, 0},
+		{25, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BLASTER, 0}, //blaster basic buff 20->25
 		{0, 2300, qfalse, 10000, 8},
 		0, NULL
 	},
@@ -317,7 +317,7 @@ weaponEntry_t Weapon_Blaster = {
 		1,
 		NULL,
 		{0, 3, 1.6f, 0},
-		{20, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BLASTER, 0},
+		{15, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BLASTER, 0}, //blaster alt nerf 20->15
 		{1, 2300, qfalse, 10000, 8},
 		0, NULL
 	}
@@ -757,7 +757,7 @@ weaponEntry_t Weapon_Disruptor = {
 		0,
 		Weapon_Disruptor_Fire,
 		{600, 5, 0, 0},
-		{30, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_DISRUPTOR, 0},
+		{45, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_DISRUPTOR, 0}, //damage buff 30->45
 		{0, 0, qfalse, 0, 0},
 		0, NULL
 	},
@@ -766,7 +766,7 @@ weaponEntry_t Weapon_Disruptor = {
 		Weapon_Disruptor_AltFire,
 		{1300, 6, 0, 0},
 		//Ufo: knockback is bad here
-		{70, 0, 0, DAMAGE_NO_KNOCKBACK, MOD_DISRUPTOR_SNIPER, 0},
+		{75, 0, 0, DAMAGE_NO_KNOCKBACK, MOD_DISRUPTOR_SNIPER, 0}, //damage buff 70->75
 		{0, 0, qfalse, 0, 3},
 		0, NULL
 	}
@@ -874,7 +874,7 @@ weaponEntry_t Weapon_Bowcaster = {
 		1,
 		NULL,
 		{750, 5, 0, 0},
-		{50, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BOWCASTER, 0},
+		{55, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BOWCASTER, 0}, //bowcaster alt damage buff 50->55
 		{2, 1300, qfalse, 10000, 3},
 		FL_BOUNCE, NULL
 	}
@@ -908,7 +908,7 @@ weaponEntry_t Weapon_Repeater = {
 		1,
 		Weapon_Repeater_AltFire,
 		{0, 15, 0, 0},
-		{60, 60, 128, DAMAGE_DEATH_KNOCKBACK, MOD_REPEATER_ALT, MOD_REPEATER_ALT_SPLASH},
+		{60, 40, 148, DAMAGE_DEATH_KNOCKBACK, MOD_REPEATER_ALT, MOD_REPEATER_ALT_SPLASH}, //splash damage nerf 60->40, radious 128->148
 		{3, 1100, qtrue, 10000, 8},
 		0, NULL
 	}
@@ -1226,7 +1226,7 @@ weaponEntry_t Weapon_DEMP2 = {
 		0,
 		Weapon_DEMP2_AltFire,
 		{0, 25, 0, 0},
-		{8, 8, 256, DAMAGE_DEATH_KNOCKBACK, MOD_DEMP2_ALT, 0},
+		{8, 8, 256, DAMAGE_DEATH_KNOCKBACK, MOD_DEMP2_ALT, 0},  
 		{2, 1800, qfalse, 10000, 0},
 		0, NULL
 	}
@@ -1388,7 +1388,7 @@ weaponEntry_t Weapon_Flechette = {
 		0,
 		Weapon_Flechette_AltFire,
 		{800, 15, 0, 0},
-		{60, 60, 128, DAMAGE_DEATH_KNOCKBACK, MOD_FLECHETTE_ALT_SPLASH, MOD_FLECHETTE_ALT_SPLASH},
+		{60, 45, 148, DAMAGE_DEATH_KNOCKBACK, MOD_FLECHETTE_ALT_SPLASH, MOD_FLECHETTE_ALT_SPLASH}, //splash damage nerf 60->45, radious 128->148
 		{3, 700, qfalse, 1500, 50}, 
 		FL_BOUNCE_HALF, NULL
 	}
@@ -1477,7 +1477,7 @@ weaponEntry_t Weapon_RocketLauncher = {
 		1,
 		Weapon_RocketLauncher_Primary,
 		{0, 1, 0, 0},
-		{100, 100, 160, DAMAGE_DEATH_KNOCKBACK, MOD_ROCKET, MOD_ROCKET_SPLASH},
+		{100, 75, 145, DAMAGE_DEATH_KNOCKBACK, MOD_ROCKET, MOD_ROCKET_SPLASH}, //iomatix radious nerf from 160 to 145 3rd col , 2nd col splash nerf damage 100 -> 75
 		{3, 900, qfalse, 10000, 0},
 		0, NULL
 	},
@@ -1485,8 +1485,8 @@ weaponEntry_t Weapon_RocketLauncher = {
 		1,
 		Weapon_RocketLauncher_Alt,
 		{0, 2, 0, 0},
-		{100, 100, 160, DAMAGE_DEATH_KNOCKBACK, MOD_ROCKET_HOMING, MOD_ROCKET_HOMING_SPLASH},
-		{3, 900 / 2, qfalse, 10000, 0},
+		{100, 95, 150, DAMAGE_DEATH_KNOCKBACK, MOD_ROCKET_HOMING, MOD_ROCKET_HOMING_SPLASH}, //iomatix radious nerf from 160 to 150 3rd col, 2nd col splash damage nerf 100 -> 95
+		{3, 550, qfalse, 10000, 0}, //velocity 450 -> 550
 		0, NULL
 	},
 };
@@ -1730,7 +1730,7 @@ weaponEntry_t Weapon_Concussion = {
 		1,
 		NULL,
 		{0, 40, 0, 0},
-		{75, 40, 200, DAMAGE_DEATH_KNOCKBACK, MOD_CONC, 0},
+		{75, 45, 255, DAMAGE_DEATH_KNOCKBACK, MOD_CONC, 0}, //radious 200->255, splash damage 40->45
 		{0, 3000, qfalse, 10000, 0},
 		0, NULL
 	},
@@ -1738,7 +1738,7 @@ weaponEntry_t Weapon_Concussion = {
 		1,
 		Weapon_Concussion_AltFire,
 		{0, 50, 0, 0},
-		{25, 0, 0, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC, MOD_CONC_ALT, 0},
+		{85, 0, 0, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC, MOD_CONC_ALT, 0}, //damage buff 25->85
 		{1, 8192, qfalse, 0, 3},
 		0, NULL
 	}
