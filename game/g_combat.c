@@ -5529,9 +5529,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	else if (mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET
 		&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
 		&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH)
-	damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.006); //0.6% +72% 120 level old: //0.7% per level + 84% 120 level
+	damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.007); //0.7% +84% 120 level old: //0.6% per level + 72% 120 level
 //explosives v v v
-	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.003); //0.3% +36% 120 level old: //0.6% per level + 72% 120 level
+	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.0045); //0.45% +54% 120 level old: //0.3% per level +36% 120 level
 
 	}
 		
@@ -6509,6 +6509,8 @@ qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, floa
 			// push the center of mass higher than the origin so players
 			// get knocked into the air more
 			dir[2] += 24;
+
+
 			if (attacker && attacker->inuse && attacker->client &&
 				attacker->s.eType == ET_NPC && attacker->s.NPC_class == CLASS_VEHICLE &&
 				attacker->m_pVehicle && attacker->m_pVehicle->m_pPilot)
@@ -6519,6 +6521,17 @@ qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, floa
 			{
 				G_Damage (ent, NULL, attacker, dir, origin, (int)points, DAMAGE_RADIUS, mod);
 			}
+
+			if (points > 38) {
+				//iomatix
+				if(points >= 100 || Q_irand(0, 100-points) <= 25) G_Knockdown(ent, Q_irand(750, 1050) + (points * 13)); //25% knockdown
+			}
+			else {
+				ent->client->Lmd.stunSpeed.time = level.time + Q_irand(650, 950);
+				ent->client->Lmd.stunSpeed.value = .75;
+				ent->client->ps.weaponTime += Q_irand(350, 450);
+			}
+
 			/* Lugormod never happens as roastPeople is always false
 			if (ent && ent->client && roastPeople && missile &&
 			!VectorCompare(ent->r.currentOrigin, missile->r.currentOrigin))

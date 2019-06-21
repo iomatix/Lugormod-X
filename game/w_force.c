@@ -1015,13 +1015,14 @@ int ForcePowerUsableOn(gentity_t *attacker, gentity_t *other, forcePowers_t forc
 			return 0;
 		}
 	}
-
+	/*iomatix: push/pull even on the ground
 	if (other && other->client && (forcePower == FP_PUSH || forcePower == FP_PULL) && BG_InKnockDown(other->client->ps.legsAnim))
 	{
 		//Ufo: it's optional, so why not
 		if (!(g_fixForce.integer & (1 << forcePower)) || !duelInProgress(&attacker->client->ps) || !(attacker->client->Lmd.duel.duelType & DT_FULL_FORCE))
 			return 0;
 	}
+	*/
 
 	if (other && other->client && other->s.eType == ET_NPC && other->s.NPC_class == CLASS_VEHICLE){
 		//can't use the force on vehicles.. except lightning

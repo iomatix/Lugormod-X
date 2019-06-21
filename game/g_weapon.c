@@ -2060,17 +2060,16 @@ THERMAL DETONATOR
 ======================================================================
 */
 
-#define TD_DAMAGE			70 //only do 70 on a direct impact
-#define TD_SPLASH_RAD		128
-#define TD_SPLASH_DAM		90
+#define TD_DAMAGE			75 //only do 75 on a direct impact
+#define TD_SPLASH_RAD		296 //128 -> 296
+#define TD_SPLASH_DAM		85 //90 -> 85
 #define TD_VELOCITY			900
 #define TD_MIN_CHARGE		0.15f
-#define TD_TIME				3000//6000
-#define TD_ALT_TIME			3000
+#define TD_TIME				3350 //6000 -> 3000 -> 3350
 
-#define TD_ALT_DAMAGE		60//100
-#define TD_ALT_SPLASH_RAD	128
-#define TD_ALT_SPLASH_DAM	50//90
+#define TD_ALT_DAMAGE		55 //90
+#define TD_ALT_SPLASH_RAD	266 //128 -> 266
+#define TD_ALT_SPLASH_DAM	40 //90
 #define TD_ALT_VELOCITY		600
 #define TD_ALT_MIN_CHARGE	0.15f
 #define TD_ALT_TIME			3000
@@ -2381,14 +2380,14 @@ LASER TRAP / TRIP MINE
 
 ======================================================================
 */
-#define LT_DAMAGE			100
-#define LT_SPLASH_RAD		256.0f
-#define LT_SPLASH_DAM		105
+#define LT_DAMAGE			80   //iomatix 100 -> 80
+#define LT_SPLASH_RAD		336.0f //iomatix 256 ->336
+#define LT_SPLASH_DAM		95 //iomatix 105 -> 95
 #define LT_VELOCITY			900.0f
 #define LT_SIZE				1.5f
 #define LT_ALT_TIME			2000
-#define	LT_ACTIVATION_DELAY	1000
-#define	LT_DELAY_TIME		50
+#define	LT_ACTIVATION_DELAY	1750 //iomatix
+#define	LT_DELAY_TIME		110 //iomatix
 
 void laserTrapExplode( gentity_t *self )
 {
@@ -2478,7 +2477,7 @@ void proxMineThink(gentity_t *ent)
 		owner = &g_entities[ent->r.ownerNum];
 	}
 
-	ent->nextthink = level.time;
+	ent->nextthink = level.time; //iomatix
 
 	if (ent->genericValue15 < level.time ||
 		!owner ||
@@ -2605,12 +2604,13 @@ void laserTrapStick( gentity_t *ent, vec3_t endpos, vec3_t normal )
 	}
 	else
 	{
+		//iomatix fix
 		ent->touch = touchLaserTrap;
-		ent->think = proxMineThink;//laserTrapExplode;
-		ent->genericValue15 = level.time + 30000; // Lugormod go higher //auto-explode after 30 seconds.
+		ent->think = proxMineThink; //laserTrapExplode;
+		ent->genericValue15 = level.time + 35000; //auto-explode after 35 seconds.
 		if (g_gametype.integer != GT_SIEGE
 			/*&& g_gametype.integer != GT_BATTLE_GROUND*/) {
-				ent->genericValue15 = level.time + 300000;
+				ent->genericValue15 = level.time + 240000; //iomatix 4 minutes
 		}
 
 		ent->nextthink = level.time + LT_ALT_TIME; // How long 'til she blows
@@ -2639,7 +2639,7 @@ void laserTrapStick( gentity_t *ent, vec3_t endpos, vec3_t normal )
 
 void TrapThink(gentity_t *ent)
 { //laser trap think
-	ent->nextthink = level.time + 50;
+	ent->nextthink = level.time + 85; //iomatix bandwidth optimalization
 	G_RunObject(ent);
 }
 
@@ -2696,7 +2696,7 @@ void CreateLaserTrap( gentity_t *laserTrap, vec3_t start, gentity_t *owner )
 	VectorCopy( start, laserTrap->pos2 );
 	laserTrap->touch = touchLaserTrap;
 	laserTrap->think = TrapThink;
-	laserTrap->nextthink = level.time + 50;
+	laserTrap->nextthink = level.time + 115; //iomatix bandwidth optimalization
 }
 
 void WP_PlaceLaserTrap( gentity_t *ent, qboolean alt_fire )
@@ -2718,7 +2718,7 @@ void WP_PlaceLaserTrap( gentity_t *ent, qboolean alt_fire )
 
 	laserTrap = G_Spawn();
 
-	//limit to 10 placed at any one time
+	//limit to 12/25 placed at any one time
 	//see how many there are now
 	while ( (found = G_Find( found, FOFS(classname), "laserTrap" )) != NULL )
 	{
@@ -2728,15 +2728,15 @@ void WP_PlaceLaserTrap( gentity_t *ent, qboolean alt_fire )
 		}
 		foundLaserTraps[trapcount++] = found->s.number;
 	}
-	//now remove first ones we find until there are only 9 left
+	//now remove first ones we find until there are only 11/45 left
 	found = NULL;
 	trapcount_org = trapcount;
 	lowestTimeStamp = level.time;
 	int maxtraps;
 	if(g_gametype.integer == GT_SIEGE) {
-		maxtraps = 9;
+		maxtraps = 12;
 	} else {
-		maxtraps = 50;
+		maxtraps = 64; //iomatix max 64
 	}
 
 	while ( trapcount > maxtraps)//9 ) Lugormod I want more
@@ -2809,6 +2809,10 @@ DET PACK
 
 ======================================================================
 */
+#define DT_DAMAGE			90 //100
+#define DT_SPLASH_RAD		256 //200
+#define DT_SPLASH_DAM		180 //200
+
 void VectorNPos(vec3_t in, vec3_t out)
 {
 	if (in[0] < 0) { out[0] = -in[0]; } else { out[0] = in[0]; }
@@ -2976,9 +2980,9 @@ void drop_charge (gentity_t *self, vec3_t start, vec3_t dir)
 
 	bolt->parent = self;
 	bolt->r.ownerNum = self->s.number;
-	bolt->damage = 100;
-	bolt->splashDamage = 200;
-	bolt->splashRadius = 200;
+	bolt->damage = DT_DAMAGE;
+	bolt->splashDamage = DT_SPLASH_DAM; //200
+	bolt->splashRadius = DT_SPLASH_RAD; //200
 	bolt->methodOfDeath = MOD_DET_PACK_SPLASH;
 	bolt->splashMethodOfDeath = MOD_DET_PACK_SPLASH;
 	bolt->clipmask = MASK_SHOT;

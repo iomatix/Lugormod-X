@@ -393,7 +393,7 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 	
 
 		if (ForcePowerUsableOn(self, target, FP_LIGHTNING)){
-			if(data->max_damage > 1)dmg = Q_irand(data->max_damage, data->max_damage+(data->max_damage/2));
+			if(data->max_damage > 1)dmg = Q_irand(data->max_damage, data->max_damage+ceil(data->max_damage/2.f));
 			else dmg = Q_irand(1,2);
 			
 			float absorb = Force_Lightning_AbsorbPower(self, target, data);
@@ -410,17 +410,18 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 
 
 			if (dmg > 0) {
-
+				
+				dir[2] += 5; //more into the air
 				G_Damage(target, self, self, dir, self->client->ps.origin, dmg, 0, MOD_FORCE_DARK);
 				//lightning push:
 				VectorNormalize(dir);
-				VectorScale(dir, g_knockback.value * dmg/125, dir); //direction scale             //knockback * scale / mass
+				VectorScale(dir, dmg+ceil(data->debounce/1.75f), dir); //direction scale //debounce time instead            // ceil((g_knockback.value*data->debounce)/985.f) //knockback * scale / mass
  				VectorAdd(target->client->ps.velocity, dir, target->client->ps.velocity); //impact
 				
 
 				if (self->client->ps.weapon == WP_MELEE && data->twohanded)
 				{
-					if (Q_irand(0, 5) == 2) //20%
+					if (Q_irand(0, 102-(self->client->ps.fd.forcePowerLevel[FP_LIGHTNING]*2)) <= 9) //9%
 					{
 						G_Knockdown(target, Q_irand(1350, 2150));
 					}
@@ -432,7 +433,7 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 					
 				}
 				else {
-					if (Q_irand(0, 14) == 2) { //7.5%
+					if (Q_irand(0, 102-(self->client->ps.fd.forcePowerLevel[FP_LIGHTNING]*2)) <= 3) { //3%
 						G_Knockdown(target, Q_irand(450, 1550));
 					}
 					else {
@@ -443,6 +444,10 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 					
 					
 				}
+
+
+
+
 			}
 				//rww - Shields can now absorb lightning too.
 				
@@ -623,7 +628,7 @@ forceLightning_t Force_Lightning_Levels[5] = {
 	//do not go over 250 cuz won't work when runing through it
 	{3,4096,		 0, Q3_INFINITE,    240, 6, qfalse}, //at least 30 dmg per 2500ms
 	{4,8192,     0, Q3_INFINITE,	200, 6, qfalse}, //at least 50 dmg per 2500ms
-	{6,FORCE_LIGHTNING_RADIUS,	 1, Q3_INFINITE,	215, 10, qtrue}, //at least 70dmg for 2500ms
+	{5,FORCE_LIGHTNING_RADIUS,	 1, Q3_INFINITE,	215, 10, qtrue}, //at least 58dmg for 2500ms
 	{4,FORCE_LIGHTNING_RADIUS*1.2,     1, Q3_INFINITE,	115, 5, qtrue}, //at least 85dmg for 2500ms
 	{3,FORCE_LIGHTNING_RADIUS*1.5, 	 1, Q3_INFINITE,	65, 3, qtrue} //at least 115dmg for 2500ms
 };

@@ -1979,7 +1979,7 @@ Ghoul2 Insert End
 typedef struct {
 	byte		allsolid;	// if true, plane is not valid
 	byte		startsolid;	// if true, the initial point was in a solid area
-	short		entityNum;	// entity the contacted sirface is a part of
+	short		entityNum;	// entity the contacted surface is a part of
 
 	float		fraction;	// time completed, 1.0 = didn't hit anything
 	vec3_t		endpos;		// final position

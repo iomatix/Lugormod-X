@@ -126,14 +126,17 @@
 - Drain and Lightning slow down the target. ✔️
 - Lightning knockdown and weapon time mechanics are added. ✔️ 
 - Lightning, Drain, Grip slow the caster. ✔️ 
-- Lightning pushes targets. ✔️ 
+- Lightning pushes targets. ✔️
+- Explosives rework. ✔️ 
+- Explosives damage and radius are adjusted. ✔️ 
+- Explosion knockdown added. ✔️ 
+
+
 
 //
 
 ///
-
 - Search a new ways for spending credits.
-- experience boosters/ packs for CR? lmd_exp_boosters
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
 - jedi is able to pick up medpacks ???
 
