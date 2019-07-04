@@ -292,7 +292,7 @@ weaponEntry_t Weapon_Bryar = {
 		Weapon_Bryar_AltFire,
 		{0, 0, 0, 0},
 		{20, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BRYAR_PISTOL_ALT, 0}, //bryar damage buff 10->20
-		{1, 1600, qfalse, 10000, 8},
+		{1, 1800, qfalse, 10000, 8}, //velocity 1600->1800
 		0, NULL
 	}
 };
@@ -309,15 +309,15 @@ weaponEntry_t Weapon_Blaster = {
 		1,
 		NULL,
 		{0, 2, 0, 0},
-		{25, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BLASTER, 0}, //blaster basic buff 20->25
-		{0, 2300, qfalse, 10000, 8},
+		{24, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BLASTER, 0}, //blaster basic buff 20->24
+		{0, 2550, qfalse, 10000, 8}, //velocity 2300->2550
 		0, NULL
 	},
 	{
 		1,
 		NULL,
 		{0, 3, 1.6f, 0},
-		{15, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BLASTER, 0}, //blaster alt nerf 20->15
+		{16, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BLASTER, 0}, //blaster alt nerf 20->16
 		{1, 2300, qfalse, 10000, 8},
 		0, NULL
 	}
@@ -811,16 +811,19 @@ void Weapon_Bowcaster_Fire(gentity_t *ent, gentity_t *missile, weaponFire_t *dat
 	}
 
 	//scale the damage down based on how many are about to be fired
+
+	//iomatix
 	if (count <= 1)
-		damage = 50;
+		damage = damage; //55
 	else if (count == 2)
-		damage = 45;
+		damage = damage-3; //52
 	else if (count == 3)
-		damage = 40;
+		damage = damage-6; //49
 	else if (count == 4)
-		damage = 35;
+		damage = damage-8; //47
 	else
-		damage = 30;
+		damage = damage-10; //55->45
+	
 
 	for (i = 0; i < count; i++ ) {
 		// create a range of different velocities
@@ -867,7 +870,7 @@ weaponEntry_t Weapon_Bowcaster = {
 		Weapon_Bowcaster_Fire,
 		{1000, 5, 5.0f, 0},
 		{55, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BOWCASTER, 0},//50->55
-		{2, 1300, qfalse, 10000, 0},
+		{2, 1400, qfalse, 10000, 0}, //velocity 1300->1400 
 		0, NULL
 	},
 	{
@@ -875,7 +878,7 @@ weaponEntry_t Weapon_Bowcaster = {
 		NULL,
 		{750, 5, 0, 0},
 		{60, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_BOWCASTER, 0}, //bowcaster alt damage buff 50->60
-		{2, 1300, qfalse, 10000, 3},
+		{2, 1600, qfalse, 10000, 5}, //velocity 1300->1600 bounce 3->5
 		FL_BOUNCE, NULL
 	}
 };
@@ -900,15 +903,15 @@ weaponEntry_t Weapon_Repeater = {
 		1,
 		NULL,
 		{0, 1, 1.4f, 0},
-		{14, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_REPEATER, 0},
-		{0, 1600, qfalse, 10000, 8},
+		{18, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_REPEATER, 0}, //damage 14->18
+		{0, 1750, qfalse, 10000, 8}, //velocity 1600->1750
 		0, NULL
 	},
 	{
 		1,
 		Weapon_Repeater_AltFire,
 		{0, 15, 0, 0},
-		{65, 45, 148, DAMAGE_DEATH_KNOCKBACK, MOD_REPEATER_ALT, MOD_REPEATER_ALT_SPLASH}, //splash damage nerf 60->45, radious 128->148
+		{65, 48, 148, DAMAGE_DEATH_KNOCKBACK, MOD_REPEATER_ALT, MOD_REPEATER_ALT_SPLASH}, //splash damage nerf 60->48, radious 128->148
 		{3, 1100, qtrue, 10000, 8},
 		0, NULL
 	}
@@ -1218,7 +1221,7 @@ weaponEntry_t Weapon_DEMP2 = {
 		1,
 		NULL,
 		{0, 8, 0, 0},
-		{25, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_DEMP2, 0},
+		{28, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_DEMP2, 0}, //damage 25->28
 		{2, 1800, qfalse, 10000, 0},
 		0, NULL
 	},
@@ -1226,7 +1229,7 @@ weaponEntry_t Weapon_DEMP2 = {
 		0,
 		Weapon_DEMP2_AltFire,
 		{0, 25, 0, 0},
-		{8, 8, 256, DAMAGE_DEATH_KNOCKBACK, MOD_DEMP2_ALT, 0},  
+		{12, 8, 256, DAMAGE_DEATH_KNOCKBACK, MOD_DEMP2_ALT, 0},  //damage 8->12
 		{2, 1800, qfalse, 10000, 0},
 		0, NULL
 	}
@@ -1379,7 +1382,7 @@ weaponEntry_t Weapon_Flechette = {
 		5,
 		NULL,
 		{700, 10, 4.0f, 0},
-		{12, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_FLECHETTE, 0},
+		{16, 0, 0, DAMAGE_DEATH_KNOCKBACK, MOD_FLECHETTE, 0}, //damage 12 -> 16
 		{1, 3500, qfalse, 10000, 5},
 		FL_BOUNCE_SHRAPNEL, NULL
 
@@ -1388,7 +1391,7 @@ weaponEntry_t Weapon_Flechette = {
 		0,
 		Weapon_Flechette_AltFire,
 		{800, 15, 0, 0},
-		{80, 45, 148, DAMAGE_DEATH_KNOCKBACK, MOD_FLECHETTE_ALT_SPLASH, MOD_FLECHETTE_ALT_SPLASH}, //splash damage nerf 60->45, radious 128->148
+		{70, 55, 148, DAMAGE_DEATH_KNOCKBACK, MOD_FLECHETTE_ALT_SPLASH, MOD_FLECHETTE_ALT_SPLASH}, //damage 80 -> 70 splash damage nerf 60->55, radious 128->148
 		{3, 700, qfalse, 1500, 50}, 
 		FL_BOUNCE_HALF, NULL
 	}
@@ -1477,16 +1480,16 @@ weaponEntry_t Weapon_RocketLauncher = {
 		1,
 		Weapon_RocketLauncher_Primary,
 		{0, 1, 0, 0},
-		{135, 75, 145, DAMAGE_DEATH_KNOCKBACK, MOD_ROCKET, MOD_ROCKET_SPLASH}, //iomatix radious nerf from 160 to 145 3rd col , 2nd col splash nerf damage 100 -> 75
-		{3, 900, qfalse, 10000, 0},
+		{135, 85, 140, DAMAGE_DEATH_KNOCKBACK, MOD_ROCKET, MOD_ROCKET_SPLASH}, //iomatix radious nerf from 160 to 140 3rd col , 2nd col splash nerf damage 100 -> 85
+		{3, 950, qfalse, 10000, 0}, //velocity 900 -> 950
 		0, NULL
 	},
 	{
 		1,
 		Weapon_RocketLauncher_Alt,
-		{0, 2, 0, 0},
+		{0, 1, 0, 0}, //ammocost 2->1 realistic
 		{125, 95, 150, DAMAGE_DEATH_KNOCKBACK, MOD_ROCKET_HOMING, MOD_ROCKET_HOMING_SPLASH}, //iomatix radious nerf from 160 to 150 3rd col, 2nd col splash damage nerf 100 -> 95
-		{3, 550, qfalse, 10000, 0}, //velocity 450 -> 550
+		{3, 520, qfalse, 10000, 0}, //velocity 450 -> 520
 		0, NULL
 	},
 };
@@ -1729,16 +1732,16 @@ weaponEntry_t Weapon_Concussion = {
 	{
 		1,
 		NULL,
-		{0, 40, 0, 0},
-		{85, 45, 255, DAMAGE_DEATH_KNOCKBACK, MOD_CONC, 0}, //radious 200->255, splash damage 40->45, damage 75->85
-		{0, 3000, qfalse, 10000, 0},
+		{0, 35, 0, 0}, //ammo cost 40->35
+		{78, 62, 265, DAMAGE_DEATH_KNOCKBACK, MOD_CONC, 0}, //radious 200->265, splash damage 40->62, damage 75->78
+		{0, 4000, qfalse, 10000, 0}, //velocity 3000->4000
 		0, NULL
 	},
 	{
 		1,
 		Weapon_Concussion_AltFire,
-		{0, 50, 0, 0},
-		{90, 0, 0, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC, MOD_CONC_ALT, 0}, //damage buff 25->90
+		{0, 55, 0, 0},   //ammocost 50->55
+		{88, 75, 105, DAMAGE_NO_HIT_LOC, MOD_CONC_ALT, 0}, //damage buff 25->88 //radious 0->105 + 75 radious damage  //DAMAGE_NO_KNOCKBACK |  OFF
 		{1, 8192, qfalse, 0, 3},
 		0, NULL
 	}

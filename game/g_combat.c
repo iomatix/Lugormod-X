@@ -5310,7 +5310,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			|| g_gametype.integer == GT_BATTLE_GROUND
 			|| PlayerAcc_Prof_GetProfession(targ) == PROF_JEDI)
 			&& targ->client->ps.weapon == WP_SABER))
-		{//if the target is a trueJedi, reduce splash and explosive damage to 85%
+		{//if the target is a trueJedi, reduce splash and explosive damage to 90%
 			switch ( mod )
 			{
 			case MOD_REPEATER_ALT:
@@ -5326,7 +5326,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 			case MOD_TRIP_MINE_SPLASH:
 			case MOD_TIMED_MINE_SPLASH:
 			case MOD_DET_PACK_SPLASH:
-				damage *= 0.85;
+				damage *= 0.9;
 				break;
 			}
 		}
@@ -5583,11 +5583,11 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 
 				}
 
-
+				
 				//PERFECT AIM (crit skill)
-				if (PlayerProf_Merc_Getperfect_aimSkill(attacker) > 0 && mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET
+				if (PlayerProf_Merc_Getperfect_aimSkill(attacker) > 0 && mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET  
 					&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
-					&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH) {
+					&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH) { 
 					int perfect_aim_value = PlayerProf_Merc_Getperfect_aimSkill(attacker);
 					int perfectaim_chance = Q_irand(0,100); 
 					if (perfectaim_chance <= (8 * perfect_aim_value)) { //8->16->24->32->40->48 % //nerfed to 4->8->12->16->20->24

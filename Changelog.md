@@ -130,7 +130,7 @@
 - Explosives rework. ✔️ 
 - Explosives damage and radius are adjusted. ✔️ 
 - Explosion knockdown added. ✔️ 
-- Weapons rebalance. 50%
+- Weapons rebalance. ✔️
 
 
 
