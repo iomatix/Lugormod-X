@@ -131,7 +131,10 @@
 - Explosives damage and radius are adjusted. ✔️ 
 - Explosion knockdown added. ✔️ 
 - Weapons rebalance. ✔️
-
+- Player is able to drop or sell the item.
+drop (+recall), sell (drop+buyoption + recall) inventory_core.c
+- Item use for get CR/EXP/HP/Force if it is consumable.
+- Expanding inventory space ???
 
 
 //
@@ -144,7 +147,6 @@
 
 ## TODO
 
-- flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
 - TODO: Add drop item from inventory.  todo: drop (+recall), sell (drop+buyoption + recall) inventory_core.c
 
 - TODO: svcmds + commands + admin commands guide
