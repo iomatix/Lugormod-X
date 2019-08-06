@@ -14,6 +14,14 @@ void Confirm_Check(gentity_t *ent) {
 	}
 }
 
+qboolean Confirm_Set_Without_Flag(gentity_t *ent, void(*func)(gentity_t *ent, void *data), void *data) {
+	Confirm_Clear(ent);
+	ent->client->Lmd.confirm.func = func;
+	ent->client->Lmd.confirm.data = data;
+	Disp(ent, CT_B"Confirmation added\n"
+		CT_B"Use \'"CT_C"/confirm yes"CT_B"\' to confirm the command or \'"CT_C"/confirm no"CT_B"\' to cancel.");
+	return qtrue;
+}
 qboolean Confirm_Set(gentity_t *ent, void (*func)(gentity_t *ent, void *data), void *data){ 
 	Confirm_Clear(ent);
 	if (ent->client->pers.Lmd.persistantFlags & SPF_NOCONFIRM) {
