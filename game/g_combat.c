@@ -2470,7 +2470,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			break;
 		}
 	}
-
+	
 	//RoboPhred: NPC_target6
 	if(attacker->NPC && attacker != self)
 	{
@@ -2684,7 +2684,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	{
 		self->client->ps.fd.suicides++;
 	}
-
+	
 	//RoboPhred
 	if(attacker->client && attacker->s.eType == ET_PLAYER) {
 		if(attacker != self) PlayerAcc_Stats_SetKills(attacker, PlayerAcc_Stats_GetKills(attacker) + 1);
@@ -2743,8 +2743,9 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 						char *msg_bd_self = va("^2You've ^3got a reward for ^1%s's^3 head.", self->client->pers.netname);
 						//trap_SendServerCommand(attacker->s.number, va("cp \"%s\"", msg_bd_self));
 						trap_SendServerCommand(attacker->s.number, va("chat \"%s\"", msg_bd_self));
-
 						Is_players_bounty_message = qtrue;
+
+	
 					}
 				}
 
@@ -2771,7 +2772,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 						trap_SendServerCommand(attacker->s.number, va("chat \"%s\"", msg_bd_self));
 						trap_SendServerCommand_ToAll(attacker->s.number, va("print \"\n%s\n\"", msg_bd));
 						trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_bd));
-					}
+					}					
 					self->client->pers.Lmd.killstreak_bounty = 0; //set killstreak_bounty to 0;
 				}
 

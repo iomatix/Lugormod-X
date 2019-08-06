@@ -2105,15 +2105,14 @@ void G_SetTauntAnim( gentity_t *ent, int taunt )
 		if ( taunt != TAUNT_MEDITATE 
 			&& taunt != TAUNT_BOW )
 		{//no sound for meditate or bow
-			//if(g_gametype.integer != GT_FFA ||
-			//   taunt != TAUNT_TAUNT) //Lugormod
-			//{
+		//	if( g_gametype.integer != GT_FFA ||
+		//	  taunt != TAUNT_TAUNT) 
+		//	{
+				
 			G_AddEvent( ent, EV_TAUNT, taunt );
-			//} else { //Lugormod I want random taunts in ffa also
-			//uses up sound indexes, so not very good
-			//        G_EntitySound(ent, CHAN_VOICE, 
-			//         G_SoundIndex(va("*taunt%i.mp3", 
-			//                          Q_irand(1,3))));
+		//	} else { 
+			//       G_EntitySound(ent, CHAN_VOICE, 
+			//        G_SoundIndex(va("*taunt%i.wav",Q_irand(1,3))));
 			//}
 		}
 	}

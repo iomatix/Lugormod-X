@@ -13,6 +13,8 @@
 #include "../ghoul2/G2.h"
 //==========================================================================
 
+#define specialtaunts 1 //iomatix: when 1 (or belove) taunts ON for all gametypes if 0 only for duel and powerduel
+
 extern qboolean WP_SaberBladeUseSecondBladeStyle( saberInfo_t *saber, int bladeNum );
 extern qboolean CG_VehicleWeaponImpact( centity_t *cent );
 extern qboolean CG_InFighter( void );
@@ -1608,12 +1610,15 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 	case EV_TAUNT:
 		DEBUGNAME("EV_TAUNT");
 		{
+			//iomatix: specialtaunts added
 			int soundIndex = 0;
-			if ( cgs.gametype != GT_DUEL
+			if ( specialtaunts == 0 &&
+				cgs.gametype != GT_DUEL
 				&& cgs.gametype != GT_POWERDUEL
 				&& es->eventParm == TAUNT_TAUNT )
 			{//normal taunt
-				soundIndex = CG_CustomSound( es->number, "*taunt.wav" );
+				//iomatix:
+				soundIndex = CG_CustomSound(es->number, va("*taunt%d.wav", Q_irand(1, 3)));
 			}
 			else
 			{
@@ -1635,10 +1640,10 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 					}
 					break;
 				case TAUNT_BOW:
-					//soundIndex = CG_CustomSound( es->number, va("*respect%d.wav", Q_irand(1,3)) );
+					soundIndex = CG_CustomSound( es->number, va("*respect%d.wav", Q_irand(1,3)) );
 					break;
 				case TAUNT_MEDITATE:
-					//soundIndex = CG_CustomSound( es->number, va("*meditate%d.wav", Q_irand(1,3)) );
+					soundIndex = CG_CustomSound( es->number, va("*meditate%d.wav", Q_irand(1,3)) );
 					break;
 				case TAUNT_FLOURISH:
 					if ( Q_irand( 0, 1 ) )
