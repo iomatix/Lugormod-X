@@ -731,7 +731,7 @@ void Cmd_Inventory_Sell(gentity_t *ent, iObjectList_t *inventory, int argnum, in
 	data->acc = target->client->pers.Lmd.account;
 	data->seller_acc = ent->client->pers.Lmd.account;
 	if (data->obj->holder != ent) {
-		Disp(ent, "^3TRADE: ^1You no longer have that item.");
+		Disp(ent, "^3TRADE: ^1You no longer have the item.");
 		return;
 	}
 	if (data->obj->fields.noGive) {
