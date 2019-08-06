@@ -131,10 +131,8 @@
 - Explosives damage and radius are adjusted. ✔️ 
 - Explosion knockdown added. ✔️ 
 - Weapons rebalance. ✔️
-- Player is able to drop or sell the item.
-drop (+recall), sell (drop+buyoption + recall) inventory_core.c
-- Item use for get CR/EXP/HP/Force if it is consumable.
-- Expanding inventory space ???
+- The trading system is added. ✔️
+- Player is able to trade or give inventory items. ✔️
 
 
 //
