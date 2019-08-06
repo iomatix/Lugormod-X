@@ -39,13 +39,14 @@
 - New falling system respecting jumps, jetpacks and the force jump.
 - Interaction with liquids is adjusted.
 - Jetpacks rework.
-- Falling system rework. 
+- Falling system rework.
+- Inventory system upgraded.
+- Fully working trading system.
 
 ### [Added new extern variables usable in server.cfg](__example_config/externvars.md)
 
 ### I'm working on:
 - Bug fixes.
-- Trading system.
 - New Light Saber styles.
 - A lot of more...
 
