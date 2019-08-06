@@ -12,6 +12,8 @@
 - **`creditbox open`** to open the Credit-Box.
 - **`dropcr |credits|`** to drop |credits|CR out.
 - **`inventory list|use|destroy`** to manage player's inventory.
+- **`inventory give |item index|`** to give the item to the targetet person. 
+- **`inventory sell |item index| |price|`** to offer the item to the targetet person.
 - **`login |username| |password|`**, **`login |username| |password| |seccode|`** to log in to an existing account.
 - **`logout`** to log out the account.
 - **`pay |credits|`** give |credits|CR to the player you are looking at.
@@ -20,8 +22,7 @@
 - **`seccode`** to check account's security code.
 - **`stats`** to check detailed account's information.
 - **`worthy`** to list players worth dueling.
-- **`inventory give |item index|`** to give the item to the targetet person. 
-- **`inventory sell |item index| |price|`** to offer the item to the targetet person.
+
 
 ## Player Commands
 - **`help player`** to print all commands.
