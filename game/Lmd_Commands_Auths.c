@@ -952,18 +952,18 @@ void Cmd_GrantAdmin_f(gentity_t *ent, int iArg){
 	authFile_t *file;
 	char *username;
 
-	if(iArg && trap_Argc() < 2) {
-		Disp(ent, CT_C"RemoveAdmin "CT_AR"<account> <authfile>\n"
-			CT_B"Set authfile to \'"CT_V"all"CT_B"\' to remove all admin.\n"
-			CT_B"If no authfile given, all of the account's authfiles will be listed.");
-		return;
-	}
-	else if (trap_Argc() < 3) {
-		Disp(ent, CT_C"GrantAdmin "CT_AR"<account> <authfile>");
-		Cmd_GrantAdmin_ShowAvailableAuthfiles(ent);
-		return;
-	}
-
+		if (iArg && trap_Argc() < 2) {
+			Disp(ent, CT_C"RemoveAdmin "CT_AR"<account> <authfile>\n"
+				CT_B"Set authfile to \'"CT_V"all"CT_B"\' to remove all admin.\n"
+				CT_B"If no authfile given, all of the account's authfiles will be listed.");
+			return;
+		}
+		else if (trap_Argc() < 3) {
+			Disp(ent, CT_C"GrantAdmin "CT_AR"<account> <authfile>");
+			Cmd_GrantAdmin_ShowAvailableAuthfiles(ent);
+			return;
+		}
+		
 	trap_Argv(1, arg, sizeof(arg));
 
 	acc = Accounts_GetById(atoi(arg));
@@ -1036,6 +1036,7 @@ void Cmd_GrantAdmin_f(gentity_t *ent, int iArg){
 		Auths_AddAccAuthfile(acc, file);
 		Disp(ent, va(CT_V"%s"CT_S" now has access to authfile \'"CT_SV"%s"CT_S"\'.", username, file->name));
 	}
+
 }
 
 void Cmd_GrantTempAdmin_ListAuths(gentity_t *ent, gentity_t *targ) {

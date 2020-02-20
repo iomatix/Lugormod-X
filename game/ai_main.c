@@ -4131,7 +4131,7 @@ void GetIdealDestination(bot_state_t *bs)
 					bs->wpDestination = gWPArray[idleWP];
 				}
 			}
-			else if (gWPArray[cWPIndex-1] && gWPArray[cWPIndex-1]->inuse &&
+			else if (cWPIndex > 0 && gWPArray[cWPIndex-1] && gWPArray[cWPIndex-1]->inuse && //iomatix fix cWPIndex > 0
 				gWPArray[cWPIndex+1] && gWPArray[cWPIndex+1]->inuse)
 			{
 				VectorSubtract(gWPArray[cWPIndex+1]->origin, usethisvec, a);
