@@ -62,7 +62,7 @@ ConsoleEscapeSeq_t consoleEscapes[] = {
 #endif
 
 void Disp (gentity_t *ent, const char *msg) {
-	if (!ent->client)return; //iomatix
+	if (!ent || !ent->client)return; //iomatix
 	const int bufLen = SERVERCOMMAND_MAX - 9; // -10 print "\n"
 
 	unsigned int len = strlen(msg);
@@ -92,7 +92,7 @@ void Disp (gentity_t *ent, const char *msg) {
 }
 
 void DispContiguous(gentity_t *ent, const char *msg) {
-	if (!ent->client)return; //iomatix
+	if (!ent || !ent->client)return; //iomatix
 	const int contigLength = SERVERCOMMAND_MAX - 9; // -9 print ""
 	static char buf[contigLength];
 	static int len = 0;
