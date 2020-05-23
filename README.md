@@ -80,4 +80,4 @@ Linux users may use the makefile inside the game folder.
 Licensed under GPL version 3 or later.
 
 Copyright (C) 2003-2018 RoboPhred.
-**Copyright (C) 2019 iomatix.**
+**Copyright (C) 2019-2020 iomatix.**

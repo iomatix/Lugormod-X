@@ -85,4 +85,4 @@ Automated orders cannot be controlled. They give temporary chance for the Credit
 
 ### Credits:
 
-**Copyright (C) 2019 iomatix.**
+**Copyright (C) 2019-2020 iomatix.**
