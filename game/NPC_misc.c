@@ -17,7 +17,7 @@ void Debug_Printf (vmCvar_t *cv, int debugLevel, char *fmt, ...)
 		return;
 
 	if (debugLevel == DEBUG_LEVEL_DETAIL)
-		color = S_COLOR_WHITE;
+		color =  S_COLOR_WHITE ;
 	else if (debugLevel == DEBUG_LEVEL_INFO)
 		color = S_COLOR_GREEN;
 	else if (debugLevel == DEBUG_LEVEL_WARNING)

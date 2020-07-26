@@ -70,11 +70,11 @@ const char	*CG_PlaceString( int rank ) {
 	}
 
 	if ( rank == 1 ) {
-		s = va("1%s",sST);//S_COLOR_BLUE "1st" S_COLOR_WHITE;		// draw in blue
+		s = va("1%s",sST);//S_COLOR_BLUE "1st"  S_COLOR_WHITE ;		// draw in blue
 	} else if ( rank == 2 ) {
-		s = va("2%s",sND);//S_COLOR_RED "2nd" S_COLOR_WHITE;		// draw in red
+		s = va("2%s",sND);//S_COLOR_RED "2nd"  S_COLOR_WHITE ;		// draw in red
 	} else if ( rank == 3 ) {
-		s = va("3%s",sRD);//S_COLOR_YELLOW "3rd" S_COLOR_WHITE;		// draw in yellow
+		s = va("3%s",sRD);//S_COLOR_YELLOW "3rd"  S_COLOR_WHITE ;		// draw in yellow
 	} else if ( rank == 11 ) {
 		s = va("11%s",sTH);
 	} else if ( rank == 12 ) {
@@ -135,7 +135,7 @@ static void CG_Obituary( entityState_t *ent ) {
 		return;
 	}
 	Q_strncpyz( targetName, Info_ValueForKey( targetInfo, "n" ), sizeof(targetName) - 2);
-	strcat( targetName, S_COLOR_WHITE );
+	strcat( targetName,  S_COLOR_WHITE  );
 
 	// check for single client messages
 
@@ -317,7 +317,7 @@ clientkilled:
 		strcpy( attackerName, "noname" );
 	} else {
 		Q_strncpyz( attackerName, Info_ValueForKey( attackerInfo, "n" ), sizeof(attackerName) - 2);
-		strcat( attackerName, S_COLOR_WHITE );
+		strcat( attackerName,  S_COLOR_WHITE  );
 		// check for kill messages about the current clientNum
 		if ( target == cg.snap->ps.clientNum ) {
 			Q_strncpyz( cg.killerName, attackerName, sizeof( cg.killerName ) );

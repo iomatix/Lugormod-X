@@ -23,6 +23,7 @@
 #include "../game/be_aas.h"
 #include "be_aas_funcs.h"
 #include "be_aas_def.h"
+#include "cmath"
 
 extern botlib_import_t botimport;
 

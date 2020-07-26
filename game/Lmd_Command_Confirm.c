@@ -9,7 +9,7 @@ void Confirm_Clear(gentity_t *ent) {
 
 void Confirm_Check(gentity_t *ent) {
 	if(ent->client->Lmd.confirm.time && ent->client->Lmd.confirm.time + 30000 <= level.time) {
-		Disp(ent, CT_B"Your confirmation has timed out.");
+		Disp(ent,  CT_B "Your confirmation has timed out.");
 		Confirm_Clear(ent);
 	}
 }
@@ -18,8 +18,8 @@ qboolean Confirm_Set_Without_Flag(gentity_t *ent, void(*func)(gentity_t *ent, vo
 	Confirm_Clear(ent);
 	ent->client->Lmd.confirm.func = func;
 	ent->client->Lmd.confirm.data = data;
-	Disp(ent, CT_B"Confirmation added\n"
-		CT_B"Use \'"CT_C"/confirm yes"CT_B"\' to confirm the command or \'"CT_C"/confirm no"CT_B"\' to cancel.");
+	Disp(ent,  CT_B "Confirmation added\n"
+		 CT_B "Use \'" CT_C "/confirm yes" CT_B "\' to confirm the command or \'" CT_C "/confirm no" CT_B "\' to cancel.");
 	return qtrue;
 }
 qboolean Confirm_Set(gentity_t *ent, void (*func)(gentity_t *ent, void *data), void *data){ 
@@ -32,9 +32,9 @@ qboolean Confirm_Set(gentity_t *ent, void (*func)(gentity_t *ent, void *data), v
 
 	ent->client->Lmd.confirm.func = func;
 	ent->client->Lmd.confirm.data = data;
-	Disp(ent, CT_B"Confirmation command added\n"
-		CT_B"Use \'"CT_C"/confirm yes"CT_B"\' to confirm the command or \'"CT_C"/confirm no"CT_B"\' to cancel.\n"
-		CT_B"Use \'"CT_C"/confirm toggle"CT_B"\' to disable the confirmation requirement.");
+	Disp(ent,  CT_B "Confirmation command added\n"
+		 CT_B "Use \'" CT_C "/confirm yes" CT_B "\' to confirm the command or \'" CT_C "/confirm no" CT_B "\' to cancel.\n"
+		 CT_B "Use \'" CT_C "/confirm toggle" CT_B "\' to disable the confirmation requirement.");
 	return qtrue;
 }
 
@@ -43,36 +43,36 @@ void Cmd_Confirm_f(gentity_t *ent, int iArg) {
 	trap_Argv(1, arg, sizeof(arg));
 	if(Q_stricmp(arg, "yes") == 0) {
 		if(!ent->client->Lmd.confirm.func) {
-			Disp(ent, CT_B"You have no pending confirmation.");
+			Disp(ent,  CT_B "You have no pending confirmation.");
 			return;
 		}
 		ent->client->Lmd.confirm.func(ent, ent->client->Lmd.confirm.data);
-		Disp(ent, CT_S"Confirmed.");
+		Disp(ent,  CT_S "Confirmed.");
 		Confirm_Clear(ent);
 	}
 	else if(Q_stricmp(arg, "no") == 0) {
 		if(!ent->client->Lmd.confirm.func) {
-			Disp(ent, CT_B"You have no pending confirmation.");
+			Disp(ent,  CT_B "You have no pending confirmation.");
 			return;
 		}
-		Disp(ent, CT_B"Confirmation canceled.");
+		Disp(ent,  CT_B "Confirmation canceled.");
 		Confirm_Clear(ent);
 	}
 	else if (Q_stricmp(arg, "toggle") == 0) {
 		if (ent->client->pers.Lmd.persistantFlags & SPF_NOCONFIRM) {
-			Disp(ent, CT_B"Confirmation is enabled. You will now be asked to confirm certain commands.");
+			Disp(ent,  CT_B "Confirmation is enabled. You will now be asked to confirm certain commands.");
 			ent->client->pers.Lmd.persistantFlags &= ~SPF_NOCONFIRM;
 		}
 		else {
-			Disp(ent, CT_B"Confirmation is disabled.  You will not be asked to confirm commands.");
+			Disp(ent,  CT_B "Confirmation is disabled.  You will not be asked to confirm commands.");
 			if (ent->client->Lmd.confirm.func) {
-				Disp(ent, CT_B"You still need to confirm or cancel your pending command.");
+				Disp(ent,  CT_B "You still need to confirm or cancel your pending command.");
 			}
 			ent->client->pers.Lmd.persistantFlags |= SPF_NOCONFIRM;
 		}
 	}
 	else 
-		Disp(ent, CT_B"Usage: "CT_C"/confirm "CT_AR"<\'yes\' | \'no\' | \'toggle\'>");
+		Disp(ent,  CT_B "Usage: " CT_C "/confirm " CT_AR "<\'yes\' | \'no\' | \'toggle\'>");
 }
 
 /*

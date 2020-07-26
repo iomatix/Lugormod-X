@@ -3549,13 +3549,13 @@ int AcceptBotCommand(char *cmd, gentity_t *pl)
 	{
 		if (gBotEdit) {
 
-			G_Printf(S_COLOR_YELLOW "bot_wp_add" S_COLOR_WHITE " - Add a waypoint (optional int parameter will insert the point after the specified waypoint index in a trail)\n\n");
-			G_Printf(S_COLOR_YELLOW "bot_wp_rem" S_COLOR_WHITE " - Remove a waypoint (removes last unless waypoint index is specified as a parameter)\n\n");
-			G_Printf(S_COLOR_YELLOW "bot_wp_addflagged" S_COLOR_WHITE " - Same as wp_add, but adds a flagged point (type bot_wp_addflagged for help)\n\n");
-			G_Printf(S_COLOR_YELLOW "bot_wp_switchflags" S_COLOR_WHITE " - Switches flags on an existing waypoint (type bot_wp_switchflags for help)\n\n");
-			G_Printf(S_COLOR_YELLOW "bot_wp_tele" S_COLOR_WHITE " - Teleport yourself to the specified waypoint's location\n");
-			G_Printf(S_COLOR_YELLOW "bot_wp_killoneways" S_COLOR_WHITE " - Removes oneway (backward and forward) flags on all waypoints in the level\n\n");
-			G_Printf(S_COLOR_YELLOW "bot_wp_save" S_COLOR_WHITE " - Saves all waypoint data into a file for later use\n");
+			G_Printf(S_COLOR_YELLOW "bot_wp_add"  S_COLOR_WHITE  " - Add a waypoint (optional int parameter will insert the point after the specified waypoint index in a trail)\n\n");
+			G_Printf(S_COLOR_YELLOW "bot_wp_rem"  S_COLOR_WHITE  " - Remove a waypoint (removes last unless waypoint index is specified as a parameter)\n\n");
+			G_Printf(S_COLOR_YELLOW "bot_wp_addflagged"  S_COLOR_WHITE  " - Same as wp_add, but adds a flagged point (type bot_wp_addflagged for help)\n\n");
+			G_Printf(S_COLOR_YELLOW "bot_wp_switchflags"  S_COLOR_WHITE  " - Switches flags on an existing waypoint (type bot_wp_switchflags for help)\n\n");
+			G_Printf(S_COLOR_YELLOW "bot_wp_tele"  S_COLOR_WHITE  " - Teleport yourself to the specified waypoint's location\n");
+			G_Printf(S_COLOR_YELLOW "bot_wp_killoneways"  S_COLOR_WHITE  " - Removes oneway (backward and forward) flags on all waypoints in the level\n\n");
+			G_Printf(S_COLOR_YELLOW "bot_wp_save"  S_COLOR_WHITE  " - Saves all waypoint data into a file for later use\n");
 		} else {
 			Disp(pl, "bot_wp_rem - Remove a waypoint (removes last unless waypoint index is specified as a parameter)");
 			Disp(pl, "bot_wp_addflagged - Same as wp_add, but adds a flagged point (type bot_wp_addflagged for help)");

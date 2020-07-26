@@ -10,10 +10,10 @@ typedef struct consoleTheme_s{
 }consoleTheme_t;
 
 consoleTheme_t theme[] = {
-	{CT_B[1], '3'},		//base
-	{CT_AR[1], '2'},	//argument required
-	{CT_AO[1], '5'},	//argument optional
-	{CT_V[1], '2'},		//value
+	{ CT_B [1], '3'},		//base
+	{ CT_AR [1], '2'},	//argument required
+	{ CT_AO  [1], '5'},	//argument optional
+	{ CT_V [1], '2'},		//value
 	{CT_PB[1], '5'},	//prof bot
 	{CT_PF[1], '4'},	//prof forceuser
 	{CT_PM[1], '1'},	//prof merc

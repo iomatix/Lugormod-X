@@ -33,6 +33,7 @@
 #include "chars.h"
 #include "inv.h"
 #include "syn.h"
+#include "cmath"
 
 
 /*

@@ -8,17 +8,17 @@
 
 ### New features:
 - New registration. Username is also character name now.
-- AI unlocked. AI is able to use Force user or Mercenary profession.
-- Level cap changed up to 120 and added mastery level for Force Users which starts on 40 profession level.
+- AI unlocked. AI is able to use Force User or Mercenary as a profession.
+- Level cap changed up to 120 and added mastery level for Force Users which starts after 40 profession level.
 - Reaching mastery level allows to use force of the opposite side and unlocks new power-ups.
-- Profession change requires a credits fee now which depends on skill points used.
-- Force, health and shield capacity grows per level depend on profession level.
+- Profession change requires credits fee now. It depends on skill points used.
+- Force, health and shield capacity grows per profession level.
 - Health, Force Power and Shield formula is re-balanced.
 - Reworked skill points system with clear and RPG style formula.
 - Player can spend skill points to upgrade new fully working passive skills.
 - Improved console displays making it more clear for the user.
 - New weapons for Mercenary profession available through his skill.
-- To get access more powerful skills player must reach his Mastery Level now.
+- To get access to more powerful skills player must reach his Mastery Level first.
 - Added level damage scaling.
 - New and changed skills.
 - A lot of new extern variables to configure the server.

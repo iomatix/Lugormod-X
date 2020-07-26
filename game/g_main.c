@@ -2924,7 +2924,7 @@ void CalculateRanks(void) {
 
 	if (currentWinner && currentWinner->client)
 	{
-	trap_SendServerCommand( -1, va("cp \"%s" S_COLOR_WHITE " %s %s\n\"",
+	trap_SendServerCommand( -1, va("cp \"%s"  S_COLOR_WHITE  " %s %s\n\"",
 	currentWinner->client->pers.netname, G_GetStringEdString("MP_SVGAME", "VERSUS"), level.clients[nonSpecIndex].pers.netname));
 	}
 	}
@@ -4020,7 +4020,7 @@ void CheckExitRules(void) {
 				}
 				LogExit("Duel limit hit.");
 				gDuelExit = qtrue;
-				trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " hit the win limit.\n\"",
+				trap_SendServerCommand(-1, va("print \"%s"  S_COLOR_WHITE  " hit the win limit.\n\"",
 					cl->pers.netname));
 				return;
 			}
@@ -4034,7 +4034,7 @@ void CheckExitRules(void) {
 				gDuelExit = qfalse;
 				if (printLimit)
 				{
-					trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s.\n\"",
+					trap_SendServerCommand(-1, va("print \"%s"  S_COLOR_WHITE  " %s.\n\"",
 						cl->pers.netname,
 						G_GetStringEdString("MP_SVGAME", "HIT_THE_KILL_LIMIT")
 					)
@@ -4057,7 +4057,7 @@ void CheckExitRules(void) {
 				gDuelExit = qfalse;
 				if (printLimit)
 				{
-					trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s.\n\"",
+					trap_SendServerCommand(-1, va("print \"%s"  S_COLOR_WHITE  " %s.\n\"",
 						cl->pers.netname,
 						G_GetStringEdString("MP_SVGAME", "HIT_THE_KILL_LIMIT")
 					)

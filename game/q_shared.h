@@ -1228,7 +1228,7 @@ extern	vec4_t		colorDkBlue;
 #define S_COLOR_BLUE	"^4"
 #define S_COLOR_CYAN	"^5"
 #define S_COLOR_MAGENTA	"^6"
-#define S_COLOR_WHITE	"^7"
+#define  S_COLOR_WHITE 	"^7"
 
 extern vec4_t	g_color_table[8];
 
