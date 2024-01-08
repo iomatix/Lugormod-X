@@ -337,6 +337,7 @@ vmCvar_t	lmd_profession_fee;
 vmCvar_t	lmd_bounty_streaks_by;
 vmCvar_t	lmd_skillpoint_cost;
 vmCvar_t	lmd_exp_for_level;
+vmCvar_t    lmd_skillpoints_base;
 vmCvar_t    lmd_skillpoints_perlevel;
 vmCvar_t    lmd_skillpoints_perngp;
 vmCvar_t    lmd_rewardcr_box;
@@ -894,7 +895,8 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_bounty_streaks_by, "lmd_bounty_streaks_by", "5", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_skillpoint_cost, "lmd_skillpoint_cost", "485", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_exp_for_level, "lmd_exp_for_level", "450", CVAR_ARCHIVE, 0, qfalse },
-{ &lmd_skillpoints_perlevel, "lmd_skillpoints_perlevel", "4", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_skillpoints_perlevel, "lmd_skillpoints_perlevel", "2", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_skillpoints_base, "lmd_skillpoints_base", "10", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_skillpoints_perngp, "lmd_skillpoints_perngp", "4", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_rewardcr_box, "lmd_rewardcr_box", "250", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_rewardsp_box, "lmd_rewardsp_box", "0.25", CVAR_ARCHIVE, 0, qfalse },

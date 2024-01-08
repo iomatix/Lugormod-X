@@ -452,7 +452,7 @@ int Professions_TotalSkillPoints(Account_t *acc) {
 	// Bonus Skill Points Other
 	bonus += floor(Accounts_GetSkillPoints_Bonus(acc));
 	
-	return  Professions_AddAmount_SkillPoints(level) + bonus;
+	return  lmd_skillpoints_base.integer+Professions_AddAmount_SkillPoints(level) + bonus;
 }
 int Professions_TotalSkillPoints_Basic(int level) {
 
@@ -1011,8 +1011,11 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 
 				}
 				else {
-					if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2)Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.", skill->name)); else
-						trap_SendServerCommand(ent->s.number, va("chat \"^1You do not have enough points or credits to increase the ^2%s^1 skill.\"", skill->name));
+					if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2) 
+						Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill. ^3The cost of this skill is ^1%i CR ^3and ^1%i SP", skill->name, cost_cr, cost)); 
+					
+					else
+						trap_SendServerCommand(ent->s.number, va("^3You do not have enough points or credits to increase the ^2%s^3 skill. ^3The cost of this skill is ^1%i CR ^3and ^1%i SP", skill->name, cost_cr, cost));
 				}
 			}
 			else
