@@ -933,8 +933,8 @@ ulong Disasm(char *src,ulong srcsize,ulong srcip,
       da->warnings|=DAW_IO;            // I/O command
     // Win32 programs usually try to keep stack dword-aligned, so INC ESP
     // (44) and DEC ESP (4C) usually don't appear in real code. Also check for
-    // ADD ESP,imm and SUB ESP,imm (81,C4,imm32; 83,C4,imm8; 81,EC,imm32;
-    // 83,EC,imm8).
+    // ADD ESP,imm and SUB ESP,imm (81,C4,imm32; 83,C4,imm8; 81, EC ,imm32;
+    // 83, EC ,imm8).
     if (cmd[0]==0x44 || cmd[0]==0x4C ||
       (size>=3 && (cmd[0]==0x81 || cmd[0]==0x83) &&
       (cmd[1]==0xC4 || cmd[1]==0xEC) && (cmd[2] & 0x03)!=0)

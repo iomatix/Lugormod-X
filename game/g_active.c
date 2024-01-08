@@ -1,4 +1,3 @@
-
 // Copyright (C) 1999-2000 Id Software, Inc.
 //
 
@@ -174,12 +173,15 @@ void P_DamageFeedback( gentity_t *player ) {
 
 
 
+
 /*
 =============
 P_WorldEffects
 
 Check for lava / slime contents and drowning
 =============
+
+
 */
 void P_WorldEffects( gentity_t *ent ) {
 	qboolean	envirosuit;
@@ -210,8 +212,8 @@ void P_WorldEffects( gentity_t *ent ) {
 			if ( ent->health > 0 ) {
 				// take more damage the longer underwater
 				ent->damage += 2;
-				if (ent->damage > 15)
-					ent->damage = 15;
+				if (ent->damage > 20)
+					ent->damage = 20;
 
 				// play a gurp sound instead of a normal pain sound
 				if (ent->health <= ent->damage) {
@@ -242,20 +244,29 @@ void P_WorldEffects( gentity_t *ent ) {
 				if(level.lavaDamage > 0) {
 					if ( envirosuit )
 						G_AddEvent( ent, EV_POWERUP_BATTLESUIT, 0 );
-					else
-						G_Damage (ent, NULL, NULL, NULL, NULL, level.lavaDamage*waterlevel, 0, MOD_LAVA);
+					else {
+						G_Damage(ent, NULL, NULL, NULL, NULL, level.lavaDamage*waterlevel+ent->damage_lava_ticks, 0, MOD_LAVA);	
+						if (ent->damage_lava_ticks > 750) ent->damage_lava_ticks = 900;
+						else ent->damage_lava_ticks += 45;
+					}
 				}
 			}
-
-			if (ent->watertype & CONTENTS_SLIME) {
+			else if (ent->watertype & CONTENTS_SLIME) {
 				if(level.lavaDamage > 0) {
 					if ( envirosuit )
 						G_AddEvent( ent, EV_POWERUP_BATTLESUIT, 0 );
 					else
-						G_Damage (ent, NULL, NULL, NULL, NULL, level.slimeDamage*waterlevel, 0, MOD_LAVA);
+						G_Damage (ent, NULL, NULL, NULL, NULL, level.slimeDamage*waterlevel + ent->damage_lava_ticks, 0, MOD_LAVA);
+					if (ent->damage_lava_ticks > 300) ent->damage_lava_ticks = 300;
+					else ent->damage_lava_ticks += 6;
 				}
 			}
+
 		}
+	}
+	else {
+		ent->damage_lava_ticks = 5;
+
 	}
 }
 
@@ -1059,27 +1070,40 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				else if ((g_gametype.integer == GT_SIEGE ||
 					g_gametype.integer == GT_BATTLE_GROUND))//Lugormod
 				{ //longer falls hurt more
-					damage = delta*1; //good enough for now, I guess
+					damage = delta*1.1; //good enough for now, I guess
 				}
 				else
 				{
 					//Ufo: lowered a little
 					//damage = (int) (delta*0.16); //good enough for now, I guess
-					damage = (int) (delta*0.1);
+					damage = (int) (delta*0.25); //iomatix
 				}
 
-				//RoboPhred
+				//iomatix:
 				if(event == EV_FALL) {
-					/*
-					if(delta >= 200)
-						G_Knockdown(ent, 0);
-					else if(delta >= 50) {
-						ent->client->ps.weaponTime += Q_irand(750, 1000);
+					
+					if (delta >= 165) {
+						//iomatix:
+						G_Knockdown(ent, 1450 + delta); //apply knockdown
+						damage += delta; 
+						
+						ent->client->ps.weaponTime += Q_irand(1850, 2250)+delta;
 						//Different random time for stun.
-						ent->client->Lmd.stunSpeed.time = level.time + Q_irand(300, 750);
-						ent->client->Lmd.stunSpeed.value = .2;
+						ent->client->Lmd.stunSpeed.time = level.time + Q_irand(1850, 2400)+delta;
+						ent->client->Lmd.stunSpeed.value = .45;
+						
+						
+
 					}
-					*/
+					else if(delta >= 65) {
+						damage += delta*0.25;
+
+						ent->client->ps.weaponTime += Q_irand(650, 950)+delta;
+						//Different random time for stun.
+						ent->client->Lmd.stunSpeed.time = level.time + Q_irand(650, 1250)+delta;
+						ent->client->Lmd.stunSpeed.value = .65;
+					}
+				
 				}
 
 				//RoboPhred: moved down to here, we still want knockdown.
@@ -1095,9 +1119,11 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				if (victim && victim->client && victim->s.number < MAX_CLIENTS &&
 					!duelInProgress(&victim->client->ps) && !duelInProgress(&ent->client->ps))
 				{
-					G_Knockdown(victim, 0);
-					damage = delta*.5;
+					G_Knockdown(victim, 750+delta);
+					damage *= .85;
 					G_Damage(victim, ent, ent, dir, victim->client->ps.origin, damage, DAMAGE_NO_ARMOR, MOD_CRUSH);
+					damage *= .75;
+					G_Damage(ent, NULL, NULL, NULL, NULL, damage, DAMAGE_NO_ARMOR, MOD_FALLING); //iomatix: added damage also to the falling client
 					ent->client->dangerTime = level.time;
 					ent->client->ps.eFlags &= ~EF_INVULNERABLE;
 					ent->client->invulnerableTimer = 0;
@@ -2079,15 +2105,14 @@ void G_SetTauntAnim( gentity_t *ent, int taunt )
 		if ( taunt != TAUNT_MEDITATE 
 			&& taunt != TAUNT_BOW )
 		{//no sound for meditate or bow
-			//if(g_gametype.integer != GT_FFA ||
-			//   taunt != TAUNT_TAUNT) //Lugormod
-			//{
+		//	if( g_gametype.integer != GT_FFA ||
+		//	  taunt != TAUNT_TAUNT) 
+		//	{
+				
 			G_AddEvent( ent, EV_TAUNT, taunt );
-			//} else { //Lugormod I want random taunts in ffa also
-			//uses up sound indexes, so not very good
-			//        G_EntitySound(ent, CHAN_VOICE, 
-			//         G_SoundIndex(va("*taunt%i.mp3", 
-			//                          Q_irand(1,3))));
+		//	} else { 
+			//       G_EntitySound(ent, CHAN_VOICE, 
+			//        G_SoundIndex(va("*taunt%i.wav",Q_irand(1,3))));
 			//}
 		}
 	}
@@ -2570,7 +2595,7 @@ void ClientThink_real( gentity_t *ent ) {
 #ifdef LMD_NEW_JETPACK
 	else if (client->jetPackTime > level.time && (prof != PROF_ADMIN || ucmd->upmove >= 0)) {
 #else
-	else if(client->jetPackOn) {
+	else if(client->jetPackOn && client->ps.velocity[2] > -1900) { //iomatix, added jetpack velocity 
 #endif
 		client->ps.pm_type = PM_JETPACK;
 		client->ps.eFlags |= EF_JETPACK_ACTIVE;
@@ -2811,9 +2836,9 @@ void ClientThink_real( gentity_t *ent ) {
 			{
 				ucmd->forwardmove = 64;	
 			}
-			else if (ucmd->forwardmove < -64)
+			else if (ucmd->forwardmove < -48) //iomatix -64 -> -48
 			{
-				ucmd->forwardmove = -64;
+				ucmd->forwardmove = -48;
 			}
 
 			if (ucmd->rightmove > 64)
@@ -2831,6 +2856,12 @@ void ClientThink_real( gentity_t *ent ) {
 		if(client->Lmd.customSpeed.time >= level.time){
 			client->ps.speed = client->Lmd.customSpeed.value;
 		}
+		//iomatix:
+		if (ucmd->forwardmove < 0) client->ps.speed *= 0.55; //nerf backward moving by 45%
+		
+
+
+
 		//Lugormod
 		// set speed
 		if (ent->client->ps.iModelScale) {
@@ -3138,8 +3169,9 @@ void ClientThink_real( gentity_t *ent ) {
 				//trap_SendServerCommand( duelAgainst-g_entities, va("print \"%s %s %s\n\"", ent->client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLDUELWINNER" ), duelAgainst->client->pers.netname ) );
 				//trap_SendServerCommand( duelAgainst-g_entities, va("print \"%s %s %s \"", ent->client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLDUELWINNER" ), duelAgainst->client->pers.netname ) );
 
-				Disp( duelAgainst, va("%s had ^1%i^7/^2%i",ent->client->pers.netname, ent->health,ent->client->ps.stats[STAT_ARMOR]));
-				//trap_SendServerCommand( duelAgainst-g_entities, va("print \"%s had ^1%i^7/^2%i^7 \"", ent->client->pers.netname, ent->health,ent->client->ps.stats[STAT_ARMOR]) );
+				if(lmd_old_commands_disp.integer!=0)trap_SendServerCommand(duelAgainst->s.number, va("chat \"^3Duel log: ^7%s^3 retains ^1%i HP^3 and ^2%i SD\"", ent->client->pers.netname, ent->health, ent->client->ps.stats[STAT_ARMOR]));
+				else Disp(duelAgainst, va("^3Duel log: ^7%s^3 retains ^1%i HP^3 and ^2%i SD",ent->client->pers.netname, ent->health,ent->client->ps.stats[STAT_ARMOR]));
+				
 
 			} else {//Private duel announcements are now made globally because we only want one duel at a time.
 				if (ent->health > 0 && ent->client->ps.stats[STAT_HEALTH] > 0)

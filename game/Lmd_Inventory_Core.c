@@ -1,5 +1,4 @@
 
-
 #include "g_local.h"
 #include "Lmd_KeyPairs.h"
 #include "Lmd_Accounts_Data.h"
@@ -18,6 +17,24 @@ IMPORTANT:
 Make sure all items run a player modified event when they are modified.
 
 */
+gentity_t* AimAnyTargetz(gentity_t *ent, int length) {
+	trace_t tr;
+	vec3_t fPos, maxs, mins;
+
+	AngleVectors(ent->client->ps.viewangles, fPos, 0, 0);
+	VectorSet(mins, -8, -8, -8);
+	VectorSet(maxs, 8, 8, 8);
+
+	fPos[0] = ent->client->renderInfo.eyePoint[0] + fPos[0] * length;
+	fPos[1] = ent->client->renderInfo.eyePoint[1] + fPos[1] * length;
+	fPos[2] = ent->client->renderInfo.eyePoint[2] + fPos[2] * length;
+
+	trap_Trace(&tr, ent->client->renderInfo.eyePoint, mins, maxs, fPos, ent->s.number, ent->clipmask);
+	if (tr.entityNum >= ENTITYNUM_MAX_NORMAL) {
+		return NULL;
+	}
+	return &g_entities[tr.entityNum];
+}
 
 BG_field_t Item_Fields[] = {
 	{"name", FOFFSET(iObjectFields_t, name), F_GSTRING},
@@ -575,7 +592,9 @@ void Cmd_Inventory_Use(gentity_t *ent, iObjectList_t *inventory, int argnum){
 	else
 		obj->use(obj);
 }
-/*
+
+//TODO:
+//iomatix: give
 typedef struct InventoryGiveItemConfirmData_s {
 	iObject_t *obj;
 	gentity_t *targ;
@@ -583,62 +602,147 @@ typedef struct InventoryGiveItemConfirmData_s {
 }InventoryGiveItemConfirmData_t;
 
 void Cmd_Inventory_Give_Confirm(gentity_t *ent, void *data){
+
 	InventoryGiveItemConfirmData_t *iData = (InventoryGiveItemConfirmData_t *)data;
 	if(iData->obj->holder != ent){
-		Disp(ent, "^3You no longer have that item.");
+		Disp(ent, "^1You no longer have that item.");
 		return;
 	}
 	if(iData->obj->fields.noGive) {
-		Disp(ent, "^3You cannot give this item away.");
+		Disp(ent, "^1You cannot give this item away.");
 		return;
 	}
-	if(!iData->obj->give(iData, iData->targ)) {
-		Disp(ent, "^3You cannot give this item to that player.");
-		return;
-	}
+		
 	if(!Inventory_Holder_LooseObject(iData->obj)) {
-		Disp(ent, "^3You cannot give this item right now");
+		Disp(ent, "^1You cannot give this item right now");
 		return;
 	}
 	if(!Inventory_Player_AquireItem(iData->targ, iData->obj)) {
-		Disp(ent, "^3That player cannot pick up this item.");
-		Inventory_Player_AquireItem(ent, iData->obj);
+		Disp(ent, "^1That player cannot pick up this item.");
+		return;
 	}
+	Disp(iData->targ, va("^2Received %s ^2from %s.", iData->obj->fields.name, ent->client->pers.netname));
+	Disp(ent, va("^2You've given %s ^2to %s", iData->obj->fields.name, iData->targ->client->pers.netname));
 }
 
 void Cmd_Inventory_Give(gentity_t *ent, iObjectList_t *inventory, int argnum){
 	char arg[MAX_STRING_CHARS];
 	trap_Argv(argnum, arg, sizeof(arg));
-	gentity_t *target = AimAnyTarget(ent, 64);
+	gentity_t *target = AimAnyTargetz(ent, 78);
 	int num = atoi(arg);
 	if(num < 0 || num >= inventory->count){
 		Disp(ent, "^3Invalid index.");
 		return;
 	}
-	if(iData->obj->fields.noGive) {
-		Disp(ent, "^3You cannot give this item away.");
-		return;
-	}
 	if(!target || !target->client) {
-		Disp(ent, "^3Invalid player.");
+		Disp(ent, "^3Invalid player. Stand closer and aim on the target player.");
 		return;
 	}
 	if(!target->client->pers.Lmd.account) {
 		Disp(ent, "^3This player is not logged in.");
 		return;
 	}
-	if(!iData->obj->give(iData, target)) {
-		Disp(ent, "^3You cannot give this item to that player.");
-		return;
-	}
-	Disp(ent, va("^3Give inventory index ^2%i^3 (^2%s^3) to ^7^s", num, inventory->objects[num]->fields.name, target->client->pers.netname));
+	Disp(ent, va("^3Give inventory index ^2%i^3 (^2%s^3) to %s", num, inventory->objects[num]->fields.name, target->client->pers.netname));
 	InventoryGiveItemConfirmData_t *data = (InventoryGiveItemConfirmData_t *)G_Alloc(sizeof(InventoryGiveItemConfirmData_t));
 	data->obj = inventory->objects[num];
 	data->targ = target;
 	data->acc = target->client->pers.Lmd.account;
 	Confirm_Set(ent, Cmd_Inventory_Give_Confirm, data);
 }
-*/
+
+
+//iomatix: sell
+typedef struct InventorySellItemConfirmData_s {
+	iObject_t *obj;
+	gentity_t *seller;
+	gentity_t *targ;
+	Account_t *acc;
+	Account_t *seller_acc;
+	int price;
+}InventorySellItemConfirmData_t;
+
+void Cmd_Inventory_Sell_Confirm_buy(gentity_t *ent, void *data) {
+	InventorySellItemConfirmData_t *iData = (InventorySellItemConfirmData_t *)data;
+
+	if (iData->obj->holder != iData->seller) {
+		Disp(ent, "^3TRADE: ^1The player no longer has the offered item.");
+		return;
+	}
+
+	if (Accounts_GetCredits(iData->acc) < iData->price) {
+		Disp(ent, "^3TRADE: ^1You have not enough Credits.");
+		Disp(iData->seller, va("^3TRADE:^7 %s ^1dosen't have enough credits to buy the item.", ent->client->pers.netname));
+		return;
+	}
+
+	if (!Inventory_Holder_LooseObject(iData->obj)) {
+		Disp(ent, "^3TRADE: ^1You cannot buy this item right now");
+		Disp(iData->seller, va("^3TRADE: ^1Something gone wrong when trading with %s. You can't sell the item right now.\n^3Trade with^7 %s ^1canceled.", ent->client->pers.netname));
+		return;
+	}
+
+	if (!Inventory_Player_AquireItem(iData->targ, iData->obj)) {
+		Disp(ent, "^3TRADE: ^1You cannot pick up this item.");
+		Disp(iData->seller, va("^3TRADE: ^1Something gone wrong when trading with %s.\n^3Trade with^7 %s ^1canceled.", ent->client->pers.netname));
+		return;
+	}
+
+	Accounts_SetCredits(iData->acc, Accounts_GetCredits(iData->acc) - iData->price);
+	Accounts_SetCredits(iData->seller_acc, Accounts_GetCredits(iData->seller_acc) + iData->price);
+
+	Disp(ent, va("^3TRADE: ^2You've bought %s ^2for ^8%iCR ^2from %s",iData->obj->fields.name,iData->price,iData->seller->client->pers.netname));
+	Disp(iData->seller, va("^3TRADE: ^2You've sold %s ^2for ^3%iCR ^2to %s", iData->obj->fields.name, iData->price, ent->client->pers.netname));
+}
+
+void Cmd_Inventory_Sell(gentity_t *ent, iObjectList_t *inventory, int argnum, int argprice) {
+	char arg[MAX_STRING_CHARS];
+	trap_Argv(argnum, arg, sizeof(arg));
+	gentity_t *target = AimAnyTargetz(ent, 100);
+	int num = atoi(arg);
+	if (num < 0 || num >= inventory->count) {
+		Disp(ent, "^1Invalid index.");
+		return;
+	}
+	if (!target || !target->client) {
+		Disp(ent, "^1Invalid player. Stand closer and aim on the target player.");
+		return;
+	}
+	if (!target->client->pers.Lmd.account) {
+		Disp(ent, "^1This player is not logged in.");
+		return;
+	}
+	if (!ent->client->pers.Lmd.account) {
+		Disp(ent, "^1You are not logged in.");
+		return;
+	}
+	trap_Argv(argprice, arg, sizeof(arg));
+	int theprice = atoi(arg);
+	if (theprice <= 0) {
+		Disp(ent, va("^1The price must be higher than ^30 CR"));
+		return;
+	}
+
+	Disp(ent, va("^3Selling inventory index ^2%i^3 (^2%s^3) to %s for ^2%iCR", num, inventory->objects[num]->fields.name, target->client->pers.netname,theprice));
+	InventorySellItemConfirmData_t *data = (InventorySellItemConfirmData_t *)G_Alloc(sizeof(InventorySellItemConfirmData_t));
+	data->price = theprice;
+	data->obj = inventory->objects[num];
+	data->seller = ent;
+	data->targ = target;
+	data->acc = target->client->pers.Lmd.account;
+	data->seller_acc = ent->client->pers.Lmd.account;
+	if (data->obj->holder != ent) {
+		Disp(ent, "^3TRADE: ^1You no longer have the item.");
+		return;
+	}
+	if (data->obj->fields.noGive) {
+		Disp(ent, "^3TRADE: ^1You cannot sell this item.");
+		return;
+	}
+	Disp(ent, va("^3TRADE:^2 %s ^2offered to %s ^2for ^3%iCR.", data->obj->fields.name, data->targ->client->pers.netname, data->price));
+
+	Disp(data->targ, va("^3TRADE:^7 %s ^3offered %s for ^8%iCR.", ent->client->pers.netname, data->obj->fields.name, data->price));
+	Confirm_Set_Without_Flag(data->targ, Cmd_Inventory_Sell_Confirm_buy, data);
+}
 
 //Need to have a struct, since data is G_Free'd.
 typedef struct InventoryDeleteItemConfirmData_s {
@@ -727,8 +831,8 @@ void Cmd_Inventory_f(gentity_t *ent, int iArg){
 	int argc = trap_Argc();
 	char arg[MAX_STRING_CHARS];
 	if(argc < 2){
-		//iomatix, todo: drop (+recall), sell (drop+buyoption + recall)
-		Disp(ent, "^3Usage: Inventory {list ^5[catagory/name] [offset]^3} {use ^2<index/name>^3} {destroy ^2<index/name>^3}");
+		//iomatix, todo: give, sell
+		Disp(ent, "^3Usage: Inventory {list ^5[catagory/name] [offset]^3} {use ^2<index/name>^3} {give ^2<index/name>^3} {sell ^2<index/name> [CR]^3} {destroy ^2<index/name>^3}");
 		return;
 	}
 	trap_Argv(1, arg, sizeof(arg));
@@ -740,9 +844,26 @@ void Cmd_Inventory_f(gentity_t *ent, int iArg){
 		Cmd_Inventory_Use(ent, inventory, 2);
 		return;
 	}
+	
+	
+	//iomatix: GIVE SELL
+	else if (Q_stricmp(arg, "give") == 0) {
+		Cmd_Inventory_Give(ent, inventory, 2);
+		return;
+	}
+	else if (Q_stricmp(arg, "sell") == 0) {
+		if (argc < 3) {
+			Disp(ent, "^3Usage: Inventory sell ^2<index/name> [CR]");
+			return;
+		}
+		Cmd_Inventory_Sell(ent, inventory, 2, 3);
+		return;
+	}
+	
+
 	else if(Q_stricmp(arg, "destroy") == 0){
 		if(argc < 2){
-			Disp(ent, "^3Usage: /inventory destroy ^2<index or type>");
+			Disp(ent, "^3Usage: /inventory destroy ^2<index/name>");
 			return;
 		}
 		Cmd_Inventory_Delete(ent, inventory, 2);

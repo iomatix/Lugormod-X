@@ -13,7 +13,10 @@ void WP_AddToClientBitflags(gentity_t *ent, int entNum);
 int WP_AbsorbConversion(gentity_t *attacked, int atdAbsLevel, gentity_t *attacker, int atPower, int atPowerLevel, int atForceSpent);
 void BotForceNotification (gclient_t *bot, gentity_t *attacker);
 
+extern void G_Knockdown(gentity_t *victim, int duration);
+
 qboolean Force_Grip_Available(gentity_t *self, const void* vData) {
+	if (isForce_Cooldown(self, FP_GRIP))return qfalse;
 	if (self->client->ps.fd.forceGripUseTime > level.time) return qfalse;
 	//TODO: move into generic usability code?
 	if (self->client->ps.forceHandExtend != HANDEXTEND_NONE)	return qfalse;
@@ -74,9 +77,9 @@ qboolean Force_Grip_Start(gentity_t *self, const void* vData) {
 		self->client->ps.fd.forceGripDamageDebounceTime = 0;
 
 		self->client->ps.forceHandExtend = HANDEXTEND_FORCE_HOLD;
-		self->client->ps.forceHandExtendTime = level.time + 5000;
+		self->client->ps.forceHandExtendTime = level.time + 60000; //60sec
 
-		BG_ForcePowerDrain( &self->client->ps, FP_GRIP, 30 );
+		BG_ForcePowerDrain( &self->client->ps, FP_GRIP, data->forcedrain );
 	}
 	else {
 		self->client->ps.fd.forceGripEntityNum = ENTITYNUM_NONE;
@@ -155,9 +158,14 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 
 	if (tr.fraction != 1.0f && tr.entityNum != gripEnt->s.number) return qfalse;
 
-	if (self->client->ps.fd.forcePowerDebounce[FP_GRIP] < level.time){
-		//2 damage per second while choking, resulting in 10 damage total (not including The Squeeze<tm>)
-		self->client->ps.fd.forcePowerDebounce[FP_GRIP] = level.time + 1000;
+
+	//slower movement when casting grip
+	self->client->Lmd.stunSpeed.value = .88;
+	self->client->Lmd.stunSpeed.time = level.time + Q_irand(75, 250);
+
+	if (level.time - gripEnt->client->ps.fd.forceGripStarted > 750 && self->client->ps.fd.forcePowerDebounce[FP_GRIP] < level.time){
+		//x damage per 3/4 second while choking, resulting in x*3/4 * 2.5 sec damage total (not including The Squeeze<tm>)
+		self->client->ps.fd.forcePowerDebounce[FP_GRIP] = level.time + 750;
 		G_Damage(gripEnt, self, self, NULL, NULL, data->damage, DAMAGE_NO_ARMOR, MOD_FORCE_DARK);
 	}
 
@@ -232,10 +240,10 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 		}
 
 		if (data->choke && 
-			(level.time - gripEnt->client->ps.fd.forceGripStarted) > 3000 &&
+			(level.time - gripEnt->client->ps.fd.forceGripStarted) > 2500 &&
 			!self->client->ps.fd.forceGripDamageDebounceTime)
-		{ //if we managed to lift him into the air for 2 seconds, give him a crack
-			self->client->ps.fd.forceGripDamageDebounceTime = 1;
+		{ //if we managed to lift him into the air every 2.5 seconds, give him a crack
+			//self->client->ps.fd.forceGripDamageDebounceTime = 1;
 			G_Damage(gripEnt, self, self, NULL, NULL, data->choke, DAMAGE_NO_ARMOR, MOD_FORCE_DARK);
 
 			//Must play custom sounds on the actual entity. Don't use G_Sound (it creates a temp entity for the sound)
@@ -245,15 +253,21 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 			gripEnt->client->ps.saberHolstered = 2;
 
 			gripEnt->client->ps.forceHandExtend = HANDEXTEND_CHOKE;
-			gripEnt->client->ps.forceHandExtendTime = level.time + 2000;
+			gripEnt->client->ps.forceHandExtendTime = level.time + 2300;
 
-			if (gripEnt->client->ps.fd.forcePowersActive & (1 << FP_GRIP)){ 
-				//choking, so don't let him keep gripping himself
+			if ((level.time - gripEnt->client->ps.fd.forceGripStarted) > 3000 && (gripEnt->client->ps.fd.forcePowersActive & (1 << FP_GRIP))){
+				//choking, so don't let him keep gripping himself if the duration is over
 
 				Force_StopPower(gripEnt, FP_GRIP);
 			}
+
+			//restart grip iomatix:
+			self->client->ps.forceHandExtend = HANDEXTEND_FORCE_HOLD;
+			self->client->ps.forceHandExtendTime += 2500;
+			gripEnt->client->ps.fd.forceGripStarted = level.time;
+
 		}
-		else if ( ((level.time - gripEnt->client->ps.fd.forceGripStarted) > data->duration))  //iomatix test data->duration
+		else if ( ((level.time - gripEnt->client->ps.fd.forceGripStarted) > 3000))  //iomatix 
 			return qfalse;
 	}
 	return qtrue;
@@ -261,8 +275,10 @@ qboolean Force_Grip_Run(gentity_t *self, const void *vData) {
 
 void Force_Grip_Stop(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceGrip_t);
+	//iomatix: 
+	Force_Cooldown(self, 1700, FP_GRIP);
 	//Ufo:
-	self->client->ps.fd.forceGripUseTime = level.time + 3000; //cooldown
+	self->client->ps.fd.forceGripUseTime = level.time + 300; //cooldown
 	if (data->throatcrush && g_entities[self->client->ps.fd.forceGripEntityNum].client &&
 		g_entities[self->client->ps.fd.forceGripEntityNum].health > 0 &&
 		g_entities[self->client->ps.fd.forceGripEntityNum].inuse &&
@@ -287,12 +303,11 @@ void Force_Grip_Stop(gentity_t *self, const void *vData) {
 }
 
 forceGrip_t Force_Grip_Levels[5] = {
-	//Ufo: fixed omni of level 3
-	{MAX_GRIP_DISTANCE,	2, 0,	25000, 0, GRIP_DRAIN_AMOUNT, 1, qfalse,	qfalse},
-	{MAX_GRIP_DISTANCE,	2, 20,	20000, 1, GRIP_DRAIN_AMOUNT, 1, qtrue,	qfalse},
-	{MAX_GRIP_DISTANCE,	2, 40,	15000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
-	{MAX_GRIP_DISTANCE * 2,	2, 40,	10000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
-	{MAX_GRIP_DISTANCE * 4,	2, 40,	5000, 2, GRIP_DRAIN_AMOUNT, 1, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE,	    1, 25,	10000, 0, GRIP_DRAIN_AMOUNT*2, 1, qfalse,	qfalse},
+	{MAX_GRIP_DISTANCE,	    2, 40,	15000, 1, GRIP_DRAIN_AMOUNT*2.5, 1, qtrue,	qfalse},
+	{MAX_GRIP_DISTANCE*2,	3, 60,	20000, 2, GRIP_DRAIN_AMOUNT*3.5, 1, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE*3,	4, 75,	25000, 2, GRIP_DRAIN_AMOUNT*5, 2, qtrue,	qtrue},
+	{MAX_GRIP_DISTANCE*4,	5, 95,	30000, 2, GRIP_DRAIN_AMOUNT*6.5, 1, qtrue,	qtrue},
 };
 
 forcePower_t Force_Grip = {
@@ -307,6 +322,7 @@ forcePower_t Force_Grip = {
 
 
 qboolean Force_Lightning_Available(gentity_t *self, const void *vData) {
+	if (isForce_Cooldown(self, FP_LIGHTNING))return qfalse;
 	//TODO: move these to generic usability
 	if (self->client->ps.forceHandExtend != HANDEXTEND_NONE)
 		return qfalse;
@@ -370,14 +386,15 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 		if (target->client->noLightningTime >= level.time) {
 			//give them power and don't hurt them.
 			target->client->ps.fd.forcePower++;
-			if (target->client->ps.fd.forcePower > 100) target->client->ps.fd.forcePower = 100;
+			if (target->client->ps.fd.forcePower > target->client->ps.fd.forcePowerMax) target->client->ps.fd.forcePower = target->client->ps.fd.forcePowerMax;
+			
 			return;
 		}
 	
 
 		if (ForcePowerUsableOn(self, target, FP_LIGHTNING)){
-			//Ufo: default damage is too hig
-			dmg = Q_irand(1, 2);
+			if(data->max_damage > 1)dmg = Q_irand(data->max_damage, data->max_damage+ceil(data->max_damage/2.f));
+			else dmg = Q_irand(1,2);
 			
 			float absorb = Force_Lightning_AbsorbPower(self, target, data);
 			if(absorb == 0) return;
@@ -392,7 +409,46 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 			
 
 
-			if (dmg > 0)G_Damage(target, self, self, dir, self->client->ps.origin, dmg, 0, MOD_FORCE_DARK);
+			if (dmg > 0) {
+				
+				dir[2] += 5; //more into the air
+				G_Damage(target, self, self, dir, self->client->ps.origin, dmg, 0, MOD_FORCE_DARK);
+				//lightning push:
+				VectorNormalize(dir);
+				VectorScale(dir, dmg+ceil(data->debounce/1.75f), dir); //direction scale //debounce time instead            // ceil((g_knockback.value*data->debounce)/985.f) //knockback * scale / mass
+ 				VectorAdd(target->client->ps.velocity, dir, target->client->ps.velocity); //impact
+				
+
+				if (self->client->ps.weapon == WP_MELEE && data->twohanded)
+				{
+					if (Q_irand(0, 102-(self->client->ps.fd.forcePowerLevel[FP_LIGHTNING]*2)) <= 9) //9%
+					{
+						G_Knockdown(target, Q_irand(1350, 2150));
+					}
+					else {
+					target->client->Lmd.stunSpeed.time = level.time + Q_irand(450, 850);
+					target->client->Lmd.stunSpeed.value = .6;
+					target->client->ps.weaponTime += Q_irand(350, 550);
+					}
+					
+				}
+				else {
+					if (Q_irand(0, 102-(self->client->ps.fd.forcePowerLevel[FP_LIGHTNING]*2)) <= 3) { //3%
+						G_Knockdown(target, Q_irand(450, 1550));
+					}
+					else {
+						target->client->Lmd.stunSpeed.time = level.time + Q_irand(350, 750);
+						target->client->Lmd.stunSpeed.value = .75;
+						if (Q_irand(0, 4) == 2)target->client->ps.weaponTime += Q_irand(50, 350);
+					}
+					
+					
+				}
+
+
+
+
+			}
 				//rww - Shields can now absorb lightning too.
 				
 			
@@ -401,8 +457,8 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 					
 				
 
-				if (target->client->ps.electrifyTime < (level.time + 400))target->client->ps.electrifyTime = level.time + 800;
-					//only update every 400ms to reduce bandwidth usage (as it is passing a 32-bit time value)		
+				if (target->client->ps.electrifyTime < (level.time + 300))target->client->ps.electrifyTime = level.time + 800;
+					//only update every 300ms to reduce bandwidth usage (as it is passing a 32-bit time value)		
 				if ( target->client->ps.powerups[PW_CLOAKED] ){
 					//disable cloak temporarily
 					Jedi_Decloak( target );
@@ -414,7 +470,7 @@ void Force_Lightning_Damage(gentity_t *self, gentity_t *target, vec3_t dir, cons
 #ifndef LMD_NEW_JETPACK
 					Jetpack_Off(target);
 #endif
-					target->client->jetPackToggleTime = level.time + Q_irand(150, 1500);
+					target->client->jetPackToggleTime = level.time + Q_irand(350, 1700);
 				}
 
 	
@@ -444,6 +500,9 @@ qboolean Force_Lightning_Run(gentity_t *self, const void* vData) {
 		//FIXME: should this be handled in available check when running?
 		return qfalse;
 	}
+	//slower movement when casting lightning
+	self->client->Lmd.stunSpeed.value = .82;
+	self->client->Lmd.stunSpeed.time = level.time + Q_irand(75, 250);
 	
 	
 	trace_t	tr;
@@ -475,8 +534,10 @@ qboolean Force_Lightning_Run(gentity_t *self, const void* vData) {
 				continue;
 			if ( !traceEnt->takedamage )
 				continue;
-			if ( traceEnt->health <= 0 )//no torturing corpses
-				continue;
+
+			//if ( traceEnt->health <= 0 )//no torturing corpses
+				//continue;
+
 			if ( !g_friendlyFire.integer && OnSameTeam(self, traceEnt))
 				continue;
 			//this is all to see if we need to start a saber attack, if it's in flight, this doesn't matter
@@ -519,8 +580,9 @@ qboolean Force_Lightning_Run(gentity_t *self, const void* vData) {
 				continue;
 			}
 
-			// ok, we are within the radius, add us to the incoming list
-			Force_Lightning_Damage( self, traceEnt, dir, data);
+			// iomatix, lightning damage slower
+			if (self->client->ps.fd.forcePowerDebounce[FP_LIGHTNING] < level.time) Force_Lightning_Damage(self, traceEnt, dir, data);
+			
 		}
 	}
 	else{
@@ -529,19 +591,30 @@ qboolean Force_Lightning_Run(gentity_t *self, const void* vData) {
 		trap_Trace( &tr, self->client->ps.origin, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT );
 		if ( tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid )
 		{
-			Force_DrainForceEnergy(self, FP_LIGHTNING, data->forcepower); //Ufo: was missing
+			if (self->client->ps.fd.forcePowerDebounce[FP_LIGHTNING] < level.time) {
+				Force_DrainForceEnergy(self, FP_LIGHTNING, data->forcepower);
+				self->client->ps.fd.forcePowerDebounce[FP_LIGHTNING] = level.time + data->debounce;
+			}
 			return qtrue;
 		}
 
 		traceEnt = &g_entities[tr.entityNum];
-		Force_Lightning_Damage( self, traceEnt, forward, data);
+		
+					// iomatix, lightning damage slower
+			if (self->client->ps.fd.forcePowerDebounce[FP_LIGHTNING] < level.time) Force_Lightning_Damage(self, traceEnt, forward, data);
+				
+			
 	}
-     Force_DrainForceEnergy(self, FP_LIGHTNING, data->forcepower);
+	if (self->client->ps.fd.forcePowerDebounce[FP_LIGHTNING] < level.time) {
+		Force_DrainForceEnergy(self, FP_LIGHTNING, data->forcepower);
+		self->client->ps.fd.forcePowerDebounce[FP_LIGHTNING] = level.time + data->debounce;
+	}
 	return qtrue;
 }
 
 void Force_Lightning_Stop(gentity_t *self, const void* vData) {
 	GETFORCEDATA(forceLightning_t);
+	Force_Cooldown(self, 1300, FP_LIGHTNING);
 	if ( data->debounce )
 		self->client->ps.fd.forcePowerDebounce[FP_LIGHTNING] = level.time + data->debounce; //3000;
 
@@ -552,12 +625,12 @@ void Force_Lightning_Stop(gentity_t *self, const void* vData) {
 }
 
 forceLightning_t Force_Lightning_Levels[5] = {
-	//Ufo: fixed radius of level 2
-	{2048,				0, 0,		3000, 1, qfalse},
-	{2048,				0, Q3_INFINITE,	1500, 1, qfalse},
-	{FORCE_LIGHTNING_RADIUS,	1, Q3_INFINITE,	1500, 1, qtrue},
-	{FORCE_LIGHTNING_RADIUS * 1.5,	1, Q3_INFINITE,	1500, 1, qtrue},
-	{FORCE_LIGHTNING_RADIUS * 2,	1, Q3_INFINITE,	1500, 1, qtrue}
+	//do not go over 250 cuz won't work when runing through it
+	{3,4096,		 0, Q3_INFINITE,    240, 6, qfalse}, //at least 30 dmg per 2500ms
+	{4,8192,     0, Q3_INFINITE,	200, 6, qfalse}, //at least 50 dmg per 2500ms
+	{5,FORCE_LIGHTNING_RADIUS,	 1, Q3_INFINITE,	215, 10, qtrue}, //at least 58dmg for 2500ms
+	{4,FORCE_LIGHTNING_RADIUS*1.2,     1, Q3_INFINITE,	115, 5, qtrue}, //at least 85dmg for 2500ms
+	{3,FORCE_LIGHTNING_RADIUS*1.5, 	 1, Q3_INFINITE,	65, 3, qtrue} //at least 115dmg for 2500ms
 };
 
 forcePower_t Force_Lightning = {
@@ -636,11 +709,11 @@ void Force_Rage_Stop(gentity_t *self, const void *vData) {
 }
 
 forceRage_t Force_Rage_Levels[5] = {
-	{2, 8000,	150,	10000, 50},
-	{2, 14000,	300, 	10000, 50},
-	{2, 20000,	450,	10000, 50},
-	{1, 20000,	600,	10000, 50},
-	{1, 20000,	750,	10000, 50},
+	{2, 8000,	150,	5000, 30},
+	{2, 14000,	300, 	7000, 35},
+	{2, 20000,	450,	9000, 40},
+	{1, 25000,	600,	11000, 50},
+	{1, 30000,	750,	13000, 60},
 };
 
 forcePower_t Force_Rage = {
@@ -736,6 +809,7 @@ qboolean Force_TeamReplenish_Start(gentity_t *self, const void *vData) {
 		ent->client->ps.fd.forcePower += poweradd;
 		if (ent->client->ps.fd.forcePower > ent->client->ps.fd.forcePowerMax)
 			ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax;
+			
 
 		if (!te){
 			te = G_TempEntity(self->client->ps.origin, EV_TEAM_POWER);
@@ -749,11 +823,11 @@ qboolean Force_TeamReplenish_Start(gentity_t *self, const void *vData) {
 
 forceTeamReplenish_t Force_TeamReplenish_Levels[5] = {
 	//Ufo: fixed forcepower of level 5
-	{256,		50,	33, 25, 2000, 50},
-	{256 * 1.5,	50,	33, 25, 2000, 33},
-	{256 * 2,	50,	33, 25, 2000, 25},
-	{256 * 3,	50,	33, 25, 2000, 25},
-	{256 * 3,	100,	66, 50, 2000, 50},
+	{256,		25,	11, 15, 2000, 20},
+	{256 * 1.5,	30,	15, 20, 2000, 25},
+	{256 * 2,	50,	33, 25, 2000, 30},
+	{256 * 3,	55,	35, 30, 2000, 35},
+	{256 * 3,	100,70, 60, 2000, 75},
 };
 
 forcePower_t Force_TeamReplenish = {
@@ -768,12 +842,16 @@ forcePower_t Force_TeamReplenish = {
 
 
 qboolean Force_Drain_Available(gentity_t *self, const void *vData) {
+	if (isForce_Cooldown(self, FP_DRAIN)) return qfalse;
 	if(self->client->ps.forceHandExtend != HANDEXTEND_NONE)
 		return qfalse;
 	if(self->client->ps.weaponTime > 0)
 		return qfalse;
 	if(self->client->ps.fd.forcePower < 25)
 		return qfalse;
+
+	if (self->health >= self->client->ps.stats[STAT_MAX_HEALTH]) return qfalse; //iomatix
+
 	return qtrue;
 }
 
@@ -794,43 +872,50 @@ qboolean Force_Drain_Start(gentity_t *self, const void *vData) {
 float Force_Drain_AbsorbPower(gentity_t *self, gentity_t *targ, const forceDrain_t *data) {
 	int powerLevel;
 	powerLevel = self->client->ps.fd.forcePowerLevel[FP_DRAIN];
-	int modPowerLevel = WP_AbsorbConversion(targ, targ->client->ps.fd.forcePowerLevel[FP_ABSORB], self, 
-		FP_DRAIN, powerLevel, 1); //Ufo: was FP_LIGHTNING
-	if (modPowerLevel == -1)
-		modPowerLevel = powerLevel;
+	int modPowerLevel = WP_AbsorbConversion(targ, targ->client->ps.fd.forcePowerLevel[FP_ABSORB], self, FP_DRAIN, powerLevel, 1); //Ufo: was FP_LIGHTNING
+	if (modPowerLevel == -1) modPowerLevel = powerLevel;
 	return ((float)modPowerLevel) / ((float)powerLevel);
 }
 
 void Force_Drain_Damage( gentity_t *self, gentity_t *target, vec3_t dir, vec3_t impactPoint, const forceDrain_t *data){
 
 	if ( target->client && (!OnSameTeam(self, target) || g_friendlyFire.integer) &&
-		self->client->ps.fd.forceDrainTime < level.time && target->client->ps.fd.forcePower )
+		self->client->ps.fd.forceDrainTime < level.time) //&& target->client->ps.fd.forcePower ) iomatix rework
 	{
 			//an enemy or object
 		if (!target->client && target->s.eType == ET_NPC){
 			//g2animent
-			if (target->s.genericenemyindex < level.time)
-				target->s.genericenemyindex = level.time + 2000;
+			if (target->s.genericenemyindex < level.time) target->s.genericenemyindex = level.time + 2000;
 		}
 		if (ForcePowerUsableOn(self, target, FP_DRAIN)){
 			int dmg = data->damage;
 
 			if (target->client){
+				//fprintf(stderr, va("%i damage initial\n",dmg));
 				dmg *= Force_Drain_AbsorbPower(self, target, data);
+				//fprintf(stderr, va("%i damage after multiplier\n", dmg));
 				//Lugormod Needed?
 				BotForceNotification (target->client, self);
 			}
 
-			if (dmg)
-				//Ufo: drain minimum if ionlysaber
-				target->client->ps.fd.forcePower -= (self->client->pers.Lmd.persistantFlags & SPF_IONLYSABER) ? 1 : dmg;
-			if (target->client->ps.fd.forcePower < 0)
-				target->client->ps.fd.forcePower = 0;
+			//Ufo: drain minimum if ionlysaber
+			if (dmg) {
+				if (target->client->ps.fd.forcePower) target->client->ps.fd.forcePower -= (self->client->pers.Lmd.persistantFlags & SPF_IONLYSABER) ? 1 : dmg;
+				else G_Damage(target, self, self, 0, self->client->ps.origin, (self->client->pers.Lmd.persistantFlags & SPF_IONLYSABER) ? 1 : dmg, 0, MOD_FORCE_DARK);
+				
+				//iomatix: slow down the client
+				target->client->Lmd.stunSpeed.time = level.time + Q_irand(450, 850);
+				target->client->Lmd.stunSpeed.value = .55;
+			}
+
+			
+				
+		
+			if (target->client->ps.fd.forcePower < 0)target->client->ps.fd.forcePower = 0;
 
 			if (self->client->ps.stats[STAT_HEALTH] < self->client->ps.stats[STAT_MAX_HEALTH]){
 				self->health += dmg;
-				if (self->health > self->client->ps.stats[STAT_MAX_HEALTH])
-					self->health = self->client->ps.stats[STAT_MAX_HEALTH];
+				if (self->health > self->client->ps.stats[STAT_MAX_HEALTH])self->health = self->client->ps.stats[STAT_MAX_HEALTH];
 				self->client->ps.stats[STAT_HEALTH] = self->health;
 			}
 
@@ -860,8 +945,12 @@ qboolean Force_Drain_Run(gentity_t *self, const void *vData) {
 			self->client->ps.fd.forcePowerDuration[FP_DRAIN] = level.time + 500;
 		}
 	}
-	if (self->client->ps.fd.forcePower < 25)
-		return qfalse;
+	if (self->client->ps.fd.forcePower < 25) return qfalse;
+	if (self->health >= self->client->ps.stats[STAT_MAX_HEALTH]) return qfalse; //iomatix
+
+	//slower movement when casting drain
+	self->client->Lmd.stunSpeed.value = .85;
+	self->client->Lmd.stunSpeed.time = level.time + Q_irand(75, 250);
 
 	trace_t	tr;
 	vec3_t	end, forward;
@@ -894,8 +983,9 @@ qboolean Force_Drain_Run(gentity_t *self, const void *vData) {
 				continue;
 			if ( !traceEnt->client )
 				continue;
-			if ( !traceEnt->client->ps.fd.forcePower )
-				continue;
+			//if ( !traceEnt->client->ps.fd.forcePower )  continue;
+			 //iomatix
+
 			if (OnSameTeam(self, traceEnt) && !g_friendlyFire.integer)
 				continue;
 			for ( i = 0 ; i < 3 ; i++ ) {
@@ -931,8 +1021,10 @@ qboolean Force_Drain_Run(gentity_t *self, const void *vData) {
 				continue;
 
 			// ok, we are within the radius, add us to the incoming list
-			Force_Drain_Damage( self, traceEnt, dir, ent_org, data);
-			gotOneOrMore = qtrue;
+			if (self->client->ps.fd.forcePowerDebounce[FP_DRAIN] < level.time) {
+				Force_Drain_Damage(self, traceEnt, dir, ent_org, data);
+				gotOneOrMore = qtrue;
+			}
 		}
 	}
 	else
@@ -944,25 +1036,33 @@ qboolean Force_Drain_Run(gentity_t *self, const void *vData) {
 			!g_entities[tr.entityNum].client || !g_entities[tr.entityNum].inuse )
 		{
 			//Lugormod Shouldn't be able to just go on and on ..
-			BG_ForcePowerDrain( &self->client->ps, FP_DRAIN, data->forcepower );
+			if (self->client->ps.fd.forcePowerDebounce[FP_DRAIN] < level.time) {
+				BG_ForcePowerDrain(&self->client->ps, FP_DRAIN, data->forcepower);
+				self->client->ps.fd.forcePowerDebounce[FP_DRAIN] = level.time + data->debounce;
+			}
 			return 0;
 		}
-
-		traceEnt = &g_entities[tr.entityNum];
-		Force_Drain_Damage( self, traceEnt, forward, tr.endpos, data);
-		gotOneOrMore = qtrue;
+		if (self->client->ps.fd.forcePowerDebounce[FP_DRAIN] < level.time) {
+			traceEnt = &g_entities[tr.entityNum];
+			Force_Drain_Damage(self, traceEnt, forward, tr.endpos, data);
+			gotOneOrMore = qtrue;
+		}
 	}
 
 	self->client->ps.activeForcePass = self->client->ps.fd.forcePowerLevel[FP_DRAIN] + FORCE_LEVEL_3;
 
-	BG_ForcePowerDrain( &self->client->ps, FP_DRAIN, data->forcepower );
+	if (self->client->ps.fd.forcePowerDebounce[FP_DRAIN] < level.time) {
+		BG_ForcePowerDrain(&self->client->ps, FP_DRAIN, data->forcepower);
 
+		self->client->ps.fd.forcePowerDebounce[FP_DRAIN] = level.time + data->debounce;
+	}
 	self->client->ps.fd.forcePowerRegenDebounceTime = level.time + data->regenstun;
 	return qtrue;
 }
 
 void Force_Drain_Stop(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceDrain_t);
+	Force_Cooldown(self, 2700, FP_DRAIN);
 	self->client->ps.fd.forcePowerDebounce[FP_DRAIN] = level.time + data->debounce;
 
 	if (self->client->ps.forceHandExtend == HANDEXTEND_FORCE_HOLD)
@@ -972,12 +1072,12 @@ void Force_Drain_Stop(gentity_t *self, const void *vData) {
 }
 
 forceDrain_t Force_Drain_Levels[5] = {
-	//Ufo: drainlocking no longer possible
-	{2, 800, MAX_DRAIN_DISTANCE, 0, 0,		3000, 5},
-	{3, 800, MAX_DRAIN_DISTANCE, 0, Q3_INFINITE,	3000, 5},
-	{4, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1500, 5},
-	{6, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1500, 7},
-	{9, 800, MAX_DRAIN_DISTANCE, 1, Q3_INFINITE,	1500, 10},
+	                                                //do not move over 350ms
+	{3, 450, MAX_DRAIN_DISTANCE-15, 0, Q3_INFINITE,	250, 4},//at least 20 1500ms
+	{4, 550, MAX_DRAIN_DISTANCE, 0, Q3_INFINITE,	150, 4}, //40
+	{4, 650, MAX_DRAIN_DISTANCE+15, 1, Q3_INFINITE,	80, 4}, //75
+	{3, 750, MAX_DRAIN_DISTANCE+30, 1, Q3_INFINITE,	50, 3}, //100
+	{4, 850, MAX_DRAIN_DISTANCE+45, 1, Q3_INFINITE,	35, 2}, //150
 };
 
 forcePower_t Force_Drain = {

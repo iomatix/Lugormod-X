@@ -102,11 +102,11 @@ void BG_ForcePowerDrain( playerState_t *ps, forcePowers_t forcePower, int overri
 		}
 
 		ps->fd.forcePower -= jumpDrain;
+		//WP_ForceLimiterForceSet(ps);
 		if ( ps->fd.forcePower < 0 )
 		{
 			ps->fd.forcePower = 0;
 		}
-
 		return;
 	}
 
@@ -3177,6 +3177,7 @@ void PM_WeaponLightsaber(void)
 				if (!pm->ps->saberInFlight)
 				{
 					pm->ps->fd.forcePower -= forcePowerNeeded[pm->ps->fd.forcePowerLevel[FP_SABERTHROW]][FP_SABERTHROW];
+					//WP_ForceLimiterForceSet(pm);
 				}
 
 				pm->ps->saberInFlight = qtrue;

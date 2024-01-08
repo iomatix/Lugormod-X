@@ -618,8 +618,20 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 	return qtrue;
 }
 
+extern int Get_Jedi_mp_maxs_value(gentity_t *ent);
+extern int Get_Jedi_hp_maxs_value(gentity_t *ent);
+extern int Get_Merc_hp_maxs_value(gentity_t *ent);
 void Profession_UpdateSkillEffects(gentity_t *ent, int prof) {
-	if (prof == PROF_JEDI) WP_InitForcePowers(ent);
+	if (prof == PROF_JEDI) {
+		WP_InitForcePowers(ent);
+		ent->client->ps.fd.forcePowerMax = Get_Jedi_mp_maxs_value(ent);
+		ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = Get_Jedi_hp_maxs_value(ent);
+
+	}
+	if (prof == PROF_MERC) {
+		ent->client->pers.maxHealth = ent->client->ps.stats[STAT_MAX_HEALTH] = Get_Merc_hp_maxs_value(ent);
+
+	}
 }
 
 qboolean Lmd_Prof_SkillIsLeveled(Account_t *acc, int prof, profSkill_t *skill) {
@@ -1039,7 +1051,7 @@ void Cmd_SkillSelect_f(gentity_t *ent, int iArg) {
 
 	if (!Professions[prof]->primarySkill.subSkills.count) {
 		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3This profession has no skills."); else
-			trap_SendServerCommand(ent->s.number, "chat \"3This profession has no skills.\"");
+			trap_SendServerCommand(ent->s.number, "chat \"^3This profession has no skills.\"");
 		return;
 	}
 	Disp(ent, "^4===========================================");
@@ -1333,8 +1345,8 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 		}
 
 		Disp(ent, va(
-			CT_B"The next level costs "CT_V"%i"CT_B" credits.  Leveling up will leave you with "CT_V"%i"CT_B" credits.\n"
-			"Use \'"CT_C"BuyLevel confirm"CT_B"\' to level up .",
+			 CT_B "The next level costs " CT_V "%i" CT_B " credits.  Leveling up will leave you with " CT_V "%i" CT_B " credits.\n"
+			"Use \'" CT_C "BuyLevel confirm" CT_B "\' to level up .",
 			cost,
 			resCr));
 	}

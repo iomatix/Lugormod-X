@@ -66,8 +66,8 @@ void Cmd_Bounds_f (gentity_t *ent, int iArg) {
 	{
 		const int lineTime = 3000;
 		Disp(ent, va(
-				CT_B"Mins: "CT_V"%s\n"
-				CT_B"Maxs: "CT_V"%s",
+				 CT_B "Mins: " CT_V "%s\n"
+				 CT_B "Maxs: " CT_V "%s",
 				vtos2(targ->r.mins),
 				vtos2(targ->r.maxs)));
 		Disp(ent, va("^3Contents: ^2%x ^3Clipmask: ^2%x", ent->r.contents, ent->clipmask));
@@ -131,8 +131,8 @@ void Cmd_Bounds_f (gentity_t *ent, int iArg) {
 		int configIndex = G_FindConfigstringIndex (arg, CS_MODELS, MAX_MODELS, qfalse);
 		if (configIndex > 0) {
 			Disp(ent, va(
-				CT_B"Mins: "CT_V"%s\n"
-				CT_B"Maxs: "CT_V"%s",
+				 CT_B "Mins: " CT_V "%s\n"
+				 CT_B "Maxs: " CT_V "%s",
 				vtos(model_mins[configIndex]),
 				vtos(model_maxs[configIndex])));
 		}
@@ -141,14 +141,14 @@ void Cmd_Bounds_f (gentity_t *ent, int iArg) {
 			char model[MAX_STRING_CHARS];
 			char *p;
 			if (!Lmd_Data_IsCleanPath(arg)) {
-				Disp(ent, CT_B"Invalid path.");
+				Disp(ent,  CT_B "Invalid path.");
 				return;
 			}
 
 			Q_strncpyz(model, arg, sizeof(model));
 			// Why someone would want stuff.glm.md3, I dunno... but support it anyway.
 			if ((p = strstr(model, ".glm")) && p[4] == 0) {
-				Disp(ent, CT_B"Ghoul2 models are not supported.");
+				Disp(ent,  CT_B "Ghoul2 models are not supported.");
 				return;
 			}
 			if (!(p = strstr(model, ".md3")) || p[4] != 0) {
@@ -171,10 +171,10 @@ void Cmd_Bounds_f (gentity_t *ent, int iArg) {
 				vec3_t mins;
 				vec3_t maxs;
 				G_ReadMD3MinsMaxes(fh, mins, maxs);
-				Disp(ent, va(CT_V"%s", model));
+				Disp(ent, va( CT_V "%s", model));
 				Disp(ent, va(
-					CT_B"Mins: "CT_V"%s\n"
-					CT_B"Maxs: "CT_V"%s",
+					 CT_B "Mins: " CT_V "%s\n"
+					 CT_B "Maxs: " CT_V "%s",
 					vtos(mins),
 					vtos(maxs)));
 				trap_FS_FCloseFile(fh);
@@ -182,7 +182,7 @@ void Cmd_Bounds_f (gentity_t *ent, int iArg) {
 		}
 	}
 	else {
-		Disp(ent, CT_B"Usage: \'"CT_C"bounds "CT_AO"[model name | entity number]");
+		Disp(ent,  CT_B "Usage: \'" CT_C "bounds " CT_AO  "[model name | entity number]");
 	}
 }
 

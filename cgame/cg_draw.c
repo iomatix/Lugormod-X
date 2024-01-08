@@ -613,6 +613,7 @@ CG_DrawHealth
 */
 void CG_DrawHealth( menuDef_t *menuHUD )
 {
+	int Hud_Limit = 999;
 	vec4_t			calcColor;
 	playerState_t	*ps;
 	int				healthAmt;
@@ -660,8 +661,12 @@ void CG_DrawHealth( menuDef_t *menuHUD )
 			percent = (float) currValue / inc;
 			calcColor[3] *= percent;		// Fade it out
 		}
-
-		trap_R_SetColor( calcColor);
+		else if (currValue > Hud_Limit) {
+			memcpy(calcColor, colorTable[CT_LTAQUA], sizeof(vec4_t));
+			percent = (float)currValue / inc;
+			calcColor[3] = percent;
+		}
+		trap_R_SetColor(calcColor);
 
 		CG_DrawPic( 
 			focusItem->window.rect.x,
@@ -701,6 +706,7 @@ CG_DrawArmor
 */
 void CG_DrawArmor( menuDef_t *menuHUD )
 {
+	int Hud_Limit = 999;
 	vec4_t			calcColor;
 	playerState_t	*ps;
 	int				armor, maxArmor;
@@ -748,6 +754,11 @@ void CG_DrawArmor( menuDef_t *menuHUD )
 		{
 			percent = (float) currValue / inc;
 			calcColor[3] *= percent;
+		}
+		else if (currValue > Hud_Limit) {
+			memcpy(calcColor, colorTable[CT_MAGENTA], sizeof(vec4_t));
+			percent = (float)currValue / inc;
+			calcColor[3] = percent;
 		}
 
 		trap_R_SetColor( calcColor);
@@ -927,6 +938,7 @@ CG_DrawAmmo
 */
 static void CG_DrawAmmo( centity_t	*cent,menuDef_t *menuHUD)
 {
+	int Hud_Limit = 999;
 	playerState_t	*ps;
 	int				i;
 	vec4_t			calcColor;
@@ -1018,6 +1030,11 @@ static void CG_DrawAmmo( centity_t	*cent,menuDef_t *menuHUD)
 			percent = value / inc;
 			calcColor[3] = percent;
 		}
+		else if (value > Hud_Limit) {
+			memcpy(calcColor, colorTable[CT_RED], sizeof(vec4_t));
+			percent = value / inc;
+			calcColor[3] = percent;
+		}
 
 		trap_R_SetColor( calcColor);
 
@@ -1041,11 +1058,12 @@ CG_DrawForcePower
 */
 void CG_DrawForcePower( menuDef_t *menuHUD )
 {
+	int Hud_Limit = 255; //iomatix: max visible force amount in the player's hud
 	int				i;
 	vec4_t			calcColor;
 	float			value,inc,percent;
 	itemDef_t		*focusItem;
-	const int		maxForcePower = 100; //iomatix
+	const int		maxForcePower = cg.snap->ps.fd.forcePowerMax; //iomatix
 	qboolean	flash=qfalse;
 
 	// Can we find the menu?
@@ -1117,6 +1135,21 @@ void CG_DrawForcePower( menuDef_t *menuHUD )
 			percent = value / inc;
 			calcColor[3] = percent;
 		}
+		else if (value > Hud_Limit)
+		{
+			if (flash)
+			{
+				memcpy(calcColor, colorTable[CT_MAGENTA], sizeof(vec4_t));
+			}
+			else
+			{
+				memcpy(calcColor, colorTable[CT_LTGREY], sizeof(vec4_t));
+			}
+
+			percent = value / inc;
+			calcColor[3] = percent;
+
+		}
 		else
 		{
 			if (flash)
@@ -1148,12 +1181,15 @@ void CG_DrawForcePower( menuDef_t *menuHUD )
 	{
 		// Print force amount
 		trap_R_SetColor( focusItem->window.foreColor );	
+		//iomatix: max 255 (client bug)
+		int fpshow = cg.snap->ps.fd.forcePower;
+		if (fpshow > Hud_Limit) fpshow = Hud_Limit;
 
 		CG_DrawNumField (
 			focusItem->window.rect.x, 
 			focusItem->window.rect.y, 
 			3, 
-			cg.snap->ps.fd.forcePower, 
+			fpshow,
 			focusItem->window.rect.w, 
 			focusItem->window.rect.h, 
 			NUM_FONT_SMALL,

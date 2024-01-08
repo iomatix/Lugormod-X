@@ -82,29 +82,69 @@
 - Blocking costs force now. The cost is 7->14->21 force power per block. ✔️ 
 - Evasion costs force now. The cost is 8 force power per evasion. ✔️  
 - Level up checking function is improved. ✔️
-- Item models on the ground are fixed. 50%
+- Passives add stats before first death. ✔️
+- Thousand Cuts and overload skills bug fix. ✔️
+- Heal adjusted. ✔️
+- Force cooldowns added. ✔️
+- lmd_is_forcecooldown added.  ✔️
+- All forces are reworked. ✔️
+- Account live-time reworked. ✔️
+- Flying with Jump Level 5 depends on lmd_force_is_double_jump value now.  ✔️
+- Flying with Jump Level 5 is reworked. ✔️
+- Health points per level increased. ✔️ 
+- No more auto getting up.  ✔️ 
+- Grip skill is reworked.  ✔️  
+- Lightning skill is reworked. ✔️
+- Drain skill is reworked. ✔️
+- Reworked damage formula. ✔️
+- lmd_damage_level_scale formula reworked to work as anti-grief mechanic. ✔️
+- g_scaleAllDamage is added. ✔️ 
+- Blocking stops force regen. ✔️ 
+- Additional 50% damage for hit in the back. ✔️
+- Bots won't gain experience or Black List Rewards. ✔️
+- lmd_bots_gain_experience is added. Default: 0, 1 to allow bots gain experience and bounty rewards. ✔️
+- Added in Combat stance. ✔️
+- Added a passive regeneration for Mercenary, slowly regens HP if not in combat stance. ✔️ 
+- New Mercenary skill "Regeneration" which increases the passive regeneartion. ✔️
+- Lava damage ticks reworked to suit better to the RPG style.  ✔️
+- Force user: More HP per level. ✔️
+- Running backward results with slower speed than forward.  ✔️
+- Merc Skills: MotR buff, PA nerf but making it less random.  ✔️  
+- Push and Pull forces rework. ✔️
+- `Accountedit passwd` command is added. Admin may use it to set the new account password. ✔️
+- Force limiter created to fit the client's HUD limitations.  ✔️
+- Stash system rework. ✔️
+- Stashes, less bandwidth usage. ✔️ 
+- Stash zone `count` property is fixed now. Default 3 and admin is able to change the max stashes value by the `count` key inside `"classname" "lmd_stashzone"`  ✔️
+- Stash system supports new experience system now. ✔️ 
+- Falling system reworked. ✔️   
+- Jumping level 5: if falling velocity vector is too long the skill won't work. ✔️ 
+- Jetpack mechanics are reworked. ✔️ 
+- Jetpacks are able to fly two times higher. ✔️ 
+- Jetpack won't protect from the falling damage. ✔️
+- Jetpack won't launch if the falling velocity vector is too long. ✔️
+- Drain and Lightning slow down the target. ✔️
+- Lightning knockdown and weapon time mechanics are added. ✔️ 
+- Lightning, Drain, Grip slow the caster. ✔️ 
+- Lightning pushes targets. ✔️
+- Explosives rework. ✔️ 
+- Explosives damage and radius are adjusted. ✔️ 
+- Explosion knockdown added. ✔️ 
+- Weapons rebalance. ✔️
+- The trading system is added. ✔️
+- Player is able to trade or give inventory items. ✔️
+
 
 //
 
 ///
-
 - Search a new ways for spending credits.
-- experience boosters/ packs for CR? lmd_exp_boosters
-- Level 5 Jump. The player can not use it to fly but jumps higher. ??
-- lmd_stashexp added. Stash system supports new experience system now. 50%
 - Sound Banks references updated for KotF. ?% (Thermal,DetPack,TripMine) something is not okay there!!!!!!!
-- Longer Grip which depends on the skill level. 80% Search for limiter function... whereveri it is hidden.
-- Longer Drain/Heal cooldowns or heal rework to work overtime not an instant.
-- Cooldowns system, when cooldown force drains more force. 
 - jedi is able to pick up medpacks ???
 
 
 ## TODO
 
-- grip longer
-
-- Try repair crosschair hud for force.  (CG_PLAYER_ARMOR_VALUE  CG_PLAYER_AMMO_VALUE   CG_PLAYER_FORCE_VALUE)
-- flsaber check saber model "let's change the person hp and force to 1 and broadcast message "x is a lame cuz trying use a invisible light sabers"
 - TODO: Add drop item from inventory.  todo: drop (+recall), sell (drop+buyoption + recall) inventory_core.c
 
 - TODO: svcmds + commands + admin commands guide

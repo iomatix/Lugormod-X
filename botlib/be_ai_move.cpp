@@ -28,7 +28,7 @@
 #include "../game/be_ea.h"
 #include "../game/be_ai_goal.h"
 #include "../game/be_ai_move.h"
-
+#include "cmath"
 
 //#define DEBUG_AI_MOVE
 //#define DEBUG_ELEVATOR

@@ -957,7 +957,7 @@ void Cmd_Stash_f(gentity_t *ent, int iArg) {
 	if (check == -3)//trap_SendServerCommand(ent->s.number, "chat \"^3The stash is doing highly improbable things...\"");
 		Disp(ent, "^3The stash is doing highly improbable things...");
 	else if (check == -2)//trap_SendServerCommand(ent->s.number, "chat \"^3There is no money stash spawned."\"");
-		Disp(ent, "^3There is no money stash spawned");
+		Disp(ent, "^3There is no money stash activator activate");
 	else if (check == -1)//trap_SendServerCommand(ent->s.number, "chat \"^3There is currently a money stash spawned."\"");
 		Disp(ent, "^3There is currently a money stash spawned");
 	else {

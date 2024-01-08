@@ -33,6 +33,7 @@
 #include "chars.h"
 #include "inv.h"
 #include "syn.h"
+#include "cmath"
 
 
 /*
@@ -2662,7 +2663,7 @@ gentity_t *GetNearestBadThing(bot_state_t *bs)
 	float glen;
 	vec3_t hold;
 	int bestindex = 0;
-	float bestdist = 800; //if not within a radius of 800, it's no threat anyway
+	float bestdist = 900; //if not within a radius of 900, it's no threat anyway
 	int foundindex = 0;
 	float factor = 0;
 	gentity_t *ent;
@@ -4131,7 +4132,7 @@ void GetIdealDestination(bot_state_t *bs)
 					bs->wpDestination = gWPArray[idleWP];
 				}
 			}
-			else if (gWPArray[cWPIndex-1] && gWPArray[cWPIndex-1]->inuse &&
+			else if (cWPIndex > 0 && gWPArray[cWPIndex-1] && gWPArray[cWPIndex-1]->inuse && //iomatix fix cWPIndex > 0
 				gWPArray[cWPIndex+1] && gWPArray[cWPIndex+1]->inuse)
 			{
 				VectorSubtract(gWPArray[cWPIndex+1]->origin, usethisvec, a);

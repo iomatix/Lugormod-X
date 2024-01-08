@@ -26,3 +26,6 @@ int Lmd_Prof_Merc_Getrifle_masterSkill(Account_t *acc);
 
 int Lmd_Prof_Merc_Getperfect_aimSkill(Account_t *acc);
 #define PlayerProf_Merc_Getperfect_aimSkill(ent) Lmd_Prof_Merc_Getperfect_aimSkill(ent->client->pers.Lmd.account)
+
+int Lmd_Prof_Merc_GetregenerationSkill(Account_t *acc);
+#define PlayerProf_Merc_GetregenerationSkill(ent) Lmd_Prof_Merc_GetregenerationSkill(ent->client->pers.Lmd.account)

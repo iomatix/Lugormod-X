@@ -74,7 +74,7 @@ const char *TeamColorString(int team) {
 		return S_COLOR_BLUE;
 	else if (team==TEAM_SPECTATOR)
 		return S_COLOR_YELLOW;
-	return S_COLOR_WHITE;
+	return  S_COLOR_WHITE ;
 }
 
 // NULL for everyone
@@ -393,7 +393,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		attacker->client->pers.teamState.lastfraggedcarrier = level.time;
 		AddScore(attacker, targ->r.currentOrigin, CTF_FRAG_CARRIER_BONUS);
 		attacker->client->pers.teamState.fragcarrier++;
-		//PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged %s's flag carrier!\n",
+		//PrintMsg(NULL, "%s"  S_COLOR_WHITE  " fragged %s's flag carrier!\n",
 		//	attacker->client->pers.netname, TeamName(team));
 		PrintCTFMessage(attacker->s.number, team, CTFMESSAGE_FRAGGED_FLAG_CARRIER);
 
@@ -412,7 +412,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		attacker->client->pers.teamState.lastfraggedcarrier = level.time;
 		AddScore(attacker, targ->r.currentOrigin, CTF_FRAG_CARRIER_BONUS * tokens * tokens);
 		attacker->client->pers.teamState.fragcarrier++;
-		//PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged %s's skull carrier!\n",
+		//PrintMsg(NULL, "%s"  S_COLOR_WHITE  " fragged %s's skull carrier!\n",
 		//	attacker->client->pers.netname, TeamName(team));
 
 		// the target had the flag, clear the hurt carrier
@@ -749,7 +749,7 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 
 	if ( ent->flags & FL_DROPPED_ITEM ) {
 		// hey, its not home.  return it by teleporting it back
-		//PrintMsg( NULL, "%s" S_COLOR_WHITE " returned the %s flag!\n", 
+		//PrintMsg( NULL, "%s"  S_COLOR_WHITE  " returned the %s flag!\n", 
 		//	cl->pers.netname, TeamName(team));
 		PrintCTFMessage(other->s.number, team, CTFMESSAGE_PLAYER_RETURNED_FLAG);
 
@@ -765,7 +765,7 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 	// flag, he's just won!
 	if (!cl->ps.powerups[enemy_flag])
 		return 0; // We don't have the flag
-	//PrintMsg( NULL, "%s" S_COLOR_WHITE " captured the %s flag!\n", cl->pers.netname, TeamName(OtherTeam(team)));
+	//PrintMsg( NULL, "%s"  S_COLOR_WHITE  " captured the %s flag!\n", cl->pers.netname, TeamName(OtherTeam(team)));
 	PrintCTFMessage(other->s.number, team, CTFMESSAGE_PLAYER_CAPTURED_FLAG);
 
 	cl->ps.powerups[enemy_flag] = 0;
@@ -828,7 +828,7 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 	gclient_t *cl = other->client;
 
-	//PrintMsg (NULL, "%s" S_COLOR_WHITE " got the %s flag!\n",
+	//PrintMsg (NULL, "%s"  S_COLOR_WHITE  " got the %s flag!\n",
 	//	other->client->pers.netname, TeamName(team));
 	PrintCTFMessage(other->s.number, team, CTFMESSAGE_PLAYER_GOT_FLAG);
 
@@ -931,7 +931,7 @@ qboolean Team_GetLocationMsg(gentity_t *ent, char *loc, int loclen)
 			best->count = 0;
 		if (best->count > 7)
 			best->count = 7;
-		Com_sprintf(loc, loclen, "%c%c%s" S_COLOR_WHITE, Q_COLOR_ESCAPE, best->count + '0', best->message );
+		Com_sprintf(loc, loclen, "%c%c%s"  S_COLOR_WHITE , Q_COLOR_ESCAPE, best->count + '0', best->message );
 	} else
 		Com_sprintf(loc, loclen, "%s", best->message);
 

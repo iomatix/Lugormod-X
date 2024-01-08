@@ -13,6 +13,8 @@
 #include "../ghoul2/G2.h"
 //==========================================================================
 
+#define specialtaunts 1 //iomatix: when 1 (or belove) taunts ON for all gametypes if 0 only for duel and powerduel
+
 extern qboolean WP_SaberBladeUseSecondBladeStyle( saberInfo_t *saber, int bladeNum );
 extern qboolean CG_VehicleWeaponImpact( centity_t *cent );
 extern qboolean CG_InFighter( void );
@@ -68,11 +70,11 @@ const char	*CG_PlaceString( int rank ) {
 	}
 
 	if ( rank == 1 ) {
-		s = va("1%s",sST);//S_COLOR_BLUE "1st" S_COLOR_WHITE;		// draw in blue
+		s = va("1%s",sST);//S_COLOR_BLUE "1st"  S_COLOR_WHITE ;		// draw in blue
 	} else if ( rank == 2 ) {
-		s = va("2%s",sND);//S_COLOR_RED "2nd" S_COLOR_WHITE;		// draw in red
+		s = va("2%s",sND);//S_COLOR_RED "2nd"  S_COLOR_WHITE ;		// draw in red
 	} else if ( rank == 3 ) {
-		s = va("3%s",sRD);//S_COLOR_YELLOW "3rd" S_COLOR_WHITE;		// draw in yellow
+		s = va("3%s",sRD);//S_COLOR_YELLOW "3rd"  S_COLOR_WHITE ;		// draw in yellow
 	} else if ( rank == 11 ) {
 		s = va("11%s",sTH);
 	} else if ( rank == 12 ) {
@@ -133,7 +135,7 @@ static void CG_Obituary( entityState_t *ent ) {
 		return;
 	}
 	Q_strncpyz( targetName, Info_ValueForKey( targetInfo, "n" ), sizeof(targetName) - 2);
-	strcat( targetName, S_COLOR_WHITE );
+	strcat( targetName,  S_COLOR_WHITE  );
 
 	// check for single client messages
 
@@ -315,7 +317,7 @@ clientkilled:
 		strcpy( attackerName, "noname" );
 	} else {
 		Q_strncpyz( attackerName, Info_ValueForKey( attackerInfo, "n" ), sizeof(attackerName) - 2);
-		strcat( attackerName, S_COLOR_WHITE );
+		strcat( attackerName,  S_COLOR_WHITE  );
 		// check for kill messages about the current clientNum
 		if ( target == cg.snap->ps.clientNum ) {
 			Q_strncpyz( cg.killerName, attackerName, sizeof( cg.killerName ) );
@@ -1608,12 +1610,15 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 	case EV_TAUNT:
 		DEBUGNAME("EV_TAUNT");
 		{
+			//iomatix: specialtaunts added
 			int soundIndex = 0;
-			if ( cgs.gametype != GT_DUEL
+			if ( specialtaunts == 0 &&
+				cgs.gametype != GT_DUEL
 				&& cgs.gametype != GT_POWERDUEL
 				&& es->eventParm == TAUNT_TAUNT )
 			{//normal taunt
-				soundIndex = CG_CustomSound( es->number, "*taunt.wav" );
+				//iomatix:
+				soundIndex = CG_CustomSound(es->number, va("*taunt%d.wav", Q_irand(1, 3)));
 			}
 			else
 			{
@@ -1635,10 +1640,10 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 					}
 					break;
 				case TAUNT_BOW:
-					//soundIndex = CG_CustomSound( es->number, va("*respect%d.wav", Q_irand(1,3)) );
+					soundIndex = CG_CustomSound( es->number, va("*respect%d.wav", Q_irand(1,3)) );
 					break;
 				case TAUNT_MEDITATE:
-					//soundIndex = CG_CustomSound( es->number, va("*meditate%d.wav", Q_irand(1,3)) );
+					soundIndex = CG_CustomSound( es->number, va("*meditate%d.wav", Q_irand(1,3)) );
 					break;
 				case TAUNT_FLOURISH:
 					if ( Q_irand( 0, 1 ) )

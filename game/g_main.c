@@ -195,6 +195,7 @@ vmCvar_t	g_logClientInfo;
 vmCvar_t	g_slowmoDuelEnd;
 
 vmCvar_t	g_saberDamageScale;
+vmCvar_t    g_scaleAllDamage;
 
 vmCvar_t	g_useWhileThrowing;
 
@@ -343,8 +344,9 @@ vmCvar_t	lmd_is_lethality_add_damage;
 vmCvar_t    lmd_is_thousandcuts_lethality;
 vmCvar_t	lmd_is_buy_level;
 vmCvar_t	lmd_old_commands_disp;
-
-								 
+vmCvar_t    lmd_is_forcecooldown;
+vmCvar_t lmd_force_is_double_jump;
+vmCvar_t lmd_bots_gain_experience;
 //RoboPhred:
 vmCvar_t lmd_DataPath;
 vmCvar_t lmd_stashrate;
@@ -535,7 +537,7 @@ static cvarTable_t		gameCvarTable[] = {
 "Number of days to keep an account between user logins."
 },
 
-{ &lmd_accLevelDays, "lmd_accLevelDays", "7", CVAR_ARCHIVE, 0, qfalse, qfalse,
+{ &lmd_accLevelDays, "lmd_accLevelDays", "3", CVAR_ARCHIVE, 0, qfalse, qfalse,
 "Level modifier for days to keep an account between user logins.\n"
 "Days added is account level multiplied by this value."
 },
@@ -620,7 +622,7 @@ static cvarTable_t		gameCvarTable[] = {
 },
 */
 
-{ &lmd_enableCorpseDrag, "lmd_enableCorpseDrag", "0", CVAR_ARCHIVE, 0, qtrue, qfalse,
+{ &lmd_enableCorpseDrag, "lmd_enableCorpseDrag", "1", CVAR_ARCHIVE, 0, qtrue, qfalse,
 "Experimental.  Enable dragging corpses with the use key.",
 },
 
@@ -717,14 +719,14 @@ static cvarTable_t		gameCvarTable[] = {
 { &g_slowmoDuelEnd, "g_slowmoDuelEnd", "0", CVAR_ARCHIVE, 0, qtrue },
 
 { &g_saberDamageScale, "g_saberDamageScale", "1", CVAR_ARCHIVE, 0, qtrue },
-
+{ &g_scaleAllDamage, "g_scaleAllDamage", "1", CVAR_ARCHIVE, 0, qtrue },
 { &g_useWhileThrowing, "g_useWhileThrowing", "1", 0, 0, qtrue },
 
 { &g_RMG, "RMG", "0", 0, 0, qtrue },
 
 { &g_svfps, "sv_fps", "20", 0, 0, qtrue },
 
-{ &g_forceRegenTime, "g_forceRegenTime", "100", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue },
+{ &g_forceRegenTime, "g_forceRegenTime", "150", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue },
 
 { &g_spawnInvulnerability, "g_spawnInvulnerability", "3000", CVAR_ARCHIVE, 0, qtrue },
 
@@ -895,8 +897,9 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_is_thousandcuts_lethality, "lmd_is_thousandcuts_lethality", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_is_buy_level, "lmd_is_buy_level", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_old_commands_disp, "lmd_old_commands_disp", "0",CVAR_ARCHIVE,0,qfalse },
-
-
+{ &lmd_is_forcecooldown, "lmd_is_forcecooldown", "1",CVAR_ARCHIVE,0,qfalse},
+{ &lmd_force_is_double_jump, "lmd_force_is_double_jump", "1",CVAR_ARCHIVE,0,qfalse },
+{ &lmd_bots_gain_experience, "lmd_bots_gain_experience", "0",CVAR_ARCHIVE,0,qfalse },
 // Lugormod cvars:
 { &g_noVoteTime, "g_noVoteTime", "5", CVAR_ARCHIVE,0, qfalse, qfalse,
 "Number of minutes to wait after a map change before votes are allowed again.  This does not apply to admins level 3 or lower."
@@ -2921,7 +2924,7 @@ void CalculateRanks(void) {
 
 	if (currentWinner && currentWinner->client)
 	{
-	trap_SendServerCommand( -1, va("cp \"%s" S_COLOR_WHITE " %s %s\n\"",
+	trap_SendServerCommand( -1, va("cp \"%s"  S_COLOR_WHITE  " %s %s\n\"",
 	currentWinner->client->pers.netname, G_GetStringEdString("MP_SVGAME", "VERSUS"), level.clients[nonSpecIndex].pers.netname));
 	}
 	}
@@ -4017,7 +4020,7 @@ void CheckExitRules(void) {
 				}
 				LogExit("Duel limit hit.");
 				gDuelExit = qtrue;
-				trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " hit the win limit.\n\"",
+				trap_SendServerCommand(-1, va("print \"%s"  S_COLOR_WHITE  " hit the win limit.\n\"",
 					cl->pers.netname));
 				return;
 			}
@@ -4031,7 +4034,7 @@ void CheckExitRules(void) {
 				gDuelExit = qfalse;
 				if (printLimit)
 				{
-					trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s.\n\"",
+					trap_SendServerCommand(-1, va("print \"%s"  S_COLOR_WHITE  " %s.\n\"",
 						cl->pers.netname,
 						G_GetStringEdString("MP_SVGAME", "HIT_THE_KILL_LIMIT")
 					)
@@ -4054,7 +4057,7 @@ void CheckExitRules(void) {
 				gDuelExit = qfalse;
 				if (printLimit)
 				{
-					trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s.\n\"",
+					trap_SendServerCommand(-1, va("print \"%s"  S_COLOR_WHITE  " %s.\n\"",
 						cl->pers.netname,
 						G_GetStringEdString("MP_SVGAME", "HIT_THE_KILL_LIMIT")
 					)

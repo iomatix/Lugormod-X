@@ -3050,9 +3050,9 @@ gentity_t *LaunchItem(gitem_t *item, vec3_t origin, vec3_t velocity) {
 			droppedRedFlag = droppedBlueFlag = dropped;
 		}
 	}
-	else { // auto-remove after 60 seconds
+	else { // auto-remove after 41 seconds
 		dropped->think = G_FreeEntity;
-		dropped->nextthink = level.time + 60000;
+		dropped->nextthink = level.time + 41000;
 	}
 
 	dropped->flags = FL_DROPPED_ITEM;

@@ -103,6 +103,8 @@ typedef struct {
 	int			voteCount;			// to prevent people from constantly calling votes
 	int			teamVoteCount;		// to prevent people from constantly calling votes
 	qboolean	teamInfo;			// send team overlay updates?
+									//iomatix:
+
 	//RoboPhred:
 	struct LmdPers_s{
 		//Lugormod
@@ -116,7 +118,10 @@ typedef struct {
 		int kingScore;
 		int killstreak;
 		int killstreak_bounty; //bounty for killstreaks (to save it after death)
-
+		int TimeInCombat; //iomatix: merc skill hp regen
+		int ForceExcess; //use to keep part of the force to resolve HUD LIMITATIONS.
+							   //iomatix
+		int force_cooldown[NUM_FORCE_POWERS]; //cooldown for forces
 		//RoboPhred:
 		//void            *nickPointer;
 		Account_t *account;
@@ -264,6 +269,8 @@ struct gclient_s {
 	int			bodyGrabIndex;
 
 	int			pushEffectTime;
+
+	
 
 	int			invulnerableTimer;
 

@@ -9,11 +9,16 @@
 #include "Lmd_Prof_Merc.h"
 #include "Lmd_Commands_Auths.h"
 
+#define EVASION_FORCE_COST 3
+
+
+
 extern void G_Knockdown( gentity_t *victim, int duration );
 
 int Jedi_GetForceRegenDebounce(gentity_t *ent);
 
 #define METROID_JUMP 1
+#define FORCE_HUD_LIMIT 255 //Max amount. Use to limit the force without overclocking the force HUD
 //RoboPhred
 qboolean isBuddy(gentity_t *ent,gentity_t *other);
 
@@ -1010,13 +1015,14 @@ int ForcePowerUsableOn(gentity_t *attacker, gentity_t *other, forcePowers_t forc
 			return 0;
 		}
 	}
-
+	/*iomatix: push/pull even on the ground
 	if (other && other->client && (forcePower == FP_PUSH || forcePower == FP_PULL) && BG_InKnockDown(other->client->ps.legsAnim))
 	{
 		//Ufo: it's optional, so why not
 		if (!(g_fixForce.integer & (1 << forcePower)) || !duelInProgress(&attacker->client->ps) || !(attacker->client->Lmd.duel.duelType & DT_FULL_FORCE))
 			return 0;
 	}
+	*/
 
 	if (other && other->client && other->s.eType == ET_NPC && other->s.NPC_class == CLASS_VEHICLE){
 		//can't use the force on vehicles.. except lightning
@@ -1323,9 +1329,9 @@ int WP_AbsorbConversion(gentity_t *attacked, int atdAbsLevel, gentity_t *attacke
 		addTot = 1;
 	}
 	attacked->client->ps.fd.forcePower += addTot;
-	if (attacked->client->ps.fd.forcePower > 100)
+	if (attacked->client->ps.fd.forcePower > attacked->client->ps.fd.forcePowerMax)
 	{
-		attacked->client->ps.fd.forcePower = 100;
+		attacked->client->ps.fd.forcePower = attacked->client->ps.fd.forcePowerMax;
 	}
 
 	//play sound indicating that attack was absorbed
@@ -1344,12 +1350,52 @@ extern vmCvar_t g_meditateExtraForce;//Lugormod
 int Get_Jedi_mp_maxs_value(gentity_t *ent);
 int Get_Jedi_overload_value_reg(gentity_t *ent, int value);
 //Iomatix:
+//Update Force HUD to fit client limitations. FORCE_HUD_LIMIT to change the value.
+void WP_ForceLimiterForceSet(gentity_t *self)
+{
+
+	if (self->client->ps.fd.forcePower < FORCE_HUD_LIMIT) {
+
+		if (self->client->pers.Lmd.ForceExcess >= FORCE_HUD_LIMIT - self->client->ps.fd.forcePower)
+		{
+			self->client->pers.Lmd.ForceExcess -= (FORCE_HUD_LIMIT - self->client->ps.fd.forcePower)/6;
+			self->client->ps.fd.forcePower += (FORCE_HUD_LIMIT - self->client->ps.fd.forcePower)/6;
+		}
+		else {
+			self->client->ps.fd.forcePower += self->client->pers.Lmd.ForceExcess/6;
+			self->client->pers.Lmd.ForceExcess -= self->client->pers.Lmd.ForceExcess/6;
+		}
+	}
+
+}
+//main force regen function
 void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 { //called on a regular interval to regenerate force power.
+
+
+
 	if ( !self->client )
 	{
 		return;
 	}
+
+
+	//iomatix: hp regen
+	if (PlayerAcc_Prof_GetProfession(self) == PROF_MERC && (level.time >= self->client->pers.Lmd.TimeInCombat)){
+		
+		int maxhp = self->client->ps.stats[STAT_MAX_HEALTH];
+		int hp = self->client->ps.stats[STAT_HEALTH];
+		if (maxhp > hp) hp += 1+(PlayerProf_Merc_GetregenerationSkill(self)*maxhp*0.015);
+		if (maxhp < hp) hp = maxhp;
+
+		self->health = self->client->ps.stats[STAT_HEALTH] = hp;
+		self->client->pers.Lmd.TimeInCombat = level.time + 2350;
+	}
+	//
+
+
+
+
 	int extraForce = g_meditateExtraForce.integer;
 
 	if(extraForce < 0) extraForce = 0;
@@ -1357,34 +1403,66 @@ void WP_ForcePowerRegenerate( gentity_t *self, int overrideAmt )
 
 	int fpmax = self->client->ps.fd.forcePowerMax;
 
+
+
 	int passive_regen = 1 + floor(fpmax*0.01f); //add 1% regen as a passive
 	if (g_meditateExtraForce.integer && g_gametype.integer == GT_FFA && self->client->ps.legsAnim == BOTH_MEDITATE && self->client->ps.torsoAnim == BOTH_MEDITATE && PlayerAcc_Prof_GetProfession(self) <= PROF_JEDI) {
 		
 		fpmax += extraForce;
-		if(!overrideAmt || overrideAmt <= 0) overrideAmt = fpmax / 10;  //iomatix: 10% additional regen while meditating
+		if(!overrideAmt || overrideAmt <= 0) overrideAmt = 20;  //iomatix: x->20% additional regen while meditating
 	}
-	if (self->client->ps.fd.forcePower >= fpmax)
+
+	//force limiter part iomatix
+	if (self->client->ps.fd.forcePower == FORCE_HUD_LIMIT && self->client->ps.fd.forcePower + self->client->pers.Lmd.ForceExcess >= fpmax) return; //do not regen then
+	//
+	if (self->client->ps.fd.forcePower <= FORCE_HUD_LIMIT && self->client->ps.fd.forcePower >= fpmax)
 	{
 		return;
 	}
 
 	int overload = 0;
 	if(PlayerAcc_Prof_GetProfession(self) == PROF_JEDI)  overload = Get_Jedi_overload_value_reg(self, passive_regen); //overload skill regen
+	//
 
     if ( overrideAmt )
 	{ //custom regen amount
-		self->client->ps.fd.forcePower += overrideAmt + passive_regen + overload;
+
+		self->client->ps.fd.forcePower += passive_regen + overload+( passive_regen + overload)*overrideAmt/100;// (x% faster)
 	}
 	else
 	{ //otherwise, just 1
 		self->client->ps.fd.forcePower += passive_regen + overload;
 	}
+	//iomatix limiter:
+	//regen
+	WP_ForceLimiterForceSet(self);
+	//
+	//the limiter
+	if (fpmax > FORCE_HUD_LIMIT)
+	{
+		if (self->client->ps.fd.forcePower >= FORCE_HUD_LIMIT)
+		{
 
-	if (self->client->ps.fd.forcePower >= fpmax)
+			self->client->pers.Lmd.ForceExcess += self->client->ps.fd.forcePower - FORCE_HUD_LIMIT;
+			self->client->ps.fd.forcePower = FORCE_HUD_LIMIT;
+
+		}
+		   
+
+			if (self->client->ps.fd.forcePower + self->client->pers.Lmd.ForceExcess > fpmax) {
+				self->client->ps.fd.forcePower = FORCE_HUD_LIMIT;
+				self->client->pers.Lmd.ForceExcess = fpmax - FORCE_HUD_LIMIT;
+			}
+		
+	}
+	else if (self->client->ps.fd.forcePower >= fpmax)
 	{ //cap it off at the max (default 100)
 		self->client->ps.fd.forcePower = fpmax;
-		return;
+		
 	}
+
+
+
 
 }
 
@@ -2628,6 +2706,7 @@ void ForceDrainDamage( gentity_t *self, gentity_t *traceEnt, vec3_t dir, vec3_t 
 				}
 
 				traceEnt->client->ps.fd.forcePower -= dmg;
+				WP_ForceLimiterForceSet(traceEnt);
 
 				if (traceEnt->client->ps.fd.forcePower < 0 && dmg > 0)
 				{
@@ -6111,8 +6190,8 @@ void WP_ForcePowersUpdate( gentity_t *self, usercmd_t *ucmd ){
 			}
 			else
 			{ //hmm.. ok.. no more getting up on your own, you've gotta push something, unless..
-				if ((level.time-self->client->ps.forceHandExtendTime) > 4000)
-				{ //4 seconds elapsed, I guess they're too dumb to push something to get up!
+				if ((level.time-self->client->ps.forceHandExtendTime) > 60000)
+				{ //1 minute elapsed, I guess they're too dumb to push something to get up!
 					if (self->client->pers.cmd.upmove &&
 						self->client->ps.fd.forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_1)
 					{ //force getup
@@ -6504,8 +6583,11 @@ void WP_ForcePowersUpdate( gentity_t *self, usercmd_t *ucmd ){
 	}
 
 	//RoboPhred: dont regen force power while in a special saber move.
-	if(self->client->ps.weapon == WP_SABER && BG_SaberInSpecial(self->client->ps.saberMove))
-		usingForce = qtrue;
+	if(self->client->ps.weapon == WP_SABER && BG_SaberInSpecial(self->client->ps.saberMove))usingForce = qtrue;
+
+	//iomatix defensive stances
+	if (self->client->ps.weapon == WP_SABER && BG_SaberInDefense(self->client->ps.saberMove))usingForce = qtrue;
+
 
 	//RoboPhred: actually use usingForce, previously it just checked forcePowersActive.
 	//Also, check debounce time here.
@@ -6744,12 +6826,12 @@ qboolean Jedi_DodgeEvasion( gentity_t *self, gentity_t *shooter, trace_t *tr, in
 
 	//iomatix:
 	//evasion cost:
-	if (self->client->ps.fd.forcePower < 8)
+	if (self->client->ps.fd.forcePower < EVASION_FORCE_COST)
 	{
 		return qfalse;
 	}
-	self->client->ps.fd.forcePower -= 8;
-
+	self->client->ps.fd.forcePower -= EVASION_FORCE_COST;
+	
 
 	if ( dodgeAnim != -1 )
 	{

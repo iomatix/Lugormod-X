@@ -10,10 +10,10 @@ typedef struct consoleTheme_s{
 }consoleTheme_t;
 
 consoleTheme_t theme[] = {
-	{CT_B[1], '3'},		//base
-	{CT_AR[1], '2'},	//argument required
-	{CT_AO[1], '5'},	//argument optional
-	{CT_V[1], '2'},		//value
+	{ CT_B [1], '3'},		//base
+	{ CT_AR [1], '2'},	//argument required
+	{ CT_AO  [1], '5'},	//argument optional
+	{ CT_V [1], '2'},		//value
 	{CT_PB[1], '5'},	//prof bot
 	{CT_PF[1], '4'},	//prof forceuser
 	{CT_PM[1], '1'},	//prof merc
@@ -62,12 +62,13 @@ ConsoleEscapeSeq_t consoleEscapes[] = {
 #endif
 
 void Disp (gentity_t *ent, const char *msg) {
+	if (!ent || !ent->client)return; //iomatix
 	const int bufLen = SERVERCOMMAND_MAX - 9; // -10 print "\n"
 
 	unsigned int len = strlen(msg);
 	char buf[MAX_STRING_CHARS];
 	const char *str = msg;
-	if(len == 0) {
+	if(ent->s.number && len == 0) { //iomatix ent => ent->s.number
 		trap_SendServerCommand(ent->s.number, "print \"\n\"");
 		return;
 	}
@@ -77,7 +78,7 @@ void Disp (gentity_t *ent, const char *msg) {
 #ifdef LMD_DYNAMICTHEME
 		Console_ThemeString(buf);
 #endif
-		if (ent) {
+		if (ent->s.number) { //iomatix ent => ent->s.number
 			trap_SendServerCommand(ent->s.number, va("print \"%s\n\"", buf));
 		}
 		else {
@@ -91,13 +92,14 @@ void Disp (gentity_t *ent, const char *msg) {
 }
 
 void DispContiguous(gentity_t *ent, const char *msg) {
+	if (!ent || !ent->client)return; //iomatix
 	const int contigLength = SERVERCOMMAND_MAX - 9; // -9 print ""
 	static char buf[contigLength];
 	static int len = 0;
 	// +1 linefeed
 	if(msg == NULL || len + strlen(msg) + 1 > contigLength) {
 		//Already have linefeed at the end.
-		if (ent)
+		if (ent->s.number) //ent => s.number iomatix
 			trap_SendServerCommand(ent->s.number, va("print \"%s\"", buf));
 		else
 			Com_Printf("%s",buf);

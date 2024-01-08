@@ -84,7 +84,7 @@ void updatePlayer(gentity_t *ent) {
 void Lmd_Accounts_LogAction(gentity_t *player, Account_t *acc, char* action) {
 	char* username = Accounts_GetUsername(acc);
 	G_LogPrintf("Player \"%s\" (%s) has %s.\n", player->client->pers.netname, username, action);
-	Auths_DispAdmins(va(CT_B"Player \'"CT_N"%s"CT_B"\' ("CT_B_V"%s"CT_B") has %s.", player->client->pers.netname, username, action));
+	Auths_DispAdmins(va( CT_B "Player \'" CT_N "%s" CT_B "\' (" CT_B_V "%s" CT_B ") has %s.", player->client->pers.netname, username, action));
 }
 
 
@@ -176,43 +176,44 @@ void HiScore(gentity_t *ent, int field) {
 
 //iomatix:
 //Titles system 
-char * GetTitle_system(gentity_t *ent)
+char * GetTitle_system(Account_t *acc)
 {
-	int level = PlayerAcc_Prof_GetLevel(ent) + PlayerAcc_GetNewGamePlus_count(ent);
-	if (PlayerAcc_Prof_GetProfession(ent) == PROF_JEDI) {
+	
+	int level = Accounts_Prof_GetLevel(acc) + Accounts_GetNewGamePlus_count(acc);
+	if (Accounts_Prof_GetProfession(acc) == PROF_JEDI) {
 		//jedi titles
-		if (level < 10)return "Apprentice";
-		else if (level < 20)return "Disciple";
-		else if (level < 30)return "Adept";
-		else if (level < 40)
+		if (level < 10)return "^7Apprentice";
+		else if (level < 20)return "^7Disciple";
+		else if (level < 30)return "^7Adept";
+		else if (level < 60)
 		{
-			if (Jedi_GetSide(ent) == FORCE_DARKSIDE) return "Darth";
-			else if (Jedi_GetSide(ent) == FORCE_LIGHTSIDE) return "Knight";
-			else return "Nomad";
+			if (Jedi_GetAccSide(acc) == FORCE_DARKSIDE) return "^1Darth";
+			else if (Jedi_GetAccSide(acc) == FORCE_LIGHTSIDE) return "^2Knight";
+			else return "^9Nomad";
 
 		}
-		else if (level < 80)return "Lord";
-		else if (level < 100)return "Count";
-		else if (level < 130)return "Sage";
-		else if (level < 170)return "Master";
-		else if (level < 200)return "Luminary";
-		else return "Legend";
+		else if (level < 80)return "^3Lord";
+		else if (level < 100)return "^3Count";
+		else if (level < 130)return "^8Sage";
+		else if (level < 170)return "^8Master";
+		else if (level < 200)return "^9Luminary";
+		else return "^0Legend";
 	}
-	else if (PlayerAcc_Prof_GetProfession(ent) == PROF_MERC)
+	else if (Accounts_Prof_GetProfession(acc) == PROF_MERC)
 	{//merc titles
-		if (level < 10)return "Freshmeat";
-		else if (level < 20)return "Rifleman";
-		else if (level < 30)return "Mercenary";
-		else if (level < 40)return "Specialist";
-		else if (level < 100)return "Bounty Hunter";
-		else if (level < 150)return "Assassin";
-		else if (level < 180)return "Commander";
-		else if (level < 230)return "Master of Hunt";
-		else return "Legend";
+		if (level < 10)return "^7Freshmeat";
+		else if (level < 20)return "^7Rifleman";
+		else if (level < 30)return "^7Mercenary";
+		else if (level < 40)return "^2Specialist";
+		else if (level < 100)return "^1Bounty Hunter";
+		else if (level < 150)return "^1Assassin";
+		else if (level < 180)return "^8Commander";
+		else if (level < 230)return "^9Master of Hunt";
+		else return "^0Legend";
 
 
 	}
-	else return "Stranger";
+	else return "^7Stranger";
 
 
 }
@@ -224,7 +225,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 	int prof, time, lvl, authrank;
 	char *c;
 	char *authlist;
-	char *the_title = GetTitle_system(ent);
+	char *the_title = GetTitle_system(acc);
 	char lastLogin[MAX_STRING_CHARS];
 
 	char *secCode;
@@ -265,7 +266,7 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3New Game Plus Level: ^2%i\n"
 		"^3New Game Plus Skill Points: ^2%i\n"
 		"^3Score:         ^2%i",
-		lvl, Accounts_GetCredits(acc), Accounts_GetExperience(acc), Professions_LevelCost_EXP(PlayerAcc_Prof_GetProfession(ent), PlayerAcc_Prof_GetLevel(ent)), Accounts_GetLevel_jedi(acc), Accounts_GetLevel_merc(acc), Accounts_GetLootboxes(acc), Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
+		lvl, Accounts_GetCredits(acc), Accounts_GetExperience(acc), Professions_LevelCost_EXP(Accounts_Prof_GetProfession(acc), Accounts_Prof_GetLevel(acc)), Accounts_GetLevel_jedi(acc), Accounts_GetLevel_merc(acc), Accounts_GetLootboxes(acc), Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)
 		c = "^2None";
 	else if (prof == PROF_ADMIN)
@@ -334,7 +335,7 @@ void listAdmins(gentity_t *ent) {
 			count++;
 		}
 	}
-	Disp(ent, va(CT_V"%i"CT_B" nicks.", count));
+	Disp(ent, va( CT_V "%i" CT_B " nicks.", count));
 }
 
 void clearLevels(void) {
@@ -610,7 +611,7 @@ qboolean Lmd_Accounts_Player_TryLogin(gentity_t *ent, char *username, char *pass
 	if (Lmd_Accounts_Player_Login(ent, acc)) {
 		if (!Auths_AccHasAdmin(acc)) {
 			trap_SendServerCommand(ent->s.number, "chat \"^2Login successful.\"");
-			Disp(ent, va("^3The account will expire in ^2%i^3 days if you do not login before that.", accountLiveTime(Accounts_Prof_GetLevel(acc))));
+			Disp(ent, va("^3The account will expire in ^2%i^3 days if you do not login before that.", accountLiveTime(Accounts_GetLevel_merc(acc)+Accounts_GetLevel_jedi(acc)+(Accounts_GetNewGamePlus_count(acc)*10))));
 		}
 		else {
 			trap_SendServerCommand(ent->s.number, "chat \"^2Login successful.\"");

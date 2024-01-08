@@ -39,6 +39,7 @@ typedef struct iObectFields_s{
 	qboolean (*combine)(iObject_t *obj, iObject_t *comb);
 	qboolean (*loose)(iObject_t *obj);
 	qboolean (*give)(iObject_t *obj, gentity_t *ent);
+	qboolean(*sell)(iObject_t *obj, gentity_t *ent);
 	qboolean (*del)(iObject_t *obj);
 	void (*use)(iObject_t *obj);
 	void (*describe)(iObject_t *obj, char *descr, unsigned int sze);

@@ -452,6 +452,9 @@ void	G_TouchTriggers(gentity_t *ent);
 void	G_TouchSolids(gentity_t *ent);
 void	GetAnglesForDirection(const vec3_t p1, const vec3_t p2, vec3_t out);
 
+//W_FORCE.C
+extern void WP_ForceLimiterForceSet(gentity_t *ent);
+
 //
 // g_object.c
 //
@@ -1003,6 +1006,7 @@ extern	vmCvar_t	g_logClientInfo;
 extern	vmCvar_t	g_slowmoDuelEnd;
 
 extern	vmCvar_t	g_saberDamageScale;
+extern vmCvar_t		g_scaleAllDamage;
 
 extern	vmCvar_t	g_useWhileThrowing;
 
@@ -1119,6 +1123,9 @@ extern	vmCvar_t	lmd_is_lethality_add_damage;
 extern	vmCvar_t	lmd_is_thousandcuts_lethality;
 extern	vmCvar_t	lmd_is_buy_level;
 extern  vmCvar_t	lmd_old_commands_disp;
+extern vmCvar_t lmd_is_forcecooldown;
+extern vmCvar_t lmd_force_is_double_jump;
+extern vmCvar_t lmd_bots_gain_experience;
 #include "../namespace_begin.h"
 
 // RoboPhred

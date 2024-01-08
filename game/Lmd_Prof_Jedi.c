@@ -208,7 +208,7 @@ STD_FORCEPOWER_FUNCS(mp_maxs, FP_PASSIVE_mp_maxs)
 
 profSkill_t jediSkill_Passive_mp_maxs = {
 	"Force",
-	"Increase the Force capacity.",
+	"Increase the Force capacity.\nIf the force is over the HUD capacity limit the force will regenerate much faster instead to recompensate the difference.",
 	jediSkill_Passive_mp_maxs_Descr,
 
 	0,
@@ -235,11 +235,11 @@ STD_FORCEPOWER_FUNCS(overload, FP_PASSIVE_overload)
 
 profSkill_t jediSkill_Passive_overload = {
 	"Overload",
-	"Regenerate more force and increase its base capacity.",
+	"Regenerate more force and increase its base capacity.\nIf the force is over the HUD capacity limit the force will regenerate much faster instead to recompensate the difference.",
 	jediSkill_Passive_overload_Descr,
 
 	0,
-	SkillLevels_8,
+	SkillLevels_4,
 	SkillPoints_Linear_12,
 
 	Lmd_Prof_Jedi_GetSkill_overload,
@@ -267,7 +267,7 @@ profSkill_t jediSkill_Passive_thousandcuts = {
 	jediSkill_Passive_thousandcuts_Descr,
 
 	0,
-	SkillLevels_4,
+	SkillLevels_8,
 	SkillPoints_Linear_12,
 
 	Lmd_Prof_Jedi_GetSkill_thousandcuts,
@@ -300,10 +300,10 @@ int Get_Jedi_hp_maxs_value(gentity_t *ent) //Will (Health points)
 {
 	if (lmd_jedi_add_hp_level.integer == 0) { return 100; } //old lugor option
 
-	int value = 40; //starting health
+	int value = 46; //starting health
 	
 		
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.1); //scale health
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 3.7); //scale health 444+46 
 	
 
 	int skillHP = Lmd_Prof_Jedi_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_hp_maxs);
@@ -338,14 +338,14 @@ int Get_Jedi_overload_value_cap(gentity_t *ent, int Amount) //returns % of total
 int Get_Jedi_mp_maxs_value(gentity_t *ent)
 {
 	int value = 55; //starting force
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.1); //Level bonus
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.75); //Level bonus
 	if (Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload)) value += Get_Jedi_overload_value_cap(ent, value); //be sure it adds only base Force Power //iomatix
 
 																																					   //Passive skill bonus:
 	int skillMP = Lmd_Prof_Jedi_GetSkill_mp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_mp_maxs);
 	if (skillMP > 0)
 	{
-		value += 10 * skillMP;
+		value += 12 * skillMP;
 		if (skillMP == jediSkill_Passive_mp_maxs.levels.max) value += 13; //bonus for maxed (12+13=25)
 	}
 
@@ -1010,7 +1010,7 @@ int Jedi_GetForceRegenDebounce(gentity_t *ent) {
 	//(level * (g_forceRegenTime.integer * (2. / 3.))) = x * 20
 	//((level * (g_forceRegenTime.integer * (2. / 3.))) / 20) = x
 	//iomatix new regen formula
-	return g_forceRegenTime.integer - floor((level * (g_forceRegenTime.integer / 8.)) / 120.); //120 is max level -> -13% regen cooldown on level 120
+	return g_forceRegenTime.integer - floor((level * (g_forceRegenTime.integer / 5.)) / 120.); //120 is max level -> -20% regen cooldown on level 120
 }
 
 unsigned int Jedi_Count() {
@@ -1072,7 +1072,7 @@ void Jedi_Spawn(gentity_t *ent) {
 	else
 	{
 		ent->client->ps.trueJedi = qtrue;
-		//not sure is it bug-free way but seems to be the only one as far as I looked for something more related with this for about 8 hours... ._.
+		//not sure is it bug-free way but seems to be the only one not as bugged as the other was far as I looked for something more related with this for about 8 hours... ._.
 	}
 	//make sure they only use the saber
 	ent->client->ps.weapon = WP_SABER;

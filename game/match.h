@@ -9,7 +9,7 @@
 //===========================================================================
 
 // make sure this is the same character as we use in chats in g_cmd.c
-#define EC	"\x19"
+#define  EC 	"\x19"
 
 //match template contexts
 #define MTCONTEXT_MISC					2

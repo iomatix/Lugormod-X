@@ -447,7 +447,6 @@ struct bgEntity_s
 typedef struct {
 	// state (in / out)
 	playerState_t	*ps;
-
 	//rww - shared ghoul2 stuff (not actually the same data, but hey)
 	void		*ghoul2;
 	int			g2Bolts_LFoot;
@@ -531,6 +530,7 @@ void Pmove (pmove_t *pmove);
 // NOTE: may not have more than 16
 typedef enum {
 	STAT_HEALTH,
+	STAT_FORCE,
 	STAT_HOLDABLE_ITEM,
 	STAT_HOLDABLE_ITEMS,
 	STAT_PERSISTANT_POWERUP,
@@ -1621,6 +1621,7 @@ qboolean BG_InBackFlip( int anim );
 qboolean BG_DirectFlippingAnim( int anim );
 qboolean BG_SaberInAttack( int move );
 qboolean BG_SaberInSpecial( int move );
+qboolean BG_SaberInDefense(int move);
 qboolean BG_KickMove( int move );
 qboolean BG_SaberInIdle( int move );
 qboolean BG_FlippingAnim( int anim );

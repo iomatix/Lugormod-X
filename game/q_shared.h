@@ -913,7 +913,7 @@ enum
 
 #define	FORCE_LEVEL_4 (FORCE_LEVEL_3+1)
 #define	FORCE_LEVEL_5 (FORCE_LEVEL_4+1)
-
+#define	FORCE_LEVEL_6 (FORCE_LEVEL_5+1)
 //rww - a C-ified structure version of the class which fires off callbacks and gives arguments to update ragdoll status.
 enum sharedERagPhase
 {
@@ -1228,7 +1228,7 @@ extern	vec4_t		colorDkBlue;
 #define S_COLOR_BLUE	"^4"
 #define S_COLOR_CYAN	"^5"
 #define S_COLOR_MAGENTA	"^6"
-#define S_COLOR_WHITE	"^7"
+#define  S_COLOR_WHITE 	"^7"
 
 extern vec4_t	g_color_table[8];
 
@@ -1979,7 +1979,7 @@ Ghoul2 Insert End
 typedef struct {
 	byte		allsolid;	// if true, plane is not valid
 	byte		startsolid;	// if true, the initial point was in a solid area
-	short		entityNum;	// entity the contacted sirface is a part of
+	short		entityNum;	// entity the contacted surface is a part of
 
 	float		fraction;	// time completed, 1.0 = didn't hit anything
 	vec3_t		endpos;		// final position
@@ -2263,7 +2263,7 @@ typedef struct playerState_s {
 	int			pm_time;
 
 	vec3_t		origin;
-	vec3_t		velocity;
+	vec3_t		velocity;//x[0],y[1],z[2]
 
 	vec3_t		moveDir; //NOT sent over the net - nor should it be.
 
@@ -2413,6 +2413,7 @@ typedef struct playerState_s {
 	int			forceHandExtendTime;
 
 	int			forceRageDrainTime;
+
 
 	int			forceDodgeAnim;
 	qboolean	quickerGetup;

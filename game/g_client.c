@@ -1964,7 +1964,7 @@ qboolean G_SaberModelSetup(gentity_t *ent)
 
 						if (tagBolt == -1)
 						{
-							assert(0);
+							//assert(0); //iomatix: ASSERTION FAILED
 							break;
 
 						}
@@ -2449,7 +2449,7 @@ void ClientUserNameChanged(gentity_t *ent, char *userinfo) {
 		G_LogPrintf("ClientNamechange: %s is now %s\n", oldname, client->pers.netname);
 		Com_Printf("info: (%2i) %s is now %s\n", clientNum, oldname, client->pers.netname);
 
-		trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s %s\n\"", oldname, G_GetStringEdString("MP_SVGAME", "PLRENAME"), client->pers.netname));
+		trap_SendServerCommand(-1, va("print \"%s"  S_COLOR_WHITE  " %s %s\n\"", oldname, G_GetStringEdString("MP_SVGAME", "PLRENAME"), client->pers.netname));
 		client->pers.netnameTime = level.time + 5000;
 	}
 }
@@ -3067,7 +3067,7 @@ char *ClientConnect(int clientNum, qboolean firstTime, qboolean isBot) {
 
 	// don't do the "xxx connected" messages if they were caried over from previous level
 	if (firstTime) {
-		trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s\n\"", client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLCONNECT")));
+		trap_SendServerCommand(-1, va("print \"%s"  S_COLOR_WHITE  " %s\n\"", client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLCONNECT")));
 		//Lugormod
 		//if (!isBot){
 		//char *p = strchr(client->sess.Lmd.ip, ':');
@@ -3356,7 +3356,7 @@ void ClientBegin(int clientNum, qboolean allowTeamReset) {
 		if (tent) tent->s.clientNum = ent->s.clientNum;
 
 		if (g_gametype.integer != GT_DUEL || g_gametype.integer == GT_POWERDUEL) {
-			trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s\n\"", client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLENTER")));
+			trap_SendServerCommand(-1, va("print \"%s"  S_COLOR_WHITE  " %s\n\"", client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLENTER")));
 		}
 	}
 	G_LogPrintf("ClientBegin: %i\n", clientNum);

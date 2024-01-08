@@ -25,6 +25,7 @@
 #include "be_aas_funcs.h"
 #include "be_interface.h"
 #include "be_aas_def.h"
+#include "cmath"
 
 #define MASK_SOLID		CONTENTS_PLAYERCLIP
 

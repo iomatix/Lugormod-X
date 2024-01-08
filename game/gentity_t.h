@@ -266,10 +266,13 @@ struct gentity_s {
 
 	//Health and damage fields
 	int			health;
+	//stash exp
+	int         health_exp;
 	qboolean	takedamage;
 	material_t	material;
 
 	int			damage;
+	int         damage_lava_ticks;
 	int			dflags;
 	int			splashDamage;	// quad will increase this without increasing radius
 	int			splashRadius;
@@ -340,6 +343,8 @@ struct gentity_s {
 	float		epGravFactor;
 
 	gitem_t		*item;			// for bonus items
+
+
 
 	//        qboolean         saveit;             //Lugormod is saved with saveit
 	//char            *spawnString;         //Lugormod spawn string

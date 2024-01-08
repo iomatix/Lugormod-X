@@ -724,13 +724,13 @@ void BroadcastTeamChange( gclient_t *client, int oldTeam )
 
 	if ( client->sess.sessionTeam == TEAM_RED ) {
 		//Lugormod these were all cp:d b4 but I don't like that.
-		trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " %s\n\"",
+		trap_SendServerCommand( -1, va("print \"%s"  S_COLOR_WHITE  " %s\n\"",
 			client->pers.netname, G_GetStringEdString("MP_SVGAME", "JOINEDTHEREDTEAM")) );
 	} else if ( client->sess.sessionTeam == TEAM_BLUE ) {
-		trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " %s\n\"",
+		trap_SendServerCommand( -1, va("print \"%s"  S_COLOR_WHITE  " %s\n\"",
 			client->pers.netname, G_GetStringEdString("MP_SVGAME", "JOINEDTHEBLUETEAM")));
 	} else if ( client->sess.sessionTeam == TEAM_SPECTATOR && oldTeam != TEAM_SPECTATOR ) {
-		trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " %s\n\"",
+		trap_SendServerCommand( -1, va("print \"%s"  S_COLOR_WHITE  " %s\n\"",
 			client->pers.netname, G_GetStringEdString("MP_SVGAME", "JOINEDTHESPECTATORS")));
 	} else if ( client->sess.sessionTeam == TEAM_FREE ) {
 		if (g_gametype.integer == GT_DUEL || g_gametype.integer == GT_POWERDUEL)
@@ -740,12 +740,12 @@ void BroadcastTeamChange( gclient_t *client, int oldTeam )
 
 			if (currentWinner && currentWinner->client)
 			{
-			trap_SendServerCommand( -1, va("cp \"%s" S_COLOR_WHITE " %s %s\n\"",
+			trap_SendServerCommand( -1, va("cp \"%s"  S_COLOR_WHITE  " %s %s\n\"",
 			currentWinner->client->pers.netname, G_GetStringEdString("MP_SVGAME", "VERSUS"), client->pers.netname));
 			}
 			else
 			{
-			trap_SendServerCommand( -1, va("cp \"%s" S_COLOR_WHITE " %s\n\"",
+			trap_SendServerCommand( -1, va("cp \"%s"  S_COLOR_WHITE  " %s\n\"",
 			client->pers.netname, G_GetStringEdString("MP_SVGAME", "JOINEDTHEBATTLE")));
 			}
 			*/
@@ -753,7 +753,7 @@ void BroadcastTeamChange( gclient_t *client, int oldTeam )
 		}
 		else
 		{
-			trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " %s\n\"",
+			trap_SendServerCommand( -1, va("print \"%s"  S_COLOR_WHITE  " %s\n\"",
 				client->pers.netname, G_GetStringEdString("MP_SVGAME", "JOINEDTHEBATTLE")));
 		}
 	}
@@ -1922,7 +1922,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 	//}
 }
 
-#define EC		"\x19"
+#define  EC 		"\x19"
 
 //Lugormod
 //#if defined(__linux__) || defined(MACOS_X)
@@ -2016,20 +2016,20 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	default:
 	case SAY_ALL:
 		G_LogPrintf( "say: %s: %s\n", ent->client->pers.netname, text );
-		Com_sprintf (name, sizeof(name), "%s%c%c"EC": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
+		Com_sprintf (name, sizeof(name), "%s%c%c" EC ": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 		color = COLOR_GREEN;
 		break;
 	case SAY_TEAM:
 		G_LogPrintf( "sayteam: %s: %s\n", ent->client->pers.netname, text );
 		if (Team_GetLocationMsg(ent, location, sizeof(location)))
 		{
-			Com_sprintf (name, sizeof(name), EC"(%s%c%c"EC")"EC": ", 
+			Com_sprintf (name, sizeof(name),  EC "(%s%c%c" EC ")" EC ": ", 
 				ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 			locMsg = location;
 		}
 		else
 		{
-			Com_sprintf (name, sizeof(name), EC"(%s%c%c"EC")"EC": ", 
+			Com_sprintf (name, sizeof(name),  EC "(%s%c%c" EC ")" EC ": ", 
 				ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 		}
 		color = COLOR_CYAN;
@@ -2039,32 +2039,32 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 			target->client->sess.sessionTeam == ent->client->sess.sessionTeam &&
 			Team_GetLocationMsg(ent, location, sizeof(location)))
 		{
-			Com_sprintf (name, sizeof(name), EC"[%s%c%c"EC"]"EC": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
+			Com_sprintf (name, sizeof(name),  EC "[%s%c%c" EC "]" EC ": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 			locMsg = location;
 		}
 		else
 		{
-			Com_sprintf (name, sizeof(name), EC"[%s%c%c"EC"]"EC": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
+			Com_sprintf (name, sizeof(name),  EC "[%s%c%c" EC "]" EC ": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 		}
 		color = COLOR_MAGENTA;
 		break;
 	case SAY_ADMINS:
 		G_LogPrintf( "sayadmin: %s: %s\n", ent->client->pers.netname, text );
 
-		Com_sprintf (name, sizeof(name), EC"<%s%c%c"EC">"EC": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
+		Com_sprintf (name, sizeof(name),  EC "<%s%c%c" EC ">" EC ": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 		color = COLOR_YELLOW;
 		break;
 	case SAY_CLOSE:
 		G_LogPrintf( "sayclose: %s: %s\n", ent->client->pers.netname, text );
 
-		Com_sprintf (name, sizeof(name), EC"<%s%c%c"EC">"EC": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
+		Com_sprintf (name, sizeof(name),  EC "<%s%c%c" EC ">" EC ": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 		color = COLOR_CYAN;
 		break;
 	case SAY_BUDDIES:
 	case SAY_FRIENDS:
 		Com_Printf( "info: %s: %s\n", ent->client->pers.netname, text );
 
-		Com_sprintf (name, sizeof(name), EC"{%s%c%c"EC"}"EC": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
+		Com_sprintf (name, sizeof(name),  EC "{%s%c%c" EC "}" EC ": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 		color = COLOR_YELLOW;
 		break;
 	}
@@ -3626,20 +3626,21 @@ void Cmd_EngageDuel_f(gentity_t *ent){
 			//Holster their sabers now, until the duel starts (then they'll get auto-turned on to look cool)
 			//Lugormod Replenish health and armor
 			if (g_privateDuel.integer & PD_START_POWER) {
-				ent->client->ps.fd.forcePower = 100;
-				challenged->client->ps.fd.forcePower = 100;
+				ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax;
+				challenged->client->ps.fd.forcePower = challenged->client->ps.fd.forcePowerMax;
+			
 			}
 			if (g_privateDuel.integer & PD_START_ARMOR) {
 				ent->client->bdArmor = ent->client->ps.stats[STAT_ARMOR];
 				challenged->client->bdArmor = challenged->client->ps.stats[STAT_ARMOR];
-				ent->client->ps.stats[STAT_ARMOR] = 100;
-				challenged->client->ps.stats[STAT_ARMOR] = 100;
+				ent->client->ps.stats[STAT_ARMOR] = 250;
+				challenged->client->ps.stats[STAT_ARMOR] = 250;
 			}
 			if (g_privateDuel.integer & PD_START_HEALTH) {
 				ent->client->bdHealth =	ent->health;
 				challenged->client->bdHealth = challenged->health;
-				ent->client->ps.stats[STAT_HEALTH] = ent->health = 100;
-				challenged->client->ps.stats[STAT_HEALTH] = challenged->health = 100;
+				ent->client->ps.stats[STAT_HEALTH] = ent->health = ent->client->ps.stats[STAT_MAX_HEALTH];
+				challenged->client->ps.stats[STAT_HEALTH] = challenged->health = challenged->client->ps.stats[STAT_MAX_HEALTH];
 			}
 
 			ent->client->pers.Lmd.persistantFlags &= ~(SPF_IONLYDUEL | SPF_IONLYSABER);

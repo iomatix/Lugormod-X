@@ -31,13 +31,14 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 			"^3Self: Accountedit ^5<stat> <value>\n"
 			"^3Stats are:\n"
 			"^2Alias\n"
+			"^2BoxesCR\n"
 			"^2Credits\n"
 			"^2Experience\n"
 			"^2Profession\n"
+			"^2Passwd\n"
 			"^2Level\n"
 			"^2Merclevel\n"
 			"^2Jedilevel\n"
-			"^2BoxesCR\n"
 			"^2NGP_Count\n"
 			"^2Score");
 		return;
@@ -82,6 +83,21 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		
 		Accounts_SetName(acc, arg);
 		Disp(ent, "^2Alias changed.\nIf player is logged-in, the command will affect after logout.");
+		return;
+	}
+	//iomatix passwd
+	else if (Q_stricmp(arg, "passwd") == 0 || Q_stricmp(arg, "chpasswd") == 0 || Q_stricmp(arg, "pass") == 0)
+	{
+		char *passwd = val;
+		if (sizeof(val) < 4)
+		{
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^1%s is too short. Type at least ^34^1 characters long.", val));
+			return;
+		}
+		Accounts_SetPassword(acc, passwd);
+		
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^2Password of ^7%s^2 is changed.", Accounts_GetUsername(acc))); else
+			trap_SendServerCommand(ent->s.number, va("chat \"^2Password of ^7%s^2 is changed.\"", Accounts_GetUsername(acc)));
 		return;
 	}
 	else if (Q_stricmp(arg, "credits") == 0 || Q_stricmp(arg, "cr") == 0) {
@@ -157,7 +173,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		
 	}
 	
-
+	//
 	else if (Q_stricmp(arg, "boxescr") == 0 || Q_stricmp(arg, "box") == 0) {
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {

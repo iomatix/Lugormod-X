@@ -77,8 +77,13 @@ qboolean Force_Levitation_Available(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceLevitate_t);
 	if ( self->s.groundEntityNum == ENTITYNUM_NONE && 
 		(!(data->airjump) || self->client->ps.fd.forcePower < 1)) {
+
+		Com_Printf("Levi Avaialbe false");
+
 			return qfalse;
 	}
+	Com_Printf("Levi Avaialbe true");
+
 	return qtrue;
 }
 
@@ -86,6 +91,7 @@ qboolean Force_Levitation_Start(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceLevitate_t);
 	float forceJumpChargeInterval;
 	vec3_t	jumpVel;
+
 
 	self->client->fjDidJump = qtrue;
 
@@ -101,27 +107,33 @@ qboolean Force_Levitation_Start(gentity_t *self, const void *vData) {
 
 	Force_DrainForceEnergy( self, FP_LEVITATION, 
 		//Is this right?  forceJumpChargeInterval was already divided by charge and frame, yet its done again here.
-		(int)(self->client->ps.fd.forceJumpCharge/forceJumpChargeInterval/(FORCE_JUMP_CHARGE_TIME/FRAMETIME)*data->forcepower));
+		(int)(self->client->ps.fd.forceJumpCharge/forceJumpChargeInterval/(FORCE_JUMP_CHARGE_TIME)*data->forcepower));
 	//self->client->ps.fd.forcePowerDuration[FP_LEVITATION] = level.time + self->client->ps.weaponTime;
 	self->client->ps.fd.forceJumpCharge = 0;
 	self->client->ps.forceJumpFlip = qtrue;
+
+	
 	return qtrue;
 }
 
 qboolean Force_Levitation_Run(gentity_t *self, const void *vData) {
-	if ( self->client->ps.groundEntityNum != ENTITYNUM_NONE && !self->client->ps.fd.forceJumpZStart )
+	if ((self->client->ps.groundEntityNum != ENTITYNUM_NONE && !self->client->ps.fd.forceJumpZStart)) {
+	
+
 		return qfalse;
+	}
+	
 	return qtrue;
 }
 
 extern float forceJumpStrength[NUM_FORCE_POWER_LEVELS + 2];
 
 forceLevitate_t Force_Levitation_Levels[5] = {
-	{forceJumpStrength[1], 10, qfalse},
-	{forceJumpStrength[2], 10, qfalse},
+	{forceJumpStrength[1], 5, qfalse},
+	{forceJumpStrength[2], 8, qfalse},
 	{forceJumpStrength[3], 10, qfalse},
-	{forceJumpStrength[4], 10, qfalse},
-	{forceJumpStrength[5], 10, qfalse}, //iomatix no double jump qtrue->qfalse
+	{forceJumpStrength[4], 12, qfalse},
+	{forceJumpStrength[5], 14, qfalse},
 };
 forcePower_t Force_Levitation = {
 	Force_Levitation_Available,
@@ -137,6 +149,7 @@ forcePower_t Force_Levitation = {
 extern int speedLoopSound;
 qboolean Force_Speed_Start( gentity_t *self, const void *vData ){
 	GETFORCEDATA(forceSpeed_t);
+	if(isForce_Cooldown(self, FP_SPEED))return qfalse;
 	self->client->ps.fd.forcePowerDuration[FP_SPEED] = level.time + data->duration;
 	G_Sound( self, CHAN_BODY, G_SoundIndex("sound/weapons/force/speed.wav") );
 	G_Sound( self, TRACK_CHANNEL_2, speedLoopSound );
@@ -145,6 +158,7 @@ qboolean Force_Speed_Start( gentity_t *self, const void *vData ){
 }
 
 void Force_Speed_Stop(gentity_t *self, const void *data) {
+	Force_Cooldown(self, 600, FP_SPEED);
 	G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_2-50], CHAN_VOICE);
 }
 
@@ -234,13 +248,23 @@ qboolean Force_Throw_CanCounter(gentity_t *self, gentity_t *thrower, qboolean pu
 		return qfalse;
 	}
 
-	if (pull)
+	if (pull) {
 		powerUse = FP_PULL;
-	else
+		
+	}
+	else {
 		powerUse = FP_PUSH;
+	}
 
+	
 	if ( !Force_CanUsePower( self, powerUse ) )
 		return qfalse;
+
+	//cooldown for countering
+	if (isForce_Cooldown(self, FP_PULL)) return qfalse;
+	else Force_Cooldown(self, 850, FP_PULL);
+	if (isForce_Cooldown(self, FP_PUSH)) return qfalse;
+	else Force_Cooldown(self, 850, FP_PUSH);
 
 	return qtrue;
 }
@@ -333,7 +357,7 @@ qboolean Force_Throw_IsThrowable (gentity_t *ent, qboolean pull){
 	return qfalse;
 }
 
-#define FORCE_PUSH_BASEPOWER 256
+#define FORCE_PUSH_BASEPOWER 296 //256 -> buff iomatix
 int Force_Throw_PushPower(gentity_t *ent, qboolean pull) {
 	//FIXME: return power from force modifications.
 	//Ufo: yes
@@ -704,6 +728,8 @@ void Force_Throw_Start(gentity_t *self, qboolean pull, const forceThrow_t *data)
 
 	unsigned int i, e;
 
+	if (isForce_Cooldown(self, power)) return;
+
 	Force_DrainForceEnergy(self, power, data->forcepower);
 
 	if (!pull && self->client->ps.saberLockTime > level.time && self->client->ps.saberLockFrame){
@@ -715,6 +741,7 @@ void Force_Throw_Start(gentity_t *self, qboolean pull, const forceThrow_t *data)
 
 	//make sure this plays and that you cannot press fire for about 1 second after this
 	if ( pull )	{
+		Force_Cooldown(self, 2650, FP_PULL);
 		G_Sound( self, CHAN_BODY, G_SoundIndex( "sound/weapons/force/pull.wav" ) );
 		if (self->client->ps.forceHandExtend == HANDEXTEND_NONE){
 			self->client->ps.forceHandExtend = HANDEXTEND_FORCEPULL;
@@ -734,6 +761,7 @@ void Force_Throw_Start(gentity_t *self, qboolean pull, const forceThrow_t *data)
 		self->client->ps.powerups[PW_PULL] = self->client->ps.powerups[PW_DISINT_4];
 	}
 	else {
+		Force_Cooldown(self, 1650, FP_PUSH);
 		G_Sound( self, CHAN_BODY, G_SoundIndex( "sound/weapons/force/push.wav" ) );
 		if (self->client->ps.forceHandExtend == HANDEXTEND_NONE){
 			self->client->ps.forceHandExtend = HANDEXTEND_FORCEPUSH;
@@ -904,11 +932,11 @@ qboolean Force_Pull_Start(gentity_t *ent, const void *data) {
 }
 
 forceThrow_t Force_Throw_Levels[5] = {
-	{256,		1024, 0,	20, qfalse, 2},
-	{256 * 2,	1024, 60,	20, qfalse,	4},
-	{256 * 3,	1024, 180,	20, qtrue,	6},
-	{256 * 4,	1024, 180,	20, qtrue,	8},
-	{256 * 5,	1024, 180,	20, qtrue,	10},
+	{FORCE_PUSH_BASEPOWER,		1024, 0,	20, qfalse, 2},
+	{ FORCE_PUSH_BASEPOWER * 2,	1024, 60,	20, qfalse,	4},
+	{ FORCE_PUSH_BASEPOWER * 3,	1024, 180,	20, qtrue,	6},
+	{ FORCE_PUSH_BASEPOWER * 4,	1024, 180,	20, qtrue,	8},
+	{ FORCE_PUSH_BASEPOWER * 5,	1024, 180,	20, qtrue,	10},
 };
 
 forcePower_t Force_Push = {
@@ -936,7 +964,7 @@ forcePower_t Force_Pull = {
 extern int seeLoopSound;
 qboolean Force_See_Start(gentity_t *self, const void *vData) {
 	GETFORCEDATA(forceSee_t);
-
+	if(isForce_Cooldown(self,FP_SEE))return qfalse;
 	self->client->ps.forceAllowDeactivateTime = level.time + 1500;
 
 	G_Sound(self, CHAN_AUTO, G_SoundIndex("sound/weapons/force/see.wav"));
@@ -949,6 +977,7 @@ qboolean Force_See_Start(gentity_t *self, const void *vData) {
 }
 
 void Force_See_Stop(gentity_t *self, const void *vData) {
+	Force_Cooldown(self, 850, FP_SEE);
 	G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_5-50], CHAN_VOICE);
 }
 

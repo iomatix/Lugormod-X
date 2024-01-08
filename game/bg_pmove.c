@@ -244,10 +244,10 @@ float forceJumpStrength[NUM_FORCE_POWER_LEVELS + 2] =
 {
 	JUMP_VELOCITY,//normal jump
 	420,
-	590,
-	840,
-	940,
-	960
+	600,
+	700,
+	800,
+	900
 };
 
 //rww - Get a pointer to the bgEntity by the index
@@ -1446,7 +1446,7 @@ qboolean PM_ForceJumpingUp(void)
 		//RoboPhred
 #ifndef LMD_NEW_JUMP
 		&& (pm->ps->velocity[2] > 0 
-		|| pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5)
+		|| (pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5 && lmd_force_is_double_jump.integer != 0)) //iomatix, admin wants to turn of flying?
 #endif
 		)//going up
 	{
@@ -2992,6 +2992,7 @@ static qboolean PM_CheckJump( void )
 					return qfalse;
 				}
 				pm->ps->fd.forcePower -= 5;
+				//WP_ForceLimiterForceSet(pm);
 				pm->ps->pm_flags |= PMF_JUMP_HELD;
 				pm->ps->fd.forcePowersActive |= (1 << FP_LEVITATION);
 			}
@@ -3315,7 +3316,7 @@ static qboolean PM_CheckJump( void )
 
 					//need to scale this down, start with height velocity (based on max force jump height) and scale down to regular jump vel
 					//Lugormod
-					if (pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5
+					if (pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5  && lmd_force_is_double_jump.integer != 0
 						&& pm->ps->groundEntityNum == ENTITYNUM_NONE) {
 							vec_t velocity = (forceJumpHeight[pm->ps->fd.forcePowerLevel[FP_LEVITATION]]-curHeight)/forceJumpHeight[pm->ps->fd.forcePowerLevel[FP_LEVITATION]]*forceJumpStrength[pm->ps->fd.forcePowerLevel[FP_LEVITATION]];//JUMP_VELOCITY;
 							velocity /= 10;
@@ -4092,11 +4093,11 @@ static qboolean PM_CheckJump( void )
 	}
 	}
 	*/
-	if ( pm->ps->groundEntityNum == ENTITYNUM_NONE )
+	if (pm->ps->groundEntityNum == ENTITYNUM_NONE )
 	{
-		if (pm->cmd.upmove > 0 &&
-			pm->ps->fd.forcePowerLevel[FP_LEVITATION] 
-		== FORCE_LEVEL_5)
+		//iomatix rework
+		if (pm->cmd.upmove > 0 && pm->ps->velocity[2] > -1999 && //jump velocity
+			pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_5 && lmd_force_is_double_jump.integer != 0) //turn it off for level 5
 		{ //Lugormod Jump in air
 
 			if (!(pm->ps->pm_flags & PMF_JUMP_HELD)) {
@@ -4104,19 +4105,33 @@ static qboolean PM_CheckJump( void )
 				{
 					return qfalse;
 				}
+
 				pm->ps->fd.forcePower -= 5;
-				pm->ps->pm_flags |= PMF_JUMP_HELD;
+				//WP_ForceLimiterForceSet(pm);
 				pm->ps->fd.forcePowersActive |= (1 << FP_LEVITATION);
+
+				//Jumping
+				pml.groundPlane = qfalse;
+				pml.walking = qfalse;
+				pm->ps->pm_flags |= PMF_JUMP_HELD;
+				PM_SetForceJumpZStart(pm->ps->origin[2]);//so we don't take damage if we land at same height
+				PM_AddEvent(EV_JUMP);
+				//iomatix:
+				//Set the animations
+				if (pm->ps->gravity > 0 && !BG_InSpecialJump(pm->ps->legsAnim))
+				{
+					PM_JumpForDir();
+				}
+
+				return qtrue;
+
+
 			}
 
-			//Set the animations
-			if ( pm->ps->gravity > 0 && !BG_InSpecialJump( pm->ps->legsAnim ) )
-			{
-				PM_JumpForDir();
-			}
-			//PM_SetForceJumpZStart(pm->ps->origin[2]);//so we don't take damage if we land at same height
 
-			return qtrue;
+		
+
+
 		}
 
 		return qfalse;
@@ -5174,10 +5189,13 @@ static void PM_CrashLand( void ) {
 	t = (-b - sqrt( den ) ) / ( 2 * a );
 
 	delta = vel + t * acc;
+
+
 	delta = delta*delta * 0.0001;
 	//Lugormod size fix
 	delta /= sqrt(scaleh);
 
+	
 
 #ifdef QAGAME
 	PM_CrashLandEffect();
@@ -5348,7 +5366,7 @@ static void PM_CrashLand( void ) {
 			if ( anim )
 			{//absorb some impact
 				pm->ps->legsTimer = 0;
-				delta /= 3; // /= 2 just cancels out the above delta *= 2 when landing while crouched, the roll itself should absorb a little damage
+				delta /= 4; // /= 2 just cancels out the above delta *= 2 when landing while crouched, the roll itself should absorb a little damage
 				pm->ps->legsAnim = 0;
 				if (pm->ps->torsoAnim == BOTH_A7_SOULCAL)
 				{ //get out of it on torso
@@ -12569,13 +12587,13 @@ void PmoveSingle (pmove_t *pmove) {
 		*/
 		gDist = PM_GroundDistance();
 
-		if (gDist < JETPACK_HOVER_HEIGHT+64)
+		if (gDist < JETPACK_HOVER_HEIGHT+64)//iomatix 128?
 		{
 			pm->ps->gravity *= 0.1f;
 		}
 		else
 		{
-			pm->ps->gravity *= 0.25f;
+			pm->ps->gravity *= 0.25f; 
 		}
 		//#endif
 	}
@@ -12618,7 +12636,8 @@ void PmoveSingle (pmove_t *pmove) {
 
 #ifndef LMD_NEW_JETPACK
 		//cap upward velocity off at 256. Seems reasonable.
-		if (pm->cmd.upmove > 0 && (pm->ps->velocity[2] < 256 || pm->ps->userInt1 && pm->gametype == GT_FFA))
+		//iomatix 384:
+		if (pm->cmd.upmove > 0 && (pm->ps->velocity[2] < 384 || pm->ps->userInt1 && pm->gametype == GT_FFA))
 #else
 		//Only move up if we arent moving sideways
 		if ((pm->cmd.forwardmove == 0 && pm->cmd.rightmove == 0) && (pm->ps->velocity[2] < 512 || pm->ps->userInt1 && pm->gametype == GT_FFA))
@@ -12634,20 +12653,27 @@ void PmoveSingle (pmove_t *pmove) {
 					addIn = 30.0f - (gDist / 64.0f);
 			}
 #else
-			float addIn = 12.0f;
+			
+
+			if (gDist > 2048)gDist = 2048; //iomatix Dist limit
+
+			float addIn = 13.0f; //starting value
+
 			if (pm->ps->velocity[2] > 0){
 				//Lugormod admins fly higher
 				if (pm->ps->userInt1 && pm->gametype == GT_FFA)
-					addIn = 18.0f - (gDist / 256.0f);
+					addIn = 19.0f - (gDist / 324.0f); //18 -> 19, 256->384 iomatix
 				else
-					addIn = 12.0f - (gDist / 64.0f);
+					addIn = 13.0f - (gDist / 285.0f); //12->13, 64 -> 285
+			}
+			else{
+				addIn -= floor(pm->ps->velocity[2] / 3); //iomatix hard breaking
 			}
 #endif
 
-			if (addIn > 0.0f){
-				pm->ps->velocity[2] += addIn;
-			}
-
+			if (addIn > 0.0f)pm->ps->velocity[2] += addIn;
+			
+			PM_SetForceJumpZStart(pm->ps->origin[2]);//iomatix: ground up
 			pm->ps->eFlags |= EF_JETPACK_FLAMING; //going up
 		}
 		else {
@@ -12661,9 +12687,9 @@ void PmoveSingle (pmove_t *pmove) {
 #else
 			pm->ps->eFlags &= ~EF_JETPACK_FLAMING; //idling
 			if (pm->ps->velocity[2] < 256){
-				if (pm->ps->velocity[2] < -100){
-					pm->ps->velocity[2] = -100;
-				}
+				//iomatix jetpack rework
+				if (pm->ps->velocity[2] <= -(gDist/4 + 80)) pm->ps->velocity[2] = -(gDist/4 + 80);
+
 				if (gDist < JETPACK_HOVER_HEIGHT){
 					//make sure we're always hovering off the ground somewhat while jetpack is active
 					pm->ps->velocity[2] += 2;
