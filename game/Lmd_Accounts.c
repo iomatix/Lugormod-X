@@ -1152,7 +1152,7 @@ std::tuple <int,float> Open_Creditbox(gentity_t *ent) { //Get random value from 
 		Disp(ent, "^3This box full of credits!");
 	}
 
-	return std::make_tuple(get_random_int(1+(lmd_rewardcr_box.integer*(value-1)), lmd_rewardcr_box.integer*value), get_random(0, lmd_rewardsp_box.integer * value));
+	return std::make_tuple(get_random_int(1+(lmd_rewardcr_box.integer*(value-1)), lmd_rewardcr_box.integer*value), get_random(0, lmd_rewardsp_box.value * value));
 }
 void Cmd_Creditbox_f(gentity_t *ent, int iArg) {
 	char arg[MAX_TOKEN_CHARS];
