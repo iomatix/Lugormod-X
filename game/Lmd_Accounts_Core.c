@@ -630,7 +630,7 @@ float Accounts_GetSkillPoints_Bonus(Account_t* acc)
 }
 void Accounts_SetSkillPoints_Bonus(Account_t* acc, float value) {
 	if (!acc)return;
-	if (value < 0)value = 0;
+	if (value < 0) value = 0.0f;
 	acc->sp_bonus = value;
 	Lmd_Accounts_Modify(acc);
 }

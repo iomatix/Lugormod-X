@@ -433,7 +433,7 @@ int Professions_AddAmount_SkillPoints(int level) //that may be useful for disps 
 {
 	int p;
 
-	p = lmd_skillpoints_perlevel.integer; //starting 
+	p = lmd_skillpoints_perlevel.integer*level; //starting 
 	if (level > MASTER_LEVEL)//additional points bonus for mastery level!
 	{
 		p += floor((float)(lmd_skillpoints_perlevel.integer / 3));
@@ -450,7 +450,7 @@ int Professions_TotalSkillPoints(Account_t *acc) {
 	// Bonus Skill Points for NG+
 	int bonus = Accounts_GetNewGamePlus_Counter(acc)*lmd_skillpoints_perngp.integer;
 	// Bonus Skill Points Other
-	bonus += Accounts_GetSkillPoints_Bonus(acc);
+	bonus += floor(Accounts_GetSkillPoints_Bonus(acc));
 	
 	return  Professions_AddAmount_SkillPoints(level) + bonus;
 }

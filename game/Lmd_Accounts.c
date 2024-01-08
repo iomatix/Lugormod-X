@@ -269,8 +269,8 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^3Credits Boxes:              ^2%i ^3Credit-Box\n"
 		"^3New Game Plus Level:        ^2%i ^3LVL\n"
 		"^3New Game Plus Skill Points: ^2%i ^3SP\n"
-		"^3Bonus Skill Points:         ^2%i ^3SP\n"
-		"^3Score:         ^2%i", // TODO
+		"^3Bonus Skill Points:   ^2%.0f ^3SP\n"
+		"^3Score:					^2%i Points",
 		lvl, Accounts_GetExperience(acc), Professions_LevelCost_EXP(Accounts_Prof_GetProfession(acc), Accounts_Prof_GetLevel(acc)), Accounts_GetCredits(acc), Accounts_GetLevel_jedi(acc), Professions_AvailableSkillPoints(acc, PROF_JEDI, NULL, NULL), Accounts_GetLevel_merc(acc), Professions_AvailableSkillPoints(acc, PROF_MERC, NULL, NULL), Accounts_GetLootboxes(acc), Accounts_GetNewGamePlus_Counter(acc), Accounts_GetNewGamePlus_Counter(acc) * lmd_skillpoints_perngp.integer, floor(Accounts_GetSkillPoints_Bonus(acc)), Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)
 		c = "^2None";

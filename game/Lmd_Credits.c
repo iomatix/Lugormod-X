@@ -62,13 +62,13 @@ void GiveSkillPoints_Bonus(gentity_t* ent, float sp, char* reason) {
 	if (sp < 0 && cur - sp < 0) sp = 0.0f;
 
 	else if (sp > 0) {
-		char* msg = va("^3You received ^2%i^3 SP %s.", sp, (reason != NULL) ? reason : "");
+		char* msg = va("^3You received ^2%f^3 SP %s.", sp, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
 		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 		G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	}
 	else if (sp < 0) {
-		char* msg = va("^3You lost ^1%i^3 SP %s.", sp, (reason != NULL) ? reason : "");
+		char* msg = va("^3You lost ^1%f^3 SP %s.", sp, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
 		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 	}
