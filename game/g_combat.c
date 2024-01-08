@@ -5578,7 +5578,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 		&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH)
 	damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.0063); //0.63% +75% 120 level old: //0.6% per level + 72% 120 level
 //explosives v v v
-	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.004); //0.4% +48% 120 level old: //0.3% per level +36% 120 level
+	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.005); //0.5% +60% 120 level old: //0.3% per level +36% 120 level
 
 	}
 		

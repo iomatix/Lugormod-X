@@ -330,14 +330,18 @@ void Accounts_Prof_SetProfession(Account_t *acc, int value) {
 	//
 
 	profData_t *data = PROFDATA(acc);
-
+	
+	// TODO -> Save 
 	Accounts_Prof_ClearData(acc);
-	level = 0; //iomatix: reset level to 0!
+
+	// Free Memory
 	G_Free(data->data);
 	data->profession = value;
 	data->data = G_Alloc(Professions[value]->data.size);
 	memset(data->data, 0, Professions[value]->data.size);
+
 	//iomatix load
+	level = 0;
 	if (value == PROF_JEDI) level = Accounts_GetLevel_jedi(acc);
 	else if (value == PROF_MERC) level = Accounts_GetLevel_merc(acc);
 	if (level < 1) level = 1;
@@ -443,10 +447,13 @@ int Professions_AddAmount_SkillPoints(int level) //that may be useful for disps 
 	return p;
 }
 //iomatix:
-int Professions_TotalSkillPoints(Account_t *acc) {
+int Professions_TotalSkillPoints(Account_t *acc, int prof) {
 
 	if (!acc)return 0;
 	int level = Accounts_Prof_GetLevel(acc);
+
+	if (prof && prof == PROF_JEDI) level = Accounts_GetLevel_jedi(acc);
+	else if (prof && prof == PROF_MERC) level = Accounts_GetLevel_merc(acc);
 	// Bonus Skill Points for NG+
 	int bonus = Accounts_GetNewGamePlus_Counter(acc)*lmd_skillpoints_perngp.integer;
 	// Bonus Skill Points Other
@@ -456,7 +463,7 @@ int Professions_TotalSkillPoints(Account_t *acc) {
 }
 int Professions_TotalSkillPoints_Basic(int level) {
 
-	return level * Professions_AddAmount_SkillPoints(level);
+	return Professions_AddAmount_SkillPoints(level);
 }
 
 int Professions_SkillCost(profSkill_t *skill, int level) {
@@ -518,19 +525,21 @@ int Professions_AvailableSkillPoints(Account_t *acc, int prof, profSkill_t *skil
 		}
 		else if (!skill->parent) {
 			level = Accounts_Prof_GetLevel(acc);
+			if (prof && prof == PROF_JEDI) { level = Accounts_GetLevel_jedi(acc); }
+			else if (prof && prof == PROF_MERC) { level = Accounts_GetLevel_merc(acc); }
 			break;
 		}
 	}
 
 	if (parent) *parent = skill;
 	
-	return Professions_TotalSkillPoints(acc) - Professions_UsedSkillPoints(acc, prof, skill);
+	return Professions_TotalSkillPoints(acc, prof) - Professions_UsedSkillPoints(acc, prof, skill);
 }
 
 int recallDroppedCredits(gentity_t *ent);
 void Profession_Reset(gentity_t *ent)
 {
-	PlayerAcc_SetScore(ent, 10);
+	PlayerAcc_SetScore(ent, 0);
 	PlayerAcc_SetExperience(ent, 0); //reset experience points.
 
 	recallDroppedCredits(ent);
@@ -572,7 +581,7 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 	}
 
 	//formula
-	int cost_skillpoints = lmd_profession_fee.integer + lmd_skillpoint_cost.integer * Professions_UsedSkillPoints(ent->client->pers.Lmd.account, playerProfession, NULL) / 10; //reset for 1/10 of the cost
+	int reset_cost = lmd_profession_fee.integer + lmd_skillpoint_cost.integer * Professions_UsedSkillPoints(ent->client->pers.Lmd.account, playerProfession, NULL) / 10; //reset for fee+10% of the cost
 	if (flags & ACCFLAGS_NOPROFCRLOSS) {
 		PlayerAcc_AddFlags(ent, -ACCFLAGS_NOPROFCRLOSS);
 		if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3Your free profession change has been used up.");
@@ -580,7 +589,7 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 			trap_SendServerCommand(ent->s.number, "chat \"^3Your free profession change has been used up.\"");
 	}
 	else {
-		if (PlayerAcc_GetCredits(ent) <= cost_skillpoints)
+		if (PlayerAcc_GetCredits(ent) <= reset_cost)
 		{
 			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You've paid all your credits.");
 			else
@@ -594,10 +603,10 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 
 
 
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You've paid ^2%i CR", cost_skillpoints));
+			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You've paid ^2%i CR", reset_cost));
 			else
-				trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR\"", cost_skillpoints));
-			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - cost_skillpoints);
+				trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR\"", reset_cost));
+			PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) - reset_cost);
 
 		}
 
@@ -605,10 +614,10 @@ qboolean Professions_ChooseProf(gentity_t *ent, int prof) {
 	}
 	//iomatix:
 
+	
 	PlayerAcc_Prof_SetProfession(ent, prof);
-
 	Profession_Reset(ent);
-
+	
 
 
 	if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3Your profession is now: ^2%s", Professions[prof]->name)); else
@@ -1012,10 +1021,10 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 				}
 				else {
 					if (lmd_old_commands_disp.integer == 1 || lmd_old_commands_disp.integer == 2) 
-						Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill. ^3The cost of this skill is ^1%i CR ^3and ^1%i SP", skill->name, cost_cr, cost)); 
+						Disp(ent, va("^3You do not have enough points or credits to increase the ^2%s^3 skill.\n^3The cost of this skill is ^1%i CR ^3and ^1%i SP.", skill->name, cost_cr, cost)); 
 					
 					else
-						trap_SendServerCommand(ent->s.number, va("^3You do not have enough points or credits to increase the ^2%s^3 skill. ^3The cost of this skill is ^1%i CR ^3and ^1%i SP", skill->name, cost_cr, cost));
+						trap_SendServerCommand(ent->s.number, va("chat \"^3You do not have enough points or credits to increase the ^2%s^3 skill.\n^3The cost of this skill is ^1%i CR ^3and ^1%i SP.\"", skill->name, cost_cr, cost));
 				}
 			}
 			else
