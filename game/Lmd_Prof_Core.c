@@ -429,7 +429,7 @@ void Professions_SetDefaultSkills(Account_t *acc, int prof) {
 }
 
 //iomatix fixed up that shit! ;)
-int Professions_Add_That_Amount_SkillPoints(int level) //that may be useful for disps !! iomatix
+int Professions_AddAmount_SkillPoints(int level) //that may be useful for disps !! iomatix
 {
 	int p;
 
@@ -446,19 +446,17 @@ int Professions_Add_That_Amount_SkillPoints(int level) //that may be useful for 
 int Professions_TotalSkillPoints(Account_t *acc) {
 
 	if (!acc)return 0;
-	int p;
-
 	int level = Accounts_Prof_GetLevel(acc);
-	int prof = Accounts_Prof_GetProfession(acc);
-	//additional points for new game plus!
-	int nwg = Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer;
-	p = level * Professions_Add_That_Amount_SkillPoints(level) + nwg;
-	return p;
+	// Bonus Skill Points for NG+
+	int bonus = Accounts_GetNewGamePlus_Counter(acc)*lmd_skillpoints_perngp.integer;
+	// Bonus Skill Points Other
+	bonus += Accounts_GetSkillPoints_Bonus(acc);
+	
+	return  Professions_AddAmount_SkillPoints(level) + bonus;
 }
 int Professions_TotalSkillPoints_Basic(int level) {
-	int p;
-	p = level * Professions_Add_That_Amount_SkillPoints(level);
-	return p;
+
+	return level * Professions_AddAmount_SkillPoints(level);
 }
 
 int Professions_SkillCost(profSkill_t *skill, int level) {
@@ -480,7 +478,7 @@ int Professions_SkillCost(profSkill_t *skill, int level) {
 int Professions_UsedSkillPoints(Account_t *acc, int prof, profSkill_t *skill) {
 	//Count upward from the current location and total up all skill points.
 
-	int i, sum = 0;
+	int sum = 0;
 
 	if (!acc) {
 		return 0;
@@ -493,21 +491,22 @@ int Professions_UsedSkillPoints(Account_t *acc, int prof, profSkill_t *skill) {
 		sum = Professions_SkillCost(skill, level);
 	}
 
-	for (i = 0; i < skill->subSkills.count; i++) {
+	for (int i = 0; i < skill->subSkills.count; i++) {
 		sum += Professions_UsedSkillPoints(acc, prof, &skill->subSkills.skill[i]);
 	}
 	return sum;
 }
 
 int Professions_AvailableSkillPoints(Account_t *acc, int prof, profSkill_t *skill, profSkill_t **parent) {
-	int level = 0;
-
-	if (!acc) {
-		return 0;
-	}
+	
+	if (!acc) return 0;
+	
 
 	//Trace backwards from the given skill to find the next point group.
 	// TODO: Support reuse of a single skill def on multiple parents?
+	int level = 0;
+	if (skill == NULL) skill = &Professions[prof]->primarySkill;
+
 	while (skill = skill->parent) {
 		if (skill->subSkills.pointGroup) {
 			//point groups must have an associated skill.
@@ -523,9 +522,8 @@ int Professions_AvailableSkillPoints(Account_t *acc, int prof, profSkill_t *skil
 		}
 	}
 
-	if (parent)
-		*parent = skill;
-
+	if (parent) *parent = skill;
+	
 	return Professions_TotalSkillPoints(acc) - Professions_UsedSkillPoints(acc, prof, skill);
 }
 
@@ -753,7 +751,7 @@ void Cmd_SkillSelect_List(gentity_t *ent, int prof, profSkill_t *parent) {
 	if (group) {
 		if (group->setValue)
 			// TODO: Not garenteed that this is the case.
-			s = va(" ^3for use inside the ^2%s^3 category.\nLeveling up the ^2%s^3 skill will give you more points for these skills", group->name, group->name);
+			s = va(" ^3for use inside the ^2%s^3 category.\nLeveling up the ^2%s^3 skill will give you more points for these skills.", group->name, group->name);
 		else
 			s = va(" ^3for use inside the ^2%s^3 category", group->name);
 	}
@@ -1131,9 +1129,9 @@ int Professions_LevelCost_EXP(int prof, int level) {
 	int cost;
 	if (lmd_exp_for_level.integer <= 1) lmd_exp_for_level.integer = 450; //default
 
-	if (nextlevel < 16) cost = lmd_exp_for_level.integer * level * nextlevel / 7.5f;
-	else if (nextlevel < MASTER_LEVEL)	cost = lmd_exp_for_level.integer * level * nextlevel / 7.3f;
-	else cost = lmd_exp_for_level.integer * level * nextlevel / 6.426f;									//harder formula for players above 40 lvl
+	if (nextlevel < 16) cost = lmd_exp_for_level.integer * level * nextlevel / 7.25f;
+	else if (nextlevel < MASTER_LEVEL)	cost = lmd_exp_for_level.integer * level * nextlevel / 6.75f;
+	else cost = lmd_exp_for_level.integer * level * nextlevel / 5.75;									//harder formula for players above 40 lvl
 
 	return cost;
 }
@@ -1243,7 +1241,7 @@ void Experience_Level_Up(gentity_t *ent)
 	/////
 
 
-	int NewSkillPoints_value = Professions_Add_That_Amount_SkillPoints(playerLevel);
+	int NewSkillPoints_value = Professions_AddAmount_SkillPoints(playerLevel);
 
 
 
@@ -1410,16 +1408,8 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 	if (Q_stricmp("start", arg) == 0)
 	{
 		int p_level = PlayerAcc_Prof_GetLevel(ent);
-		if (p_level <= 1)
-		{
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1Your profession level is too small to start the new game.");
-			else trap_SendServerCommand(ent->s.number, "chat \"^1Your profession level is too small to start the new game.\"");
-			return;
-		}
-
-
-		Disp(ent, "^2New Game Plus started.");
-		if (p_level > 1) {
+		if (p_level >= 40) {
+			Disp(ent, "^2New Game Plus started.");
 			int ng_points = 0;
 			PlayerAcc_Prof_SetLevel(ent, 1);
 			Profession_Reset(ent);
@@ -1435,21 +1425,21 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 					trap_SendServerCommand(ent->s.number, va("chat \"^3The New Game Plus Level is increased by ^2%i. ^3You've got additional skillpoints.\"", ng_points));
 
 			}
-			else {
-				if (lmd_old_commands_disp.integer == 1) Disp(ent, "^3The New Game Plus Level isn't increased. You must reach at least ^6Mastery Level.");
-				else {
-					trap_SendServerCommand(ent->s.number, "chat \"^3The New Game Plus Level isn't increased. You must reach at least ^6Mastery Level.\"");
-					trap_SendServerCommand_ToAll(ent->s.number, va("chat \"%s ^8started a New Game.\"", PlayerAcc_GetName(ent)));
-				}
 
-			}
 
-			PlayerAcc_SetNewGamePlus_count(ent, PlayerAcc_GetNewGamePlus_count(ent) + ng_points);
+			PlayerAcc_SetNewGamePlus_Counter(ent, PlayerAcc_GetNewGamePlus_count(ent) + ng_points);
 			Accounts_Prof_ClearData(ent->client->pers.Lmd.account);
 			
 			Professions_SetDefaultSkills(ent->client->pers.Lmd.account, PlayerAcc_Prof_GetProfession(ent));
 			Profession_UpdateSkillEffects(ent, PlayerAcc_Prof_GetProfession(ent));
 			WP_InitForcePowers(ent);
+
+		}
+		else {
+			if (lmd_old_commands_disp.integer == 1) Disp(ent, "^3The New Game Plus Level isn't increased. You must reach at least ^6Mastery Level.");
+			else {
+				trap_SendServerCommand(ent->s.number, "chat \"^3The New Game Plus Level isn't increased. You must reach at least ^6Mastery Level.\"");
+			}
 
 		}
 
@@ -1458,7 +1448,7 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 		int ng_points = PlayerAcc_GetNewGamePlus_count(ent);
 		if (ng_points != 0)
 		{
-			PlayerAcc_SetNewGamePlus_count(ent, 0);
+			PlayerAcc_SetNewGamePlus_Counter(ent, 0);
 			if (lmd_old_commands_disp.integer == 1) Disp(ent, "^3Your New Game Plus progress is reseted!");
 			else trap_SendServerCommand(ent->s.number, "chat \"^3Your New Game Plus progress is reseted!\"");
 

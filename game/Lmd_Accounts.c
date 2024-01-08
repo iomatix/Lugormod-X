@@ -10,7 +10,8 @@
 #include "Lmd_IPs.h"
 #include "Lmd_Commands_Core.h"
 #include "Lmd_Console.h"
-
+#include "tuple"
+#include "Lmd_Prof_Core.h"
 
 Account_t *Accounts_New(char *username, char *name, char *password);
 
@@ -179,12 +180,12 @@ void HiScore(gentity_t *ent, int field) {
 char * GetTitle_system(Account_t *acc)
 {
 	
-	int level = Accounts_Prof_GetLevel(acc) + Accounts_GetNewGamePlus_count(acc);
+	int level = Accounts_Prof_GetLevel(acc) + Accounts_GetNewGamePlus_Counter(acc);
 	if (Accounts_Prof_GetProfession(acc) == PROF_JEDI) {
 		//jedi titles
 		if (level < 10)return "^7Apprentice";
 		else if (level < 20)return "^7Disciple";
-		else if (level < 30)return "^7Adept";
+		else if (level < 30)return "^7Force Adept";
 		else if (level < 60)
 		{
 			if (Jedi_GetAccSide(acc) == FORCE_DARKSIDE) return "^1Darth";
@@ -197,19 +198,20 @@ char * GetTitle_system(Account_t *acc)
 		else if (level < 130)return "^8Sage";
 		else if (level < 170)return "^8Master";
 		else if (level < 200)return "^9Luminary";
-		else return "^0Legend";
+		else return "^0Legendary Champion";
 	}
 	else if (Accounts_Prof_GetProfession(acc) == PROF_MERC)
 	{//merc titles
 		if (level < 10)return "^7Freshmeat";
-		else if (level < 20)return "^7Rifleman";
-		else if (level < 30)return "^7Mercenary";
-		else if (level < 40)return "^2Specialist";
-		else if (level < 100)return "^1Bounty Hunter";
-		else if (level < 150)return "^1Assassin";
-		else if (level < 180)return "^8Commander";
-		else if (level < 230)return "^9Master of Hunt";
-		else return "^0Legend";
+		else if (level < 20)return "^7Skilled Gunslinger";
+		else if (level < 30)return "^7Contracted Mercenary";
+		else if (level < 60)return "^2Veteran Rogue";
+		else if (level < 80)return "^1Veteran Hunter";
+		else if (level < 100)return "^1Elitarian Hunter";
+		else if (level < 130)return "^8Master Hunter";
+		else if (level < 170)return "^8Galactic Enforcer";
+		else if (level < 200)return "^9Master Enforcer";
+		else return "^0Legendary Enforcer";
 
 
 	}
@@ -219,7 +221,7 @@ char * GetTitle_system(Account_t *acc)
 }
 
 
-extern int Professions_LevelCost_EXP(int prof, int playerLevel);
+
 int Jedi_GetAccSide(Account_t *acc);
 void GetStats(gentity_t *ent, Account_t *acc) {
 	int prof, time, lvl, authrank;
@@ -257,16 +259,19 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		time / 3600, (time / 60) % 60, (Accounts_GetBountyReward(acc) > 0) ? va("^1Black List:    ^3%i CR", Accounts_GetBountyReward(acc)) : "^3You are not listed on ^1The Black List^3."));
 	Disp(ent, va(
 		"^8===== Progress Information =====\n"
-		"^3Main Level:    ^2%i\n"
-		"^3Credits:       ^2%i\n"
-		"^3Experience:    ^5%i ^3/ ^2%i \n"
-		"^3Force User Level:    ^2%i\n"
-		"^3Mercenary Level:     ^2%i\n"
-		"^3Credits Boxes:       ^2%i\n"
-		"^3New Game Plus Level: ^2%i\n"
-		"^3New Game Plus Skill Points: ^2%i\n"
-		"^3Score:         ^2%i",
-		lvl, Accounts_GetCredits(acc), Accounts_GetExperience(acc), Professions_LevelCost_EXP(Accounts_Prof_GetProfession(acc), Accounts_Prof_GetLevel(acc)), Accounts_GetLevel_jedi(acc), Accounts_GetLevel_merc(acc), Accounts_GetLootboxes(acc), Accounts_GetNewGamePlus_count(acc), Accounts_GetNewGamePlus_count(acc)*lmd_skillpoints_perlevel.integer, Accounts_GetScore(acc)));
+		"^3Main Level:                 ^2%i ^3LVL\n"
+		"^3Experience:        ^5%i ^3/ ^2%i ^3EXP\n"
+		"^3Credits:                    ^2%i ^3CR\n"
+		"^3Force User Level:           ^2%i ^3LVL\n"
+		"^3Avialable Skill Points:     ^2%i ^3SP\n"
+		"^3Mercenary Level:            ^2%i ^3LVL\n"
+		"^3Avialable Skill Points:     ^2%i ^3SP\n"
+		"^3Credits Boxes:              ^2%i ^3Credit-Box\n"
+		"^3New Game Plus Level:        ^2%i ^3LVL\n"
+		"^3New Game Plus Skill Points: ^2%i ^3SP\n"
+		"^3Bonus Skill Points:         ^2%i ^3SP\n"
+		"^3Score:         ^2%i", // TODO
+		lvl, Accounts_GetExperience(acc), Professions_LevelCost_EXP(Accounts_Prof_GetProfession(acc), Accounts_Prof_GetLevel(acc)), Accounts_GetCredits(acc), Accounts_GetLevel_jedi(acc), Professions_AvailableSkillPoints(acc, PROF_JEDI, NULL, NULL), Accounts_GetLevel_merc(acc), Professions_AvailableSkillPoints(acc, PROF_MERC, NULL, NULL), Accounts_GetLootboxes(acc), Accounts_GetNewGamePlus_Counter(acc), Accounts_GetNewGamePlus_Counter(acc) * lmd_skillpoints_perngp.integer, floor(Accounts_GetSkillPoints_Bonus(acc)), Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)
 		c = "^2None";
 	else if (prof == PROF_ADMIN)
@@ -611,7 +616,7 @@ qboolean Lmd_Accounts_Player_TryLogin(gentity_t *ent, char *username, char *pass
 	if (Lmd_Accounts_Player_Login(ent, acc)) {
 		if (!Auths_AccHasAdmin(acc)) {
 			trap_SendServerCommand(ent->s.number, "chat \"^2Login successful.\"");
-			Disp(ent, va("^3The account will expire in ^2%i^3 days if you do not login before that.", accountLiveTime(Accounts_GetLevel_merc(acc)+Accounts_GetLevel_jedi(acc)+(Accounts_GetNewGamePlus_count(acc)*10))));
+			Disp(ent, va("^3The account will expire in ^2%i^3 days if you do not login before that.", accountLiveTime(Accounts_GetLevel_merc(acc)+Accounts_GetLevel_jedi(acc)+(Accounts_GetNewGamePlus_Counter(acc)*10))));
 		}
 		else {
 			trap_SendServerCommand(ent->s.number, "chat \"^2Login successful.\"");
@@ -883,8 +888,8 @@ void Cmd_Credits_f(gentity_t *ent, int iArg) {
 	}
 
 	if (iArg == 0) {
-		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You have ^2CR %i^3.", ownCreds)); else
-			trap_SendServerCommand(ent->s.number, va("chat \"^3You have ^2CR %i^3.\"", ownCreds));
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You have ^%i^3 CR.", ownCreds)); else
+			trap_SendServerCommand(ent->s.number, va("chat \"^3You have ^2%i^3 CR.\"", ownCreds));
 		return;
 	}
 
@@ -915,8 +920,8 @@ void Cmd_Credits_f(gentity_t *ent, int iArg) {
 	}
 
 	if (numCreds > ownCreds) {
-		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You cannot afford ^1CR %i^3.", numCreds)); else
-			trap_SendServerCommand(ent->s.number, va("chat \"^1You cannot afford ^1CR %i^3.\"", numCreds));
+		if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^3You cannot afford ^1%i^3 CR.", numCreds)); else
+			trap_SendServerCommand(ent->s.number, va("chat \"^1You cannot afford ^1%i^3 CR.\"", numCreds));
 		return;
 	}
 	if (iArg == 1) {
@@ -1118,61 +1123,50 @@ void Cmd_aliasname_f(gentity_t *ent, int iArg) {
 	Lmd_Accounts_Player_Login(ent, thisacc);
 
 }
-int get_random(int min, int max)
-{
-	int tmp;
-	if (max >= min)
-		max -= min;
-	else
-	{
-		tmp = min - max;
-		min = max;
-		max = tmp;
-	}
-	return max ? (rand() % max + min) : min;
-}
-int Open_Creditbox(gentity_t *ent) { //Get random value from the credit box
-									 //Chances: 55% for 50-350CR, 25% for 360-1500CR, 15% for 1600-5500CR, 4% for 8000-20 000CR, 1% 20 000 - 175 000CR 
-	int value = get_random(0, 101);
 
+
+std::tuple <int,int> Open_Creditbox(gentity_t *ent) { //Get random value from the credit box
+	//credits formula random(1+(lmd_rewardcr_box*(tier-1)),lmd_rewardcr_box*tier), 
+	//skill points formula random(0,lmd_rewardsp_box*tier) [0-0.25 sp -> 1.25 sp]
+	int value = get_random_int(0, 101);
+	
 	if (value <= 55)
 	{
-		value = get_random(5, 35) * 10; //50-350 by 10
+		value = 1;
 		Disp(ent, "^3This box is almost empty...");
 	}
 	else if (value <= 80) {
-		value = get_random(36, 150) * 10; //360-1500 by 10
+		value = 2;
 		Disp(ent, "^3This is small box...");
 	}
 	else if (value <= 95) {
-		value = get_random(16, 55) * 100; //1600-5500 by 100
+		value = 3;
 		Disp(ent, "^3This is medium box...");
 	}
 	else if (value <= 99) {
-		value = get_random(16, 40) * 500; //8000-20000 by 500
+		value = 4;
 		Disp(ent, "^3This is large box...");
 	}
 	else if (value <= 101) {
-		value = get_random(20, 175) * 1000; //20 000-175 000 by 1000
+		value = 5;
 		Disp(ent, "^3This box full of credits!");
 	}
-	return value;
+
+	return std::make_tuple(get_random_int(1+(lmd_rewardcr_box.integer*(value-1)), lmd_rewardcr_box.integer*value), get_random_int(0, lmd_rewardsp_box.integer * value));
 }
 void Cmd_Creditbox_f(gentity_t *ent, int iArg) {
 	char arg[MAX_TOKEN_CHARS];
 	trap_Argv(1, arg, sizeof(arg));
 	if (Q_stricmp("open", arg) == 0)
 	{
-		int chests = PlayerAcc_GetLootboxes(ent);
-		int credits_amount;
-		if (chests > 0)
+
+		if (PlayerAcc_GetLootboxes(ent) > 0)
 		{
-			chests--;
-			PlayerAcc_SetLootboxes(ent, chests);
-			credits_amount = Open_Creditbox(ent);
-			GiveCredits(ent, credits_amount, "from the Credit Box.");
-			if (lmd_old_commands_disp.integer == 1)Disp(ent, va("^2Recived ^3%i ^2Credits!", credits_amount)); else
-				trap_SendServerCommand(ent->s.number, va("chat \"^2Recived ^3%i ^2Credits!\"", credits_amount));
+			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent)-1);
+			std::tuple<int,int> rewards = Open_Creditbox(ent); // 0 -> CR, 1 -> SP
+			GiveCredits(ent, std::get<0>(rewards), "from the Credit Box.");
+			GiveSkillPoints_Bonus(ent, std::get<1>(rewards), "from the Credit Box.");
+
 		}
 		else
 			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^1You have no Credit Boxes right now."); else

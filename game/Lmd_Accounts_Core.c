@@ -38,6 +38,7 @@ struct Account_s{
 	int level_merc; //4
 	int lootboxes;
 	int new_game_plus_counter;
+	float sp_bonus;
 	int bountyReward;
 	int max_killstreak;
 	int flags;
@@ -232,6 +233,7 @@ DataWriteResult_t Accounts_Write_Modules(void *target, char key[], int keySize, 
 	_m##_AUTO(level_merc, ACCOUNTOFS(level_merc), F_INT) \
 	_m##_AUTO(lootboxes, ACCOUNTOFS(lootboxes), F_INT) \
 	_m##_AUTO(new_game_plus_counter, ACCOUNTOFS(new_game_plus_counter), F_INT) \
+	_m##_AUTO(sp_bonus, ACCOUNTOFS(sp_bonus), F_FLOAT) \
 	_m##_AUTO(bountyReward, ACCOUNTOFS(bountyReward), F_INT) \
 	_m##_AUTO(max_killstreak, ACCOUNTOFS(max_killstreak), F_INT) \
 	_m##_AUTO(flags, ACCOUNTOFS(flags), F_INT) \
@@ -411,7 +413,7 @@ int accountLiveTime(int level) {
 
 qboolean accountLiveTimeCheck(Account_t *acc) {
 	int now = Time_Days(Time_Now());
-	int keep = accountLiveTime(Accounts_GetLevel_merc(acc) + Accounts_GetLevel_jedi(acc) + (Accounts_GetNewGamePlus_count(acc)*10));
+	int keep = accountLiveTime(Accounts_GetLevel_merc(acc) + Accounts_GetLevel_jedi(acc) + (Accounts_GetNewGamePlus_Counter(acc)*10));
 	if(now - Time_Days(acc->lastLogin) > keep) return qfalse;
 	return qtrue;
 }
@@ -611,7 +613,7 @@ void Accounts_SetLootboxes(Account_t *acc, int value) {
 	acc->lootboxes = value;
 	Lmd_Accounts_Modify(acc);
 }
-int Accounts_GetNewGamePlus_count(Account_t *acc) {
+int Accounts_GetNewGamePlus_Counter(Account_t *acc) {
 	if (!acc)return 0;
 	return acc->new_game_plus_counter;
 }
@@ -619,6 +621,17 @@ void Accounts_SetNewGamePlus_count(Account_t *acc, int value) {
 	if (!acc)return;
 	if (value < 0)value = 0;
 	acc->new_game_plus_counter = value;
+	Lmd_Accounts_Modify(acc);
+}
+float Accounts_GetSkillPoints_Bonus(Account_t* acc)
+{
+	if (!acc)return 0;
+	return acc->sp_bonus;
+}
+void Accounts_SetSkillPoints_Bonus(Account_t* acc, float value) {
+	if (!acc)return;
+	if (value < 0)value = 0;
+	acc->sp_bonus = value;
 	Lmd_Accounts_Modify(acc);
 }
 //

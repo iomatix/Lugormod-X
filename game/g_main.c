@@ -338,6 +338,10 @@ vmCvar_t	lmd_bounty_streaks_by;
 vmCvar_t	lmd_skillpoint_cost;
 vmCvar_t	lmd_exp_for_level;
 vmCvar_t    lmd_skillpoints_perlevel;
+vmCvar_t    lmd_skillpoints_perngp;
+vmCvar_t    lmd_rewardcr_box;
+vmCvar_t    lmd_rewardsp_box;
+vmCvar_t    lmd_bonussp_perma;
 vmCvar_t	lmd_mastery_level_skills_level;
 vmCvar_t	lmd_damage_level_scale;
 vmCvar_t	lmd_is_lethality_add_damage;
@@ -890,9 +894,13 @@ static cvarTable_t		gameCvarTable[] = {
 { &lmd_bounty_streaks_by, "lmd_bounty_streaks_by", "5", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_skillpoint_cost, "lmd_skillpoint_cost", "485", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_exp_for_level, "lmd_exp_for_level", "450", CVAR_ARCHIVE, 0, qfalse },
-{ &lmd_skillpoints_perlevel, "lmd_skillpoints_perlevel", "5", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_skillpoints_perlevel, "lmd_skillpoints_perlevel", "4", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_skillpoints_perngp, "lmd_skillpoints_perngp", "4", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_rewardcr_box, "lmd_rewardcr_box", "250", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_rewardsp_box, "lmd_rewardsp_box", "0.25", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_bonussp_perma, "lmd_bonussp_perma", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_mastery_level_skills_level, "lmd_mastery_level_skills_level", "3", CVAR_ARCHIVE, 0, qfalse },
-{ &lmd_damage_level_scale, "lmd_damage_level_scale", "1", CVAR_ARCHIVE, 0, qfalse },
+{ &lmd_damage_level_scale, "lmd_damage_level_scale", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_is_lethality_add_damage, "lmd_is_lethality_add_damage", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_is_thousandcuts_lethality, "lmd_is_thousandcuts_lethality", "0", CVAR_ARCHIVE, 0, qfalse },
 { &lmd_is_buy_level, "lmd_is_buy_level", "0", CVAR_ARCHIVE, 0, qfalse },

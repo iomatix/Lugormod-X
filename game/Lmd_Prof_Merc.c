@@ -121,29 +121,29 @@ const int MercFields_Count = DATAFIELDS_COUNT(MercFields);
 
 //skills:
 const char *mercSkill_hp_maxs_Descr[] = {
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+13 HP",
-	"+25 HP",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Increase your Vitality",
+	"Greatly increase your Vitality",
 	NULL
 };
-//+272 HP
+
 
 
 STD_SKILLS_FUNCS(hp_maxs)
@@ -191,26 +191,26 @@ profSkill_t mercSkill_regeneration = {
 
 ////////////
 const char *mercSkill_sd_maxs_Descr[] = {
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+5 Shield",
-	"+8 Shield",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Improve your Shield Generator",
+	"Greatly Improve your Shield Generator",
 	NULL
 };
 
@@ -231,11 +231,11 @@ profSkill_t mercSkill_sd_maxs = {
 };
 ///////////
 const char *mercSkill_lethality_Descr[] = {
-	"5 percent of the Lethality",
-	"10 percent of the Lethality",
-	"15 percent of the Lethality",
-	"20 percent of the Lethality",
-	"25 percent of the Lethality",
+	"3 percent of the damage is Lethal",
+	"5 percent of the damage is Lethal",
+	"8 percent of the damage is Lethal",
+	"10 percent of the damage is Lethal",
+	"15 percent of the damage is Lethal",
 	NULL
 };
 
@@ -256,10 +256,10 @@ profSkill_t mercSkill_Lethality = {
 };
 //////////
 const char *mercSkill_rifle_master_Descr[] = {
-	"9 percent of the additional damage using rifles.",
-	"18 percent of the additional damage using rifles.",
-	"27 percent of the additional damage using rifles.",
-	"36 percent of the additional damage using rifles.",
+	"3 percent of the additional damage using rifles.",
+	"5 percent of the additional damage using rifles.",
+	"8 percent of the additional damage using rifles.",
+	"12 percent of the additional damage using rifles.",
 	NULL
 };
 
@@ -279,14 +279,14 @@ profSkill_t mercSkill_rifle_master = {
 	Lmd_Prof_Merc_SetSkill_rifle_master,
 };
 
-/////// too op? 4,8,12,16,20,24%? nerf?
+/////// 3,5,8,10,15,20 % -> 25,33,45,55,65,75 %
 const char *mercSkill_perfect_aim_Descr[] = {
-	"8 percent chance for additional 12 percent critical damage.",
-	"16 percent chance for additional 24 percent of critical damage.",
-	"24 percent chance for additional 36 percent of critical damage.",
-	"32 percent chance for additional 48 percent of critical damage.",
-	"40 percent chance for additional 60 percent of critical damage.",
-	"48 percent chance for additional 72 percent of critical damage.",
+	"3 percent chance for additional 25 percent critical damage.",
+	"5 percent chance for additional 33 percent of critical damage.",
+	"8 percent chance for additional 45 percent of critical damage.",
+	"10 percent chance for additional 55 percent of critical damage.",
+	"15 percent chance for additional 65 percent of critical damage.",
+	"20 percent chance for additional 75 percent of critical damage.",
 	NULL
 };
 
@@ -336,13 +336,13 @@ int Lmd_Prof_Merc_GetLethalitySkill(Account_t *acc) {
 /////Functions:
 int Get_Merc_hp_maxs_value(gentity_t *ent)
 {
-	int value = 58; //starting health
+	int value = 55; //starting health
 
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 4.1); //scale health 492+55
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 3.45); // 3.45 health per level
 	int skillHP = Lmd_Prof_Merc_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &mercSkill_hp_maxs);
 	if (skillHP > 0){
-		value += 13 * skillHP;
-		if (skillHP == mercSkill_hp_maxs.levels.max) value += 12; //bonus for maxed (13+12=25)
+		value += 15 * skillHP; // 15 per skill level
+		if (skillHP == mercSkill_hp_maxs.levels.max) value += 50; //bonus for being maxed
 	}
 	return value;
 
@@ -350,12 +350,12 @@ int Get_Merc_hp_maxs_value(gentity_t *ent)
 
 int Get_Merc_sd_maxs_value(gentity_t *ent)
 {
-	int value = 5; //starting shield
+	int value = 15; //starting shield
 
 	int skillSD = Lmd_Prof_Merc_GetSkill_sd_maxs(ent->client->pers.Lmd.account, &mercSkill_sd_maxs);
 	if (skillSD > 0) {
-		value = 5 * skillSD;
-		if (skillSD == mercSkill_sd_maxs.levels.max) value += 3; //bonus for maxed (5+3=8)
+		value = 15 * skillSD;
+		if (skillSD == mercSkill_sd_maxs.levels.max) value += 40; //bonus for being maxed
 	}
 
 	return value;
@@ -461,18 +461,18 @@ int Lmd_Prof_Merc_GetWeaponsSkill(Account_t *acc) {
 	return mercSkill_Weapons.getValue(acc, &mercSkill_Weapons);
 }
 const char *mercSkill_Shield_Descr[] = {
-	"Spawn with an extra 15 percent shield charge.",
-	"Spawn with an extra 30 percent shield charge.",
-	"Spawn with an extra 45 percent shield charge.",
-	"Spawn with an extra 60 percent shield charge.",
-	"Spawn with an extra 75 percent shield charge.",
+	"Spawn with an extra shield charge.",
+	"Spawn with an extra shield charge.",
+	"Spawn with an extra shield charge.",
+	"Spawn with an extra shield charge.",
+	"Spawn with an extra shield charge.",
 	NULL
 };
 STD_SKILLS_FUNCS(armor)
 
 profSkill_t mercSkill_Shield = {
 	"Shield",
-	"Bring a higher shield charge into the field.",
+	"Bring into the field a higher tier shield with better charge.",
 	mercSkill_Shield_Descr,
 	
 	0,
@@ -1891,7 +1891,7 @@ void Merc_Spawn(gentity_t *ent) {
 		int armorSkill = Lmd_Prof_Merc_GetSkill_armor(ent->client->pers.Lmd.account, &mercSkill_Shield);
 		if (armorSkill > 0) {
 			//Will be capped to max on spawn finalize if needed.
-			ent->client->ps.stats[STAT_ARMOR] += armorSkill * (ent->client->pers.maxHealth * 0.15f);
+			ent->client->ps.stats[STAT_ARMOR] += armorSkill * 12;
 		}
 		//iomatix:
 		ent->client->ps.stats[STAT_ARMOR] += Get_Merc_sd_maxs_value(ent);

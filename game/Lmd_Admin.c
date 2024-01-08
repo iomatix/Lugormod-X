@@ -34,6 +34,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 			"^2BoxesCR\n"
 			"^2Credits\n"
 			"^2Experience\n"
+			"^2SkillPoints\n"
 			"^2Profession\n"
 			"^2Passwd\n"
 			"^2Level\n"
@@ -205,8 +206,23 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		Disp(ent, "^5New Game Plus count set.");
 		return;
 	}
+	////
+	else if (Q_stricmp(arg, "sp") == 0 || Q_stricmp(arg, "bsp") == 0 || Q_stricmp(arg, "skillpoints") || Q_stricmp(arg, "bonusskillpoints")) {
+		int v = atoi(val);
+		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
+			Disp(ent, "^1Invalid ^5bonus Skill Points ^1amount.");
+			return;
+		}
+		if (v < 0) {
+			Disp(ent, "^1Invalid amount, ^5Skill Points ^1must be greater than or equal to zero.");
+			return;
+		}
 
 
+		Accounts_SetSkillPoints_Bonus(acc, v);
+		Disp(ent, "^5Bonus Skill Points amount is set.");
+		return;
+		}
 
 	///////
 	else if (Q_stricmp(arg, "profession") == 0 || Q_stricmp(arg, "prof") == 0) {

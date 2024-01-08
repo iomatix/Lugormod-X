@@ -1,10 +1,11 @@
+#pragma once
 #include "Lmd_Prof_Jedi.h"
 #include "Lmd_Prof_Merc.h"
 #include "Lmd_Professions_Public.h"
 
 //iomatix ^ ^
-enum{
-	PROF_NONE = 0,
+enum {
+	PROF_NONE,
 	PROF_ADMIN,
 	PROF_BOT,
 	PROF_JEDI,

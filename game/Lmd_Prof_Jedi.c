@@ -4,6 +4,7 @@
 #include "Lmd_Data.h"
 #include "Lmd_Accounts_Data.h"
 #include "Lmd_Prof_Core.h"
+#include <cmath>
 
 //Jedi skills.
 enum {
@@ -139,26 +140,26 @@ int Jedi_GetSide(gentity_t *ent) {
 //skills:
 //will
 const char *jediSkill_Passive_hp_maxs_Descr[] = {
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+10 HP",
-	"+20 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+12 HP",
+	"+42 HP",
 	NULL
 };
 
@@ -180,26 +181,26 @@ profSkill_t jediSkill_Passive_hp_maxs = {
 };
 //Force
 const char *jediSkill_Passive_mp_maxs_Descr[] = {
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+12 Force capacity",
-	"+25 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+8 Force capacity",
+	"+34 Force capacity",
 	NULL
 };
 
@@ -224,9 +225,11 @@ profSkill_t jediSkill_Passive_mp_maxs = {
 //Overload
 const char *jediSkill_Passive_overload_Descr[] = {
 	"Additional 2 percent of force regeneration and force capacity",
-	"Additional 5 percent of force regeneration and force capacity",
-	"Additional 8 percent of force regeneration and force capacity",
+	"Additional 4 percent of force regeneration and force capacity",
+	"Additional 6 percent of force regeneration and force capacity",
 	"Additional 10 percent of force regeneration and force capacity",
+	"Additional 13 percent of force regeneration and force capacity",
+	"Additional 20 percent of force regeneration and force capacity",
 	NULL
 };
 
@@ -239,23 +242,23 @@ profSkill_t jediSkill_Passive_overload = {
 	jediSkill_Passive_overload_Descr,
 
 	0,
-	SkillLevels_4,
+	SkillLevels_6,
 	SkillPoints_Linear_12,
 
 	Lmd_Prof_Jedi_GetSkill_overload,
 	Lmd_Prof_Jedi_CanSetSkill_overload,
 	Lmd_Prof_Jedi_SetSkill_overload
 };
-
+// 6, 12, 18, 25 ... 30% -> 3, 5, 8, 10, 15, 20, 25, 30%
 const char *jediSkill_Passive_thousandcuts_Descr[] = {
-	"5 percent of the additional saber damage.",
-	"10 percent of the additional saber damage.",
-	"15 percent of the additional saber damage.",
-	"20 percent of the additional saber damage.",
-	"5 percent of the base saber damage is converted to the lethality damage.",
-	"10 percent of the base saber damage is converted to the lethality damage.",
+	"6 percent of the additional saber damage. 3 percent of the damage is Lethal.",
+	"12 percent of the additional saber damage. 5 percent of the damage is Lethal.",
+	"18 percent of the additional saber damage. 8 percent of the damage is Lethal.",
+	"25 percent of the additional saber damage. 10 percent of the damage is Lethal.",
 	"15 percent of the base saber damage is converted to the lethality damage.",
 	"20 percent of the base saber damage is converted to the lethality damage.",
+	"25 percent of the base saber damage is converted to the lethality damage.",
+	"30 percent of bonus saber damage and 30 percent of the base saber damage is converted to the lethality damage.",
 	NULL
 };
 
@@ -300,17 +303,17 @@ int Get_Jedi_hp_maxs_value(gentity_t *ent) //Will (Health points)
 {
 	if (lmd_jedi_add_hp_level.integer == 0) { return 100; } //old lugor option
 
-	int value = 46; //starting health
+	int value = 45; //starting health
 	
 		
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 3.7); //scale health 444+46 
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.75); //scale health 2,75 per lvl
 	
 
 	int skillHP = Lmd_Prof_Jedi_GetSkill_hp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_hp_maxs);
 	if (skillHP > 0) {
 
-		value += 10 * skillHP;
-		if (skillHP == jediSkill_Passive_hp_maxs.levels.max) value += 10; //bonus for maxed (10+10=20)
+		value += 12 * skillHP; // 12 per skill level
+		if (skillHP == jediSkill_Passive_hp_maxs.levels.max) value += 30; //bonus for being maxed
 	}
 
 	return value;
@@ -319,34 +322,40 @@ int Get_Jedi_hp_maxs_value(gentity_t *ent) //Will (Health points)
 
 
 //Overload + Force
-
+//
+int CalculateOverloadValue(int skillOverload, int Amount) {
+	if (skillOverload == 1) return std::round(Amount / 50.0);    // 2%
+	else if (skillOverload == 2) return std::round(Amount / 25.0); // 4%
+	else if (skillOverload == 3) return std::round(Amount / 15.0); // 6.67%
+	else if (skillOverload == 4) return std::round(Amount / 10.0); // 10%
+	else if (skillOverload == 5) return std::round(Amount / 7.5); // 13.33%
+	else if (skillOverload == 6) return std::round(Amount / 5.0); // 20%
+	return 0;
+}
 int Get_Jedi_overload_value_cap(gentity_t *ent, int Amount) //returns % of total mana. Amount is based on overload skill level.
 {
 
 	if (!Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload)) return 0;
 
-	int value = 0;
+	
 	int skillOverload = Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload);
-	//2,5,8,10 %
-	if (skillOverload == 1) value = Amount / 50; //2%
-	else if (skillOverload == 2) value = Amount / 20; //5%
-	else if (skillOverload == 3) value = Amount / 12; //+-8%
-	else if (skillOverload == 4) value = Amount / 10; //10%
+	int value = CalculateOverloadValue(skillOverload, Amount);
+
 	return value;
 
 }
 int Get_Jedi_mp_maxs_value(gentity_t *ent)
 {
 	int value = 55; //starting force
-	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.75); //Level bonus
+	value += floor(PlayerAcc_Prof_GetLevel(ent) * 2.45); // 2.45 per level
 	if (Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload)) value += Get_Jedi_overload_value_cap(ent, value); //be sure it adds only base Force Power //iomatix
 
 																																					   //Passive skill bonus:
 	int skillMP = Lmd_Prof_Jedi_GetSkill_mp_maxs(ent->client->pers.Lmd.account, &jediSkill_Passive_mp_maxs);
 	if (skillMP > 0)
 	{
-		value += 12 * skillMP;
-		if (skillMP == jediSkill_Passive_mp_maxs.levels.max) value += 13; //bonus for maxed (12+13=25)
+		value += 8 * skillMP; // 8 per skill level
+		if (skillMP == jediSkill_Passive_mp_maxs.levels.max) value += 25; //bonus for being maxed
 	}
 
 	return value;
@@ -358,12 +367,7 @@ int Get_Jedi_overload_value_reg(gentity_t *ent, int value) //returns % output fo
 	if (!Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload)) return 0;
 
 	int skillOverload = Lmd_Prof_Jedi_GetSkill_overload(ent->client->pers.Lmd.account, &jediSkill_Passive_overload);
-	//2,5,8,10 %
-	if (skillOverload == 1) value /= 50; //2%
-	else if (skillOverload == 2) value /= Get_Jedi_mp_maxs_value(ent) / 20; //5%
-	else if (skillOverload == 3) value /= Get_Jedi_mp_maxs_value(ent) / 12; //+-8%
-	else if (skillOverload == 4) value /= Get_Jedi_mp_maxs_value(ent) / 10; //10%
-	else value = 0;
+	value = CalculateOverloadValue(skillOverload, value);
 
 	return value;
 
@@ -477,9 +481,9 @@ profSkill_t jediSkill_Neutral_Speed = {
 
 
 const char *jediSkill_Neutral_Seeing_Descr[] = {
-	"Gain the Seeing force power.  Lasts 10 seconds",
+	"Gain the Seeing force power. Lasts 10 seconds",
 	"Increase the Seeing duration to 20 seconds.",
-	"Increase the Seeing duration to 30 seconds.  Sense the money stash with a blue beam.",
+	"Increase the Seeing duration to 30 seconds. Sense the money stash.",
 	"Increase the Seeing duration to 40 seconds.",
 	"Increase the Seeing duration to 60 seconds.",
 	NULL
@@ -513,11 +517,11 @@ const unsigned int jediSkillNeutralCount = sizeof(jediSkill_Neutral_Subskills) /
 
 
 const char *jediSkill_Light_Absorb_Descr[] = {
-	"Gain the Absorb force power.  Become immune to the Lightning, Drain, Grip, Push, and Pull force powers.  Absorb 1/3 of the force energy.",
-	"Absorb 2/3 of the force energy.",
+	"Gain the Absorb force power.  Become immune to the Lightning, Drain, Grip, Push, and Pull force powers.  Absorbs the force energy.",
+	"Absorb more of the force energy.",
 	"Absorb all of the force energy.",
-	"Absorb all of the force energy, and gain 1/3 more.",
-	"Absorb all of the force energy, and gain 2/3 more.  Use Protect while absorbing.",
+	"Absorb all of the force energy, and more.",
+	"Absorb all of the force energy, and even more. Use Protect while absorbing.",
 	NULL
 };
 

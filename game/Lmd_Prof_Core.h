@@ -15,3 +15,4 @@ qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister);
 void Experience_Level_Up(gentity_t *ent);
 
 int Professions_LevelCost_EXP(int prof, int playerLevel);
+int Professions_AvailableSkillPoints(Account_t* acc, int prof, profSkill_t* skill, profSkill_t** parent);

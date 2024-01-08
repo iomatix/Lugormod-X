@@ -1145,10 +1145,10 @@ void Cmd_SetBounty_f(gentity_t *ent, int iArg) {
 	Accounts_SetBountyReward(acc, theBounty);
 	PlayerAcc_SetCredits(ent, principal_Budget);
 	//messages:
-	char *msg_line_1 = "^3New Bounty!";
-	char *msg_line_2 = va("^3%s^3 pays ^2%i CR^3 for the ^7%s's^3 ^3head.", who_principal, v, who_target);
-	char *msg_line_3 = va("^3Total Bounty is: ^2%i CR.", Accounts_GetBountyReward(acc));
-	char *msg_all = va("%s\n%s\n%s", msg_line_1, msg_line_2, msg_line_3);
+	const char *msg_line_1 = "^3Bounty contract has been registred!";
+	const char *msg_line_2 = va("^3%s^3 pays ^2%i CR^3 for the ^7%s's^3 ^3head.", who_principal, v, who_target);
+	const char *msg_line_3 = va("^3Total Bounty is: ^2%i CR.", Accounts_GetBountyReward(acc));
+	const char *msg_all = va("%s\n%s\n%s", msg_line_1, msg_line_2, msg_line_3);
 	//employer
 	if (lmd_old_commands_disp.integer == 1) Disp(ent, va("^3You've paid ^2%i CR ^3for ^7%s's^3 head.", v, who_target)); else trap_SendServerCommand(ent->s.number, va("chat \"^3You've paid ^2%i CR ^3for ^7%s's^3 head.\"", v, who_target));
 

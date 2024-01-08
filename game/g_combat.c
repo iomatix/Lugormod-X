@@ -9,7 +9,9 @@
 #include "Lmd_Accounts_Stats.h"
 #include "Lmd_Accounts_Core.h"
 #include "Lmd_Professions.h"
-extern int get_random(int min, int max);
+#include <vector>
+#include <string>
+
 extern int G_ShipSurfaceForSurfName( const char *surfaceName );
 extern qboolean G_FlyVehicleDestroySurface( gentity_t *veh, int surface );
 extern void G_VehicleSetDamageLocFlags( gentity_t *veh, int impactDir, int deathPoint );
@@ -2779,33 +2781,77 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				//Attacker gains killing streak
 				attacker->client->pers.Lmd.killstreak += 1; //increase
 				attacker->client->pers.Lmd.killstreak_bounty += 1;
-				//Black List automation:
-				int rand = get_random(1-(lmd_bounty_streaks_by.integer/3), (lmd_bounty_streaks_by.integer/3)+1);
-				if (attacker->client->pers.Lmd.account && (attacker->client->pers.Lmd.killstreak_bounty >= lmd_bounty_streaks_by.integer-rand || PlayerAcc_GetBountyReward(attacker) > 75))
-				{
-					int player_getbountyReward = PlayerAcc_GetBountyReward(attacker);
-						if (player_getbountyReward < 35) PlayerAcc_SetBountyReward(attacker, 35);
+				// Black List Automation:
+				float randRange = get_random(0, lmd_bounty_streaks_by.integer / 3 * 2 + 1);
 
-						if (rand == 0) rand = get_random(15,35+(player_getbountyReward/10));
-						else if (attacker->client->pers.Lmd.killstreak_bounty >= 20 * lmd_bounty_streaks_by.integer*abs(rand)) rand = get_random(7500, 25000);
-						else if (attacker->client->pers.Lmd.killstreak_bounty >= 10 * lmd_bounty_streaks_by.integer*abs(rand)) rand = get_random(2500, 15000);
-						else if (attacker->client->pers.Lmd.killstreak_bounty >= 5*lmd_bounty_streaks_by.integer*abs(rand)) rand = get_random(500, 3000);
-						else if (attacker->client->pers.Lmd.killstreak_bounty >= 3*lmd_bounty_streaks_by.integer*abs(rand)) rand = get_random(100, 1500);
-						PlayerAcc_SetBountyReward(attacker, PlayerAcc_GetBountyReward(attacker) + abs(rand) + attacker->client->pers.Lmd.killstreak_bounty * 3);
-					
+				if (attacker->client->pers.Lmd.account &&
+					(attacker->client->pers.Lmd.killstreak_bounty >= lmd_bounty_streaks_by.integer + randRange))
+				{
+
+					// Adjust rand based on conditions
+					if (randRange < 1) {
+						randRange = get_random(15, 35 + (PlayerAcc_GetBountyReward(attacker) / 100));
+					}
+					else {
+						const int BOUNTY_THRESHOLD_1 = 3;
+						const int BOUNTY_THRESHOLD_2 = 5;
+						const int BOUNTY_THRESHOLD_3 = 7;
+						const int BOUNTY_THRESHOLD_4 = 10;
+						const int BOUNTY_THRESHOLD_5 = 13;
+						const int BOUNTY_THRESHOLD_6 = 15;
+						const int BOUNTY_THRESHOLD_7 = 18;
+						const int BOUNTY_THRESHOLD_8 = 20;
+
+						if (attacker->client->pers.Lmd.killstreak_bounty >= BOUNTY_THRESHOLD_8 * lmd_bounty_streaks_by.integer + abs(randRange)) {
+							randRange = get_random_int(5500, 8500);
+						}
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= BOUNTY_THRESHOLD_7 * lmd_bounty_streaks_by.integer + abs(randRange)) {
+							randRange = get_random_int(3500, 5000);
+						}
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= BOUNTY_THRESHOLD_6 * lmd_bounty_streaks_by.integer + abs(randRange)) {
+							randRange = get_random_int(2200, 3000);
+						}
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= BOUNTY_THRESHOLD_5 * lmd_bounty_streaks_by.integer + abs(randRange)) {
+							randRange = get_random_int(1500, 2150);
+						}
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= BOUNTY_THRESHOLD_4 * lmd_bounty_streaks_by.integer + abs(randRange)) {
+							randRange = get_random_int(1000, 1450);
+						}
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= BOUNTY_THRESHOLD_3 * lmd_bounty_streaks_by.integer + abs(randRange)) {
+							randRange = get_random_int(600, 950);
+						}
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= BOUNTY_THRESHOLD_2 * lmd_bounty_streaks_by.integer + abs(randRange)) {
+							randRange = get_random_int(300, 550);
+						}
+						else if (attacker->client->pers.Lmd.killstreak_bounty >= BOUNTY_THRESHOLD_1 * lmd_bounty_streaks_by.integer + abs(randRange)) {
+							randRange = get_random_int(100, 250);
+						}
+					}
+
+					// Update bounty reward
+					 PlayerAcc_SetBountyReward(attacker, PlayerAcc_GetBountyReward(attacker) + abs(randRange));
 				}
-				//
-				if (attacker->client->pers.Lmd.account && PlayerAcc_GetMaxKillstreak(attacker) < attacker->client->pers.Lmd.killstreak)PlayerAcc_SetMaxKillstreak(attacker, attacker->client->pers.Lmd.killstreak_bounty); //save statistics
-				if(attacker->client->pers.Lmd.killstreak%lmd_bounty_streaks_by.integer == 0)GiveLootboxes(attacker, 1, va("for ^1x%i ^3kill streak", attacker->client->pers.Lmd.killstreak));
+				// Save statistics
+				if (attacker->client->pers.Lmd.account && PlayerAcc_GetMaxKillstreak(attacker) < attacker->client->pers.Lmd.killstreak) PlayerAcc_SetMaxKillstreak(attacker, attacker->client->pers.Lmd.killstreak_bounty);
+				if (attacker->client->pers.Lmd.killstreak % lmd_bounty_streaks_by.integer == 0) GiveLootboxes(attacker, 1, va("for ^1x%i ^3kill streak", attacker->client->pers.Lmd.killstreak));
 				if (attacker->client->pers.Lmd.killstreak_bounty%lmd_bounty_streaks_by.integer == 0)
 				{
+
 					//send bounty information
-					char *msg_b_line1 = "^3A New Bounty!";
-					char *msg_b_line2 = va("^3Kill ^1%s ^3to get ^2x%i ^3Credit-Box.", attacker->client->pers.netname, attacker->client->pers.Lmd.killstreak_bounty/lmd_bounty_streaks_by.integer);
-					char *msg_b = va("%s\n%s", msg_b_line1, msg_b_line2);
+					std::string msg_b_line1_str = get_random_message({
+					"^3A New Bounty on the Black List. Prepare for a new challenge!",
+					"^3The Galactic Empire seeks a skilled bounty hunter for a dangerous mission.",
+					"^3The Rebel Alliance has posted a reward for completing the bounty.",
+					"^3A mysterious figure emerges in the Outer Rim. The bounty is high but the danger is real.",
+					"^3Explore uncharted planets, but beware of hidden dangers. The bounty is yours for the taking.",
+					"^3Imperial credits await those who can infiltrate the Black Market and complete the bounty.",
+					"^3The Jedi Order calls for your assistance! Someone spreads destruction, and the balance must be restored."
+						});
+					const char *msg_b_line2 = va("^3Kill ^1%s ^3to get ^2x%i ^3Credit-Box.", attacker->client->pers.netname, attacker->client->pers.Lmd.killstreak_bounty/lmd_bounty_streaks_by.integer);
+					const char *msg_b = va("%s\n%s", msg_b_line1_str.c_str(), msg_b_line2);
 					//trap_SendServerCommand_ToAll(attacker->s.number, va("print \"\n%s\n\"", msg_b));
 					//trap_SendServerCommand_ToAll(attacker->s.number, va("cp \"%s\"", msg_b));
-					trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_b_line1));
+					trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_b_line1_str.c_str()));
 					trap_SendServerCommand_ToAll(attacker->s.number, va("chat \"%s\"", msg_b_line2));
 				}
 				
@@ -5524,15 +5570,15 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	//level bonus: BALANCE: Stack or not to stack? damage -> damage_modifier to fast nerf everything by +- 50%
 	//note: do not go over + ~400% (after ~400% time to kill rate will increase, before ~400% will decrease per level (depends on hp scaling))
 	if (attacker->client && attacker->client->pers.Lmd.account && attacker->s.eType != ET_NPC) {
-	if(mod == MOD_SABER)damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.015); //1.5% per level + 180% with 120 level
-	else if (mod == MOD_FORCE_DARK)damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.008); //0.8% +96% with 120 level  old: //0.3% per level + 36% 120 level
+	if(mod == MOD_SABER)damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.0065); //0.65% per level + 78% with 120 level
+	else if (mod == MOD_FORCE_DARK)damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.055); //0.55% +66% with 120 level  old: //0.3% per level + 36% 120 level
 								//non-explosive v v v
 	else if (mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET
 		&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
 		&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH)
-	damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.007); //0.7% +84% 120 level old: //0.6% per level + 72% 120 level
+	damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.0063); //0.63% +75% 120 level old: //0.6% per level + 72% 120 level
 //explosives v v v
-	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.0045); //0.45% +54% 120 level old: //0.3% per level +36% 120 level
+	else damage += PlayerAcc_Prof_GetLevel(attacker) * (damage*0.004); //0.4% +48% 120 level old: //0.3% per level +36% 120 level
 
 	}
 		
@@ -5580,7 +5626,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 					&& mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET 
 					&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
 					&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH ){  //is MotR upgraded? and is not a explosive weapon?
-					damage_modifier += (PlayerProf_Merc_Getrifle_masterSkill(attacker)*9)/100;
+					int motrPercentages[] = { 3, 5, 10, 12 }; // check the mercSkill_rifle_master_Descr descr 3, 5, 10, 12%
+					damage_modifier += (damage * motrPercentages[PlayerProf_Merc_Getrifle_masterSkill(attacker) - 1]) / 100;
 
 				}
 
@@ -5589,10 +5636,12 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 				if (PlayerProf_Merc_Getperfect_aimSkill(attacker) > 0 && mod != MOD_REPEATER_ALT && mod != MOD_REPEATER_ALT_SPLASH && mod != MOD_DEMP2_ALT && mod != MOD_FLECHETTE_ALT_SPLASH && mod != MOD_ROCKET  
 					&& mod != MOD_ROCKET_SPLASH && mod != MOD_ROCKET_HOMING && mod != MOD_ROCKET_HOMING_SPLASH
 					&& mod != MOD_THERMAL && mod != MOD_THERMAL_SPLASH && mod != MOD_TRIP_MINE_SPLASH && mod != MOD_TIMED_MINE_SPLASH) { 
-					int perfect_aim_value = PlayerProf_Merc_Getperfect_aimSkill(attacker);
-					int perfectaim_chance = Q_irand(0,100); 
-					if (perfectaim_chance <= (8 * perfect_aim_value)) { //8->16->24->32->40->48 % //nerfed to 4->8->12->16->20->24
-						damage_modifier += damage * (perfect_aim_value*0.12f); // 12->24->36->48->60->72 % additional damage
+
+					
+					int paimChance[] = { 3, 5, 8, 10, 15, 20 }; 
+					int paimPercentages[] = { 25, 33, 45, 55, 65, 75 }; 
+					if (Q_irand(0, 100) <= paimChance[PlayerProf_Merc_Getperfect_aimSkill(attacker) - 1]) { //3->5->8->10->15->20% Chance for Critical Damage
+						damage_modifier += damage * paimPercentages[PlayerProf_Merc_Getperfect_aimSkill(attacker) - 1]; // + 25->33->45->55->65->75% Crit Damage
 					}
 
 				}
@@ -5600,8 +5649,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 				damage += damage_modifier; //STACK MERCENARY
 				damage_modifier = 0;
 				if (PlayerProf_Merc_GetLethalitySkill(attacker) > 0) {  //is lethality upgraded?
-																		//4->8->12->16->20 check the lethality descr   //update -> 5 10 15 20 25 
-					lethalityoutput = (damage * PlayerProf_Merc_GetLethalitySkill(attacker) * 5) / 100; //gets the percent of damage value
+					int lethalityPercentages[] = { 3, 5, 8, 10, 15 }; // check the mercSkill_Lethality descr   //update -> 3, 5, 8, 10, 15%
+					lethalityoutput = (damage * lethalityPercentages[PlayerProf_Merc_GetLethalitySkill(attacker) - 1]) / 100; //gets the percent of damage value
 					if (lmd_is_lethality_add_damage.integer == 0) damage -= lethalityoutput; //default add_damage = 0. It converts the damage instead of adding the damage.
 				} //Lethality changed to compute after bonuses.
 
@@ -5615,34 +5664,27 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 				if (PlayerProf_Jedi_GetThousandCutsSkill(attacker) > 0 && mod == MOD_SABER)  //saber only
 				{ //is thousandcuts upgraded? //saber only
 
-					//5->10->15->20 check the thousandcuts descr level 1,2,3,4
-					//5->10->15->25 lethality level 5,6,7,8
-					int lethality_multiplier = 0;
-					int additional_damage_multiplier = PlayerProf_Jedi_GetThousandCutsSkill(attacker);
-					if (additional_damage_multiplier > 4)
-					{
-																//1,2,3,4 for additional damage
-															  //5,6,7 or 8
-						lethality_multiplier = additional_damage_multiplier - 4; //1,2,3,4 again
-						additional_damage_multiplier = 4;
-
-					}
+						//check the thousandcuts descr level
+						/////// 3,5,8,10,15,20 % -> 25,33,45,55,65,75 %
+						int thcutsBonus[] = { 6, 12, 18, 25, 25, 25, 25, 30 };
+						int thcutsLethal[] = { 3, 5, 8, 10, 15, 20, 25, 30 };
+					
 
 					//additional damage
 					if (lmd_is_thousandcuts_lethality.integer == 1) //want to use thousandcuts additional damage as a lethality skill from the beginning?
 					{
-						lethalityoutput += (damage * additional_damage_multiplier * 5) / 100; //gets the percent of damage value
+						lethalityoutput += (damage * thcutsBonus[PlayerProf_Merc_GetLethalitySkill(attacker) - 1]) / 100; //gets the percent of damage value
 					}
 					else { //standard formula for increased output
-
-						damage_modifier += (damage * additional_damage_multiplier * 5) / 100;
+						
+						damage_modifier += (damage * thcutsBonus[PlayerProf_Merc_GetLethalitySkill(attacker) - 1]) / 100;
 
 					}
 					damage += damage_modifier; //Stack for jedi
 					damage_modifier = 0;
-					//converts base damage to the lethality
-					lethalityoutput += (damage * lethality_multiplier * 5) / 100;
-					damage -= lethalityoutput; // no option for that sorry
+					//converts damage to the lethality
+					lethalityoutput += (damage * thcutsLethal[PlayerProf_Merc_GetLethalitySkill(attacker) - 1]) / 100;
+					damage -= lethalityoutput; // no option for that, sorry
 					//compute after all bonuses
 				}
 

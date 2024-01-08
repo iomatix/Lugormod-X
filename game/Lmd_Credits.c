@@ -40,17 +40,16 @@ void GiveExperience(gentity_t *ent, int exper, char *reason) {
 }
 void GiveCredits(gentity_t *ent, int cr, char *reason) {
 	int cur = PlayerAcc_GetCredits(ent);
-	if(cr < 0 && cur - cr < 0)
-		cr = 0;
+	if(cr < 0 && cur - cr < 0) cr = 0;
 
 	else if(cr > 0) {
-		char *msg = va("^3You received ^2CR %i^3 %s.", cr, (reason != NULL) ? reason : "");
+		char *msg = va("^3You received ^2%i^3 CR %s.", cr, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
 		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 		G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	}
 	else if(cr < 0){
-		char *msg = va("^3You lost ^1CR %i^3 %s.", cr, (reason != NULL) ? reason : "");
+		char *msg = va("^3You lost ^1%i^3 CR %s.", cr, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
 		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 	}
@@ -58,23 +57,42 @@ void GiveCredits(gentity_t *ent, int cr, char *reason) {
 	PlayerAcc_SetCredits(ent, cur + cr);
 
 }
-void GiveLootboxes(gentity_t *ent, int lx, char *reason) {
-	int lbx = PlayerAcc_GetLootboxes(ent);
-	if (lx < 0 && lbx - lx < 0) lx = 0;
+void GiveSkillPoints_Bonus(gentity_t* ent, float sp, char* reason) {
+	float cur = PlayerAcc_GetSkillPoints_Bonus(ent);
+	if (sp < 0 && cur - sp < 0) sp = 0.0f;
 
-	else if (lx > 0) {
-		char *msg = va("^3You received ^2%i ^8Credits-Box ^3%s.", lx, (reason != NULL) ? reason : "");
+	else if (sp > 0) {
+		char* msg = va("^3You received ^2%i^3 SP %s.", sp, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
 		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 		G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
 	}
-	else if (lx < 0) {
-		char *msg = va("^3You lost ^1%i ^8Credit-Box ^3%s.", lx, (reason != NULL) ? reason : "");
+	else if (sp < 0) {
+		char* msg = va("^3You lost ^1%i^3 SP %s.", sp, (reason != NULL) ? reason : "");
 		Disp(ent, msg);
 		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
 	}
 
-	PlayerAcc_SetLootboxes(ent, lbx + lx);
+	PlayerAcc_SetSkillPoints_Bonus(ent, cur + sp);
+
+}
+void GiveLootboxes(gentity_t *ent, int crbx, char *reason) {
+	int lbx = PlayerAcc_GetLootboxes(ent);
+	if (crbx < 0 && lbx - crbx < 0) crbx = 0;
+
+	else if (crbx > 0) {
+		char *msg = va("^3You received ^2%i ^8Credits-Box ^3%s.", crbx, (reason != NULL) ? reason : "");
+		Disp(ent, msg);
+		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
+		G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/interface/secret_area.wav"));
+	}
+	else if (crbx < 0) {
+		char *msg = va("^3You lost ^1%i ^8Credit-Box ^3%s.", crbx, (reason != NULL) ? reason : "");
+		Disp(ent, msg);
+		//trap_SendServerCommand(ent->s.number, va("print \"%s\"", msg));
+	}
+
+	PlayerAcc_SetLootboxes(ent, lbx + crbx);
 
 }
 void hurl (gentity_t *ent, gentity_t *dropped);

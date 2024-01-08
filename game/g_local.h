@@ -1,7 +1,6 @@
 // Copyright (C) 1999-2000 Id Software, Inc.
 //
 // g_local.h -- local definitions for game module
-
 #ifndef __G_LOCAL_H__
 #define __G_LOCAL_H__
 
@@ -19,6 +18,8 @@
 #include "gclient_t.h"
 
 #include "b_public.h"
+#include <initializer_list>
+#include <string>
 
 //Lugormod
 void Disp(gentity_t *ent, const char *msg);
@@ -451,6 +452,13 @@ qboolean G_ActivateBehavior(gentity_t *self, int bset);
 void	G_TouchTriggers(gentity_t *ent);
 void	G_TouchSolids(gentity_t *ent);
 void	GetAnglesForDirection(const vec3_t p1, const vec3_t p2, vec3_t out);
+
+
+
+int		get_random_int(int min, int max);
+float	get_random(float min, float max);
+std::string get_random_message(std::initializer_list<const char*> messages);
+
 
 //W_FORCE.C
 extern void WP_ForceLimiterForceSet(gentity_t *ent);
@@ -1117,6 +1125,10 @@ extern	vmCvar_t	lmd_bounty_streaks_by;
 extern	vmCvar_t	lmd_skillpoint_cost;
 extern	vmCvar_t	lmd_exp_for_level;
 extern	vmCvar_t    lmd_skillpoints_perlevel;
+extern	vmCvar_t    lmd_skillpoints_perngp;
+extern	vmCvar_t    lmd_rewardcr_box;
+extern	vmCvar_t    lmd_rewardsp_box;
+extern	vmCvar_t    lmd_bonussp_perma;
 extern	vmCvar_t    lmd_mastery_level_skills_level;
 extern	vmCvar_t	lmd_damage_level_scale;
 extern	vmCvar_t	lmd_is_lethality_add_damage;

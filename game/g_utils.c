@@ -485,6 +485,9 @@ local anim index into account and make the call -rww
 #include "../namespace_begin.h"
 void BG_SetAnim(playerState_t *ps, animation_t *animations, int setAnimParts,int anim,int setAnimFlags, int blendTime);
 #include "../namespace_end.h"
+#include <random>
+#include <string>
+#include <initializer_list>
 
 void G_SetAnim(gentity_t *ent, int setAnimParts, int anim, int setAnimFlags, int blendTime)
 {
@@ -2517,4 +2520,33 @@ void GetAnglesForDirection( const vec3_t p1, const vec3_t p2, vec3_t out )
 
 	VectorSubtract( p2, p1, v );
 	vectoangles( v, out );
+}
+
+int get_random_int(int min, int max)
+{
+	if (max < min) std::swap(min, max);
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> distribution(min, max);
+
+	return distribution(gen);
+}
+
+float get_random(float min, float max)
+{
+	if (max < min) std::swap(min, max);
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> distribution(min, max);
+
+	return distribution(gen);
+}
+std::string get_random_message(std::initializer_list<const char*> messages)
+{
+	auto it = messages.begin();
+	std::advance(it, get_random_int(0, messages.size() - 1) % messages.size());
+
+	return *it;
 }
