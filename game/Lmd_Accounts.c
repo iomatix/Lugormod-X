@@ -1125,10 +1125,10 @@ void Cmd_aliasname_f(gentity_t *ent, int iArg) {
 }
 
 
-std::tuple <int,int> Open_Creditbox(gentity_t *ent) { //Get random value from the credit box
+std::tuple <int,float> Open_Creditbox(gentity_t *ent) { //Get random value from the credit box
 	//credits formula random(1+(lmd_rewardcr_box*(tier-1)),lmd_rewardcr_box*tier), 
 	//skill points formula random(0,lmd_rewardsp_box*tier) [0-0.25 sp -> 1.25 sp]
-	int value = get_random_int(0, 101);
+	float value = get_random(0, 101);
 	
 	if (value <= 55)
 	{
@@ -1152,7 +1152,7 @@ std::tuple <int,int> Open_Creditbox(gentity_t *ent) { //Get random value from th
 		Disp(ent, "^3This box full of credits!");
 	}
 
-	return std::make_tuple(get_random_int(1+(lmd_rewardcr_box.integer*(value-1)), lmd_rewardcr_box.integer*value), get_random_int(0, lmd_rewardsp_box.integer * value));
+	return std::make_tuple(get_random_int(1+(lmd_rewardcr_box.integer*(value-1)), lmd_rewardcr_box.integer*value), get_random(0, lmd_rewardsp_box.integer * value));
 }
 void Cmd_Creditbox_f(gentity_t *ent, int iArg) {
 	char arg[MAX_TOKEN_CHARS];
@@ -1163,7 +1163,7 @@ void Cmd_Creditbox_f(gentity_t *ent, int iArg) {
 		if (PlayerAcc_GetLootboxes(ent) > 0)
 		{
 			PlayerAcc_SetLootboxes(ent, PlayerAcc_GetLootboxes(ent)-1);
-			std::tuple<int,int> rewards = Open_Creditbox(ent); // 0 -> CR, 1 -> SP
+			std::tuple<int,float> rewards = Open_Creditbox(ent); // 0 -> CR, 1 -> SP
 			GiveCredits(ent, std::get<0>(rewards), "from the Credit Box.");
 			GiveSkillPoints_Bonus(ent, std::get<1>(rewards), "from the Credit Box.");
 
