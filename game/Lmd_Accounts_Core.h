@@ -49,6 +49,13 @@ void GiveLootboxes(gentity_t *ent, int cr, char *reason);
 
 
 ///////
+
+int Accounts_GetActiveProfession(Account_t* acc);
+#define PlayerAcc_GetActiveProfession(ent) Accounts_GetActiveProfession(ent->client->pers.Lmd.account)
+
+void Accounts_SetActiveProfession(Account_t* acc, int value);
+#define PlayerAcc_SetActiveProfession(ent, value) Accounts_SetActiveProfession(ent->client->pers.Lmd.account, value)
+
 int Accounts_GetLootboxes(Account_t *acc);
 #define PlayerAcc_GetLootboxes(ent) Accounts_GetLootboxes(ent->client->pers.Lmd.account)
 

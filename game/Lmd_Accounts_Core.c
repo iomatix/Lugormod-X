@@ -15,6 +15,7 @@
 #include "Lmd_Professions.h"
 #include "Lmd_Prof_Core.h"
 
+
 #define SECCODE_LENGTH 6
 
 qboolean IsValidName(char *name);
@@ -42,10 +43,14 @@ struct Account_s{
 	int max_killstreak;
 	int flags;
 
+	profData_t* profession; // pointer for profession
+
 	struct {
 		unsigned int count; // In case data is added after the account was allocated.
 		void **data;
 	} data;
+
+
 
 	int modifiedTime;
 };
@@ -334,7 +339,12 @@ void freeAccount(Account_t *acc) {
 		}
 	}
 
-	Lmd_Arrays_RemoveAllElements((void **)&acc->data.data);
+	if (acc->profession) {
+		Lmd_Prof_Free(acc->profession);
+		G_Free(acc->profession);
+	}
+
+	Lmd_Arrays_RemoveAllElements((void**)&acc->data.data);
 	G_Free(acc->username);
 	G_Free(acc);
 }
@@ -359,10 +369,13 @@ void removeAccount(Account_t *acc) {
 }
 
 void deleteAccount(Account_t *acc) {
+	
 	Lmd_Data_DeleteFile("accounts", va("%s.uac", acc->username));
-	Lmd_Data_DeleteFile("accounts", va("%s.swap.uac", acc->username));
+	
+	for (int i = 0; i < NUM_PROFESSIONS; i++)  Lmd_Data_DeleteFile("accounts/%s", va("%s_%i.uac", acc->username, acc->username, i));
 	freeAccount(acc);
 }
+		
 
 
 
@@ -375,12 +388,23 @@ void Accounts_Delete(Account_t *acc) {
 	deleteAccount(acc);
 }
 
+void updatePlayer(gentity_t* ent);
 void Accounts_Save(Account_t *acc)
 {
-	Accounts_SaveProfessionData(acc, Accounts_Prof_GetProfession(acc));
-	fileHandle_t f = Lmd_Data_OpenDataFile("accounts", va("%s.uac", acc->username), FS_WRITE);
-	Lmd_Data_WriteToFile_LinesDelimited(f, AccountFields, AccountFields_Count, (void *)acc);
-	trap_FS_FCloseFile(f);
+
+	// Save Profession Data
+	gentity_t* player = Accounts_GetPlayerByAcc(acc);
+	if (player)
+	{
+		updatePlayer(player);
+		// Save only if player data is loaded
+		Accounts_SaveProfessionData(acc, acc->activeprofession);
+		fileHandle_t f = Lmd_Data_OpenDataFile("accounts", va("%s.uac", acc->username), FS_WRITE);
+		Lmd_Data_WriteToFile_LinesDelimited(f, AccountFields, AccountFields_Count, (void*)acc);
+		trap_FS_FCloseFile(f);
+		G_LogPrintf(va("Account %s has been saved!", acc->username));
+	}
+
 
 	acc->modifiedTime = 0;
 }
@@ -388,8 +412,6 @@ void Accounts_Save(Account_t *acc)
 
 
 
-
-void updatePlayer(gentity_t *ent);
 void Accounts_SaveAll(qboolean force){
 
 		int i;
@@ -397,9 +419,6 @@ void Accounts_SaveAll(qboolean force){
 		for (i = 0; i < AccList.count; i++) {
 			if (AccList.accounts[i]->modifiedTime > 0 && (force ||
 				level.time - AccList.accounts[i]->modifiedTime > 60000)) {
-				player = Accounts_GetPlayerByAcc(AccList.accounts[i]);
-				if (player)
-					updatePlayer(player);
 				Accounts_Save(AccList.accounts[i]);
 			}
 		}
@@ -498,6 +517,8 @@ Account_t *Accounts_New(char *username, char *name, char *password) {
 		category->accLoadCompleted(acc, acc->data.data[i]);
 	}
 	addAccount(acc);
+
+
 	return acc;
 }
 
@@ -602,6 +623,16 @@ char* Accounts_NewSeccode(Account_t *acc) {
 	return acc->secCode;
 }
 /////
+int Accounts_GetActiveProfession(Account_t* acc) {
+	if (!acc)return 0;
+	return acc->activeprofession;
+}
+void Accounts_SetActiveProfession(Account_t* acc, int prof) {
+	if (!acc)return;
+	if (prof < 0)prof = 0;
+	acc->activeprofession = prof;
+	Lmd_Accounts_Modify(acc);
+}
 
 
 int Accounts_GetLootboxes(Account_t *acc) {

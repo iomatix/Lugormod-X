@@ -9,6 +9,7 @@
 #define LMD_DATABASE_FILENAME_SIZE MAX_NETNAME
 #define LMD_DATABASE_DATAPATH "data"
 
+
 qboolean BG_ParseField( BG_field_t *l_fields, const char *key, const char *value, void *target );
 qboolean BG_ParseType(fieldtype_t type, const char *value, void *target);
 
@@ -458,7 +459,7 @@ int Lmd_Data_WriteToFile_LinesDelimited(
 				key[0] = 0;
 			}
 			// Call the write function for this field
-			if(!(dwr = fields[i].write(target, key, sizeof(key), value, sizeof(value), &writeState, fields[i].writeArgs))) G_LogPrintf(va("Debug: [WRITE] NULL... [i=%i] !!!!\n", i));
+			dwr = fields[i].write(target, key, sizeof(key), value, sizeof(value), &writeState, fields[i].writeArgs);
 			// G_LogPrintf(va("Debug: [WRITE] Writing OK [i=%i] !\n", i));
 			
 			// If the write function returned a result other than NODATA and the key is not empty,

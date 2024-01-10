@@ -56,14 +56,7 @@ profession_t *Professions[] = {
 	&mercProf, //merc
 };
 
-typedef struct profData_s {
-	int profession;
-	int level;
-	int experience;
-	int new_game_plus_counter;
-	int lastLevelUp;
-	void *data;
-}profData_t;
+
 #define	PROFDATAOFS(x) ((int)&(((profData_t *)0)->x))
 
 
@@ -127,16 +120,13 @@ typedef struct ProfessionWriteState_s {
 
 DataWriteResult_t Accounts_Profs_Write(void* target, char key[], int keySize, char value[], int valueSize, void** writeState, void* args)
 {
-	G_LogPrintf("Debug: [WRITE Accounts_Profs_Write] V V V ======== !\n");
 
-	G_LogPrintf(va("Debug: [WRITE Accounts_Profs_Write] target=%s !\n", target));
 	profData_t* profData = (profData_t*)target;
-	G_LogPrintf(va("Debug: [WRITE Accounts_Profs_Write] profData=%s !\n", profData));
+
 	profession_t* prof = Professions[profData->profession];
-	G_LogPrintf(va("Debug: [WRITE Accounts_Profs_Write] Professions=%s !\n", Professions));
-	G_LogPrintf(va("Debug: [WRITE Accounts_Profs_Write] prof=%s !\n", prof));
+
 	int dataFieldsCount = prof->data.count;
-	G_LogPrintf(va("Debug: [WRITE Accounts_Profs_Write] Count=%i !\n", dataFieldsCount));
+
 	if (dataFieldsCount == 0) {
 		// This prof has no data, dont bother allocating anything
 		return DWR_NODATA;
@@ -210,10 +200,10 @@ const int ProfsFields_Count = DATAFIELDS_COUNT(ProfsFields);
 
 
 
-void Lmd_Prof_Alloc(void *target) {
-	profData_t *profData = (profData_t *)target;
+void Lmd_Prof_Alloc(void* target) {
+	profData_t* profData = (profData_t*)target;
 	//Init the loader by giving us an array of all professions
-	void **alloc = (void**)G_Alloc(sizeof(void *) * NUM_PROFESSIONS);
+	void** alloc = (void**)G_Alloc(sizeof(void*) * NUM_PROFESSIONS);
 	int i;
 	for (i = 0; i < NUM_PROFESSIONS; i++) {
 		if (!Professions[i] || Professions[i]->data.size == 0) {
@@ -221,7 +211,7 @@ void Lmd_Prof_Alloc(void *target) {
 			continue;
 		}
 
-		alloc[i] = (void *)G_Alloc(Professions[i]->data.size);
+		alloc[i] = (void*)G_Alloc(Professions[i]->data.size);
 		memset(alloc[i], 0, Professions[i]->data.size);
 	}
 
@@ -437,30 +427,86 @@ unsigned int Accounts_ParseProfessionData(Account_t* acc, int prof) {
 }
 
 
+
+unsigned int Accounts_LoadProfessionData(Account_t* acc, int prof) {
+	if (!acc) {
+		G_LogPrintf("Debug: Account is NULL in Accounts_LoadProfessionData\n");
+		return 0;
+	}
+
+	char* fileContents = Lmd_Data_AllocFileContents(va("accounts/%s/%s_%i.uac", Accounts_GetName(acc), Accounts_GetName(acc), prof));
+	if (!fileContents) {
+		G_LogPrintf("Debug: Failed to open file in Accounts_LoadProfessionData\n");
+		return 0;
+	}
+
+	Accounts_Prof_ClearData(acc);
+	Accounts_Prof_AllocProfessionTemplate(acc, prof);
+
+	profData_t* data = PROFDATA(acc);
+	if (!data) {
+		G_LogPrintf("Debug: DATA is NULL in Accounts_LoadProfessionData\n");
+		return 0;
+	}
+
+	char* line = fileContents;
+	int fieldsRead = 0;
+	while (*line) {
+		char* nextLine = strchr(line, '\n');
+		if (nextLine) *nextLine = '\0';
+
+		char key[1024], value[1024];
+		if (sscanf(line, "%s %s", key, value) == 2) {
+			if (Lmd_Data_Parse_KeyValuePair(key, value, (void*)data->data, ProfsFields, ProfsFields_Count)) {
+				fieldsRead++;
+			}
+		}
+
+		if (nextLine) *nextLine = '\n';
+		line = nextLine ? (nextLine + 1) : NULL;
+	}
+
+	G_Free(fileContents);
+
+	//G_LogPrintf("Debug: Read %d fields for account %s profession %d\n", fieldsRead, Accounts_GetName(acc), prof);
+
+	return fieldsRead;
+}
+
+
+
+
 bool is_Gameplay_Proffesion(int prof) {
 	return (prof == PROF_JEDI || prof == PROF_MERC);
 }
-void Accounts_Prof_SetProfession(Account_t *acc, int prof) {
+
+void Accounts_Prof_SetProfession(Account_t* acc, int prof) {
 	if (!acc) return;
-	
-	// iomatix
-	int prev_prof = Accounts_Prof_GetProfession(acc);	if (prof == prev_prof) return;
+
+	int prev_prof = Accounts_Prof_GetProfession(acc);
+	if (prof == prev_prof) return;
 
 	// Save game profession data if is not false 
-	if(prev_prof) Accounts_SaveProfessionData(acc, prev_prof);
-	
-	// Load game profession data if exist TODO
-	//Accounts_LoadProfessionData(acc, prof);
-	
-	// Reset if don't TODO
-	// Free Memory
+	if (prev_prof) Accounts_SaveProfessionData(acc, prev_prof);
+
+	// Try to load profession data
+	if (Accounts_LoadProfessionData(acc, prof)) {
+		// If data is successfully loaded, we're done
+		Accounts_SetActiveProfession(acc, prof);
+		Accounts_Save(acc);
+		return;
+	}
+
+	// If data is not loaded, clear and allocate new memory
 	Accounts_ClearData(acc);
-	// Alloc empty mem
 	Accounts_Prof_AllocProfessionTemplate(acc, prof);
 
-	Lmd_Accounts_Modify(acc);
-	
+	// Register new account's value
+	Accounts_SetActiveProfession(acc, prof);
+	// Save account on new profession initialization
+	Accounts_Save(acc);
 }
+
 
 int Accounts_Prof_GetLevel(Account_t *acc) {
 	if (!acc) return 0;

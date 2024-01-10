@@ -37,3 +37,14 @@ void Accounts_Prof_SetExperience(Account_t* acc, int value);
 int Accounts_Prof_GetNewGamePlus_Counter(Account_t* acc);
 void Accounts_Prof_SetNewGamePlus_Counter(Account_t* acc, int value);
 int Accounts_Prof_GetNewGamePlus_SkillPoints(Account_t* acc, int prof);
+
+
+void Lmd_Prof_Free(void* target);
+typedef struct profData_s {
+	int profession;
+	int level;
+	int experience;
+	int new_game_plus_counter;
+	int lastLevelUp;
+	void* data;
+}profData_t;
