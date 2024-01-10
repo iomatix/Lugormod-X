@@ -1,4 +1,4 @@
-
+#pragma once
 #ifndef LMD_DATA_H
 #define LMD_DATA_H
 
@@ -9,12 +9,16 @@ qboolean Lmd_Data_IsCleanPath(char *path);
 // Opens a data file from the current data directory.
 fileHandle_t Lmd_Data_OpenDataFile(char *directory, char *name, fsMode_t mode);
 
+// Check if file exist
+bool Lmd_Data_isFileValid(char* directory, char* name);
+
 // Copies the file content of the non-data path to a G_Alloc string.
 char* Lmd_Data_AllocFileContents(char *filename);
 
 
+unsigned int Lmd_Data_ProcessFiles(char* directory, char* ext, qboolean(*Callback)(char* fileName, char* fileBuf), int maxFiles, char* specificFile = NULL);
+unsigned int Lmd_Data_ProcessFile(char* directory, char* fileName, qboolean(*Callback)(char* fileName, char* fileBuf));
 
-unsigned int Lmd_Data_ProcessFiles(char *directory, char *ext, qboolean (*Callback)(char *fileName, char *fileBuf), int maxFiles);
 
 // Parses a set of keys and values as
 //key: long value text terminated by linefeed
@@ -30,7 +34,11 @@ unsigned int Lmd_Data_ParseFields_Old(char **str, qboolean requireValue, qboolea
 //key,value,key,value
 unsigned int Lmd_Data_ParseDatastring(char **str, qboolean (*Callback)(byte *object, qboolean pre, char *key, char *value), BG_field_t *fields, byte* structure);
 
+//Match Fields
+int Lmd_Data_MatchField(char* key, const DataField_t* fields, int fieldCount, int start);
+
 qboolean Lmd_Data_DeleteFile(char *directory, char *name);
+
 
 typedef struct{
 	unsigned int func;

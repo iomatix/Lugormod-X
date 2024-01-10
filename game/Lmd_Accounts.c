@@ -41,7 +41,7 @@ void checkLevelUp(gentity_t *ent) {
 	int levelUp = 0;
 	if (myLevel && PlayerAcc_Prof_GetProfession(ent) != PROF_ADMIN) {
 		qboolean lvlup = qfalse;
-		while (myLevel * (myLevel + 1) * LEVEL_SCORE <= PlayerAcc_GetExperience(ent) && myLevel * (myLevel + 1) * LEVEL_SCORE <= PlayerAcc_GetScore(ent) && myLevel * myLevel * 3600 * 2 <= myTime && myLevel < MAX_LEVEL) {
+		while (myLevel * (myLevel + 1) * LEVEL_SCORE <= Accounts_Prof_GetExperience(ent->client->pers.Lmd.account) && myLevel * (myLevel + 1) * LEVEL_SCORE <= PlayerAcc_GetScore(ent) && myLevel * myLevel * 3600 * 2 <= myTime && myLevel < MAX_LEVEL) {
 			levelUp++;
 			myLevel++;
 		}
@@ -180,7 +180,7 @@ void HiScore(gentity_t *ent, int field) {
 char * GetTitle_system(Account_t *acc)
 {
 	
-	int level = Accounts_Prof_GetLevel(acc) + Accounts_GetNewGamePlus_Counter(acc);
+	int level = Accounts_Prof_GetLevel(acc) + Accounts_Prof_GetNewGamePlus_Counter(acc);
 	if (Accounts_Prof_GetProfession(acc) == PROF_JEDI) {
 		//jedi titles
 		if (level < 10)return "^7Apprentice";
@@ -261,17 +261,22 @@ void GetStats(gentity_t *ent, Account_t *acc) {
 		"^8===== Progress Information =====\n"
 		"^3Main Level:                 ^2%i ^3LVL\n"
 		"^3Experience:        ^5%i ^3/ ^2%i ^3EXP\n"
+		"^3Available Skill Points:     ^2%i ^3SP\n"
 		"^3Credits:                    ^2%i ^3CR\n"
-		"^3Force User Level:           ^2%i ^3LVL\n"
-		"^3Avialable Skill Points:     ^2%i ^3SP\n"
-		"^3Mercenary Level:            ^2%i ^3LVL\n"
-		"^3Avialable Skill Points:     ^2%i ^3SP\n"
-		"^3Credits Boxes:              ^2%i ^3Credit-Box\n"
+		"^3Credits Boxes:    ^2%i ^3Credit-Box\n"
 		"^3New Game Plus Level:        ^2%i ^3LVL\n"
 		"^3New Game Plus Skill Points: ^2%i ^3SP\n"
 		"^3Bonus Skill Points:         ^2%.0f ^3SP\n"
 		"^3Score:					^2%i Points",
-		lvl, Accounts_GetExperience(acc), Professions_LevelCost_EXP(Accounts_Prof_GetProfession(acc), Accounts_Prof_GetLevel(acc)), Accounts_GetCredits(acc), Accounts_GetLevel_jedi(acc), Professions_AvailableSkillPoints(acc, PROF_JEDI, NULL, NULL), Accounts_GetLevel_merc(acc), Professions_AvailableSkillPoints(acc, PROF_MERC, NULL, NULL), Accounts_GetLootboxes(acc), Accounts_GetNewGamePlus_Counter(acc), Accounts_GetNewGamePlus_Counter(acc) * lmd_skillpoints_perngp.integer, floor(Accounts_GetSkillPoints_Bonus(acc)), Accounts_GetScore(acc)));
+		lvl,
+		Accounts_Prof_GetExperience(acc),
+		Professions_LevelCost_EXP(Accounts_Prof_GetProfession(acc), lvl),
+		Professions_AvailableSkillPoints(acc, prof, NULL, NULL),
+		Accounts_GetCredits(acc),
+		Accounts_GetLootboxes(acc),
+		Accounts_Prof_GetNewGamePlus_Counter(acc),
+		Accounts_Prof_GetNewGamePlus_SkillPoints(acc, prof),
+		floor(Accounts_GetSkillPoints_Bonus(acc)), Accounts_GetScore(acc)));
 	if (prof == PROF_NONE)
 		c = "^2None";
 	else if (prof == PROF_ADMIN)
@@ -616,7 +621,7 @@ qboolean Lmd_Accounts_Player_TryLogin(gentity_t *ent, char *username, char *pass
 	if (Lmd_Accounts_Player_Login(ent, acc)) {
 		if (!Auths_AccHasAdmin(acc)) {
 			trap_SendServerCommand(ent->s.number, "chat \"^2Login successful.\"");
-			Disp(ent, va("^3The account will expire in ^2%i^3 days if you do not login before that.", accountLiveTime(Accounts_GetLevel_merc(acc)+Accounts_GetLevel_jedi(acc)+(Accounts_GetNewGamePlus_Counter(acc)*10))));
+			Disp(ent, va("^3The account will expire in ^2%i^3 days if you do not login before that.", accountLiveTime(Accounts_Prof_GetLevel(acc) + (Accounts_Prof_GetNewGamePlus_Counter(acc) * 10))));
 		}
 		else {
 			trap_SendServerCommand(ent->s.number, "chat \"^2Login successful.\"");

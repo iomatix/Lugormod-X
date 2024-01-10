@@ -11,6 +11,7 @@
 #include "Lmd_PlayerActions.h"
 #include "Lmd_Bans.h"
 #include "Lmd_Time.h"
+#include "Lmd_Prof_Core.h"
 
 #define STANDARD_BEAM "env/hevil_bolt"
 
@@ -38,8 +39,6 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 			"^2Profession\n"
 			"^2Passwd\n"
 			"^2Level\n"
-			"^2Merclevel\n"
-			"^2Jedilevel\n"
 			"^2NGP_Count\n"
 			"^2Score");
 		return;
@@ -125,12 +124,12 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 			Disp(ent, "^1Invalid amount, ^5experience ^1must be greater than or equal zero.");
 			return;
 		}
-		Accounts_SetExperience(acc, v);
+		Accounts_Prof_SetExperience(acc, v);
 		Disp(ent, "^5Experience set.");
 		return;
 	}
 
-	else if (Q_stricmp(arg, "merclevel") == 0 || Q_stricmp(arg, "merclvl") == 0) {
+	else if (Q_stricmp(arg, "level") == 0 || Q_stricmp(arg, "lvl") == 0) {
 		int v = atoi(val);
 		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
 			Disp(ent, "^1Invalid level.");
@@ -144,31 +143,8 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		}
 			
 			
-			if(Accounts_Prof_GetProfession(acc) == PROF_MERC)Accounts_Prof_SetLevel(acc, v);
-			else Accounts_SetLevel_merc(acc, v);
-			Disp(ent, "^2Mercenary level is changed.");
-			return;
-		
-		
-	}
-	else if (Q_stricmp(arg, "jedilevel") == 0 || Q_stricmp(arg, "jedilvl") == 0) {
-		int v = atoi(val);
-		if (v == 0 && !(val[0] == '0' && val[1] == 0)) {
-			Disp(ent, "^1Invalid level.");
-			return;
-		}
-		if (v < 1 || v > 255) {
-			{
-				Disp(ent, "^1Invalid level value. Between 1 and 255.");
-				return;
-			}
-		}
-
-			
-			
-			if (Accounts_Prof_GetProfession(acc) == PROF_JEDI)Accounts_Prof_SetLevel(acc, v);
-			else Accounts_SetLevel_jedi(acc, v);
-			Disp(ent, "^2Jedi level is changed.");
+			Accounts_Prof_SetLevel(acc, v);
+			Disp(ent, "^2Active profesion's level has been changed to the new value.");
 			return;
 		
 		
@@ -202,7 +178,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg) {
 		}
 
 		
-		Accounts_SetNewGamePlus_count(acc, v);
+		Accounts_Prof_SetNewGamePlus_Counter(acc, v);
 		Disp(ent, "^5New Game Plus count set.");
 		return;
 	}

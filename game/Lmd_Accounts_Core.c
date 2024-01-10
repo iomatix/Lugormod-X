@@ -13,6 +13,7 @@
 #include "BG_Fields.h"
 
 #include "Lmd_Professions.h"
+#include "Lmd_Prof_Core.h"
 
 #define SECCODE_LENGTH 6
 
@@ -32,13 +33,10 @@ struct Account_s{
 	
 	int time;
 	int score;
+
 	int credits;
-	int experience; //iomatix
-	int level_jedi; //3
-	int level_merc; //4
-	int lootboxes;
-	int new_game_plus_counter;
 	float sp_bonus;
+	int lootboxes;
 	int bountyReward;
 	int max_killstreak;
 	int flags;
@@ -52,7 +50,6 @@ struct Account_s{
 };
 
 #define	ACCOUNTOFS(x) ((int)&(((Account_t *)0)->x))
-
 struct {
 	unsigned int count;
 	accDataModule_t **categories;
@@ -228,11 +225,7 @@ DataWriteResult_t Accounts_Write_Modules(void *target, char key[], int keySize, 
 	_m##_AUTO(time, ACCOUNTOFS(time), F_INT) \
 	_m##_AUTO(score, ACCOUNTOFS(score), F_INT) \
 	_m##_AUTO(credits, ACCOUNTOFS(credits), F_INT) \
-	_m##_AUTO(experience, ACCOUNTOFS(experience), F_INT) \
-	_m##_AUTO(level_jedi, ACCOUNTOFS(level_jedi), F_INT) \
-	_m##_AUTO(level_merc, ACCOUNTOFS(level_merc), F_INT) \
 	_m##_AUTO(lootboxes, ACCOUNTOFS(lootboxes), F_INT) \
-	_m##_AUTO(new_game_plus_counter, ACCOUNTOFS(new_game_plus_counter), F_INT) \
 	_m##_AUTO(sp_bonus, ACCOUNTOFS(sp_bonus), F_FLOAT) \
 	_m##_AUTO(bountyReward, ACCOUNTOFS(bountyReward), F_INT) \
 	_m##_AUTO(max_killstreak, ACCOUNTOFS(max_killstreak), F_INT) \
@@ -240,9 +233,12 @@ DataWriteResult_t Accounts_Write_Modules(void *target, char key[], int keySize, 
 	_m##_DEFL(Accounts_Parse_Modules, Accounts_Write_Modules, NULL)
 AccountFields_Base(DEFINE_FIELD_PRE)
 
+
+
 DATAFIELDS_BEGIN(AccountFields)
 AccountFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
+
 
 const int AccountFields_Count = DATAFIELDS_COUNT(AccountFields);
 
@@ -361,8 +357,11 @@ void removeAccount(Account_t *acc) {
 
 void deleteAccount(Account_t *acc) {
 	Lmd_Data_DeleteFile("accounts", va("%s.uac", acc->username));
+	Lmd_Data_DeleteFile("accounts", va("%s.swap.uac", acc->username));
 	freeAccount(acc);
 }
+
+
 
 void Lmd_Accounts_Player_Logout(gentity_t *ent);
 void Accounts_Delete(Account_t *acc) {
@@ -381,6 +380,10 @@ void Accounts_Save(Account_t *acc)
 
 	acc->modifiedTime = 0;
 }
+
+
+
+
 
 void updatePlayer(gentity_t *ent);
 void Accounts_SaveAll(qboolean force){
@@ -411,9 +414,18 @@ int accountLiveTime(int level) {
 	return keep;
 }
 
+int calcAccountLive(Account_t *acc) {
+	return Accounts_Prof_GetLevel(acc) + (Accounts_Prof_GetNewGamePlus_Counter(acc) * 10);
+};
+int getAccountLiveDays(Account_t* acc) {
+	return Time_Days(calcAccountLive(acc));
+}
+int getAccountLiveTime(Account_t* acc) {
+	return accountLiveTime(calcAccountLive(acc));
+}
 qboolean accountLiveTimeCheck(Account_t *acc) {
 	int now = Time_Days(Time_Now());
-	int keep = accountLiveTime(Accounts_GetLevel_merc(acc) + Accounts_GetLevel_jedi(acc) + (Accounts_GetNewGamePlus_Counter(acc)*10));
+	int keep = getAccountLiveDays(acc);
 	if(now - Time_Days(acc->lastLogin) > keep) return qfalse;
 	return qtrue;
 }
@@ -461,6 +473,7 @@ unsigned int Accounts_Load(){
 
 	return result;
 }
+
 
 Account_t *Accounts_New(char *username, char *name, char *password) {
 	if(Accounts_GetByUsername(username) || Accounts_GetByName(name))
@@ -583,26 +596,8 @@ char* Accounts_NewSeccode(Account_t *acc) {
 	return acc->secCode;
 }
 /////
-int Accounts_GetLevel_jedi(Account_t *acc) {
-	if (!acc)return 0;
-	return acc->level_jedi;
-}
-void Accounts_SetLevel_jedi(Account_t *acc, int value) {
-	if (!acc)return;
-	if (value < 1)value = 1;
-	acc->level_jedi = value;
-	Lmd_Accounts_Modify(acc);
-}
-int Accounts_GetLevel_merc(Account_t *acc) {
-	if (!acc)return 0;
-	return acc->level_merc;
-}
-void Accounts_SetLevel_merc(Account_t *acc, int value) {
-	if (!acc)return;
-	if (value < 1)value = 1;
-	acc->level_merc = value;
-	Lmd_Accounts_Modify(acc);
-}
+
+
 int Accounts_GetLootboxes(Account_t *acc) {
 	if (!acc)return 0;
 	return acc->lootboxes;
@@ -613,16 +608,7 @@ void Accounts_SetLootboxes(Account_t *acc, int value) {
 	acc->lootboxes = value;
 	Lmd_Accounts_Modify(acc);
 }
-int Accounts_GetNewGamePlus_Counter(Account_t *acc) {
-	if (!acc)return 0;
-	return acc->new_game_plus_counter;
-}
-void Accounts_SetNewGamePlus_count(Account_t *acc, int value) {
-	if (!acc)return;
-	if (value < 0)value = 0;
-	acc->new_game_plus_counter = value;
-	Lmd_Accounts_Modify(acc);
-}
+
 float Accounts_GetSkillPoints_Bonus(Account_t* acc)
 {
 	if (!acc)return 0;
@@ -635,16 +621,7 @@ void Accounts_SetSkillPoints_Bonus(Account_t* acc, float value) {
 	Lmd_Accounts_Modify(acc);
 }
 //
-int Accounts_GetExperience(Account_t *acc) {
-	if (!acc)return 0;
-	return acc->experience;
-}
-void Accounts_SetExperience(Account_t *acc, int value) {
-	if (!acc)return;
-	if (value < 0)value = 0;
-	acc->experience = value;
-	Lmd_Accounts_Modify(acc);
-}
+
 int Accounts_GetCredits(Account_t *acc) {
 	if(!acc)return 0;
 	return acc->credits;
@@ -765,3 +742,5 @@ void Accounts_SetLastLogin(Account_t *acc, int value) {
 	acc->lastLogin = value;
 	Lmd_Accounts_Modify(acc);
 }
+
+ 

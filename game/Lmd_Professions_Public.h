@@ -89,4 +89,5 @@ typedef struct profession_s {
 	void (*spawn)(gentity_t *ent);
 }profession_t;
 
+
 #endif

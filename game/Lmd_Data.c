@@ -47,8 +47,26 @@ fileHandle_t Lmd_Data_OpenDataFile(char *directory, char *name, fsMode_t mode) {
 	}
 
 	Q_strcat(path, sizeof(path), name);
+
 	trap_FS_FOpenFile(path, &f, mode);
 	return f;
+}
+
+bool Lmd_Data_isFileValid(char* directory, char* name) {
+	char path[MAX_STRING_CHARS] = "";
+	if (directory) {
+		Lmd_Data_GetDataPath(directory, path, sizeof(path));
+		Q_strcat(path, sizeof(path), "/");
+	}
+
+	Q_strcat(path, sizeof(path), name);
+	fileHandle_t f; // = 0 ?
+	trap_FS_FOpenFile(path, &f, FS_READ);
+	if (f > 0) { // > 0
+		trap_FS_FCloseFile(f);
+		return true;
+	}
+	return false;
 }
 
 char* Lmd_Data_AllocFileContents(char *filename) {
@@ -69,46 +87,76 @@ char* Lmd_Data_AllocFileContents(char *filename) {
 	return buf;
 }
 
-unsigned int Lmd_Data_ProcessFiles(char *directory, char *ext, qboolean (*Callback)(char *fileName, char *fileBuf), int maxFiles){
+
+unsigned int Lmd_Data_ProcessFile(char* directory, char* fileName, qboolean(*Callback)(char* fileName, char* fileBuf)) {
+	char path[MAX_STRING_CHARS];
+	char* fileBuf;
+	unsigned int result = 0;
+
+	Lmd_Data_GetDataPath(directory, path, sizeof(path));
+
+	// Generate the full path to the file
+	char fullPath[MAX_STRING_CHARS];
+	snprintf(fullPath, sizeof(fullPath), "%s/%s", path, fileName);
+
+	// Allocate and read the file contents
+	fileBuf = Lmd_Data_AllocFileContents(fullPath);
+	if (!fileBuf) {
+		return result;
+	}
+
+	// Remove the extension from the file name
+	char* s = fileName;
+	char* s2 = NULL;
+	while (s[0] && (s2 = strchr(s, '.'))) {
+		s = s2;
+		s2++;
+	}
+	s[0] = 0;
+
+	// Invoke the callback function
+	if (Callback(fileName, fileBuf)) {
+		result = 1;
+	}
+
+	// Free allocated memory
+	G_Free(fileBuf);
+
+	return result;
+}
+
+unsigned int Lmd_Data_ProcessFiles(char* directory, char* ext, qboolean(*Callback)(char* fileName, char* fileBuf), int maxFiles, char* specificFile) {
 	int listbufSze = LMD_DATABASE_FILENAME_SIZE;
-	char *listbuf;// = (char *)G_Alloc(listbufSze);
+	char* listbuf;
 	char path[MAX_STRING_CHARS];
 	int numFiles;
-	char *namePtr;
+	char* namePtr;
 	int nameLen;
-	char *fileBuf;
 	unsigned int totalFiles = 0;
-	char *s, *s2;
-	if(maxFiles > LMD_DATABASE_FILELIST_MAX)
-		maxFiles = LMD_DATABASE_FILELIST_MAX;
-	Lmd_Data_GetDataPath(directory, path, sizeof(path));
-	listbufSze *= maxFiles;
-	namePtr = listbuf = (char *)G_Alloc(listbufSze);
 
-	numFiles = trap_FS_GetFileList(path, ext, listbuf, listbufSze);
-	int i;
-	for(i = 0; i < numFiles; i++, namePtr += nameLen + 1){
+	// ... (same as before)
+
+	// Initialize namePtr before entering the loop
+	namePtr = listbuf;
+
+	for (int i = 0; i < numFiles; i++, namePtr += nameLen + 1) {
 		nameLen = strlen(namePtr);
 
-		fileBuf = Lmd_Data_AllocFileContents(va("%s/%s", path, namePtr));
-		if(!fileBuf)
-			continue;
-
-		//remove extention
-		s = s2 = namePtr;
-		while(s[0] && (s2 = strchr(s2, '.'))){
-			s = s2;
-			s2++;
+		// Check if a specific file is provided and matches the current file
+		if (specificFile && strcmp(namePtr, specificFile) != 0) {
+			continue;  // Skip this file if it's not the specific one
 		}
-		s[0] = 0;
 
-		if(Callback(namePtr, fileBuf)){
+		// Call the new function to process a single file
+		if (Lmd_Data_ProcessFile(directory, namePtr, Callback)) {
 			totalFiles++;
 		}
-		G_Free(fileBuf);
-		if(totalFiles >= maxFiles)
+
+		if (totalFiles >= maxFiles) {
 			break;
+		}
 	}
+
 	G_Free(listbuf);
 	return totalFiles;
 }
@@ -381,33 +429,46 @@ qboolean Lmd_Data_Parse_KeyValuePair(char *key, char *value, void *target, const
 
 int Lmd_Data_WriteToFile_LinesDelimited(
 	fileHandle_t file,
-	const DataField_t fields [],
+	const DataField_t fields[],
 	int fieldCount,
-	void *target){
+	void* target) {
 
 	int i;
 	char key[MAX_STRING_CHARS];
 	char value[MAX_STRING_CHARS];
-	void *writeState = NULL;
+	void* writeState = NULL;
 
 	int writes = 0;
 
+	G_LogPrintf("Debug: [WRITE] Starting FOR...\n");
 	for (i = 0; i < fieldCount; i++) {
 		DataWriteResult_t dwr;
-
+		// If there is no write function for this field, skip to the next one
 		if (!fields[i].write) continue;
 		writeState = NULL;
+		G_LogPrintf(va("Debug: [WRITE] Starting DO-WHILE... [i=%i] !\n", i));
 		do {
-			// May be NULL for 'any key' parsers/writers
+			// If the field has a key, copy it to the key variable
+			// Otherwise, set the key to an empty string
 			if (fields[i].key != NULL) {
 				Q_strncpyz(key, fields[i].key, sizeof(key));
+				G_LogPrintf(va("Debug: [WRITE] Key Copied... [i=%i] !\n", i));
+				G_LogPrintf(va("Debug: [WRITE] Key = %s  [i=%i] !\n", key, i));
 			}
 			else {
 				key[0] = 0;
+				G_LogPrintf(va("Debug: [WRITE] Key[0] = 0... [i=%i] !\n", i));
 			}
-			dwr = fields[i].write(target, key, sizeof(key), value, sizeof(value), &writeState, fields[i].writeArgs);
+			// Call the write function for this field
+			G_LogPrintf(va("Debug: [WRITE] Writing... [i=%i] !\n", i));
+			if(!(dwr = fields[i].write(target, key, sizeof(key), value, sizeof(value), &writeState, fields[i].writeArgs))) G_LogPrintf(va("Debug: [WRITE] NULL... [i=%i] !!!!\n", i));
+			G_LogPrintf(va("Debug: [WRITE] Writing OK [i=%i] !\n", i));
+			// If the write function returned a result other than NODATA and the key is not empty,
+			// write the key-value pair to the file
 			if (dwr != DWR_NODATA && key[0]) {
-				char *line;
+				char* line;
+				// If the value is not empty, write both the key and the value
+				// Otherwise, write only the key
 				if (value[0]) {
 					line = va("%s: %s\n", key, value);
 				}
@@ -417,9 +478,11 @@ int Lmd_Data_WriteToFile_LinesDelimited(
 				trap_FS_Write(line, strlen(line), file);
 				writes++;
 			}
+			// Repeat the process if the write function returned CONTINUE or SKIP
 		} while (dwr == DWR_CONTINUE || dwr == DWR_SKIP);
 	}
-		
+
+	// Return the number of writes
 	return writes;
 }
 
@@ -435,6 +498,8 @@ void Lmd_Data_FreeFields(void *target, const DataField_t fields [], int fieldCou
 
 qboolean Lmd_Data_AutoFieldCallback_Parse(char *key, char *value, void *target, void *args) {
 	if (value != NULL && value[0]) {
+		G_LogPrintf(va("Debug: %s<->%s %s !!\n"),key,value, value[0]);
+		G_LogPrintf(va("Debug: ARGS: %s !!\n"),args);
 		DataAutoFieldArgs_t *fieldArgs = (DataAutoFieldArgs_t *) args;
 		BG_ParseType(fieldArgs->type, value, (byte *) target + fieldArgs->ofs);
 		return qtrue;

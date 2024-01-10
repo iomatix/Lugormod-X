@@ -12,6 +12,8 @@
 #include "Lmd_Confirm.h"
 #include "Lmd_Time.h"
 #include "BG_Fields.h"
+#include "Lmd_Main.h"
+#include "Lmd_Accounts_Core.h"
 
 int AccProfessionDataDataIndex = -1;
 #define PROFDATA(acc) (profData_t *)Lmd_Accounts_GetAccountCategoryData(acc, AccProfessionDataDataIndex)
@@ -57,10 +59,13 @@ profession_t *Professions[] = {
 typedef struct profData_s {
 	int profession;
 	int level;
+	int experience;
+	int new_game_plus_counter;
 	int lastLevelUp;
 	void *data;
 }profData_t;
 #define	PROFDATAOFS(x) ((int)&(((profData_t *)0)->x))
+
 
 
 void SetSkillParents(profSkill_t *skill) {
@@ -82,15 +87,15 @@ void Prof_Init() {
 	}
 }
 
-qboolean Accounts_Profs_Parse(char *key, char *value, void *target, void *args) {
-	profData_t *profData = (profData_t *)target;
+qboolean Accounts_Profs_Parse(char* key, char* value, void* target, void* args) {
+	profData_t* profData = (profData_t*)target;
 	if (Q_stricmpn(key, "prof_", 5) != 0)
 		return qfalse;
 
-	void **alloc = (void **)profData->data;
+	void** alloc = (void**)profData->data;
 	int i;
-	char *profName = key + 5;
-	char *skillName;
+	char* profName = key + 5;
+	char* skillName;
 	int len;
 	for (i = 0; i < NUM_PROFESSIONS; i++)
 	{
@@ -106,7 +111,7 @@ qboolean Accounts_Profs_Parse(char *key, char *value, void *target, void *args) 
 			break;
 
 		skillName = profName + (len + 1);
-		Lmd_Data_Parse_KeyValuePair(skillName, value, (void *)alloc[i], Professions[i]->data.fields, Professions[i]->data.count);
+		Lmd_Data_Parse_KeyValuePair(skillName, value, (void*)alloc[i], Professions[i]->data.fields, Professions[i]->data.count);
 		break;
 	}
 
@@ -116,14 +121,14 @@ qboolean Accounts_Profs_Parse(char *key, char *value, void *target, void *args) 
 typedef struct ProfessionWriteState_s {
 	int index;
 	int dataFieldIndex;
-	void *dataFieldState;
+	void* dataFieldState;
 } ProfessionWriteState_t;
 
-DataWriteResult_t Accounts_Profs_Write(void *target, char key[], int keySize, char value[], int valueSize, void **writeState, void *args)
+DataWriteResult_t Accounts_Profs_Write(void* target, char key[], int keySize, char value[], int valueSize, void** writeState, void* args)
 {
-	profData_t *profData = (profData_t *)target;
+	profData_t* profData = (profData_t*)target;
 
-	profession_t *prof = Professions[profData->profession];
+	profession_t* prof = Professions[profData->profession];
 	int dataFieldsCount = prof->data.count;
 
 	if (dataFieldsCount == 0) {
@@ -136,7 +141,7 @@ DataWriteResult_t Accounts_Profs_Write(void *target, char key[], int keySize, ch
 		statePtr = *writeState = G_Alloc(sizeof(ProfessionWriteState_t));
 	}
 
-	ProfessionWriteState_t *state = (ProfessionWriteState_t *)statePtr;
+	ProfessionWriteState_t* state = (ProfessionWriteState_t*)statePtr;
 
 	if (state->index >= dataFieldsCount) {
 		G_Free(state);
@@ -146,9 +151,9 @@ DataWriteResult_t Accounts_Profs_Write(void *target, char key[], int keySize, ch
 nextField:
 	if (state->index < dataFieldsCount) {
 		// Write the field.
-		const DataField_t *field = &prof->data.fields[state->index];
+		const DataField_t* field = &prof->data.fields[state->index];
 		if (field->write) {
-			void *dataPtr = profData->data;
+			void* dataPtr = profData->data;
 
 			Q_strcat(key, keySize, va("%s_%s", prof->key, field->key));
 			DataWriteResult_t result = field->write(dataPtr, key, keySize, value, valueSize, &state->dataFieldState, field->writeArgs);
@@ -174,19 +179,118 @@ nextField:
 	}
 }
 
+
+// Function to update keys for professions
+void Prof_Update_Override(char** key, char** value) {
+	if (Q_stricmp(*key, "prof_merc_jetpack") == 0) {
+		*key = "prof_merc_fuel";
+	}
+	else if (Q_stricmp(*key, "prof_merc_strength") == 0) {
+		*key = "prof_merc_forceresist";
+	}
+	// Add other overrides as needed
+}
+
+// State structure for Prof_Write_Modules
+struct ProfWriteModulesState {
+	int moduleIndex;
+	int dataFieldIndex;
+	void* dataFieldState;
+};
+
+// Parsing function for professions
+qboolean Prof_Parse_Modules(char* key, char* value, void* target, void* args);
+
+// Writing function for professions
+DataWriteResult_t Prof_Write_Modules(void* target, char key[], int keySize, char value[], int valueSize, void** writeState, void* args);
+
+
+
+//	_m##_PREF(prof_ ,Accounts_Profs_Parse, Accounts_Profs_Write, NULL) \
+
 #define ProfsFields_Base(_m) \
-	_m##_PREF(prof_, Accounts_Profs_Parse, Accounts_Profs_Write, NULL) \
-	_m##_AUTO(profession, PROFDATAOFS(profession), F_INT) \
-	_m##_AUTO(level, PROFDATAOFS(level), F_INT) \
-	_m##_AUTO(lastLevelUp, PROFDATAOFS(lastLevelUp), F_INT)
-
+    _m##_AUTO(profession, PROFDATAOFS(profession), F_INT) \
+    _m##_AUTO(lastLevelUp, PROFDATAOFS(lastLevelUp), F_INT) \
+    _m##_AUTO(level, PROFDATAOFS(level), F_INT) \
+    _m##_AUTO(experience, PROFDATAOFS(experience), F_INT) \
+    _m##_AUTO(new_game_plus_counter, PROFDATAOFS(new_game_plus_counter), F_INT) \
+    _m##_DEFL(Prof_Parse_Modules, Prof_Write_Modules, NULL)
 ProfsFields_Base(DEFINE_FIELD_PRE)
-
 DATAFIELDS_BEGIN(ProfsFields)
 ProfsFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
 const int ProfsFields_Count = DATAFIELDS_COUNT(ProfsFields);
+
+qboolean Prof_Parse_Modules(char* key, char* value, void* target, void* args) {
+	profData_t* profData = (profData_t*)target;
+
+	Prof_Update_Override(&key, &value);
+
+	for (int i = 0; i < ProfsFields_Count; i++) {
+		void* dataPtr = profData->data;
+		if (Lmd_Data_Parse_KeyValuePair(key, value, dataPtr, ProfsFields, ProfsFields_Count)) {
+			return qtrue;
+		}
+	}
+
+	return qfalse;
+}
+
+// Writing function for professions
+DataWriteResult_t Prof_Write_Modules(void* target, char key[], int keySize, char value[], int valueSize, void** writeState, void* args) {
+	profData_t* profData = (profData_t*)target;
+
+	// Debug: Check if target is NULL
+	if (target == NULL) {
+		G_LogPrintf("Debug: Target is NULL in Prof_Write_Modules\n");
+		return DWR_NODATA;
+	}
+
+	struct ProfWriteModulesState* state;
+
+	// Initialize or retrieve state
+	if (*writeState == NULL) {
+		state = (struct ProfWriteModulesState*)G_Alloc(sizeof(struct ProfWriteModulesState));
+		state->moduleIndex = -1;
+		*writeState = state;
+	}
+	else {
+		state = (struct ProfWriteModulesState*)*writeState;
+	}
+
+	// Find a good category
+	state->dataFieldIndex = 0;
+	state->dataFieldState = NULL;
+	while (++state->moduleIndex < ProfsFields_Count) {
+		// Write the field.
+		const DataField_t* field = &ProfsFields[state->moduleIndex];
+		if (field->write) {
+			void* dataPtr = profData->data;
+
+			Q_strncpyz(key, field->key, keySize);
+			DataWriteResult_t result = field->write(dataPtr, key, keySize, value, valueSize, &state->dataFieldState, field->writeArgs);
+			if (result == DWR_COMPLETE || result == DWR_NODATA) {
+				// We are done with this field
+				state->dataFieldIndex++;
+			}
+
+			if (result == DWR_NODATA) {
+				continue;
+			}
+
+			return DWR_CONTINUE;
+		}
+		else {
+			state->dataFieldIndex++;
+			continue;
+		}
+	}
+
+	// No more modules
+	G_Free(state);
+	return DWR_NODATA;
+}
 
 
 void Lmd_Prof_Alloc(void *target) {
@@ -273,6 +377,24 @@ void Accounts_Prof_ClearData(Account_t *acc) {
 	}
 
 }
+void Accounts_ClearData(Account_t* acc) {
+	profData_t* data = PROFDATA(acc);
+	G_Free(data->data);
+
+}
+
+void Accounts_Prof_AllocProfessionTemplate(Account_t *acc, int prof) {
+	
+	profData_t* data = PROFDATA(acc);
+
+	data->level = 1;
+	data->profession = prof;
+	data->experience = 0;
+	data->lastLevelUp = 0;
+	data->new_game_plus_counter = 0;
+	data->data = G_Alloc(Professions[prof]->data.size);
+	memset(data->data, 0, Professions[prof]->data.size);
+}
 
 void* Accounts_Prof_GetFieldData(Account_t *acc) {
 	if (!acc)
@@ -320,36 +442,97 @@ qboolean PlayerAcc_Prof_CanUseProfession(gentity_t *ent) {
 	return qtrue;
 }
 
-void Accounts_Prof_SetProfession(Account_t *acc, int value) {
-	if (!acc) return;
-	//iomatix save 
-	int level = Accounts_Prof_GetLevel(acc);
-	if (level < 1) level = 1;
-	if (Accounts_Prof_GetProfession(acc) == PROF_JEDI)Accounts_SetLevel_jedi(acc, level);
-	else if (Accounts_Prof_GetProfession(acc) == PROF_MERC)Accounts_SetLevel_merc(acc, level);
-	//
+void Accounts_SaveProfessionData(Account_t* acc, int prof) {
+	// Debug: Check if acc is NULL
+	G_LogPrintf("Debug: Save Profession initial...\n");
+	if (acc == NULL) {
+		G_LogPrintf("Debug: Account is NULL in Accounts_SaveProfessionData\n");
+		return;
+	}
+	G_LogPrintf("Debug: Save Profession handling file...\n");
+	fileHandle_t f = Lmd_Data_OpenDataFile(va("accounts/%i", prof), va("%s.uac", Accounts_GetName(acc)), FS_WRITE);
 
-	profData_t *data = PROFDATA(acc);
-	
-	// TODO -> Save 
+	// Debug: Check if file is opened correctly
+	if (!f) {
+		G_LogPrintf("Debug: Failed to open file in Accounts_SaveProfessionData\n");
+		return;
+	}
+	G_LogPrintf("Debug: File OK...\n");
+	profData_t* data = PROFDATA(acc);
+	G_LogPrintf("Debug: GOT PROFDATA...\n");
+	// Save the state of the current profession before the change
+	// Use appropriate functions to save data, e.g., to a file
+	G_LogPrintf("Debug: WriteToFile (??)...\n");
+	Lmd_Data_WriteToFile_LinesDelimited(f, ProfsFields, ProfsFields_Count, (void*)acc);
+	G_LogPrintf("Debug: OK!...\n");
+	// For example, assuming you have a function to save data to a file:
+	// SaveDataToFile(acc->username, "old_profession.txt", oldProfessionData);
+}
+
+unsigned int Accounts_ParseProfessionData(Account_t* acc, int prof) {
+	// Load the state of the new profession
+	// Use appropriate functions to load data, e.g., from a file
+
+	fileHandle_t f = Lmd_Data_OpenDataFile(va("accounts/%i", prof), va("%s.uac", Accounts_GetName(acc)), FS_READ);
+	if (!f || f <= 0) return 0; 
+			
 	Accounts_Prof_ClearData(acc);
+	Accounts_Prof_AllocProfessionTemplate(acc, prof);
+	
+	profData_t* data = PROFDATA(acc);
 
+	if(g_developer.integer > 0) Com_Printf("Loading profession for: %s\n", Accounts_GetName(acc));
+	
+	char* str;
+	Lmd_Data_Parse_LineDelimited(&str, (void *) data->data, ProfsFields, ProfsFields_Count);
+
+
+	trap_FS_FCloseFile(f);
+
+	// For example, assuming you have a function to load data from a file:
+	// newData = LoadDataFromFile(acc->username, "new_profession.txt");
+
+	// Update the state of the new profession in the player's data structure
+	// data->data = newData;
+
+	// Save the new profession in the data structure
+
+	//profData_t* data = PROFDATA(acc);
+	//data->data = newData;
+	//data->profession = prof;
+
+	// For example, assuming you have a function to save data to a file:
+	// SaveDataToFile(acc->username, "new_profession.txt", newData);
+	return 0;
+}
+
+
+bool is_Gameplay_Proffesion(int prof) {
+	return (prof == PROF_JEDI || prof == PROF_MERC);
+}
+void Accounts_Prof_SetProfession(Account_t *acc, int prof) {
+	if (!acc) return;
+	
+	// iomatix
+	int prev_prof = Accounts_Prof_GetProfession(acc);	if (prof == prev_prof) return;
+
+	// Save game profession data if is not false 
+	if(prev_prof) Accounts_SaveProfessionData(acc, prev_prof);
+
+
+
+	
+	// Load game profession data if exist TODO
+	//Accounts_LoadProfessionData(acc, prof);
+	
+	// Reset if don't TODO
 	// Free Memory
-	G_Free(data->data);
-	data->profession = value;
-	data->data = G_Alloc(Professions[value]->data.size);
-	memset(data->data, 0, Professions[value]->data.size);
+	Accounts_ClearData(acc);
+	// Alloc empty mem
+	Accounts_Prof_AllocProfessionTemplate(acc, prof);
 
-	//iomatix load
-	level = 0;
-	if (value == PROF_JEDI) level = Accounts_GetLevel_jedi(acc);
-	else if (value == PROF_MERC) level = Accounts_GetLevel_merc(acc);
-	if (level < 1) level = 1;
-	data->level = level;
 	Lmd_Accounts_Modify(acc);
-
-
-
+	
 }
 
 int Accounts_Prof_GetLevel(Account_t *acc) {
@@ -361,14 +544,11 @@ int Accounts_Prof_GetLevel(Account_t *acc) {
 void Accounts_Prof_SetLevel(Account_t *acc, int value) {
 	if (!acc) return;
 	profData_t *data = PROFDATA(acc);
-	if (value < 1)value = 1;
+	if (value < 1) value = 1;
 	data->level = value;
 	data->lastLevelUp = Time_Now();
 	Lmd_Accounts_Modify(acc);
 
-	//iomatix saving
-	if (Accounts_Prof_GetProfession(acc) == PROF_MERC)Accounts_SetLevel_merc(acc, value);
-	else if (Accounts_Prof_GetProfession(acc) == PROF_JEDI)Accounts_SetLevel_jedi(acc, value);
 }
 
 int Accounts_Prof_GetLastLevelup(Account_t *acc) {
@@ -376,6 +556,34 @@ int Accounts_Prof_GetLastLevelup(Account_t *acc) {
 		return 0;
 	profData_t *data = PROFDATA(acc);
 	return data->lastLevelUp;
+}
+
+int Accounts_Prof_GetExperience(Account_t* acc) {
+	if (!acc)return 0;
+	profData_t* data = PROFDATA(acc);
+	return data->lastLevelUp;
+}
+void Accounts_Prof_SetExperience(Account_t* acc, int value) {
+	if (!acc)return;
+	if (value < 0) value = 0;
+	profData_t* data = PROFDATA(acc);
+	data->experience = value;
+
+	Lmd_Accounts_Modify(acc);
+}
+
+int Accounts_Prof_GetNewGamePlus_Counter(Account_t* acc) {
+	if (!acc)return 0;
+	profData_t* data = PROFDATA(acc);
+	return data->new_game_plus_counter;
+}
+void Accounts_Prof_SetNewGamePlus_Counter(Account_t* acc, int value) {
+	if (!acc)return;
+	if (value < 0) value = 0;
+	profData_t* data = PROFDATA(acc);
+	data->new_game_plus_counter = value;
+
+	Lmd_Accounts_Modify(acc);
 }
 
 #if 0
@@ -447,15 +655,16 @@ int Professions_AddAmount_SkillPoints(int level) //that may be useful for disps 
 	return p;
 }
 //iomatix:
+int Accounts_Prof_GetNewGamePlus_SkillPoints(Account_t *acc, int prof) {
+	return Accounts_Prof_GetNewGamePlus_Counter(acc) * lmd_skillpoints_perngp.integer;
+}
 int Professions_TotalSkillPoints(Account_t *acc, int prof) {
 
 	if (!acc)return 0;
 	int level = Accounts_Prof_GetLevel(acc);
 
-	if (prof && prof == PROF_JEDI) level = Accounts_GetLevel_jedi(acc);
-	else if (prof && prof == PROF_MERC) level = Accounts_GetLevel_merc(acc);
 	// Bonus Skill Points for NG+
-	int bonus = Accounts_GetNewGamePlus_Counter(acc)*lmd_skillpoints_perngp.integer;
+	int bonus = Accounts_Prof_GetNewGamePlus_SkillPoints(acc, prof);
 	// Bonus Skill Points Other
 	bonus += floor(Accounts_GetSkillPoints_Bonus(acc));
 	
@@ -525,8 +734,6 @@ int Professions_AvailableSkillPoints(Account_t *acc, int prof, profSkill_t *skil
 		}
 		else if (!skill->parent) {
 			level = Accounts_Prof_GetLevel(acc);
-			if (prof && prof == PROF_JEDI) { level = Accounts_GetLevel_jedi(acc); }
-			else if (prof && prof == PROF_MERC) { level = Accounts_GetLevel_merc(acc); }
 			break;
 		}
 	}
@@ -540,7 +747,7 @@ int recallDroppedCredits(gentity_t *ent);
 void Profession_Reset(gentity_t *ent)
 {
 	PlayerAcc_SetScore(ent, 0);
-	PlayerAcc_SetExperience(ent, 0); //reset experience points.
+	Accounts_Prof_SetExperience(ent->client->pers.Lmd.account, 0); //reset experience points.
 
 	recallDroppedCredits(ent);
 
@@ -1184,7 +1391,7 @@ void Cmd_BuyLevel_Confirm(gentity_t *ent, void *dataptr) {
 void Experience_Level_Up(gentity_t *ent)
 {
 	int playerLevel = PlayerAcc_Prof_GetLevel(ent);
-	int myExp = PlayerAcc_GetExperience(ent), cost;
+	int myExp = Accounts_Prof_GetExperience(ent->client->pers.Lmd.account), cost;
 	int flags = PlayerAcc_GetFlags(ent);
 	int prof = PlayerAcc_Prof_GetProfession(ent);
 
@@ -1194,7 +1401,7 @@ void Experience_Level_Up(gentity_t *ent)
 
 	if (flags & ACCFLAGS_NOPROFCRLOSS) PlayerAcc_AddFlags(ent, -ACCFLAGS_NOPROFCRLOSS);
 	cost = Professions_LevelCost_EXP(prof, playerLevel);
-	int resEXP = PlayerAcc_GetExperience(ent);
+	int resEXP = Accounts_Prof_GetExperience(ent->client->pers.Lmd.account);
 	if (resEXP <= 0) {
 		return;
 	}
@@ -1202,7 +1409,7 @@ void Experience_Level_Up(gentity_t *ent)
 
 	resEXP = resEXP - cost; // new cost
 	if (resEXP < 0) {
-		Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", PlayerAcc_GetExperience(ent), cost));
+		Disp(ent, va("^5%i ^3/ ^2%i ^3EXP\n", Accounts_Prof_GetExperience(ent->client->pers.Lmd.account), cost));
 		Disp(ent, va("^3You need ^5%i EXP ^3more.\n", -resEXP));
 		return;
 	}
@@ -1211,7 +1418,7 @@ void Experience_Level_Up(gentity_t *ent)
 
 	//checks are completed
 
-	PlayerAcc_SetExperience(ent, resEXP);
+	Accounts_Prof_SetExperience(ent->client->pers.Lmd.account, resEXP);
 	//iomatix:
 	playerLevel++;
 	PlayerAcc_Prof_SetLevel(ent, playerLevel);
@@ -1318,6 +1525,7 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 		if (playerLevel <= 0) {
 			if (lmd_old_commands_disp.integer == 1)Disp(ent, "^3You are not logged in."); else
 				trap_SendServerCommand(ent->s.number, "chat \"^1You are not logged in.\"");
+			// TODO Game User Guidance on chat
 			return;
 		}
 
@@ -1333,7 +1541,7 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 		}
 
 		cost = Professions_LevelCost(prof, playerLevel, Time_Now() - Accounts_Prof_GetLastLevelup(ent->client->pers.Lmd.account));
-		cost += (Professions_LevelCost_EXP(prof, playerLevel) - PlayerAcc_GetExperience(ent)) / 4;
+		cost += (Professions_LevelCost_EXP(prof, playerLevel) - Accounts_Prof_GetExperience(ent->client->pers.Lmd.account)) / 4;
 
 		int resCr = PlayerAcc_GetCredits(ent) - cost;
 		if (resCr < 0) {
@@ -1346,7 +1554,7 @@ void Cmd_BuyLevel_f(gentity_t *ent, int iArg) {
 			PlayerAcc_SetCredits(ent, resCr);
 			//iomatix:
 
-			PlayerAcc_SetExperience(ent, 1 + (Professions_LevelCost_EXP(prof, playerLevel) - PlayerAcc_GetExperience(ent)));
+			Accounts_Prof_SetExperience(ent->client->pers.Lmd.account, 1 + (Professions_LevelCost_EXP(prof, playerLevel) - Accounts_Prof_GetExperience(ent->client->pers.Lmd.account)));
 			Experience_Level_Up(ent);
 
 
@@ -1439,7 +1647,7 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 			}
 
 
-			PlayerAcc_SetNewGamePlus_Counter(ent, PlayerAcc_GetNewGamePlus_count(ent) + ng_points);
+			Accounts_Prof_SetNewGamePlus_Counter(ent->client->pers.Lmd.account, Accounts_Prof_GetNewGamePlus_Counter(ent->client->pers.Lmd.account) + ng_points);
 			Accounts_Prof_ClearData(ent->client->pers.Lmd.account);
 			
 			Professions_SetDefaultSkills(ent->client->pers.Lmd.account, PlayerAcc_Prof_GetProfession(ent));
@@ -1457,10 +1665,10 @@ void Cmd_NewGameP_f(gentity_t *ent, int iArg) {
 
 	}
 	else if (Q_stricmp("reset", arg) == 0) {
-		int ng_points = PlayerAcc_GetNewGamePlus_count(ent);
+		int ng_points = Accounts_Prof_GetNewGamePlus_Counter(ent->client->pers.Lmd.account);
 		if (ng_points != 0)
 		{
-			PlayerAcc_SetNewGamePlus_Counter(ent, 0);
+			Accounts_Prof_SetNewGamePlus_Counter(ent->client->pers.Lmd.account, 0);
 			if (lmd_old_commands_disp.integer == 1) Disp(ent, "^3Your New Game Plus progress is reseted!");
 			else trap_SendServerCommand(ent->s.number, "chat \"^3Your New Game Plus progress is reseted!\"");
 

@@ -1,6 +1,7 @@
 // Copyright (C) 1999-2000 Id Software, Inc.
 //
 // g_local.h -- local definitions for game module
+#pragma once
 #ifndef __G_LOCAL_H__
 #define __G_LOCAL_H__
 
@@ -458,6 +459,7 @@ void	GetAnglesForDirection(const vec3_t p1, const vec3_t p2, vec3_t out);
 int		get_random_int(int min, int max);
 float	get_random(float min, float max);
 std::string get_random_message(std::initializer_list<const char*> messages);
+bool FileExists(const char* filePath);
 
 
 //W_FORCE.C

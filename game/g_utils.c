@@ -2550,3 +2550,7 @@ std::string get_random_message(std::initializer_list<const char*> messages)
 
 	return *it;
 }
+bool FileExists(const char* filePath) {
+	struct stat buffer;
+	return (stat(filePath, &buffer) == 0);
+}

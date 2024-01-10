@@ -1,0 +1,3 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984#define ProfsFields_Base(_m) _m##_PREF(prof_, Accounts_Profs_Parse, Accounts_Profs_Write, NULL) _m##_AUTO(profession, PROFDATAOFS(profession), F_INT) _m##_AUTO(lastLevelUp, PROFDATAOFS(lastLevelUp), F_INT) _m##_AUTO(level, PROFDATAOFS(level), F_INT) _m##_AUTO(experience, PROFDATAOFS(experience), F_INT) _m##_AUTO(new_game_plus_counter, PROFDATAOFS(new_game_plus_counter), F_INT) _m##_DEFL(Prof_Parse_Modules, Prof_Write_Modules, NULL)

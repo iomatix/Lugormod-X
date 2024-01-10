@@ -6,6 +6,7 @@ gentity_t *Lmd_logic_entity(int index);
 #include "Lmd_Accounts_Stats.h"
 #include "Lmd_Professions.h"
 #include "Lmd_Prof_Merc.h"
+#include "Lmd_Prof_Core.h"
 
 //RoboPhred
 extern vmCvar_t lmd_stashdepotime;
@@ -349,7 +350,7 @@ void depositMoneyStash(gentity_t *ent){
 	PlayerAcc_Stats_SetStashes(ent, PlayerAcc_Stats_GetStashes(ent) + 1);
 
 	PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) + amount);
-	PlayerAcc_SetExperience(ent, PlayerAcc_GetExperience(ent) + amount_exp);
+	Accounts_Prof_SetExperience(ent->client->pers.Lmd.account, Accounts_Prof_GetExperience(ent->client->pers.Lmd.account) + amount_exp);
 	trap_SendServerCommand(ent->s.number, va("cp \"^3You received ^2%i^3 credits and ^2%i^3 experience.\"", amount, amount_exp));
 	trap_SendServerCommand(-1, va("print \"%s ^3deposited the money stash.\n\"", ent->client->pers.netname));
 	G_LogPrintf("%s deposited the money stash. CR %i.\n", ent->client->pers.netname, amount);

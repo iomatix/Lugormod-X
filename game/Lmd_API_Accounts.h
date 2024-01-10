@@ -7,6 +7,8 @@
 
 #define LMDAPI_ACCOUNTS_VERSION_CURRENT LMDAPI_ACCOUNTS_VERSION_1
 
+
+
 typedef struct LmdApi_Accounts_v1_s {
 	/*
 	Registers an account module.
@@ -89,7 +91,6 @@ typedef struct LmdApi_Accounts_v1_s {
 	// Gets the last IP to log in to the account.
 	void (*getAccountLastIP)(AccountPtr_t acc, IP_t outIP);
 } LmdApi_Accounts_v1_t;
-
 
 // Represents the current memory function list at the time of compile.
 #define LmdApi_Accounts_t LmdApi_Accounts_v1_t

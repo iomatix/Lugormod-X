@@ -1,6 +1,6 @@
 // Copyright (C) 1999-2000 Id Software, Inc.
 //
-
+#pragma once
 #include "g_active.h"
 
 #include "Lmd_Accounts_Core.h"

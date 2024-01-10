@@ -1,4 +1,4 @@
-
+#pragma once
 SpawnData_t* ParseEntitySpawnstring(char *string);
 void removeSpawnstring(SpawnData_t *spawnData);
 gentity_t *spawnEntityFromData(SpawnData_t *spawnData);

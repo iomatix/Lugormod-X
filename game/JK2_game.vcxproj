@@ -766,6 +766,7 @@
     <ClInclude Include="Lmd_Inventory.h" />
     <ClInclude Include="Lmd_IPs.h" />
     <ClInclude Include="Lmd_KeyPairs.h" />
+    <ClInclude Include="Lmd_Main.h" />
     <ClInclude Include="lmd_mem.h" />
     <ClInclude Include="Lmd_API_Memory.h" />
     <ClInclude Include="Lmd_Parser.h" />
@@ -802,6 +803,7 @@
     <None Include="Appendix A Player guide.txt" />
     <None Include="Appendix F Entities.txt" />
     <None Include="change_log.txt" />
+    <None Include="cpp.hint" />
     <None Include="JK2_game.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

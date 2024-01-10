@@ -4,6 +4,7 @@
 
 #include "Lmd_Entities_Public.h"
 #include "Lmd_Accounts_Core.h"
+#include "Lmd_Prof_Core.h"
 
 //==========================================================
 
@@ -1379,7 +1380,7 @@ void Use_Target_Experience(gentity_t *ent, gentity_t *other, gentity_t *activato
 	if (ent->genericValue6_e && ent->genericValue6_e > level.time)
 		return;
 
-	activatorCreds = PlayerAcc_GetExperience(activator);
+	activatorCreds = Accounts_Prof_GetExperience(activator->client->pers.Lmd.account);
 
 
 	ent->genericValue6_e = 0;

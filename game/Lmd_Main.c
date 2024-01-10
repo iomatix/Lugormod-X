@@ -1,6 +1,8 @@
 
+#pragma once
 #include "g_local.h"
 #include "Lmd_EntityCore.h"
+#include "Lmd_Main.h"
 
 //#define LMD_MEMORY_DEBUG
 
@@ -9,10 +11,7 @@
 #include <crtdbg.h>
 #endif
 
-void Accounts_SaveAll(qboolean force);
 
-unsigned int Factions_Load(void);
-unsigned int Accounts_Load();
 void Commands_Init();
 unsigned int Auths_Load();
 void loadLingoFilter();
@@ -159,9 +158,9 @@ void CheckJediItemSpawn();
 
 void Lmd_RunFrame(void){
 
-	Accounts_SaveAll(qfalse);
-
-	Factions_Save(qfalse);
+	// Save TODO
+	// Accounts_SaveAll(qfalse);
+	// Factions_Save(qfalse);
 
 	Lmd_IPs_Run();
 
@@ -184,8 +183,10 @@ void Lmd_Shutdown(void){
 	SaveEntitiesData("previous");
 	ShutdownEntitySystem();
 
-	Accounts_SaveAll(qtrue);
-	Factions_Save(qtrue);
+
+	// Reimplement Saving SHUTDOWN Save Todo
+	//Accounts_SaveAll(qtrue);
+	//Factions_Save(qtrue);
 
 	Auths_Shutdown();
 }

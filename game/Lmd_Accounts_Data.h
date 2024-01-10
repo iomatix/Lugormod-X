@@ -1,4 +1,4 @@
-
+#pragma once
 #include "Lmd_Data.h"
 
 #include "Lmd_Accounts_Public.h"

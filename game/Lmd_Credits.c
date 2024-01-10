@@ -3,6 +3,7 @@
 
 #include "Lmd_Accounts_Core.h"
 #include "Lmd_Professions.h"
+#include "Lmd_Prof_Core.h"
 
 
 qboolean PlayerItem_CanSpawnItem(gentity_t *player);
@@ -11,8 +12,8 @@ extern void Experience_Level_Up(gentity_t *ent);
 
 void GiveExperience(gentity_t *ent, int exper, char *reason) {
 	if (lmd_bots_gain_experience.integer == 0 && (ent->r.svFlags & SVF_BOT)) return; //do not give experience to bots.
-	if (PlayerAcc_Prof_GetLevel(ent) >= 120) { PlayerAcc_SetExperience(ent, 0); return; } //if max level don't give exp
-	int cur = PlayerAcc_GetExperience(ent);
+	if (Accounts_Prof_GetLevel(ent->client->pers.Lmd.account) >= 120) { Accounts_Prof_SetExperience(ent->client->pers.Lmd.account, 0); return; } //if max level don't give exp
+	int cur = Accounts_Prof_GetExperience(ent->client->pers.Lmd.account);
 	if (exper < 0 && exper - exper < 0) exper = 0;
 
 	else if (exper > 0) {
@@ -30,7 +31,7 @@ void GiveExperience(gentity_t *ent, int exper, char *reason) {
 
 
 
-	PlayerAcc_SetExperience(ent, cur + exper);
+	Accounts_Prof_SetExperience(ent->client->pers.Lmd.account, cur + exper);
 	Experience_Level_Up(ent);
 	
 	//auto check is level up 

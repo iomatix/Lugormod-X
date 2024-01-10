@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __G_ACTIVE_H__
 #define __G_ACTIVE_H__
 
