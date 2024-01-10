@@ -15,8 +15,8 @@ bool Lmd_Data_isFileValid(char* directory, char* name);
 // Copies the file content of the non-data path to a G_Alloc string.
 char* Lmd_Data_AllocFileContents(char *filename);
 
-
 unsigned int Lmd_Data_ProcessFiles(char* directory, char* ext, qboolean(*Callback)(char* fileName, char* fileBuf), int maxFiles, char* specificFile = NULL);
+
 unsigned int Lmd_Data_ProcessFile(char* directory, char* fileName, qboolean(*Callback)(char* fileName, char* fileBuf));
 
 

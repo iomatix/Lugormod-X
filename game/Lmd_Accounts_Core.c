@@ -14,6 +14,7 @@
 
 #include "Lmd_Professions.h"
 #include "Lmd_Prof_Core.h"
+#include "Lmd_Main.h"
 
 
 #define SECCODE_LENGTH 6
@@ -396,6 +397,7 @@ void Accounts_Save(Account_t *acc)
 	gentity_t* player = Accounts_GetPlayerByAcc(acc);
 	if (player)
 	{
+
 		updatePlayer(player);
 		// Save only if player data is loaded
 		Accounts_SaveProfessionData(acc, acc->activeprofession);
@@ -403,10 +405,11 @@ void Accounts_Save(Account_t *acc)
 		Lmd_Data_WriteToFile_LinesDelimited(f, AccountFields, AccountFields_Count, (void*)acc);
 		trap_FS_FCloseFile(f);
 		G_LogPrintf(va("Account %s has been saved!", acc->username));
+		acc->modifiedTime = 0;
 	}
 
 
-	acc->modifiedTime = 0;
+
 }
 
 
@@ -467,14 +470,21 @@ qboolean validateNewAccount(Account_t *acc) {
 	return qtrue;
 }
 
-qboolean parseAccount(char *name, char *buf){
-	Account_t *acc = allocAccount();
-	if(g_developer.integer > 0)
+qboolean parseAccount(char* name, char* buf) {
+	Account_t* acc = allocAccount();
+	if (g_developer.integer > 0)
 		Com_Printf("Loading account: %s\n", name);
 	acc->username = G_NewString2(name); //guarenteed to be unique, since it's a filename.
-	char *str = buf;
-	Lmd_Data_Parse_LineDelimited(&str, (void *) acc, AccountFields, AccountFields_Count);
-	if(validateNewAccount(acc)) {
+	char* str = buf;
+	Lmd_Data_Parse_LineDelimited(&str, (void*)acc, AccountFields, AccountFields_Count);
+
+	// Load Proff data
+	int prof = Accounts_Prof_GetProfession(acc);
+	if (prof > 0) {
+		Accounts_LoadProfessionData(acc, prof);
+	}
+
+	if (validateNewAccount(acc)) {
 		addAccount(acc);
 	}
 	else {
@@ -484,43 +494,79 @@ qboolean parseAccount(char *name, char *buf){
 	return qtrue;
 }
 
-unsigned int Accounts_Load(){
-	unsigned int result = Lmd_Data_ProcessFiles("accounts", ".uac", parseAccount, Q3_INFINITE);
-	int i, a;
-	for(i = 0; i < AccountDataTypes.count; i++){
-		accDataModule_t *module = AccountDataTypes.categories[i];
-		if(module->accLoadCompleted == NULL)
+
+
+
+// Load data
+void loadAccountData(char* accountName) {
+	// Alloc new acc data
+	Account_t* acc = allocAccount();
+	acc->username = G_NewString2(accountName);
+
+	char* buf = Lmd_Data_AllocFileContents(va("accounts/%s.uac", accountName));
+	if (!buf) {
+		G_LogPrintf("Debug: Failed to open file in loadAccountData\n");
+		return;
+	}
+
+	char* str = buf;
+	Lmd_Data_Parse_LineDelimited(&str, (void*)acc, AccountFields, AccountFields_Count);
+	G_Free(buf);
+
+	// Load Prof data
+	int prof = Accounts_Prof_GetProfession(acc);
+	if (prof > 0) Accounts_LoadProfessionData(acc, prof);
+
+	// Add acc to the list
+	addAccount(acc);
+}
+
+unsigned int Accounts_Load() {
+	unsigned int totalFiles = Lmd_Data_ProcessFiles("accounts", ".uac", parseAccount, Q3_INFINITE);
+
+	// Call accLoadCompleted for each account and data module
+	for (int i = 0; i < AccountDataTypes.count; i++) {
+		accDataModule_t* module = AccountDataTypes.categories[i];
+		if (module->accLoadCompleted == NULL) {
 			continue;
-		for(a = 0; a < AccList.count; a++) {
-			module->accLoadCompleted(AccList.accounts[a], AccList.accounts[a]->data.data[i]);
+		}
+		for (int a = 0; a < AccList.count; a++) {
+			Account_t* acc = AccList.accounts[a];
+			module->accLoadCompleted(acc, acc->data.data[i]);
 		}
 	}
 
-	return result;
+	return totalFiles;
 }
 
 
-Account_t *Accounts_New(char *username, char *name, char *password) {
-	if(Accounts_GetByUsername(username) || Accounts_GetByName(name))
+
+Account_t* Accounts_New(char* username, char* name, char* password) {
+	if (Accounts_GetByUsername(username) || Accounts_GetByName(name))
 		return NULL;
-	Account_t *acc = allocAccount();
+	Account_t* acc = allocAccount();
 	acc->username = G_NewString2(username);
 	acc->name = G_NewString2(name);
 	acc->modifiedTime = level.time;
 	acc->pwChksum = Checksum(password);
 	acc->id = nextId;
+
+	// Prof Allocation
+	acc->profession = (profData_t*)G_Alloc(sizeof(profData_t));
+	memset(acc->profession, 0, sizeof(profData_t));
+
 	int i;
-	for(i = 0; i < AccountDataTypes.count; i++){
-		accDataModule_t *category = AccountDataTypes.categories[i];
-		if(category->accLoadCompleted == NULL)
+	for (i = 0; i < AccountDataTypes.count; i++) {
+		accDataModule_t* category = AccountDataTypes.categories[i];
+		if (category->accLoadCompleted == NULL)
 			continue;
 		category->accLoadCompleted(acc, acc->data.data[i]);
 	}
 	addAccount(acc);
 
-
 	return acc;
 }
+
 
 void Lmd_Accounts_Modify(Account_t *acc) {
 	if(acc->modifiedTime == 0) acc->modifiedTime = level.time;

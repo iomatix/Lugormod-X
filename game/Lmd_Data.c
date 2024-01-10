@@ -89,6 +89,7 @@ char* Lmd_Data_AllocFileContents(char *filename) {
 }
 
 
+
 unsigned int Lmd_Data_ProcessFile(char* directory, char* fileName, qboolean(*Callback)(char* fileName, char* fileBuf)) {
 	char path[MAX_STRING_CHARS];
 	char* fileBuf;
@@ -161,6 +162,7 @@ unsigned int Lmd_Data_ProcessFiles(char* directory, char* ext, qboolean(*Callbac
 	G_Free(listbuf);
 	return totalFiles;
 }
+
 
 qboolean Lmd_Data_DeleteFile(char *directory, char *name){
 	vmCvar_t fs_game;

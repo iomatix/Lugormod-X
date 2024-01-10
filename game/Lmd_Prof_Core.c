@@ -370,7 +370,7 @@ void Accounts_SaveProfessionData(Account_t* acc, int prof) {
 	
 	int writes = Lmd_Data_WriteToFile_LinesDelimited(f, ProfsFields, ProfsFields_Count, (void*)data);
 	trap_FS_FCloseFile(f);
-	G_LogPrintf("Debug: Wrote %d fields for account %s profession %d\n", writes, Accounts_GetName(acc), prof);
+	//G_LogPrintf("Debug: Wrote %d fields for account %s profession %d\n", writes, Accounts_GetName(acc), prof);
 }
 
 unsigned int Accounts_ParseProfessionData(Account_t* acc, int prof) {
