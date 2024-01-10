@@ -124,13 +124,19 @@ typedef struct ProfessionWriteState_s {
 	void* dataFieldState;
 } ProfessionWriteState_t;
 
+
 DataWriteResult_t Accounts_Profs_Write(void* target, char key[], int keySize, char value[], int valueSize, void** writeState, void* args)
 {
+	G_LogPrintf("Debug: [WRITE Accounts_Profs_Write] V V V ======== !\n");
+
+	G_LogPrintf(va("Debug: [WRITE Accounts_Profs_Write] target=%s !\n", target));
 	profData_t* profData = (profData_t*)target;
-
+	G_LogPrintf(va("Debug: [WRITE Accounts_Profs_Write] profData=%s !\n", profData));
 	profession_t* prof = Professions[profData->profession];
+	G_LogPrintf(va("Debug: [WRITE Accounts_Profs_Write] Professions=%s !\n", Professions));
+	G_LogPrintf(va("Debug: [WRITE Accounts_Profs_Write] prof=%s !\n", prof));
 	int dataFieldsCount = prof->data.count;
-
+	G_LogPrintf(va("Debug: [WRITE Accounts_Profs_Write] Count=%i !\n", dataFieldsCount));
 	if (dataFieldsCount == 0) {
 		// This prof has no data, dont bother allocating anything
 		return DWR_NODATA;
@@ -180,117 +186,28 @@ nextField:
 }
 
 
-// Function to update keys for professions
-void Prof_Update_Override(char** key, char** value) {
-	if (Q_stricmp(*key, "prof_merc_jetpack") == 0) {
-		*key = "prof_merc_fuel";
-	}
-	else if (Q_stricmp(*key, "prof_merc_strength") == 0) {
-		*key = "prof_merc_forceresist";
-	}
-	// Add other overrides as needed
-}
 
-// State structure for Prof_Write_Modules
-struct ProfWriteModulesState {
-	int moduleIndex;
-	int dataFieldIndex;
-	void* dataFieldState;
-};
-
-// Parsing function for professions
-qboolean Prof_Parse_Modules(char* key, char* value, void* target, void* args);
-
-// Writing function for professions
-DataWriteResult_t Prof_Write_Modules(void* target, char key[], int keySize, char value[], int valueSize, void** writeState, void* args);
-
-
-
-//	_m##_PREF(prof_ ,Accounts_Profs_Parse, Accounts_Profs_Write, NULL) \
 
 #define ProfsFields_Base(_m) \
+	_m##_PREF( prof_, Accounts_Profs_Parse, Accounts_Profs_Write, NULL) \
     _m##_AUTO(profession, PROFDATAOFS(profession), F_INT) \
     _m##_AUTO(lastLevelUp, PROFDATAOFS(lastLevelUp), F_INT) \
     _m##_AUTO(level, PROFDATAOFS(level), F_INT) \
     _m##_AUTO(experience, PROFDATAOFS(experience), F_INT) \
-    _m##_AUTO(new_game_plus_counter, PROFDATAOFS(new_game_plus_counter), F_INT) \
-    _m##_DEFL(Prof_Parse_Modules, Prof_Write_Modules, NULL)
+    _m##_AUTO(new_game_plus_counter, PROFDATAOFS(new_game_plus_counter), F_INT) 
 ProfsFields_Base(DEFINE_FIELD_PRE)
+
 DATAFIELDS_BEGIN(ProfsFields)
 ProfsFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
+
+//_m##_DEFL(Prof_Parse_Modules, Prof_Write_Modules, NULL)
+
+
 const int ProfsFields_Count = DATAFIELDS_COUNT(ProfsFields);
 
-qboolean Prof_Parse_Modules(char* key, char* value, void* target, void* args) {
-	profData_t* profData = (profData_t*)target;
 
-	Prof_Update_Override(&key, &value);
-
-	for (int i = 0; i < ProfsFields_Count; i++) {
-		void* dataPtr = profData->data;
-		if (Lmd_Data_Parse_KeyValuePair(key, value, dataPtr, ProfsFields, ProfsFields_Count)) {
-			return qtrue;
-		}
-	}
-
-	return qfalse;
-}
-
-// Writing function for professions
-DataWriteResult_t Prof_Write_Modules(void* target, char key[], int keySize, char value[], int valueSize, void** writeState, void* args) {
-	profData_t* profData = (profData_t*)target;
-
-	// Debug: Check if target is NULL
-	if (target == NULL) {
-		G_LogPrintf("Debug: Target is NULL in Prof_Write_Modules\n");
-		return DWR_NODATA;
-	}
-
-	struct ProfWriteModulesState* state;
-
-	// Initialize or retrieve state
-	if (*writeState == NULL) {
-		state = (struct ProfWriteModulesState*)G_Alloc(sizeof(struct ProfWriteModulesState));
-		state->moduleIndex = -1;
-		*writeState = state;
-	}
-	else {
-		state = (struct ProfWriteModulesState*)*writeState;
-	}
-
-	// Find a good category
-	state->dataFieldIndex = 0;
-	state->dataFieldState = NULL;
-	while (++state->moduleIndex < ProfsFields_Count) {
-		// Write the field.
-		const DataField_t* field = &ProfsFields[state->moduleIndex];
-		if (field->write) {
-			void* dataPtr = profData->data;
-
-			Q_strncpyz(key, field->key, keySize);
-			DataWriteResult_t result = field->write(dataPtr, key, keySize, value, valueSize, &state->dataFieldState, field->writeArgs);
-			if (result == DWR_COMPLETE || result == DWR_NODATA) {
-				// We are done with this field
-				state->dataFieldIndex++;
-			}
-
-			if (result == DWR_NODATA) {
-				continue;
-			}
-
-			return DWR_CONTINUE;
-		}
-		else {
-			state->dataFieldIndex++;
-			continue;
-		}
-	}
-
-	// No more modules
-	G_Free(state);
-	return DWR_NODATA;
-}
 
 
 void Lmd_Prof_Alloc(void *target) {
@@ -443,51 +360,64 @@ qboolean PlayerAcc_Prof_CanUseProfession(gentity_t *ent) {
 }
 
 void Accounts_SaveProfessionData(Account_t* acc, int prof) {
-	// Debug: Check if acc is NULL
-	G_LogPrintf("Debug: Save Profession initial...\n");
-	if (acc == NULL) {
+	if (!acc) {
 		G_LogPrintf("Debug: Account is NULL in Accounts_SaveProfessionData\n");
 		return;
 	}
-	G_LogPrintf("Debug: Save Profession handling file...\n");
-	fileHandle_t f = Lmd_Data_OpenDataFile(va("accounts/%i", prof), va("%s.uac", Accounts_GetName(acc)), FS_WRITE);
+	
+	fileHandle_t f = Lmd_Data_OpenDataFile(va("accounts/%s", Accounts_GetName(acc)), va("%s_%i.uac", Accounts_GetName(acc), prof), FS_WRITE);
 
 	// Debug: Check if file is opened correctly
 	if (!f) {
 		G_LogPrintf("Debug: Failed to open file in Accounts_SaveProfessionData\n");
 		return;
 	}
-	G_LogPrintf("Debug: File OK...\n");
 	profData_t* data = PROFDATA(acc);
-	G_LogPrintf("Debug: GOT PROFDATA...\n");
-	// Save the state of the current profession before the change
-	// Use appropriate functions to save data, e.g., to a file
-	G_LogPrintf("Debug: WriteToFile (??)...\n");
-	Lmd_Data_WriteToFile_LinesDelimited(f, ProfsFields, ProfsFields_Count, (void*)acc);
-	G_LogPrintf("Debug: OK!...\n");
-	// For example, assuming you have a function to save data to a file:
-	// SaveDataToFile(acc->username, "old_profession.txt", oldProfessionData);
+	if (!data) {
+		G_LogPrintf("Debug: DATA is NULL in Accounts_SaveProfessionData\n");
+		return;
+	}
+	
+	int writes = Lmd_Data_WriteToFile_LinesDelimited(f, ProfsFields, ProfsFields_Count, (void*)data);
+	trap_FS_FCloseFile(f);
+	G_LogPrintf("Debug: Wrote %d fields for account %s profession %d\n", writes, Accounts_GetName(acc), prof);
 }
 
 unsigned int Accounts_ParseProfessionData(Account_t* acc, int prof) {
 	// Load the state of the new profession
 	// Use appropriate functions to load data, e.g., from a file
 
-	fileHandle_t f = Lmd_Data_OpenDataFile(va("accounts/%i", prof), va("%s.uac", Accounts_GetName(acc)), FS_READ);
-	if (!f || f <= 0) return 0; 
+	if (!acc) {
+		G_LogPrintf("Debug: Account is NULL in Accounts_ParseProfessionData\n");
+		return 0;
+	}
+
+	fileHandle_t f = Lmd_Data_OpenDataFile(va("accounts/%s", Accounts_GetName(acc)), va("%s_%i.uac", Accounts_GetName(acc), prof), FS_READ);
+	if (!f || f <= 0) {
+		G_LogPrintf("Debug: Failed to open file in Accounts_ParseProfessionData\n");
+		return 0;
+	}
 			
 	Accounts_Prof_ClearData(acc);
 	Accounts_Prof_AllocProfessionTemplate(acc, prof);
 	
 	profData_t* data = PROFDATA(acc);
+	if (!data) {
+		G_LogPrintf("Debug: DATA is NULL in Accounts_ParseProfessionData\n");
+		return 0;
+	}
 
 	if(g_developer.integer > 0) Com_Printf("Loading profession for: %s\n", Accounts_GetName(acc));
 	
 	char* str;
-	Lmd_Data_Parse_LineDelimited(&str, (void *) data->data, ProfsFields, ProfsFields_Count);
+	int fieldsRead = Lmd_Data_Parse_LineDelimited(&str, (void*)data->data, ProfsFields, ProfsFields_Count);
 
 
 	trap_FS_FCloseFile(f);
+
+	//G_LogPrintf("Debug: Read %d fields for account %s profession %d\n", fieldsRead, Accounts_GetName(acc), prof);
+
+	return fieldsRead;
 
 	// For example, assuming you have a function to load data from a file:
 	// newData = LoadDataFromFile(acc->username, "new_profession.txt");
@@ -518,9 +448,6 @@ void Accounts_Prof_SetProfession(Account_t *acc, int prof) {
 
 	// Save game profession data if is not false 
 	if(prev_prof) Accounts_SaveProfessionData(acc, prev_prof);
-
-
-
 	
 	// Load game profession data if exist TODO
 	//Accounts_LoadProfessionData(acc, prof);

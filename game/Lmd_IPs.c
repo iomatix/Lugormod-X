@@ -339,7 +339,7 @@ void Lmd_IPs_Run() {
 			}
 		}
 
-		Lmd_IPs_Run_Timer = level.time + 10000;
+		Lmd_IPs_Run_Timer = level.time + 30000; // 30 seconds
 	}
 }
 

@@ -156,11 +156,12 @@ void Lmd_IPs_Run();
 void CheckJediItemSpawn();
 #endif
 
+
 void Lmd_RunFrame(void){
 
-	// Save TODO
-	// Accounts_SaveAll(qfalse);
-	// Factions_Save(qfalse);
+	// Save TODO COOLDOWN FOR SAVING... IT'S INSANE...
+	Accounts_SaveAll(qfalse);
+	Factions_Save(qfalse);
 
 	Lmd_IPs_Run();
 
@@ -185,8 +186,8 @@ void Lmd_Shutdown(void){
 
 
 	// Reimplement Saving SHUTDOWN Save Todo
-	//Accounts_SaveAll(qtrue);
-	//Factions_Save(qtrue);
+	Accounts_SaveAll(qtrue);
+	Factions_Save(qtrue);
 
 	Auths_Shutdown();
 }

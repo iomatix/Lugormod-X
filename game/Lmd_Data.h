@@ -95,7 +95,6 @@ void Lmd_Data_AutoFieldCallback_Free(void *target, void *args);
 
 
 // Field generation
-
 #define AUTOFIELD(name, ofs, type) {name, qfalse, Lmd_Data_AutoFieldCallback_Parse, (void*)&DataAutoFieldArgs_t(ofs, type)}
 
 // Until the compiler supports compound literals, this will have to do.

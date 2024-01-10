@@ -499,11 +499,13 @@ void Factions_SaveFaction(unsigned int index){
 }
 
 void Factions_Save(qboolean full){
-	unsigned int i;
-	for(i = 0;i<FactionList.count;i++){
-		if(FactionList.Factions[i]->modifyTime > 0 && (full || FactionList.Factions[i]->modifyTime + FACTION_SAVE_TIME <= level.time))
-			Factions_SaveFaction(i);
-	}
+
+		unsigned int i;
+		for (i = 0; i < FactionList.count; i++) {
+			if (FactionList.Factions[i]->modifyTime > 0 && (full || FactionList.Factions[i]->modifyTime + FACTION_SAVE_TIME <= level.time))
+				Factions_SaveFaction(i);
+		}
+
 }
 
 void Factions_List(gentity_t *ent, int playerId){

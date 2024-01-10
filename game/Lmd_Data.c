@@ -440,29 +440,27 @@ int Lmd_Data_WriteToFile_LinesDelimited(
 
 	int writes = 0;
 
-	G_LogPrintf("Debug: [WRITE] Starting FOR...\n");
+	
 	for (i = 0; i < fieldCount; i++) {
 		DataWriteResult_t dwr;
 		// If there is no write function for this field, skip to the next one
 		if (!fields[i].write) continue;
 		writeState = NULL;
-		G_LogPrintf(va("Debug: [WRITE] Starting DO-WHILE... [i=%i] !\n", i));
+
 		do {
 			// If the field has a key, copy it to the key variable
 			// Otherwise, set the key to an empty string
+			
 			if (fields[i].key != NULL) {
 				Q_strncpyz(key, fields[i].key, sizeof(key));
-				G_LogPrintf(va("Debug: [WRITE] Key Copied... [i=%i] !\n", i));
-				G_LogPrintf(va("Debug: [WRITE] Key = %s  [i=%i] !\n", key, i));
 			}
 			else {
 				key[0] = 0;
-				G_LogPrintf(va("Debug: [WRITE] Key[0] = 0... [i=%i] !\n", i));
 			}
 			// Call the write function for this field
-			G_LogPrintf(va("Debug: [WRITE] Writing... [i=%i] !\n", i));
 			if(!(dwr = fields[i].write(target, key, sizeof(key), value, sizeof(value), &writeState, fields[i].writeArgs))) G_LogPrintf(va("Debug: [WRITE] NULL... [i=%i] !!!!\n", i));
-			G_LogPrintf(va("Debug: [WRITE] Writing OK [i=%i] !\n", i));
+			// G_LogPrintf(va("Debug: [WRITE] Writing OK [i=%i] !\n", i));
+			
 			// If the write function returned a result other than NODATA and the key is not empty,
 			// write the key-value pair to the file
 			if (dwr != DWR_NODATA && key[0]) {

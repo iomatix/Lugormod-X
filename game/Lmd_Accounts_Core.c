@@ -34,6 +34,7 @@ struct Account_s{
 	int time;
 	int score;
 
+	int activeprofession;
 	int credits;
 	float sp_bonus;
 	int lootboxes;
@@ -86,6 +87,7 @@ qboolean Accounts_Parse_Password(char *key, char *value, void *target, void *arg
 
 DataWriteResult_t Accounts_Write_Password(void *target, char key[], int keySize, char value[], int valueSize, void **writeState, void *args) {
 	Account_t *acc = (Account_t*) target;
+
 	Q_strncpyz(value, va("0x%06x", acc->pwChksum), valueSize);
 	return DWR_COMPLETE;
 }
@@ -224,15 +226,16 @@ DataWriteResult_t Accounts_Write_Modules(void *target, char key[], int keySize, 
 	_m##_FUNC(lastip, Accounts_Parse_LastIP, Accounts_Write_LastIP, NULL) \
 	_m##_AUTO(time, ACCOUNTOFS(time), F_INT) \
 	_m##_AUTO(score, ACCOUNTOFS(score), F_INT) \
+	_m##_AUTO(activeprofession, ACCOUNTOFS(activeprofession), F_INT) \
 	_m##_AUTO(credits, ACCOUNTOFS(credits), F_INT) \
 	_m##_AUTO(lootboxes, ACCOUNTOFS(lootboxes), F_INT) \
 	_m##_AUTO(sp_bonus, ACCOUNTOFS(sp_bonus), F_FLOAT) \
 	_m##_AUTO(bountyReward, ACCOUNTOFS(bountyReward), F_INT) \
 	_m##_AUTO(max_killstreak, ACCOUNTOFS(max_killstreak), F_INT) \
-	_m##_AUTO(flags, ACCOUNTOFS(flags), F_INT) \
-	_m##_DEFL(Accounts_Parse_Modules, Accounts_Write_Modules, NULL)
+	_m##_AUTO(flags, ACCOUNTOFS(flags), F_INT) 
 AccountFields_Base(DEFINE_FIELD_PRE)
 
+//_m##_DEFL(Accounts_Parse_Modules, Accounts_Write_Modules, NULL)
 
 
 DATAFIELDS_BEGIN(AccountFields)
@@ -374,6 +377,7 @@ void Accounts_Delete(Account_t *acc) {
 
 void Accounts_Save(Account_t *acc)
 {
+	Accounts_SaveProfessionData(acc, Accounts_Prof_GetProfession(acc));
 	fileHandle_t f = Lmd_Data_OpenDataFile("accounts", va("%s.uac", acc->username), FS_WRITE);
 	Lmd_Data_WriteToFile_LinesDelimited(f, AccountFields, AccountFields_Count, (void *)acc);
 	trap_FS_FCloseFile(f);
@@ -387,17 +391,19 @@ void Accounts_Save(Account_t *acc)
 
 void updatePlayer(gentity_t *ent);
 void Accounts_SaveAll(qboolean force){
-	int i;
-	gentity_t *player;
-	for(i = 0; i < AccList.count; i++){
-		if(AccList.accounts[i]->modifiedTime > 0 && (force || 
-			level.time - AccList.accounts[i]->modifiedTime > 60000)) {
+
+		int i;
+		gentity_t* player;
+		for (i = 0; i < AccList.count; i++) {
+			if (AccList.accounts[i]->modifiedTime > 0 && (force ||
+				level.time - AccList.accounts[i]->modifiedTime > 60000)) {
 				player = Accounts_GetPlayerByAcc(AccList.accounts[i]);
-				if(player)
+				if (player)
 					updatePlayer(player);
 				Accounts_Save(AccList.accounts[i]);
+			}
 		}
-	}
+	
 }
 
 extern vmCvar_t lmd_accBaseDays;
