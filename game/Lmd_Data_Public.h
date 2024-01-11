@@ -19,18 +19,16 @@ enum class DataParseResult_t {
     DPAR_IGNORE
 };
 
-struct ParseArgs {
+struct DataFieldArgs {
     void* parseState;
-};
-
-struct WriteArgs {
     void* writeState;
 };
 
-using ParseFunction = std::function<DataParseResult_t(const std::string&, const std::string&, ParseArgs*, void*)>;
-using WriteFunction = std::function<DataWriteResult_t(void*, std::string&, std::string&, WriteArgs*, void*)>;
+using ParseFunction = std::function<DataParseResult_t(const std::string&, const std::string&, DataFieldArgs*, void*)>;
+using WriteFunction = std::function<DataWriteResult_t(void*, std::string&, std::string&, DataFieldArgs*, void*)>;
 
 using FreeDataFunction = std::function<void(void*, void*)>;
+
 
 struct DataField_t {
     // Key
@@ -39,11 +37,11 @@ struct DataField_t {
 
     // Parsing
     ParseFunction parse;
-    ParseArgs parseArgs;
+    DataFieldArgs parseArgs;
 
     // Writing
     WriteFunction write;
-    WriteArgs writeArgs;
+    DataFieldArgs writeArgs;
 
     // Memory
     FreeDataFunction freeData;

@@ -9,6 +9,7 @@
 #include "Lmd_EntityCore.h"
 #include "Lmd_Confirm.h"
 #include "Lmd_Console.h"
+#include "g_utils.h"
 
 gentity_t* AimAnyTarget (gentity_t *ent, int length);
 char *ConcatArgs (int start);
@@ -877,8 +878,6 @@ void Cmd_PlaceRandomSpot_f (gentity_t *ent, int iArg){
 		Lmd_Entities_SetSaveable(spot->Lmd.spawnData, qtrue);
 }
 
-void listRemaps(gentity_t *ent, int offset);
-qboolean removeRemap(int index);
 void Cmd_Remap_f(gentity_t *ent, int iArg){
 	char arg[MAX_STRING_CHARS];
 	int argc = trap_Argc();

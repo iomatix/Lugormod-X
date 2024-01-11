@@ -4,11 +4,11 @@
 
 #include "g_local.h"
 #include "bg_saga.h"
-#include "q_shared.h"
 
-//RoboPhred
+
 #include "Lmd_EntityCore.h"
 #include "Lmd_Professions.h"
+#include "g_utils.h"
 
 typedef struct {
 	char oldShader[MAX_QPATH];
@@ -21,60 +21,7 @@ typedef struct {
 int remapCount = 0;
 shaderRemap_t remappedShaders[MAX_SHADER_REMAPS];
 
-//RoboPhred
-void listRemaps(gentity_t *ent, int offset){
-	int i;
-	int end = offset + 25;
-	if(end >= remapCount)
-		end = remapCount - 1;
-	Disp(ent, "^3=================================================");
-	for(i = offset;i<=end;i++)
-		Disp(ent, va("^5%i  ^3%64s ^2%64s", i, remappedShaders[i].oldShader, remappedShaders[i].newShader));
-	Disp(ent, "^3=================================================");
-	if(end < remapCount - 1)
-		Disp(ent, "^3More remaps were not shown due to the console limit, enter a higher starting offset to see them.");
-}
 
-int AddRemap(const char *oldShader, const char *newShader, float timeOffset) {
-	int i;
-
-	for (i = 0; i < remapCount; i++) {
-		if (Q_stricmp(oldShader, remappedShaders[i].oldShader) == 0) {
-			// found it, just update this one
-			strcpy(remappedShaders[i].newShader,newShader);
-			remappedShaders[i].timeOffset = timeOffset;
-			return i;
-		}
-	}
-	if (remapCount < MAX_SHADER_REMAPS) {
-		strcpy(remappedShaders[remapCount].newShader,newShader);
-		strcpy(remappedShaders[remapCount].oldShader,oldShader);
-		remappedShaders[remapCount].timeOffset = timeOffset;
-		return remapCount++;
-	}
-	return -1;
-}
-
-qboolean removeRemap(int index){
-	if(index < 0 || index >= remapCount)
-		return qfalse;
-	Q_strncpyz(remappedShaders[index].newShader, remappedShaders[index].oldShader, level.time * 0.001f);
-	trap_SetConfigstring(CS_SHADERSTATE, BuildShaderStateConfig());
-	return qtrue;
-}
-
-const char *BuildShaderStateConfig(void) {
-	static char	buff[MAX_STRING_CHARS*4];
-	char out[(MAX_QPATH * 2) + 5];
-	int i;
-
-	memset(buff, 0, MAX_STRING_CHARS);
-	for (i = 0; i < remapCount; i++) {
-		Com_sprintf(out, (MAX_QPATH * 2) + 5, "%s=%s:%5.2f@", remappedShaders[i].oldShader, remappedShaders[i].newShader, remappedShaders[i].timeOffset);
-		Q_strcat( buff, sizeof( buff ), out);
-	}
-	return buff;
-}
 
 /*
 =========================================================================
@@ -2514,6 +2461,62 @@ float ShortestLineSegBewteen2LineSegs( vec3_t start1, vec3_t end1, vec3_t start2
 	return current_dist;
 }
 
+//RoboPhred
+void listRemaps(gentity_t* ent, int offset) {
+	int i;
+	int end = offset + 25;
+	if (end >= remapCount)
+		end = remapCount - 1;
+	Disp(ent, "^3=================================================");
+	for (i = offset; i <= end; i++)
+		Disp(ent, va("^5%i  ^3%64s ^2%64s", i, remappedShaders[i].oldShader, remappedShaders[i].newShader));
+	Disp(ent, "^3=================================================");
+	if (end < remapCount - 1)
+		Disp(ent, "^3More remaps were not shown due to the console limit, enter a higher starting offset to see them.");
+}
+
+int AddRemap(const char* oldShader, const char* newShader, float timeOffset) {
+	int i;
+
+	for (i = 0; i < remapCount; i++) {
+		if (Q_stricmp(oldShader, remappedShaders[i].oldShader) == 0) {
+			// found it, just update this one
+			strcpy(remappedShaders[i].newShader, newShader);
+			remappedShaders[i].timeOffset = timeOffset;
+			return i;
+		}
+	}
+	if (remapCount < MAX_SHADER_REMAPS) {
+		strcpy(remappedShaders[remapCount].newShader, newShader);
+		strcpy(remappedShaders[remapCount].oldShader, oldShader);
+		remappedShaders[remapCount].timeOffset = timeOffset;
+		return remapCount++;
+	}
+	return -1;
+}
+
+bool removeRemap(int index) {
+	if (index < 0 || index >= remapCount)
+		return false;
+	Q_strncpyz(remappedShaders[index].newShader, remappedShaders[index].oldShader, level.time * 0.001f);
+	trap_SetConfigstring(CS_SHADERSTATE, BuildShaderStateConfig());
+	return true;
+}
+
+const char* BuildShaderStateConfig(void) {
+	static char	buff[MAX_STRING_CHARS * 4];
+	char out[(MAX_QPATH * 2) + 5];
+	int i;
+
+	memset(buff, 0, MAX_STRING_CHARS);
+	for (i = 0; i < remapCount; i++) {
+		Com_sprintf(out, (MAX_QPATH * 2) + 5, "%s=%s:%5.2f@", remappedShaders[i].oldShader, remappedShaders[i].newShader, remappedShaders[i].timeOffset);
+		Q_strcat(buff, sizeof(buff), out);
+	}
+	return buff;
+}
+
+// iomatix
 void GetAnglesForDirection( const vec3_t p1, const vec3_t p2, vec3_t out )
 {
 	vec3_t v;
@@ -2554,3 +2557,5 @@ bool FileExists(const char* filePath) {
 	struct stat buffer;
 	return (stat(filePath, &buffer) == 0);
 }
+
+

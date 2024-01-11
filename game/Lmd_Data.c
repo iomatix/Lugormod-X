@@ -37,24 +37,19 @@ bool Lmd_Data_IsCleanPath(const std::string& path) {
 	return true;
 }
 
-
-
 std::string Lmd_Data_GetDataPath(const std::string& directory) {
-	std::ostringstream oss;
-
 	std::string datapath = lmd_DataPath.string;
 	if (datapath.empty()) {
 		datapath = "default";
 	}
 
-	oss << LMD_DATABASE_DATAPATH;
-	oss << fs::path::preferred_separator;
-	oss << datapath;
-	oss << fs::path::preferred_separator;
-	oss << directory;
+	fs::path dataPath = LMD_DATABASE_DATAPATH;
+	dataPath /= datapath;
+	dataPath /= directory;
 
-	return oss.str();
+	return dataPath.string();
 }
+
 
 fileHandle_t Lmd_Data_OpenDataFile(const std::string& directory, const std::string& name, fsMode_t mode) {
 	fs::path filePath = Lmd_Data_GetDataPath(directory);
@@ -108,18 +103,7 @@ std::vector<char> Lmd_Data_AllocFileContents(const std::string& filename) {
 	}
 }
 
-std::string Lmd_Data_GetDataPath(const std::string& directory) {
-	std::string datapath = lmd_DataPath.string;
-	if (datapath.empty()) {
-		datapath = "default";
-	}
 
-	fs::path dataPath = LMD_DATABASE_DATAPATH;
-	dataPath /= datapath;
-	dataPath /= directory;
-
-	return dataPath.string();
-}
 
 
 unsigned int Lmd_Data_ProcessFile(const std::string& directory, const std::string& fileName,
@@ -168,8 +152,13 @@ unsigned int Lmd_Data_ProcessFiles(const std::string& directory, const std::stri
 					continue;  // Skip this file if it's not the specific one
 				}
 
+				// Convert the function pointer to std::function using a lambda
+				auto processFileCallback = [Callback](const std::string& fName, const std::vector<char>& fileContent) {
+					return Callback(fName, fileContent.data());
+					};
+
 				// Call the updated function to process a single file
-				if (Lmd_Data_ProcessFile(directory, fileName, Callback)) {
+				if (Lmd_Data_ProcessFile(directory, fileName, processFileCallback)) {
 					totalFiles++;
 				}
 
@@ -327,8 +316,10 @@ bool Lmd_Data_SaveDatafile(const std::string& directory, const std::string& name
 	bool (*Override)(byte* structure, const std::string& key, std::string& value),
 	DBSaveFileCallbackReturn_t* (*MoreKeys)(byte* structure, DBSaveFileCallbackReturn_t* arg, std::string& key, std::string& value)) {
 
-	fs::path filePath = Lmd_Data_GetDataPath(directory) / name;
-	std::ofstream file(filePath, std::ios::out | std::ios::trunc);
+	fs::path filePath = Lmd_Data_GetDataPath(directory);
+	filePath /= name;
+	std::ofstream file(filePath.string(), std::ios::out | std::ios::trunc);
+
 
 	if (!file.is_open()) {
 		return false;
@@ -344,8 +335,8 @@ bool Lmd_Data_SaveDatafile(const std::string& directory, const std::string& name
 			}
 			else {
 				std::ostringstream oss;
-				if (Lmd_Data_WriteDatafileField(bgf, oss, structure)) {
-					file << key << ": " << oss.str() << '\n';
+				if (Lmd_Data_WriteDatafileField(bgf, value, value.size(), structure)) {
+					file << key << ": " << value << '\n';
 				}
 			}
 		}
@@ -424,7 +415,7 @@ int Lmd_Data_Parse_LineDelimited(
 			valuePtr = nullptr; // No value.
 		}
 
-		if (Lmd_Data_Parse_KeyValuePair(key, valuePtr, target, fields, fieldCount)) {
+		if (Lmd_Data_Parse_KeyValuePair(key, valuePtr, target, std::vector<DataField_t>(fields, fields + fieldCount))) {
 			count++;
 		}
 
@@ -451,7 +442,8 @@ bool Lmd_Data_Parse_KeyValuePair(const std::string& key, const std::string& valu
 			auto parseFunction = std::any_cast<ParseFunction>(field.parse);
 			// Sprawdü, czy sygnatura funkcji jest zgodna
 			if constexpr (std::is_invocable_r_v<DataParseResult_t, ParseFunction, const std::string&, const std::string&, void*, void*>) {
-				DataParseResult_t dpar = field.parse(key, value, target, std::any_cast<void*>(field.parseArgs));
+				
+				DataParseResult_t dpar = field.parse(key, value, &field.parseArgs, target, nullptr);
 
 
 				switch (dpar) {
@@ -568,16 +560,22 @@ bool Lmd_Data_AutoFieldCallback_Parse(const std::string& key, const std::string&
 }
 
 DataWriteResult_t Lmd_Data_AutoFieldCallback_Write(void* target, std::string& key, std::string& value, void** writeState, void* args) {
-	DataAutoFieldArgs_t* fieldArgs = static_cast<DataAutoFieldArgs_t*>(args);
-	BG_field_t f = { key.c_str(), fieldArgs->ofs, fieldArgs->type };
-	BG_GetField(&f, value.c_str(), value.size(), reinterpret_cast<byte*>(target));
+	if (args) {
+		DataAutoFieldArgs_t* fieldArgs = static_cast<DataAutoFieldArgs_t*>(args);
+		BG_field_t f = { key.c_str(), fieldArgs->ofs, fieldArgs->type };
+		BG_GetField(&f, value.c_str(), value.size(), reinterpret_cast<byte*>(target));
 
-	assert(!key.empty());
+		assert(!key.empty());
 
-	return DataWriteResult_t::DWR_OK;
+		return DataWriteResult_t::DWR_OK;
+	}
+
+	return DataWriteResult_t::DWR_SKIP;
 }
 
 void Lmd_Data_AutoFieldCallback_Free(void* state, void* args) {
-	DataAutoFieldArgs_t* fieldArgs = static_cast<DataAutoFieldArgs_t*>(args);
-	BG_FreeField(fieldArgs->type, reinterpret_cast<byte*>(state) + fieldArgs->ofs);
+	if (state && args) {
+		DataAutoFieldArgs_t* fieldArgs = static_cast<DataAutoFieldArgs_t*>(args);
+		BG_FreeField(fieldArgs->type, reinterpret_cast<byte*>(state) + fieldArgs->ofs);
+	}
 }

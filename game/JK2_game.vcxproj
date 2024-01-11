@@ -693,6 +693,7 @@
     <ClCompile Include="ai_util.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="g_utils.h" />
     <ClInclude Include="Lmd_Accounts_Public.h" />
     <ClInclude Include="ai.h" />
     <ClInclude Include="ai_main.h" />

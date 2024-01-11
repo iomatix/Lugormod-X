@@ -1,61 +1,53 @@
 #pragma once
 
 #include "Lmd_Data_Public.h"
+#include <fstream>
+#include <sstream>
 
-qboolean Lmd_Data_IsCleanPath(char *path);
+enum class FieldType {
+	Auto,
+	Func,
+	Prefix,
+	Default,
+};
 
-// Opens a data file from the current data directory.
-fileHandle_t Lmd_Data_OpenDataFile(char *directory, char *name, fsMode_t mode);
-
-// Check if file exist
-bool Lmd_Data_isFileValid(char* directory, char* name);
-
-// Copies the file content of the non-data path to a G_Alloc string.
-char* Lmd_Data_AllocFileContents(char *filename);
-
-unsigned int Lmd_Data_ProcessFiles(const std::string& directory, const std::string& ext, qboolean(*Callback)(const std::string& fileName, const char* fileBuf), int maxFiles, const std::string& specificFile = NULL);
-
-unsigned int Lmd_Data_ProcessFile(char* directory, char* fileName, qboolean(*Callback)(char* fileName, char* fileBuf));
-
-
-// Parses a set of keys and values as
-//key: long value text terminated by linefeed
-//key: long value text terminated by linefeed
-unsigned int Lmd_Data_ParseKeys_Old(char **str, qboolean requireValue, qboolean (*callback)(char *key, char *value, void *state), void *state);
-
-// Parses a set of fields as
-//key: value
-//key: "quoted value"
-unsigned int Lmd_Data_ParseFields_Old(char **str, qboolean requireValue, qboolean (*Callback)(byte *object, qboolean pre, char *key, char *value), BG_field_t *fields, byte* structure);
-
-// Parses a set of fields as
-//key,value,key,value
-unsigned int Lmd_Data_ParseDatastring(char **str, qboolean (*Callback)(byte *object, qboolean pre, char *key, char *value), BG_field_t *fields, byte* structure);
-
-//Match Fields
-int Lmd_Data_MatchField(char* key, const DataField_t* fields, int fieldCount, int start);
-
-qboolean Lmd_Data_DeleteFile(char *directory, char *name);
-
-
-typedef struct{
+typedef struct {
 	unsigned int func;
 	int offset;
 }DBSaveFileCallbackReturn_t;
 
-qboolean Lmd_Data_SaveDatafile(char *directory, char *name, BG_field_t *fields, byte* structure, qboolean (*Override)(byte *structure,
-							   char *key, char *value, int valueSze),
-							   DBSaveFileCallbackReturn_t* (*MoreKeys)(byte *structure, DBSaveFileCallbackReturn_t *arg, char *key, int keySze, char *value, int valueSze));
+bool Lmd_Data_IsCleanPath(const std::string& path);
+
+// Opens a data file from the current data directory.
+fileHandle_t Lmd_Data_OpenDataFile(const std::string& directory, const std::string& name, fsMode_t mode);
+
+// Check if file exist
+bool Lmd_Data_isFileValid(const std::string& directory, const std::string& name);
+
+// Copies the file content of the non-data path to a G_Alloc string.
+std::vector<char> Lmd_Data_AllocFileContents(const std::string& filename);
+
+unsigned int Lmd_Data_ProcessFiles(const std::string& directory, const std::string& ext, qboolean(*Callback)(const std::string& fileName, const char* fileBuf), int maxFiles, const std::string& specificFile = NULL);
+unsigned int Lmd_Data_ProcessFile(const std::string& directory, const std::string& fileName,
+	std::function<bool(const std::string&, const std::vector<char>&)> Callback);
 
 
+// Parses a set of fields as
+//key,value,key,value
+unsigned int Lmd_Data_ParseDatastring(char** str, std::function<bool(byte*, bool, const std::string&, const std::string&)> Callback, BG_field_t* fields, byte* structure);
+
+//Match Fields
+int Lmd_Data_MatchField(char* key, const DataField_t* fields, int fieldCount, int start);
+
+bool Lmd_Data_DeleteFile(const std::string& directory, const std::string& name);
+
+
+bool Lmd_Data_SaveDatafile(const std::string& directory, const std::string& name, BG_field_t* fields, byte* structure,
+	bool (*Override)(byte* structure, const std::string& key, std::string& value),
+	DBSaveFileCallbackReturn_t* (*MoreKeys)(byte* structure, DBSaveFileCallbackReturn_t* arg, std::string& key, std::string& value));
 bool Lmd_Data_WriteDatastringField(BG_field_t* f, char* value, unsigned int sze, byte* b);
 bool Lmd_Data_WriteDatafileField(BG_field_t* f, std::string& value, unsigned int sze, byte* b);
-char* Lmd_Data_GetDataPath(char *directory, char *output, int outputSze);
-
-qboolean BG_CompareFields(BG_field_t *f, byte *v1, byte *v2);
-
-void BG_CopyField(BG_field_t *f, byte *dst, byte *src);
-void BG_FreeFields(BG_field_t *fields, byte* structure);
+std::string Lmd_Data_GetDataPath(const std::string& directory);
 
 typedef struct DataAutoFieldArgs_s
 {
@@ -65,20 +57,19 @@ typedef struct DataAutoFieldArgs_s
 
 
 int Lmd_Data_Parse_LineDelimited(
-		char **str,
-		void *target,
-		const DataField_t fields[],
-		int fieldCount);
+	char** str,
+	void* target,
+	const DataField_t fields[],
+	int fieldCount,
+	const char* keyValueSeparator,
+	const char* fieldSeparator);
+
 
 // TODO: Define macros for recursive key value pair delegation.
-qboolean Lmd_Data_Parse_KeyValuePair(char *key, char *value, void *target, const DataField_t fields[], int fieldCount);
+bool Lmd_Data_Parse_KeyValuePair(const std::string& key, const std::string& value, void* target, const std::vector<DataField_t>& fields);
 
 
-int Lmd_Data_WriteToFile_LinesDelimited(
-	fileHandle_t file,
-	const DataField_t fields [],
-	int fieldCount,
-	void *target);
+int Lmd_Data_WriteToFile_LinesDelimited(fileHandle_t file, const DataField_t fields[], int fieldCount, void* target);
 
 
 
@@ -86,26 +77,27 @@ void Lmd_Data_FreeFields(void *target, const DataField_t fields [], int fieldCou
 
 
 // Predefined callbacks
+bool Lmd_Data_AutoFieldCallback_Parse(const std::string& key, const std::string& value, void* target, void* args);
+DataWriteResult_t Lmd_Data_AutoFieldCallback_Write(void* target, std::string& key, std::string& value, void** writeState, void* args);
+void Lmd_Data_AutoFieldCallback_Free(void* state, void* args);
 
-qboolean Lmd_Data_AutoFieldCallback_Parse(char *key, char *value, void *target, void *args);
-DataWriteResult_t Lmd_Data_AutoFieldCallback_Write(void *target, char key[], int keySize, char value[], int valueSize, void **writeState, void *args);
-void Lmd_Data_AutoFieldCallback_Free(void *target, void *args);
 
 
-// Field generation
-#define AUTOFIELD(name, ofs, type) {name, qfalse, Lmd_Data_AutoFieldCallback_Parse, (void*)&DataAutoFieldArgs_t(ofs, type)}
 
-// Until the compiler supports compound literals, this will have to do.
+
+#define AUTOFIELD(name, ofs, type) {name, false, Lmd_Data_AutoFieldCallback_Parse, std::make_any<DataAutoFieldArgs_t>(ofs, type), Lmd_Data_AutoFieldCallback_Write, std::make_any<DataAutoFieldArgs_t>(ofs, type), Lmd_Data_AutoFieldCallback_Free, std::make_any<DataAutoFieldArgs_t>(ofs, type)}
+
 #define DEFINE_FIELD_PRE_AUTO(name, ofs, type) const DataAutoFieldArgs_t DataFieldArgs_##name = { ofs, type };
 #define DEFINE_FIELD_PRE_FUNC(name, parseFunc, writeFunc, args)
 #define DEFINE_FIELD_PRE_PREF(prefix, parseFunc, writeFunc, args)
 #define DEFINE_FIELD_PRE_DEFL(parseFunc, writeFunc, args)
 
-#define DATAFIELDS_BEGIN(name) const DataField_t name [] = {
-#define DEFINE_FIELD_LIST_AUTO(name, ofs, type) {#name, qfalse, Lmd_Data_AutoFieldCallback_Parse, (void *) &DataFieldArgs_##name, Lmd_Data_AutoFieldCallback_Write, (void *) &DataFieldArgs_##name, Lmd_Data_AutoFieldCallback_Free, (void *) &DataFieldArgs_##name},
-#define DEFINE_FIELD_LIST_FUNC(name, parseFunc, writeFunc, args) {#name, qfalse, parseFunc, args, writeFunc, args},
-#define DEFINE_FIELD_LIST_PREF(prefix, parseFunc, writeFunc, args) {#prefix, qtrue, parseFunc, args, writeFunc, args},
-#define DEFINE_FIELD_LIST_DEFL(parseFunc, writeFunc, args)		 {NULL, qtrue, parseFunc, args, writeFunc, args},
+#define DEFINE_FIELD_LIST_AUTO(name, ofs, type) {#name, false, Lmd_Data_AutoFieldCallback_Parse, std::make_any<DataAutoFieldArgs_t>(ofs, type), Lmd_Data_AutoFieldCallback_Write, std::make_any<DataAutoFieldArgs_t>(ofs, type), Lmd_Data_AutoFieldCallback_Free, std::make_any<DataAutoFieldArgs_t>(ofs, type)}
+#define DEFINE_FIELD_LIST_FUNC(name, parseFunc, writeFunc, args) {#name, false, parseFunc, args, writeFunc, args}
+#define DEFINE_FIELD_LIST_PREF(prefix, parseFunc, writeFunc, args) {#prefix, true, parseFunc, args, writeFunc, args}
+#define DEFINE_FIELD_LIST_DEFL(parseFunc, writeFunc, args) {NULL, true, parseFunc, args, writeFunc, args}
+
+#define DATAFIELDS_BEGIN(name) const DataField_t name[] = {
 #define DATAFIELDS_END };
 
 #define DATAFIELDS_COUNT(name) (sizeof(name) / sizeof(DataField_t))
