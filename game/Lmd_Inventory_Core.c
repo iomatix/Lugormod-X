@@ -220,7 +220,7 @@ iObject_t *Inventory_LoadObject(iObjectDef_t *def, char *data) {
 	return obj;
 }
 
-qboolean Lmd_Data_WriteDatastringField( BG_field_t *f, char *value, unsigned int sze, byte *b );
+
 void Inventory_WriteObject(iObject_t *obj, char *data, unsigned int sze) {
 	char buf[MAX_STRING_CHARS] = "";
 	BG_field_t *field = Item_Fields;

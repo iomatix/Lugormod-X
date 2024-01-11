@@ -1,216 +1,283 @@
-
+#pragma once
 #include "g_local.h"
 
 #include "Lmd_Data.h"
 
 #include "BG_Fields.h"
+#include <string>
+#include <string_view>
+#include <vector>
+#include <unordered_map>
+#include <sstream>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
 
-#define LMD_DATABASE_FILELIST_MAX 2048
-#define LMD_DATABASE_FILENAME_SIZE MAX_NETNAME
-#define LMD_DATABASE_DATAPATH "data"
+constexpr int LMD_DATABASE_FILELIST_MAX = 2048;
+constexpr int  LMD_DATABASE_FILENAME_SIZE = MAX_NETNAME;
+constexpr const char* LMD_DATABASE_DATAPATH = "data";
+extern vmCvar_t lmd_DataPath;
 
+namespace fs = std::filesystem;
 
-qboolean BG_ParseField( BG_field_t *l_fields, const char *key, const char *value, void *target );
-qboolean BG_ParseType(fieldtype_t type, const char *value, void *target);
+bool Lmd_Data_IsCleanPath(const std::string& path) {
+	static const char invalidChars[] = { '?', '%', '*', ':', '|', '\"', '<', '>' };
 
-qboolean Lmd_Data_IsCleanPath(char *path) {
-	static const char invalidChars[] = {'?', '%', '*', ':', '|', '\"', '<', '>' };
-	if (strstr(path, ".."))
-		return qfalse;
-	int len = strlen(path);
-	for(int i = 0; i < len; i++) {
-		for(int j = 0; j < sizeof(invalidChars); j++) {
-			if (path[i] == invalidChars[j]) {
-				return qfalse;
-			}
+	if (path.find("..") != std::string::npos) {
+		return false;
+	}
+
+	std::ostringstream oss;
+	for (char c : path) {
+		if (std::find(std::begin(invalidChars), std::end(invalidChars), c) != std::end(invalidChars)) {
+			return false;
 		}
 	}
 
-	return qtrue;
+	return true;
 }
 
 
-extern vmCvar_t lmd_DataPath;
-char* Lmd_Data_GetDataPath(char *directory, char *output, int outputSze){
-	char *datapath = lmd_DataPath.string;
-	if(!datapath[0])
+
+std::string Lmd_Data_GetDataPath(const std::string& directory) {
+	std::ostringstream oss;
+
+	std::string datapath = lmd_DataPath.string;
+	if (datapath.empty()) {
 		datapath = "default";
-	Q_strncpyz(output, va(LMD_DATABASE_DATAPATH"/%s/%s", datapath, directory), outputSze);
-	return output;
-}
-
-fileHandle_t Lmd_Data_OpenDataFile(char *directory, char *name, fsMode_t mode) {
-	fileHandle_t f;
-	char path[MAX_STRING_CHARS] = "";
-	if(directory) {
-		Lmd_Data_GetDataPath(directory, path, sizeof(path));
-		Q_strcat(path, sizeof(path), "/");
 	}
 
-	Q_strcat(path, sizeof(path), name);
+	oss << LMD_DATABASE_DATAPATH;
+	oss << fs::path::preferred_separator;
+	oss << datapath;
+	oss << fs::path::preferred_separator;
+	oss << directory;
 
-	trap_FS_FOpenFile(path, &f, mode);
+	return oss.str();
+}
+
+fileHandle_t Lmd_Data_OpenDataFile(const std::string& directory, const std::string& name, fsMode_t mode) {
+	fs::path filePath = Lmd_Data_GetDataPath(directory);
+	filePath.append(name);
+
+	fileHandle_t f;
+	trap_FS_FOpenFile(filePath.string().c_str(), &f, mode);
 	return f;
 }
 
-bool Lmd_Data_isFileValid(char* directory, char* name) {
-	char path[MAX_STRING_CHARS] = "";
-	if (directory) {
-		Lmd_Data_GetDataPath(directory, path, sizeof(path));
-		Q_strcat(path, sizeof(path), "/");
-	}
 
-	Q_strcat(path, sizeof(path), name);
-	fileHandle_t f; // = 0 ?
-	trap_FS_FOpenFile(path, &f, FS_READ);
-	if (f > 0) { // > 0
+bool Lmd_Data_isFileValid(const std::string& directory, const std::string& name) {
+	fs::path filePath = Lmd_Data_GetDataPath(directory);
+	filePath.append(name);
+
+	fileHandle_t f;
+	if (trap_FS_FOpenFile(filePath.string().c_str(), &f, FS_READ) && f >= 0) {
 		trap_FS_FCloseFile(f);
 		return true;
 	}
 	return false;
 }
 
-char* Lmd_Data_AllocFileContents(char *filename) {
-	fileHandle_t f;
-	int len = trap_FS_FOpenFile(filename, &f, FS_READ);
-	char *buf;
-	if(len < 0)
-		return NULL;
-	else if(len <= 0) {
-		trap_FS_FCloseFile(f);
-		return NULL;
+// Function to allocate memory and read the contents of a file
+std::vector<char> Lmd_Data_AllocFileContents(const std::string& filename) {
+	std::ifstream file(filename, std::ios::binary);
+
+	// Check if the file is open
+	if (!file.is_open()) {
+		std::cerr << "Failed to open file: " << filename << std::endl;
+		return std::vector<char>();
 	}
 
-	len += 1;
-	buf = (char *)G_Alloc(len);
-	trap_FS_Read(buf, len, f);
-	trap_FS_FCloseFile(f);
-	return buf;
+	// Determine the size of the file
+	file.seekg(0, std::ios::end);
+	std::streamsize fileSize = file.tellg();
+	file.seekg(0, std::ios::beg);
+
+	// Create a vector and read the file contents
+	std::vector<char> buf(fileSize);
+	if (file.read(buf.data(), fileSize)) {
+		// File read successfully
+		file.close();
+		return buf;
+	}
+	else {
+		// Failed to read file
+		std::cerr << "Failed to read file: " << filename << std::endl;
+		file.close();
+		return std::vector<char>();
+	}
+}
+
+std::string Lmd_Data_GetDataPath(const std::string& directory) {
+	std::string datapath = lmd_DataPath.string;
+	if (datapath.empty()) {
+		datapath = "default";
+	}
+
+	fs::path dataPath = LMD_DATABASE_DATAPATH;
+	dataPath /= datapath;
+	dataPath /= directory;
+
+	return dataPath.string();
 }
 
 
-
-unsigned int Lmd_Data_ProcessFile(char* directory, char* fileName, qboolean(*Callback)(char* fileName, char* fileBuf)) {
-	char path[MAX_STRING_CHARS];
-	char* fileBuf;
-	unsigned int result = 0;
-
-	Lmd_Data_GetDataPath(directory, path, sizeof(path));
-
-	// Generate the full path to the file
-	char fullPath[MAX_STRING_CHARS];
-	snprintf(fullPath, sizeof(fullPath), "%s/%s", path, fileName);
+unsigned int Lmd_Data_ProcessFile(const std::string& directory, const std::string& fileName,
+	std::function<bool(const std::string&, const std::vector<char>&)> Callback) {
+	std::string path = Lmd_Data_GetDataPath(directory);
+	std::string fullPath = path + "/" + fileName;
 
 	// Allocate and read the file contents
-	fileBuf = Lmd_Data_AllocFileContents(fullPath);
-	if (!fileBuf) {
-		return result;
+	std::vector<char> fileBufVec = Lmd_Data_AllocFileContents(fullPath);
+	if (fileBufVec.empty()) {
+		return 0;
 	}
 
 	// Remove the extension from the file name
-	char* s = fileName;
-	char* s2 = NULL;
-	while (s[0] && (s2 = strchr(s, '.'))) {
-		s = s2;
-		s2++;
-	}
-	s[0] = 0;
+	std::string fileWithoutExtension = fileName.substr(0, fileName.find_last_of('.'));
 
-	// Invoke the callback function
-	if (Callback(fileName, fileBuf)) {
-		result = 1;
+	// Use the std::function callback
+	if (Callback(fileWithoutExtension, fileBufVec)) {
+		return 1;
 	}
 
-	// Free allocated memory
-	G_Free(fileBuf);
-
-	return result;
+	// No need to free memory when using std::vector
+	return 0;
 }
 
-unsigned int Lmd_Data_ProcessFiles(char* directory, char* ext, qboolean(*Callback)(char* fileName, char* fileBuf), int maxFiles, char* specificFile) {
-	int listbufSze = LMD_DATABASE_FILENAME_SIZE;
-	char* listbuf;
-	char path[MAX_STRING_CHARS];
-	int numFiles;
-	char* namePtr;
-	int nameLen;
+std::string Lmd_Data_ProcessFile_GetFileNameWithoutExtension(const std::string& fileName) {
+	size_t pos = fileName.find_last_of('.');
+	return (pos != std::string::npos) ? fileName.substr(0, pos) : fileName;
+}
+
+unsigned int Lmd_Data_ProcessFiles(const std::string& directory, const std::string& ext,
+	qboolean(*Callback)(const std::string& fileName, const char* fileBuf),
+	int maxFiles, const std::string& specificFile) {
+
+	std::string path = Lmd_Data_GetDataPath(directory);
+	fs::path directoryPath = path;
+
 	unsigned int totalFiles = 0;
 
-	// ... (same as before)
+	try {
+		for (const auto& entry : fs::directory_iterator(directoryPath)) {
+			if (entry.is_regular_file() && entry.path().extension() == ext) {
+				std::string fileName = entry.path().filename().string();
 
-	// Initialize namePtr before entering the loop
-	namePtr = listbuf;
+				if (!specificFile.empty() && fileName != specificFile) {
+					continue;  // Skip this file if it's not the specific one
+				}
 
-	for (int i = 0; i < numFiles; i++, namePtr += nameLen + 1) {
-		nameLen = strlen(namePtr);
+				// Call the updated function to process a single file
+				if (Lmd_Data_ProcessFile(directory, fileName, Callback)) {
+					totalFiles++;
+				}
 
-		// Check if a specific file is provided and matches the current file
-		if (specificFile && strcmp(namePtr, specificFile) != 0) {
-			continue;  // Skip this file if it's not the specific one
-		}
-
-		// Call the new function to process a single file
-		if (Lmd_Data_ProcessFile(directory, namePtr, Callback)) {
-			totalFiles++;
-		}
-
-		if (totalFiles >= maxFiles) {
-			break;
+				if (totalFiles >= maxFiles) {
+					break;
+				}
+			}
 		}
 	}
+	catch (const fs::filesystem_error& ex) {
+		std::cerr << "Error processing files: " << ex.what() << std::endl;
+	}
 
-	G_Free(listbuf);
 	return totalFiles;
 }
 
 
-qboolean Lmd_Data_DeleteFile(char *directory, char *name){
+bool Lmd_Data_DeleteFile(const std::string& directory, const std::string& name) {
 	vmCvar_t fs_game;
-	char filename[MAX_STRING_CHARS];
-	Lmd_Data_GetDataPath(directory, filename, sizeof(filename));
-	Q_strcat(filename, sizeof(filename), "/");
-	Q_strcat(filename, sizeof(filename), name); 
-	trap_Cvar_Register( &fs_game, "fs_game", "", CVAR_SERVERINFO | CVAR_ROM);
-	if(fs_game.string[0] == 0)
-		return (remove(va("base/%s", filename)) == 0);
-	else
-		return (remove(va("%s/%s", fs_game.string, filename)) == 0);
+	std::string filename = Lmd_Data_GetDataPath(directory) + "/" + name;
+
+	trap_Cvar_Register(&fs_game, "fs_game", "", CVAR_SERVERINFO | CVAR_ROM);
+
+	std::string gamePath = (fs_game.string[0] == 0) ? "base" : fs_game.string;
+	fs::path fullPath = gamePath + "/" + filename;
+
+	try {
+		fs::remove(fullPath);
+		return true;
+	}
+	catch (const fs::filesystem_error& ex) {
+		std::cerr << "Error deleting file: " << ex.what() << std::endl;
+		return false;
+	}
 }
 
-unsigned int Lmd_Data_ParseKeys_Old(char **str, qboolean requireValue, qboolean (*callback)(char *key, char *value, void *state), void *state) {
-	char *p;
+
+
+// Define the ParseFieldsState_s structure
+struct ParseFieldsState_s {
+	BG_field_t* fields;
+	byte* structure;
+	bool (*callback)(byte* object, bool pre, char* key, char* value);
+};
+
+// Class definition for ParseFieldsState
+class ParseFieldsState {
+public:
+	ParseFieldsState(BG_field_t* fields, byte* structure, bool (*callback)(byte* object, bool pre, char* key, char* value))
+		: fields(fields), structure(structure), callback(callback) {}
+
+	// Getters
+	BG_field_t* getFields() const { return fields; }
+	byte* getStructure() const { return structure; }
+	bool (*getCallback())(byte*, bool, char*, char*) { return callback; }
+
+	// Setters
+	void setFields(BG_field_t* newFields) { fields = newFields; }
+	void setStructure(byte* newStructure) { structure = newStructure; }
+	void setCallback(bool (*newCallback)(byte*, bool, char*, char*)) { callback = newCallback; }
+
+private:
+	BG_field_t* fields;
+	byte* structure;
+	bool (*callback)(byte* object, bool pre, char* key, char* value);
+};
+
+
+bool Lmd_Data_ParseFields_Callback(char* key, char* value, void* pstate) {
+	ParseFieldsState* state = static_cast<ParseFieldsState*>(pstate);
+
+	if (state->getCallback() && state->getCallback()(state->getStructure(), true, key, value)) {
+		return true;
+	}
+
+	if (state->getFields() && state->getStructure()) {
+		if (BG_ParseField(state->getFields(), key, value, state->getStructure()) ||
+			(state->getCallback() && state->getCallback()(state->getStructure(), false, key, value))) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool ParseField(char** sourcep, char* dest, char start, char stop);
+unsigned int Lmd_Data_ParseDatastring(char** str, std::function<bool(byte*, bool, const std::string&, const std::string&)> Callback, BG_field_t* fields, byte* structure) {
 	char key[MAX_STRING_CHARS], value[MAX_STRING_CHARS];
+	char* token;
 	unsigned int count = 0;
-	int colPos;
-	while(str[0]) {
-		p = COM_ParseExt((const char **)str, qtrue);
-		if (p[0] == 0) {
+
+	while (str[0]) {
+		token = COM_ParseDatastring(const_cast<const char**>(str));
+		if (!token[0])
 			break;
-		}
+		strncpy_s(key, token, sizeof(key));
 
-		Q_strncpyz(key, p, sizeof(key));
-		colPos = strlen(key) - 1;
-		if (colPos <= 0) {
-			// Skip this line.  Untested.
-			COM_ParseLine((const char **)str);
+		token = COM_ParseDatastring(const_cast<const char**>(str));
+		if (!token[0])
 			break;
-		}
+		strncpy_s(value, token, sizeof(value));
 
-		if (key[colPos] == ':') {
-			key[colPos] = 0;
-			Q_strncpyz(value, COM_ParseLine((const char **)str), sizeof(value));
-			if (value[0] == 0 && requireValue) {
-				continue;
-			}
-		}
-		else if (requireValue) {
-			continue;
-		}
-		else {
-			value[0] = 0;
-		}
+		std::string keyStr(key);
+		std::string valueStr(value);
 
-		if (callback(key, value, state)) {
+		if ((Callback && Callback(structure, true, keyStr, valueStr)) ||
+			BG_ParseField(fields, keyStr.c_str(), valueStr.c_str(), structure) ||
+			(Callback && Callback(structure, false, keyStr, valueStr))) {
 			count++;
 		}
 	}
@@ -218,144 +285,99 @@ unsigned int Lmd_Data_ParseKeys_Old(char **str, qboolean requireValue, qboolean 
 	return count;
 }
 
-struct ParseFieldsState_s {
-	BG_field_t *fields;
-	byte *structure;
-	qboolean (*callback)(byte *object, qboolean pre, char *key, char *value);
-};
-
-qboolean Lmd_Data_ParseFields_Callback(char *key, char *value, void *pstate) {
-	struct ParseFieldsState_s *state = (struct ParseFieldsState_s*)pstate;
-
-	if((state->callback && state->callback(state->structure, qtrue, key, value)) ||
-		(state->fields && state->structure && (BG_ParseField(state->fields, key, value, state->structure) ||
-			(state->callback && state->callback(state->structure, qfalse, key, value))))){
-				return true;
-		}
-	return false;
-}
-
-unsigned int Lmd_Data_ParseFields_Old(char **str, qboolean requireValue, qboolean (*callback)(byte *object, qboolean pre, char *key, char *value), BG_field_t *fields, byte* structure) {
-	struct ParseFieldsState_s state = {fields, structure, callback};
-	return Lmd_Data_ParseKeys_Old(str, requireValue, Lmd_Data_ParseFields_Callback, (void *)&state);
-}
-
-qboolean ParseField(char **sourcep, char *dest, char start, char stop);
-unsigned int Lmd_Data_ParseDatastring(char **str, qboolean (*Callback)(byte *object, qboolean pre, char *key, char *value), BG_field_t *fields, byte* structure){
-	char key[MAX_STRING_CHARS], value[MAX_STRING_CHARS];
-	char *token;
-	unsigned int count = 0;
-	while(str[0]){
-		token = COM_ParseDatastring((const char **)str);
-		if(!token[0])
-			break;
-		Q_strncpyz(key, token, sizeof(key));
-
-		token = COM_ParseDatastring((const char **)str);
-		if(!token[0])
-			break;
-		Q_strncpyz(value, token, sizeof(value));
-		
-		if((Callback && Callback(structure, qtrue, key, value))
-			|| BG_ParseField(fields, key, value, structure) ||
-			(Callback && Callback(structure, qfalse, key, value))){
-				count++;
-		}
+// Function to write a datafile field to a std::string
+bool Lmd_Data_WriteDatafileField(BG_field_t* f, std::string& value, unsigned int sze, byte* b) {
+	// Don't attempt if null or 0
+	if ((f->type == F_LSTRING || f->type == F_GSTRING) && (*(char**)(b + f->ofs) == nullptr || (*(char**)(b + f->ofs))[0] == 0) ||
+		(f->type == F_INT || f->type == F_FLOAT) && *(int*)(b + f->ofs) == 0) {
+		return false;
 	}
-	return count;
+
+	// Using std::ostringstream for string concatenation
+	std::ostringstream oss;
+	BG_GetField(f, oss, b);
+
+	// Assign the concatenated string to value
+	value = va("%s: %s", f->name, oss.str().c_str());
+
+	return true;
 }
 
-qboolean BG_GetField( BG_field_t *l_field, char *value, unsigned int sze, byte *ent );
-qboolean Lmd_Data_WriteDatafileField( BG_field_t *f, char *value, unsigned int sze, byte *b ){
-	char buf[MAX_STRING_CHARS];
-
-	//dont attempt if null
-	if((f->type == F_LSTRING || f->type == F_GSTRING) && (*(char **)(b+f->ofs) == NULL || (*(char **)(b+f->ofs))[0] == 0))
-		return qfalse;
-	//dont write if 0
-	else if((f->type == F_INT || f->type == F_FLOAT) && *(int *)(b+f->ofs) == 0)
-		return qfalse;
 
 
-	memset(buf, 0, sizeof(buf));
-	BG_GetField(f, buf, sizeof(buf), b);
-	Q_strncpyz(value, va("%s: %s", f->name, buf), sze);
-	return qtrue;
+// Function to write a datastring field to a char array
+bool Lmd_Data_WriteDatastringField(BG_field_t* f, char* value, unsigned int sze, byte* b) {
+	// Don't attempt if null or 0
+	if ((f->type == F_LSTRING || f->type == F_GSTRING) && (*(char**)(b + f->ofs) == nullptr || (*(char**)(b + f->ofs))[0] == 0) ||
+		(f->type == F_INT || f->type == F_FLOAT) && *(int*)(b + f->ofs) == 0) {
+		return false;
+	}
+
+	// Using std::ostringstream for string concatenation
+	std::ostringstream oss;
+	BG_GetField(f, oss, b);
+
+	// Copy the concatenated string to the provided char array
+	Q_strncpyz(value, va("%s,%s,", f->name, oss.str().c_str()), sze);
+
+	return true;
 }
 
-qboolean Lmd_Data_WriteDatastringField( BG_field_t *f, char *value, unsigned int sze, byte *b ){
-	char buf[MAX_STRING_CHARS];
+bool Lmd_Data_SaveDatafile(const std::string& directory, const std::string& name, BG_field_t* fields, byte* structure,
+	bool (*Override)(byte* structure, const std::string& key, std::string& value),
+	DBSaveFileCallbackReturn_t* (*MoreKeys)(byte* structure, DBSaveFileCallbackReturn_t* arg, std::string& key, std::string& value)) {
 
-	//dont attempt if null
-	if((f->type == F_LSTRING || f->type == F_GSTRING) && (*(char **)(b+f->ofs) == NULL || (*(char **)(b+f->ofs))[0] == 0))
-		return qfalse;
-	//dont write if 0
-	else if((f->type == F_INT || f->type == F_FLOAT) && *(int *)(b+f->ofs) == 0)
-		return qfalse;
+	fs::path filePath = Lmd_Data_GetDataPath(directory) / name;
+	std::ofstream file(filePath, std::ios::out | std::ios::trunc);
 
+	if (!file.is_open()) {
+		return false;
+	}
 
-	memset(buf, 0, sizeof(buf));
-	BG_GetField(f, buf, sizeof(buf), b);
-	Q_strncpyz(value, va("%s,%s,", f->name, buf), sze);
-	return qtrue;
-}
+	if (fields && structure) {
+		for (BG_field_t* bgf = fields; bgf->name != nullptr; bgf++) {
+			std::string key = bgf->name;
+			std::string value;
 
-qboolean Lmd_Data_SaveDatafile(char *directory, char *name, BG_field_t *fields, byte* structure,
-							   qboolean (*Override)(byte *structure, char *key, char *value, int valueSze),
-							   DBSaveFileCallbackReturn_t* (*MoreKeys)(byte *structure, DBSaveFileCallbackReturn_t *arg, char *key, int keySze, char *value, int valueSze)){
-	BG_field_t *bgf;
-	//int i;
-	DBSaveFileCallbackReturn_t arg, *argPtr = &arg;
-	char key[MAX_STRING_CHARS], value[MAX_STRING_CHARS];
-	fileHandle_t f;
-	memset(&arg, 0, sizeof(arg));
-
-	f = Lmd_Data_OpenDataFile(directory, name, FS_WRITE);
-	if(!f)
-		return qfalse;
-	
-	if(fields && structure) {
-		for(bgf = fields;bgf->name != NULL;bgf++){
-			Q_strncpyz(key, bgf->name, sizeof(key));
-			value[0] = 0;
-			if(Override && Override(structure, key, value, sizeof(value))) {
-				char *line = va("%s: %s\n", key, value);
-				trap_FS_Write(line, strlen(line), f);
+			if (Override && Override(structure, key, value)) {
+				file << key << ": " << value << '\n';
 			}
-			else if (Lmd_Data_WriteDatafileField(bgf, value, sizeof(value), structure)) {
-				trap_FS_Write(va("%s\n", value), strlen(value) + 1, f);
+			else {
+				std::ostringstream oss;
+				if (Lmd_Data_WriteDatafileField(bgf, oss, structure)) {
+					file << key << ": " << oss.str() << '\n';
+				}
 			}
 		}
 	}
 
-	if(MoreKeys){
-		char *d;
-		key[0] = 0;
-		value[0] = 0;
-		while((argPtr = MoreKeys(structure, argPtr, key, sizeof(key), value, sizeof(value)))){
-			if(key[0] && value[0]){
-				d = va("%s: %s\n", key, value);
-				trap_FS_Write(d, strlen(d), f);
-				key[0] = 0;
-				value[0] = 0;
+	if (MoreKeys) {
+		DBSaveFileCallbackReturn_t arg, * argPtr = &arg;
+		std::string key, value;
+
+		while ((argPtr = MoreKeys(structure, argPtr, key, value))) {
+			if (!key.empty() && !value.empty()) {
+				file << key << ": " << value << '\n';
+				key.clear();
+				value.clear();
 			}
 		}
 	}
 
-	trap_FS_FCloseFile(f);
-	return qtrue;
+	file.close();
+	return true;
 }
 
-int Lmd_Data_MatchField(char *key, const DataField_t *fields, int fieldCount, int start) {
-	int i;
-	for(i = start; i < fieldCount; i++) {
+
+int Lmd_Data_MatchField(const char* key, const DataField_t* fields, int fieldCount, int start) {
+	for (int i = start; i < fieldCount; i++) {
 		if (fields[i].isPrefix) {
-			if (fields[i].key == NULL || Q_stricmpn(key, fields[i].key, strlen(fields[i].key)) == 0) {
+			if (fields[i].key.empty() || strncmp(key, fields[i].key.c_str(), fields[i].key.size()) == 0) {
 				return i;
 			}
 		}
 		else {
-			if (Q_stricmp(key, fields[i].key) == 0) {
+			if (strcmp(key, fields[i].key.c_str()) == 0) {
 				return i;
 			}
 		}
@@ -363,27 +385,23 @@ int Lmd_Data_MatchField(char *key, const DataField_t *fields, int fieldCount, in
 
 	return -1;
 }
-
-/*
-TODO: Take arbitrary seperators:
-	char *keyValueSeperator,
-	char *fieldSeperator,
-*/
 int Lmd_Data_Parse_LineDelimited(
-		char **str,
-		void *target,
-		const DataField_t fields[],
-		int fieldCount)
+	char** str,
+	void* target,
+	const DataField_t fields[],
+	int fieldCount,
+	const char* keyValueSeparator,
+	const char* fieldSeparator)
 {
-	char *p;
+	char* p;
 	char key[MAX_STRING_CHARS], value[MAX_STRING_CHARS];
 	unsigned int count = 0;
 	int colPos;
 
-	char *valuePtr;
+	char* valuePtr;
 
-	while(str[0]) {
-		p = COM_ParseExt((const char **)str, qtrue);
+	while (*str) {
+		p = COM_ParseExt((const char**)str, qtrue);
 		if (p[0] == 0) {
 			break;
 		}
@@ -391,82 +409,119 @@ int Lmd_Data_Parse_LineDelimited(
 		Q_strncpyz(key, p, sizeof(key));
 		colPos = strlen(key) - 1;
 		if (colPos <= 0) {
-			// Skip this line.  Untested.
-			COM_ParseLine((const char **)str);
+			// Skip this line. Untested.
+			COM_ParseLine((const char**)str);
 			break;
 		}
 
-		if (key[colPos] == ':') {
+		// Use the provided keyValueSeparator to separate key and value
+		if (key[colPos] == keyValueSeparator[0]) {
 			key[colPos] = 0;
-			Q_strncpyz(value, COM_ParseLine((const char **)str), sizeof(value));
+			Q_strncpyz(value, COM_ParseLine((const char**)str), sizeof(value));
 			valuePtr = value; // We got a real value (may be empty).
 		}
 		else {
-			valuePtr = NULL; // No value.
+			valuePtr = nullptr; // No value.
 		}
 
 		if (Lmd_Data_Parse_KeyValuePair(key, valuePtr, target, fields, fieldCount)) {
 			count++;
+		}
+
+		// Use the provided fieldSeparator to skip fields
+		if (fieldSeparator[0] != 0) {
+			while (*str && Q_stricmp(COM_ParseExt((const char**)str, qtrue), fieldSeparator) != 0) {
+				// Skip fields until the next fieldSeparator or end of string
+			}
 		}
 	}
 
 	return count;
 }
 
-qboolean Lmd_Data_Parse_KeyValuePair(char *key, char *value, void *target, const DataField_t fields[], int fieldCount) {
-	int start = 0;
-	while (start < fieldCount) {
-		int index = Lmd_Data_MatchField(key, fields, fieldCount, start);
-		const DataField_t *field;
-		if (index < 0) break;
-		field = &fields[index];
-		if (field->parse(key, value, target, field->parseArgs)) {
-			return qtrue;
+
+bool Lmd_Data_Parse_KeyValuePair(const std::string& key, const std::string& value, void* target, const std::vector<DataField_t>& fields) {
+	size_t start = 0;
+
+	while (start < fields.size()) {
+		size_t index = Lmd_Data_MatchField(key.c_str(), fields.data(), static_cast<int>(fields.size()), static_cast<int>(start));
+		const DataField_t& field = fields[index];
+
+		try {
+			auto parseFunction = std::any_cast<ParseFunction>(field.parse);
+			// Sprawdü, czy sygnatura funkcji jest zgodna
+			if constexpr (std::is_invocable_r_v<DataParseResult_t, ParseFunction, const std::string&, const std::string&, void*, void*>) {
+				DataParseResult_t dpar = field.parse(key, value, target, std::any_cast<void*>(field.parseArgs));
+
+
+				switch (dpar) {
+				case DataParseResult_t::DPAR_OK:
+					return true;
+				case DataParseResult_t::DPAR_FAIL:
+					return false;
+				case DataParseResult_t::DPAR_IGNORE:
+					// Continue to the next field
+					break;
+				}
+			}
+			else {
+				// Error Handling
+				std::cerr << "Error: Invalid function signature" << std::endl;
+			}
+		}
+		catch (const std::bad_any_cast& e) {
+			// Handle the exception (e.g., log an error)
+			// This indicates that the stored type in field.parseArgs does not match ParseFunction
+			// You might want to add proper error handling based on your requirements
+			// For example, you could log the error and continue to the next field
+			std::cerr << "Error in Lmd_Data_Parse_KeyValuePair: " << e.what() << std::endl;
 		}
 
 		start = index + 1;
 	}
 
-	return qfalse;
+	return false;
 }
 
-int Lmd_Data_WriteToFile_LinesDelimited(
-	fileHandle_t file,
-	const DataField_t fields[],
-	int fieldCount,
-	void* target) {
 
-	int i;
-	char key[MAX_STRING_CHARS];
-	char value[MAX_STRING_CHARS];
-	void* writeState = NULL;
 
+
+
+
+// Assuming DataField_t and its types are already defined
+int Lmd_Data_WriteToFile_LinesDelimited(fileHandle_t file, const DataField_t fields[], int fieldCount, void* target) {
 	int writes = 0;
 
-	
-	for (i = 0; i < fieldCount; i++) {
+	for (int i = 0; i < fieldCount; i++) {
 		DataWriteResult_t dwr;
+
 		// If there is no write function for this field, skip to the next one
 		if (!fields[i].write) continue;
-		writeState = NULL;
 
+		void* writeState = nullptr;
 		do {
 			// If the field has a key, copy it to the key variable
 			// Otherwise, set the key to an empty string
-			
-			if (fields[i].key != NULL) {
-				Q_strncpyz(key, fields[i].key, sizeof(key));
+			char key[MAX_STRING_CHARS];
+			char value[MAX_STRING_CHARS];
+
+			if (!fields[i].key.empty()) {
+				Q_strncpyz(key, fields[i].key.c_str(), sizeof(key));
 			}
 			else {
 				key[0] = 0;
 			}
+
 			// Call the write function for this field
-			dwr = fields[i].write(target, key, sizeof(key), value, sizeof(value), &writeState, fields[i].writeArgs);
-			// G_LogPrintf(va("Debug: [WRITE] Writing OK [i=%i] !\n", i));
+			dwr = fields[i].write(target, key, value, &fields[i].writeArgs, nullptr);
 			
+
+
+
+
 			// If the write function returned a result other than NODATA and the key is not empty,
 			// write the key-value pair to the file
-			if (dwr != DWR_NODATA && key[0]) {
+			if (dwr != DataWriteResult_t::DWR_NODATA && key[0]) {
 				char* line;
 				// If the value is not empty, write both the key and the value
 				// Otherwise, write only the key
@@ -480,16 +535,18 @@ int Lmd_Data_WriteToFile_LinesDelimited(
 				writes++;
 			}
 			// Repeat the process if the write function returned CONTINUE or SKIP
-		} while (dwr == DWR_CONTINUE || dwr == DWR_SKIP);
+		} while (dwr == DataWriteResult_t::DWR_CONTINUE || dwr == DataWriteResult_t::DWR_SKIP);
 	}
 
 	// Return the number of writes
 	return writes;
 }
 
-void Lmd_Data_FreeFields(void *target, const DataField_t fields [], int fieldCount) {
-	int i;
-	for(i = 0; i < fieldCount; i++) {
+
+
+
+void Lmd_Data_FreeFields(void* target, const DataField_t fields[], int fieldCount) {
+	for (int i = 0; i < fieldCount; i++) {
 		if (fields[i].freeData) {
 			fields[i].freeData(target, fields[i].freeDataArgs);
 		}
@@ -497,29 +554,30 @@ void Lmd_Data_FreeFields(void *target, const DataField_t fields [], int fieldCou
 }
 
 
-qboolean Lmd_Data_AutoFieldCallback_Parse(char *key, char *value, void *target, void *args) {
-	if (value != NULL && value[0]) {
-		G_LogPrintf(va("Debug: %s<->%s %s !!\n"),key,value, value[0]);
-		G_LogPrintf(va("Debug: ARGS: %s !!\n"),args);
-		DataAutoFieldArgs_t *fieldArgs = (DataAutoFieldArgs_t *) args;
-		BG_ParseType(fieldArgs->type, value, (byte *) target + fieldArgs->ofs);
-		return qtrue;
+bool Lmd_Data_AutoFieldCallback_Parse(const std::string& key, const std::string& value, void* target, void* args) {
+	if (!value.empty()) {
+		G_LogPrintf("Debug: %s<->%s %s !!\n", key.c_str(), value.c_str(), value[0]);
+		G_LogPrintf("Debug: ARGS: %s !!\n", args);
+
+		DataAutoFieldArgs_t* fieldArgs = static_cast<DataAutoFieldArgs_t*>(args);
+		BG_ParseType(fieldArgs->type, value.c_str(), reinterpret_cast<byte*>(target) + fieldArgs->ofs);
+		return true;
 	}
 
-	return qfalse;
+	return false;
 }
 
-DataWriteResult_t Lmd_Data_AutoFieldCallback_Write(void *target, char key[], int keySize, char value[], int valueSize, void **writeState, void *args) {
-	DataAutoFieldArgs_t *fieldArgs = (DataAutoFieldArgs_t *) args;
-	BG_field_t f = { key, fieldArgs->ofs, fieldArgs->type };
-	BG_GetField(&f, value, valueSize, (byte *)target);
+DataWriteResult_t Lmd_Data_AutoFieldCallback_Write(void* target, std::string& key, std::string& value, void** writeState, void* args) {
+	DataAutoFieldArgs_t* fieldArgs = static_cast<DataAutoFieldArgs_t*>(args);
+	BG_field_t f = { key.c_str(), fieldArgs->ofs, fieldArgs->type };
+	BG_GetField(&f, value.c_str(), value.size(), reinterpret_cast<byte*>(target));
 
-	assert(key[0]);
+	assert(!key.empty());
 
-	return DWR_COMPLETE;
+	return DataWriteResult_t::DWR_OK;
 }
 
-void Lmd_Data_AutoFieldCallback_Free(void *state, void *args) {
-	DataAutoFieldArgs_t *fieldArgs = (DataAutoFieldArgs_t *) args;
-	BG_FreeField(fieldArgs->type, (byte *) state + fieldArgs->ofs);
+void Lmd_Data_AutoFieldCallback_Free(void* state, void* args) {
+	DataAutoFieldArgs_t* fieldArgs = static_cast<DataAutoFieldArgs_t*>(args);
+	BG_FreeField(fieldArgs->type, reinterpret_cast<byte*>(state) + fieldArgs->ofs);
 }

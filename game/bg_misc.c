@@ -28,7 +28,7 @@ extern void Z_Free(void *pvAddress);
 #ifdef QAGAME
 extern void Q3_SetParm (int entID, int parmNum, const char *parmValue);
 #endif
-
+#include <sstream>
 #include "../namespace_begin.h"
 
 const char *bgToggleableSurfaces[BG_NUM_TOGGLEABLE_SURFACES] = 
@@ -357,95 +357,53 @@ char *fieldNames[] = {
 //RoboPhred
 //Need this in the ui
 //#if defined(QAGAME) || defined(CGAME)
-qboolean BG_GetField( BG_field_t *l_field, char *value, unsigned int sze, byte *ent ){
-	BG_field_t	*f = l_field;
-	byte	*b;
-	memset(value, 0, sze);
+bool BG_GetField(BG_field_t* l_field, std::ostringstream& value, byte* ent){
+	BG_field_t* f = l_field;
+	byte* b = ent;
 
-	b = (byte *)ent;
+	// Using std::ostringstream for string concatenation
+	std::ostringstream oss;
 
-	switch( f->type ) {
+switch (l_field->type) {
 	case F_QSTRING:
-		if(*(char **)(b+f->ofs) == NULL)
-			Q_strcat(value, sze, "\"\"");
-		else {
-			Q_strcat(value, sze, "\"");
-			Q_strcat(value, sze,*(char **)(b+f->ofs));
-			Q_strcat(value, sze, "\"");
-		}
-		return qtrue;
-		break;
+		if (*(char**)(b + f->ofs) == NULL)
+			oss << "\"\"";
+		else
+			oss << "\"" << *(char**)(b + f->ofs) << "\"";
+		return true;
 	case F_LSTRING:
 	case F_GSTRING:
-
-		if(*(char **)(b+f->ofs) == NULL)
-			Q_strcat(value, sze,"NULL");
+		if (*(char**)(b + f->ofs) == NULL)
+			oss << "NULL";
 		else
-			Q_strcat(value, sze,*(char **)(b+f->ofs));
-		return qtrue;
-		break;
+			oss << *(char**)(b + f->ofs);
+		return true;
 	case F_VECTOR:
-		//not in ui
-		//Q_strcat(value, sze, vtos(((float *)(b+f->ofs))));
-		Q_strcat(value, sze, va("%f %f %f", ((float *)(b+f->ofs))[0], ((float *)(b+f->ofs))[1], ((float *)(b+f->ofs))[2]));
-		return qtrue;
-		break;
+		oss << va("%f %f %f", ((float*)(b + f->ofs))[0], ((float*)(b + f->ofs))[1], ((float*)(b + f->ofs))[2]);
+		return true;
 	case F_INT:
-		Q_strcat(value, sze, va("%i", *(int *)(b+f->ofs)));
-		return qtrue;
-		break;
+		oss << va("%i", *(int*)(b + f->ofs));
+		return true;
 	case F_FLOAT:
-		Q_strcat(value, sze, va("%f", *(float *)(b+f->ofs)));
-		return qtrue;
-		break;
+		oss << va("%f", *(float*)(b + f->ofs));
+		return true;
 	case F_ANGLEHACK:
-		Q_strcat(value, sze, va("0 %f 0", ((float *)(b+f->ofs))[1]));
-		return qtrue;
-		break;
+		oss << va("0 %f 0", ((float*)(b + f->ofs))[1]);
+		return true;
 #ifdef QAGAME
-	case F_PARM1:
-	case F_PARM2:
-	case F_PARM3:
-	case F_PARM4:
-	case F_PARM5:
-	case F_PARM6:
-	case F_PARM7:
-	case F_PARM8:
-	case F_PARM9:
-	case F_PARM10:
-	case F_PARM11:
-	case F_PARM12:
-	case F_PARM13:
-	case F_PARM14:
-	case F_PARM15:
-	case F_PARM16:
-		//Q3_SetParm( ((gentity_t *)(ent))->s.number, (f->type - F_PARM1), (char *) value );
-		//Q_strncpyz(value, "TODO: get q3 parameter and report it here", sze);
-		//va so it writes NULL if need be
-		//Q_strncpyz(value, va("%s", ent->parms->parm[(f->type - F_PARM1)]), sze);
-		break;
+		// Add cases for F_PARM1 to F_PARM16 if needed
 #endif
 
+		// Add cases for F_LONG, F_BOOLEAN, F_UINT if needed
 
-	/*RoboPhred: euka stuff
-	case F_LONG:
-		//*(int *)(b+f->ofs) = atol(value);
-		Q_strcat(value, sze, va("%li", *(int *)(b+f->ofs)));
-
-		break;
-	case F_BOOLEAN:
-		//*(qboolean *)(b+f->ofs) = (value[0]=='1'?qtrue:qfalse);
-		Q_strcat(value, sze, ((*(qboolean *)(b+f->ofs)==qtrue)?"1":"0"));
-		break;
-	case F_UINT:
-		Q_strcat(value, sze, va("%u", *(unsigned int *)(b+f->ofs)));
-		break;
-	*/
 	default:
 	case F_IGNORE:
 		break;
 	}
-	return qfalse;
+
+	// Assign the concatenated string to value
+	value = oss.str();
+	return false;
 }
 //#endif
 /*
@@ -457,56 +415,51 @@ in a gentity/centity/whatever the hell you want
 ===============
 */
 
-// RoboPhred
-qboolean BG_ParseType(fieldtype_t type, const char *value, void *target) {
-	float	v;
-	vec3_t	vec;
-	const char *p;
-	byte *b = (byte *)target;
+// iomatix
+// Function to parse a value based on its type
+bool BG_ParseType(fieldtype_t type, const char* value, void* target) {
+	float v;
+	vec3_t vec;
+	const char* p;
+	byte* b = static_cast<byte*>(target);
 
-	switch( type ) {
+	switch (type) {
 	case F_QSTRING:
 		p = value;
 #ifdef QAGAME
-		*(char **)(b) = G_NewString(COM_ParseExt(&p, qfalse));
+		* (char**)(b) = G_NewString(COM_ParseExt(&p, qfalse));
 #else
-		*(char **)(b) = CG_NewString(COM_ParseExt(&p, qfalse));
+		* (char**)(b) = CG_NewString(COM_ParseExt(&p, qfalse));
 #endif
 		break;
 	case F_LSTRING:
 	case F_GSTRING:
 #ifdef QAGAME
-		*(char **)(b) = G_NewString (value);
+		* (char**)(b) = G_NewString(value);
 #else
-		*(char **)(b) = CG_NewString (value);
+		* (char**)(b) = CG_NewString(value);
 #endif
-		return qtrue;
-		break;
+		return true;
 	case F_VECTOR:
-		//RoboPhred: clear to 0 to avoid random values.
+		// RoboPhred: clear to 0 to avoid random values.
 		memset(vec, 0, sizeof(vec));
-		sscanf (value, "%f %f %f", &vec[0], &vec[1], &vec[2]);
-		((float *)(b))[0] = vec[0];
-		((float *)(b))[1] = vec[1];
-		((float *)(b))[2] = vec[2];
-		return qtrue;
-		break;
+		sscanf(value, "%f %f %f", &vec[0], &vec[1], &vec[2]);
+		((float*)(b))[0] = vec[0];
+		((float*)(b))[1] = vec[1];
+		((float*)(b))[2] = vec[2];
+		return true;
 	case F_INT:
-		*(int *)(b) = atoi(value);
-		return qtrue;
-		break;
+		*(int*)(b) = std::atoi(value);
+		return true;
 	case F_FLOAT:
-		*(float *)(b) = atof(value);
-		return qtrue;
-		break;
+		*(float*)(b) = std::atof(value);
+		return true;
 	case F_ANGLEHACK:
-		v = atof(value);
-        ((float *)(b))[0] = 0;
-		((float *)(b))[1] = v;
-		((float *)(b))[2] = 0;
-		return qtrue;
-		break;
-
+		v = std::atof(value);
+		((float*)(b))[0] = 0;
+		((float*)(b))[1] = v;
+		((float*)(b))[2] = 0;
+		return true;
 #ifdef QAGAME
 	case F_PARM1:
 	case F_PARM2:
@@ -524,91 +477,89 @@ qboolean BG_ParseType(fieldtype_t type, const char *value, void *target) {
 	case F_PARM14:
 	case F_PARM15:
 	case F_PARM16:
-		Q3_SetParm( ((gentity_t *)(target))->s.number, (type - F_PARM1), (char *) value );
-		return qtrue;
-		break;
+		Q3_SetParm(((gentity_t*)(target))->s.number, (type - F_PARM1), (char*)value);
+		return true;
 #endif
 	default:
 	case F_IGNORE:
 		break;
 	}
 
-	return qfalse;
+	return false;
 }
 
-//RoboPhred: to boolean
-qboolean BG_ParseField( BG_field_t *l_fields, const char *key, const char *value, void *target ){
-	BG_field_t *f;
+// Function to parse a field based on key and value
+bool BG_ParseField(BG_field_t* l_fields, const char* key, const char* value, void* target) {
+	BG_field_t* f;
 
-	for ( f=l_fields ; f->name ; f++ ) {
-		if ( !Q_stricmp(f->name, key) ) {
-			BG_ParseType(f->type, value, (((byte *)target) + f->ofs));
+	for (f = l_fields; f->name; f++) {
+		if (!Q_stricmp(f->name, key)) {
+			BG_ParseType(f->type, value, (static_cast<byte*>(target) + f->ofs));
 		}
 	}
-	return qfalse;
+	return false;
 }
 
-// RoboPhred
-qboolean BG_CompareFields(BG_field_t *f, byte *v1, byte *v2){
-	switch(f->type){
+// Function to copy fields
+void BG_CopyField(BG_field_t* f, byte* dst, byte* src) {
+	switch (f->type) {
 	case F_INT:
-		return *(int *)(v1+f->ofs) == *(int *)(v2+f->ofs);
+		*(int*)(dst + f->ofs) = *(int*)(src + f->ofs);
 		break;
 	case F_FLOAT:
-		return *(float *)(v1+f->ofs) == *(float *)(v2+f->ofs);
-		break;
-	case F_GSTRING:
-	case F_LSTRING:
-	case F_QSTRING:
-		return (Q_stricmp(*(char **)(v1+f->ofs), *(char **)(v2+f->ofs)) == 0);
-		break;
-	default:
-		assert(!"Unhandled F_ type in db_CompareFields");
-	}
-	//Default to false I guess
-	return qfalse;
-}
-
-// RoboPhred
-void BG_CopyField(BG_field_t *f, byte *dst, byte *src){
-	switch(f->type){
-	case F_INT:
-		*(int *)(dst+f->ofs) = *(int *)(src+f->ofs);
-		break;
-	case F_FLOAT:
-		*(float *)(dst+f->ofs) = *(float *)(src+f->ofs);
+		*(float*)(dst + f->ofs) = *(float*)(src + f->ofs);
 		break;
 	case F_GSTRING:
 	case F_LSTRING:
 	case F_QSTRING:
 #ifdef QAGAME
-		if(*(char **)(dst+f->ofs))
-			G_Free(*(char **)(dst+f->ofs));
-		*(char **)(dst+f->ofs) = G_NewString(*(char **)(src+f->ofs));
+		if (*(char**)(dst + f->ofs))
+			G_Free(*(char**)(dst + f->ofs));
+		*(char**)(dst + f->ofs) = G_NewString(*(char**)(src + f->ofs));
 #else
-		*(char **)(dst+f->ofs) = CG_NewString(*(char **)(src+f->ofs));
+		* (char**)(dst + f->ofs) = CG_NewString(*(char**)(src + f->ofs));
 #endif
 		break;
 	default:
 		assert(!"Unhandled F_ type in db_CopyField");
 	}
 }
-
-// RoboPhred
-#ifdef QAGAME
-void BG_FreeField(fieldtype_t type, void *target) {
-	switch(type) {
+// Function to compare fields
+bool BG_CompareFields(BG_field_t* f, byte* v1, byte* v2) {
+	switch (f->type) {
+	case F_INT:
+		return *(int*)(v1 + f->ofs) == *(int*)(v2 + f->ofs);
+		break;
+	case F_FLOAT:
+		return *(float*)(v1 + f->ofs) == *(float*)(v2 + f->ofs);
+		break;
 	case F_GSTRING:
 	case F_LSTRING:
 	case F_QSTRING:
-		G_Free(*(char **)target);
+		return (Q_stricmp(*(char**)(v1 + f->ofs), *(char**)(v2 + f->ofs)) == 0);
+		break;
+		// ... (add cases for other field types as needed)
+	default:
+		assert(!"Unhandled F_ type in BG_CompareFields");
+	}
+	// Default to false
+	return false;
+}
+// Function to free a field
+#ifdef QAGAME
+void BG_FreeField(fieldtype_t type, void* target) {
+	switch (type) {
+	case F_GSTRING:
+	case F_LSTRING:
+	case F_QSTRING:
+		G_Free(*(char**)target);
 	}
 }
 
-// RoboPhred
-void BG_FreeFields(BG_field_t *fields, byte* structure) {
-	BG_field_t *f = fields;
-	while(f->name) {
+// Function to free fields
+void BG_FreeFields(BG_field_t* fields, byte* structure) {
+	BG_field_t* f = fields;
+	while (f->name) {
 		BG_FreeField(f->type, structure + f->ofs);
 		f++;
 	}

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef LMD_DATA_H
-#define LMD_DATA_H
 
 #include "Lmd_Data_Public.h"
 
@@ -15,7 +13,7 @@ bool Lmd_Data_isFileValid(char* directory, char* name);
 // Copies the file content of the non-data path to a G_Alloc string.
 char* Lmd_Data_AllocFileContents(char *filename);
 
-unsigned int Lmd_Data_ProcessFiles(char* directory, char* ext, qboolean(*Callback)(char* fileName, char* fileBuf), int maxFiles, char* specificFile = NULL);
+unsigned int Lmd_Data_ProcessFiles(const std::string& directory, const std::string& ext, qboolean(*Callback)(const std::string& fileName, const char* fileBuf), int maxFiles, const std::string& specificFile = NULL);
 
 unsigned int Lmd_Data_ProcessFile(char* directory, char* fileName, qboolean(*Callback)(char* fileName, char* fileBuf));
 
@@ -50,8 +48,8 @@ qboolean Lmd_Data_SaveDatafile(char *directory, char *name, BG_field_t *fields, 
 							   DBSaveFileCallbackReturn_t* (*MoreKeys)(byte *structure, DBSaveFileCallbackReturn_t *arg, char *key, int keySze, char *value, int valueSze));
 
 
-qboolean Lmd_Data_WriteDatastringField( BG_field_t *f, char *value, unsigned int sze, byte *b );
-qboolean Lmd_Data_WriteDatafileField( BG_field_t *f, char *value, unsigned int sze, byte *b );
+bool Lmd_Data_WriteDatastringField(BG_field_t* f, char* value, unsigned int sze, byte* b);
+bool Lmd_Data_WriteDatafileField(BG_field_t* f, std::string& value, unsigned int sze, byte* b);
 char* Lmd_Data_GetDataPath(char *directory, char *output, int outputSze);
 
 qboolean BG_CompareFields(BG_field_t *f, byte *v1, byte *v2);
@@ -112,5 +110,5 @@ void Lmd_Data_AutoFieldCallback_Free(void *target, void *args);
 
 #define DATAFIELDS_COUNT(name) (sizeof(name) / sizeof(DataField_t))
 
-#endif
+
 
