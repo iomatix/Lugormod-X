@@ -74,10 +74,10 @@
 - RoboPhred   - for developing the mod for many years,
 - Ufo         - for small scale development and producing a Linux build.
 
-*Can be compiled using Visual Studio 2013.*
+*Can be compiled using Visual Studio ~~2013~~ 2022 C++14.*
 Linux users may use the makefile inside the game folder.
 
 Licensed under GPL version 3 or later.
 
 Copyright (C) 2003-2018 RoboPhred.
-**Copyright (C) 2019-2020 iomatix.**
+**Copyright (C) 2019-2024 iomatix.**
