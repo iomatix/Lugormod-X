@@ -1,6 +1,13 @@
 ## Currently integrating Lugormod-X to OpenJK engine
 New version will be available here: [OpenJK - Lugormod-X](https://github.com/iomatix/OpenJK_Lugormod-X)
 
+### Supporting Development
+
+My mods are **always free to use**.
+
+If you appreciate my work, you can support me by [buying me a coffee](https://buymeacoffee.com/iomatix).
+
+
 # Lugormod X 
 **X version aims to change the core of the Lugormod to bring out its potential and making it compatible with the KotF modification. Lugormod X will become official [KotF Multiplayer](https://www.moddb.com/mods/knights-of-the-force-21/downloads) server core.**
 
