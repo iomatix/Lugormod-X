@@ -1,6 +1,12 @@
 ## Currently integrating Lugormod-X to OpenJK engine
 New version will be available here: [OpenJK - Lugormod-X](https://github.com/iomatix/OpenJK_Lugormod-X)
 
+## Contributions
+
+<a href="https://github.com/iomatix/Lugormod-X/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=iomatix/Lugormod-X" />
+</a>
+
 ### Supporting Development
 
 My mods are **always free to use**.
